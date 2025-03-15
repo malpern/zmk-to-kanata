@@ -18,15 +18,17 @@ class LayerParser:
     def __init__(self):
         """Initialize the parser with regex patterns."""
         # Pattern to match the entire keymap section
-        self.keymap_pattern = re.compile(
-            r'/\s*{\s*'  # Root node
-            r'keymap\s*{\s*'  # Keymap section
-            r'compatible\s*=\s*"zmk,keymap";\s*'  # Compatible property
-            r'([\s\S]*?'  # Capture all layer content (including newlines)
-            r'}\s*;)\s*'  # Close keymap (included in capture)
+        keymap_parts = [
+            r'(?:(?:#include\s+<[^>]+>\s*)*)',  # Optional includes at start
+            r'/\s*{\s*',  # Root node
+            r'(?:global\s*{\s*[^}]*}\s*;\s*)*',  # Optional global section
+            r'keymap\s*{\s*',  # Keymap section
+            r'compatible\s*=\s*"zmk,keymap";\s*',  # Compatible property
+            r'([\s\S]*?',  # Capture all layer content (including newlines)
+            r'}\s*;)\s*',  # Close keymap (included in capture)
             r'}\s*;',  # Close root
-            re.DOTALL
-        )
+        ]
+        self.keymap_pattern = re.compile(''.join(keymap_parts), re.DOTALL)
         
         # Pattern to match individual layers
         self.layer_pattern = re.compile(
