@@ -177,8 +177,6 @@ converter/
 - [✅] **Task 9:** Implement the output module in `output/file_writer.py`.
 - [ ] **Task 10:** Create an end-to-end integration test in `tests/integration_tests.py` that processes `sample_basic.zmk` and validates the final output.
 
----
-
 ### Phase 2: Layer Support
 
 - [✅] **Task 11:** Create a ZMK sample file with multiple layers (`sample_layers.zmk`).
@@ -198,36 +196,42 @@ converter/
   - Updated parser to handle includes and global section
   - Successfully converts multi-layer ZMK files to Kanata format
 
----
-
 ### Phase 3: Tap-Hold / Hold-Tap Behaviors
-Breaking this down into smaller, testable increments:
 
 #### 3.1 Basic Hold-Tap Parsing
-- [ ] Task 16: Create parser for basic hold-tap behavior definitions
+- [✅] Task 16: Create parser for basic hold-tap behavior definitions
   - Parse behavior name and label
   - Parse basic properties (compatible, binding-cells)
   - Unit tests for basic property extraction
 
 #### 3.2 Hold-Tap Configuration Parsing
-- [ ] Task 17: Extend parser to handle hold-tap configuration
-  - Parse timing parameters (tapping-term-ms, quick-tap-ms, etc.)
-  - Parse flavor settings
-  - Parse bindings configuration
+- [✅] Task 17: Extend parser to handle hold-tap configuration
+  - Add configuration fields to HoldTapBehavior class
+  - Update parser to extract timing parameters
+  - Add validation for flavor values
   - Unit tests for configuration parsing
+  - Test with real-world examples from sample file
 
 #### 3.3 Advanced Hold-Tap Features
-- [ ] Task 18: Support advanced hold-tap features
-  - Parse hold-trigger-key-positions
-  - Parse hold-trigger-on-release
-  - Parse retro-tap settings
-  - Unit tests for advanced features
+- [✅] Task 18: Support advanced hold-tap features
+  - Add fields to HoldTapBehavior:
+    - hold_trigger_key_positions: List[int]
+    - hold_trigger_on_release: bool
+    - retro_tap: bool
+  - Update parser to handle array-style parameters
+  - Add support for boolean flags
+  - Add validation for key position indices
+  - Test with Mac-style home row mods example
+  - Test error cases (invalid positions, malformed arrays)
 
 #### 3.4 Keymap Integration
-- [ ] Task 19: Integrate hold-tap behaviors with keymap parsing
-  - Update keymap parser to recognize hold-tap bindings
-  - Handle both built-in and custom hold-tap behaviors
-  - Unit tests for keymap integration
+- [✅] Task 19: Integrate hold-tap behaviors with keymap parsing
+  - Add HoldTapBinding class to model hold-tap parameters
+  - Update KeyMapping to support hold-tap bindings
+  - Add hold-tap binding parsing to LayerParser
+  - Add parse_bindings_matrix method for cleaner binding parsing
+  - Test with mixed bindings and home row mods
+  - Successfully parse Mac-style home row mods configuration
 
 #### 3.5 Kanata Translation
 - [ ] Task 20: Implement translation to Kanata tap-hold syntax
@@ -240,8 +244,6 @@ Breaking this down into smaller, testable increments:
   - Test complete hold-tap configurations
   - Verify correct translation of Mac-style home row mods
   - End-to-end tests with sample files
-
----
 
 ### Phase 4: Combos
 ...
