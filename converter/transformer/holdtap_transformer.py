@@ -12,11 +12,16 @@ class HoldTapTransformer:
         """Initialize the transformer with behavior mappings."""
         # Map ZMK hold-tap flavors to Kanata tap-hold variants
         self.flavor_map: Dict[str, str] = {
-            "hold-preferred": "tap-hold",  # Default ZMK behavior
-            "balanced": "tap-hold",  # Balanced behavior maps to default
-            "tap-preferred": "tap-hold-release",  # Release variant for tap preference
-            "tap-unless-interrupted": "tap-hold-press",  # Press variant for interruption
-            "tap-then-hold": "tap-hold-press-timeout",  # Press with timeout for tap-then-hold
+            # Default ZMK behavior
+            "hold-preferred": "tap-hold",
+            # Balanced behavior maps to default
+            "balanced": "tap-hold",
+            # Release variant for tap preference
+            "tap-preferred": "tap-hold-release",
+            # Press variant for interruption
+            "tap-unless-interrupted": "tap-hold-press",
+            # Press with timeout for tap-then-hold
+            "tap-then-hold": "tap-hold-press-timeout",
         }
         
         # Map ZMK modifiers to Kanata format
@@ -31,7 +36,12 @@ class HoldTapTransformer:
             "RGUI": "rmet",
         }
     
-    def transform_binding(self, binding: HoldTapBinding, tap_time: int, hold_time: int) -> Optional[str]:
+    def transform_binding(
+        self,
+        binding: HoldTapBinding,
+        tap_time: int,
+        hold_time: int
+    ) -> Optional[str]:
         """Transform a ZMK hold-tap binding into Kanata format.
         
         Args:
@@ -57,18 +67,25 @@ class HoldTapTransformer:
             tap_hold_type = "tap-hold-press-timeout"
         
         # Map the hold key (usually a modifier)
-        hold_key = self.modifier_map.get(binding.hold_key, binding.hold_key.lower())
+        hold_key = self.modifier_map.get(
+            binding.hold_key,
+            binding.hold_key.lower()
+        )
         
         # Map the tap key
         tap_key = binding.tap_key.lower()
         
         # Basic tap-hold configuration
-        config = f"({tap_hold_type} {tap_time} {hold_time} {tap_key} {hold_key}"
+        config = (
+            f"({tap_hold_type} {tap_time} {hold_time} {tap_key} {hold_key}"
+        )
         
         # Add extra parameters for advanced features
         if tap_hold_type == "tap-hold-release-keys":
             # Convert key positions to a list
-            positions = " ".join(str(pos) for pos in binding.hold_trigger_key_positions)
+            positions = " ".join(
+                str(pos) for pos in binding.hold_trigger_key_positions
+            )
             config += f" ({positions})"
         elif tap_hold_type == "tap-hold-press-timeout" and binding.retro_tap:
             # Add tap key as timeout action for retro-tap

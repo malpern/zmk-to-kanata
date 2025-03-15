@@ -28,7 +28,7 @@ def test_basic_holdtap_transformation():
 
 
 def test_holdtap_with_release():
-    """Test transformation of a hold-tap binding with hold-trigger-on-release."""
+    """Test hold-tap binding with hold-trigger-on-release."""
     transformer = HoldTapTransformer()
     binding = HoldTapBinding(
         behavior_name="rh_hm",
@@ -44,7 +44,7 @@ def test_holdtap_with_release():
 
 
 def test_holdtap_with_key_positions():
-    """Test transformation of a hold-tap binding with hold-trigger-key-positions."""
+    """Test hold-tap binding with hold-trigger-key-positions."""
     transformer = HoldTapTransformer()
     binding = HoldTapBinding(
         behavior_name="lh_hm",

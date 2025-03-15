@@ -20,9 +20,12 @@ class HoldTapBinding:
     behavior_name: str  # e.g., "lh_hm", "rh_hm"
     hold_key: str      # e.g., "LGUI", "LALT"
     tap_key: str       # e.g., "A", "S"
-    hold_trigger_key_positions: Optional[Tuple[int, ...]] = None  # Key positions that trigger hold
-    hold_trigger_on_release: bool = False  # Whether to trigger hold on key release
-    retro_tap: bool = False  # Whether to allow tap on release after hold timeout
+    # Key positions that trigger hold
+    hold_trigger_key_positions: Optional[Tuple[int, ...]] = None
+    # Whether to trigger hold on key release
+    hold_trigger_on_release: bool = False
+    # Whether to allow tap on release after hold timeout
+    retro_tap: bool = False
 
 
 @dataclass

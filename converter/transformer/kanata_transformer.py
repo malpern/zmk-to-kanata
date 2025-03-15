@@ -5,8 +5,6 @@ This module converts our intermediate representation into Kanata DSL format.
 from typing import List
 
 from converter.model.keymap_model import (
-    GlobalSettings,
-    Layer,
     KeymapConfig,
     KeyMapping
 )
@@ -93,7 +91,11 @@ class KanataTransformer:
                 for key in row:
                     if key.hold_tap:
                         # Create a unique identifier for this hold-tap binding
-                        binding_id = f"{key.hold_tap.behavior_name}_{key.hold_tap.hold_key}_{key.hold_tap.tap_key}"
+                        binding_id = (
+                            f"{key.hold_tap.behavior_name}_"
+                            f"{key.hold_tap.hold_key}_"
+                            f"{key.hold_tap.tap_key}"
+                        )
                         holdtap_bindings.add((binding_id, key.hold_tap))
         
         if not holdtap_bindings:
@@ -126,7 +128,11 @@ class KanataTransformer:
         """
         if key.hold_tap:
             # Use the alias we created for this hold-tap binding
-            binding_id = f"{key.hold_tap.behavior_name}_{key.hold_tap.hold_key}_{key.hold_tap.tap_key}"
+            binding_id = (
+                f"{key.hold_tap.behavior_name}_"
+                f"{key.hold_tap.hold_key}_"
+                f"{key.hold_tap.tap_key}"
+            )
             return f"@{binding_id}"
         
         if key.key.startswith("mo "):
@@ -154,7 +160,9 @@ class KanataTransformer:
             lines.append(f"(deflayer {layer.name}")
             # Transform each row of keys
             for row in layer.keys:
-                key_line = "  " + "  ".join(self._transform_key(k) for k in row)
+                key_line = "  " + "  ".join(
+                    self._transform_key(k) for k in row
+                )
                 lines.append(key_line)
             lines.append(")")
             # Add spacing between layers, but not after the last one
