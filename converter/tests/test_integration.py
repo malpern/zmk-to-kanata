@@ -14,7 +14,7 @@ def test_basic_conversion():
     """Test end-to-end conversion of a basic ZMK file to Kanata format."""
     # Get the path to the samples directory
     samples_dir = Path(__file__).parent.parent / "samples"
-    input_file = samples_dir / "sample_basic.zmk"
+    input_file = samples_dir / "sample.zmk"
 
     # Parse the ZMK file
     parser = ZMKParser()
@@ -46,7 +46,7 @@ def test_basic_conversion():
             "",
             ";; Global settings",
             "(defvar tap-time 200)",
-            "(defvar hold-time 250)",
+            "(defvar hold-time 300)",
             "",
             "(deflayer default",
             "  a  b  c  d",

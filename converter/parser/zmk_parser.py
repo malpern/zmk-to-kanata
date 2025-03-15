@@ -22,19 +22,26 @@ class ZMKParser:
         """Initialize the parser."""
         # Regular expressions for parsing
         self.global_pattern = re.compile(
-            r'global\s*{\s*'
-            r'tap-time\s*=\s*<(\d+)>;\s*'
-            r'hold-time\s*=\s*<(\d+)>;\s*'
-            r'}'
+            r'/\s*{\s*'  # Root node
+            r'global\s*{\s*'  # Global section
+            r'tap-time\s*=\s*<(\d+)>;\s*'  # Tap time
+            r'hold-time\s*=\s*<(\d+)>;\s*'  # Hold time
+            r'}'  # Close global
         )
         self.bindings_pattern = re.compile(
-            r'bindings\s*=\s*<([^>]+)>'
+            r'keymap\s*{\s*'  # Keymap section
+            r'compatible\s*=\s*"zmk,keymap";\s*'  # Compatible property
+            r'default_layer\s*{\s*'  # Default layer
+            r'bindings\s*=\s*<([^>]+)>'  # Bindings
         )
 
     def parse(self, file_path: Path) -> KeymapConfig:
         """Parse a ZMK keymap file into a KeymapConfig object."""
         with open(file_path, 'r') as f:
             content = f.read()
+
+        # Skip include statements
+        content = re.sub(r'#include\s*<[^>]+>\s*', '', content)
 
         # Parse global settings
         global_match = self.global_pattern.search(content)
