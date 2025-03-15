@@ -4,6 +4,7 @@ Tests for basic key-to-key remapping functionality.
 """
 from pathlib import Path
 import tempfile
+import pytest
 
 from converter.model.keymap_model import (
     KeyMapping,
@@ -144,3 +145,23 @@ def test_write_kanata_config():
     finally:
         # Clean up
         temp_path.unlink()
+
+
+def test_write_invalid_content():
+    """Test writing invalid content raises TypeError."""
+    writer = KanataFileWriter()
+    with tempfile.NamedTemporaryFile(suffix='.kbd', delete=False) as temp_file:
+        temp_path = Path(temp_file.name)
+
+    try:
+        with pytest.raises(TypeError, match="Content must be a string"):
+            writer.write(None, temp_path)  # type: ignore
+    finally:
+        temp_path.unlink()
+
+
+def test_write_invalid_path():
+    """Test writing to invalid path type raises TypeError."""
+    writer = KanataFileWriter()
+    with pytest.raises(TypeError, match="Output path must be a Path object"):
+        writer.write("content", "not/a/path")  # type: ignore
