@@ -200,28 +200,51 @@ converter/
 
 ---
 
-### Phase 3: Simple Tap-Hold / Tap-Hold-Press Behavior
+### Phase 3: Tap-Hold / Hold-Tap Behaviors
+Breaking this down into smaller, testable increments:
 
-- [ ] **Task 16:** Create a ZMK sample file with tap-hold actions (`sample_taphold.zmk`).
-- [ ] **Task 17:** Write unit tests in `tests/test_taphold.py` to verify tap-hold behavior extraction.
-- [ ] **Task 18:** Extend the parser to support tap-hold behaviors.
-- [ ] **Task 19:** Write tests in `tests/test_taphold.py` for transforming tap-hold behaviors into `(defalias ...)` lines.
-- [ ] **Task 20:** Update the transformer to handle tap-hold behavior conversions.
-- [ ] **Task 21:** Update integration tests to process `sample_taphold.zmk` and validate output.
+#### 3.1 Basic Hold-Tap Parsing
+- [ ] Task 16: Create parser for basic hold-tap behavior definitions
+  - Parse behavior name and label
+  - Parse basic properties (compatible, binding-cells)
+  - Unit tests for basic property extraction
+
+#### 3.2 Hold-Tap Configuration Parsing
+- [ ] Task 17: Extend parser to handle hold-tap configuration
+  - Parse timing parameters (tapping-term-ms, quick-tap-ms, etc.)
+  - Parse flavor settings
+  - Parse bindings configuration
+  - Unit tests for configuration parsing
+
+#### 3.3 Advanced Hold-Tap Features
+- [ ] Task 18: Support advanced hold-tap features
+  - Parse hold-trigger-key-positions
+  - Parse hold-trigger-on-release
+  - Parse retro-tap settings
+  - Unit tests for advanced features
+
+#### 3.4 Keymap Integration
+- [ ] Task 19: Integrate hold-tap behaviors with keymap parsing
+  - Update keymap parser to recognize hold-tap bindings
+  - Handle both built-in and custom hold-tap behaviors
+  - Unit tests for keymap integration
+
+#### 3.5 Kanata Translation
+- [ ] Task 20: Implement translation to Kanata tap-hold syntax
+  - Create mapping between ZMK and Kanata tap-hold configurations
+  - Handle different flavors and timing parameters
+  - Unit tests for translation accuracy
+
+#### 3.6 Integration and Testing
+- [ ] Task 21: Create comprehensive integration tests
+  - Test complete hold-tap configurations
+  - Verify correct translation of Mac-style home row mods
+  - End-to-end tests with sample files
 
 ---
 
-### Phase 4: Documentation and Final Integration
-
-- [ ] **Task 22:** Document supported features and list limitations in the README and in `CONVENTIONS.md`.
-- [ ] **Task 23:** Write unit tests in `tests/test_error_handling.py` to simulate malformed inputs and ensure proper error reporting.
-- [ ] **Task 24:** Write unit tests in `tests/test_conventions.py` to ensure IR consistency.
-- [ ] **Task 25:** Refactor and run the full test suite.
-- [ ] **Task 26:** Update `main.py` to provide a CLI for the converter.
-- [ ] **Task 27:** Finalize the project README with usage instructions and resource links.
-- [ ] **Task 28:** Package and push the final version to Git.
-
----
+### Phase 4: Combos
+...
 
 ## Resources and References
 
