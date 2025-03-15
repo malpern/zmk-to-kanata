@@ -1,6 +1,6 @@
 import re
 from dataclasses import dataclass
-from typing import List
+from typing import List, Optional
 
 @dataclass
 class HoldTapBehavior:
@@ -9,21 +9,30 @@ class HoldTapBehavior:
     label: str
     binding_cells: int
     bindings: List[str]
+    # Configuration parameters
+    tapping_term_ms: Optional[int] = None
+    quick_tap_ms: Optional[int] = None
+    require_prior_idle_ms: Optional[int] = None
+    flavor: Optional[str] = None  # tap-preferred, hold-preferred, or balanced
 
 class HoldTapParser:
     """Parser for ZMK hold-tap behavior definitions."""
     
+    VALID_FLAVORS = {'tap-preferred', 'hold-preferred', 'balanced', 'tap-unless-interrupted'}
+    
     def __init__(self):
-        # Pattern to match behavior name and label
+        # Basic property patterns
         self.name_pattern = re.compile(r'(\w+):\s*\w+\s*{')
-        # Pattern to match label field
         self.label_pattern = re.compile(r'label\s*=\s*"([^"]+)"')
-        # Pattern to match binding cells
         self.cells_pattern = re.compile(r'#binding-cells\s*=\s*<(\d+)>')
-        # Pattern to match individual bindings within angle brackets
         self.binding_pattern = re.compile(r'<&(\w+)>')
-        # Pattern to verify hold-tap compatibility
         self.compatible_pattern = re.compile(r'compatible\s*=\s*"zmk,behavior-hold-tap"')
+        
+        # Configuration patterns
+        self.tapping_term_pattern = re.compile(r'tapping-term-ms\s*=\s*<(\d+)>')
+        self.quick_tap_pattern = re.compile(r'quick-tap-ms\s*=\s*<(\d+)>')
+        self.prior_idle_pattern = re.compile(r'require-prior-idle-ms\s*=\s*<(\d+)>')
+        self.flavor_pattern = re.compile(r'flavor\s*=\s*"([^"]+)"')
     
     def parse_behavior(self, zmk_config: str) -> HoldTapBehavior:
         """Parse a ZMK hold-tap behavior definition.
@@ -70,9 +79,31 @@ class HoldTapParser:
         
         print(f"Final bindings list: {bindings}")
         
+        # Parse configuration parameters
+        tapping_term = self._parse_int_param(self.tapping_term_pattern, zmk_config)
+        quick_tap = self._parse_int_param(self.quick_tap_pattern, zmk_config)
+        prior_idle = self._parse_int_param(self.prior_idle_pattern, zmk_config)
+        
+        # Parse and validate flavor
+        flavor = None
+        flavor_match = self.flavor_pattern.search(zmk_config)
+        if flavor_match:
+            flavor = flavor_match.group(1)
+            if flavor not in self.VALID_FLAVORS:
+                raise ValueError(f"Invalid flavor '{flavor}'. Must be one of: {', '.join(self.VALID_FLAVORS)}")
+        
         return HoldTapBehavior(
             name=name,
             label=label_match.group(1),
             binding_cells=int(cells_match.group(1)),
-            bindings=bindings
-        ) 
+            bindings=bindings,
+            tapping_term_ms=tapping_term,
+            quick_tap_ms=quick_tap,
+            require_prior_idle_ms=prior_idle,
+            flavor=flavor
+        )
+    
+    def _parse_int_param(self, pattern: re.Pattern, config: str) -> Optional[int]:
+        """Helper method to parse integer parameters from config."""
+        match = pattern.search(config)
+        return int(match.group(1)) if match else None 
