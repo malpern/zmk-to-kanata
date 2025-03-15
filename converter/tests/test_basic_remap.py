@@ -16,6 +16,17 @@ from converter.transformer.kanata_transformer import KanataTransformer
 from converter.output.file_writer import KanataFileWriter
 
 
+def test_key_mapping_equality():
+    """Test KeyMapping equality comparison."""
+    key1 = KeyMapping(key="A")
+    key2 = KeyMapping(key="A")
+    key3 = KeyMapping(key="B")
+
+    assert key1 == key2
+    assert key1 != key3
+    assert key1 != "A"  # Compare with non-KeyMapping object
+
+
 def test_parse_global_settings():
     """Test parsing global settings from a sample ZMK file."""
     config = KeymapConfig(
@@ -165,3 +176,31 @@ def test_write_invalid_path():
     writer = KanataFileWriter()
     with pytest.raises(TypeError, match="Output path must be a Path object"):
         writer.write("content", "not/a/path")  # type: ignore
+
+
+def test_parse_malformed_file(tmp_path):
+    """Test parsing a malformed ZMK file raises appropriate errors."""
+    from converter.parser.zmk_parser import ZMKParser
+
+    # Test missing global settings
+    malformed_file = tmp_path / "malformed.zmk"
+    malformed_file.write_text("/ { keymap { } };")
+    parser = ZMKParser()
+    with pytest.raises(ValueError, match="Could not find global settings"):
+        parser.parse(malformed_file)
+
+    # Test missing bindings
+    malformed_file.write_text("""
+    / {
+        global {
+            tap-time = <200>;
+            hold-time = <250>;
+        };
+        keymap {
+            compatible = "zmk,keymap";
+            default_layer { };
+        };
+    };
+    """)
+    with pytest.raises(ValueError, match="Could not find key bindings"):
+        parser.parse(malformed_file)
