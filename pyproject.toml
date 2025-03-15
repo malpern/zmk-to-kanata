@@ -1,0 +1,14 @@
+[project]
+name = "zmk-to-kanata"
+version = "0.1.0"
+description = "Convert ZMK keymap files to Kanata configuration"
+requires-python = ">=3.8"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["converter/tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
