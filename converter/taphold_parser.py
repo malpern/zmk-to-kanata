@@ -1,6 +1,6 @@
 import re
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List, Optional, Set
 
 @dataclass
 class HoldTapBehavior:
@@ -9,11 +9,15 @@ class HoldTapBehavior:
     label: str
     binding_cells: int
     bindings: List[str]
-    # Configuration parameters
+    # Basic configuration parameters
     tapping_term_ms: Optional[int] = None
     quick_tap_ms: Optional[int] = None
     require_prior_idle_ms: Optional[int] = None
     flavor: Optional[str] = None  # tap-preferred, hold-preferred, or balanced
+    # Advanced features
+    hold_trigger_key_positions: Optional[List[int]] = None
+    hold_trigger_on_release: bool = False
+    retro_tap: bool = False
 
 class HoldTapParser:
     """Parser for ZMK hold-tap behavior definitions."""
@@ -33,19 +37,14 @@ class HoldTapParser:
         self.quick_tap_pattern = re.compile(r'quick-tap-ms\s*=\s*<(\d+)>')
         self.prior_idle_pattern = re.compile(r'require-prior-idle-ms\s*=\s*<(\d+)>')
         self.flavor_pattern = re.compile(r'flavor\s*=\s*"([^"]+)"')
+        
+        # Advanced feature patterns
+        self.key_positions_pattern = re.compile(r'hold-trigger-key-positions\s*=\s*<([^>]+)>')
+        self.hold_trigger_release_pattern = re.compile(r'hold-trigger-on-release\s*;')
+        self.retro_tap_pattern = re.compile(r'retro-tap\s*;')
     
     def parse_behavior(self, zmk_config: str) -> HoldTapBehavior:
-        """Parse a ZMK hold-tap behavior definition.
-        
-        Args:
-            zmk_config: String containing the ZMK behavior definition
-            
-        Returns:
-            HoldTapBehavior object representing the parsed configuration
-            
-        Raises:
-            ValueError: If the behavior is not a hold-tap or required fields are missing
-        """
+        """Parse a ZMK hold-tap behavior definition."""
         # Check if this is a hold-tap behavior
         if not self.compatible_pattern.search(zmk_config):
             raise ValueError("Not a hold-tap behavior")
@@ -66,18 +65,12 @@ class HoldTapParser:
         if not all([label_match, cells_match, bindings_line]):
             raise ValueError("Missing required fields in hold-tap behavior")
         
-        # Parse bindings with debug output
+        # Parse bindings
         bindings_str = bindings_line.group(1)
-        print(f"Raw bindings string: '{bindings_str}'")
-        
-        # Find all binding references
         bindings = []
         for match in self.binding_pattern.finditer(bindings_str):
             binding = match.group(1)
-            print(f"Found binding: '{binding}'")
             bindings.append(binding)
-        
-        print(f"Final bindings list: {bindings}")
         
         # Parse configuration parameters
         tapping_term = self._parse_int_param(self.tapping_term_pattern, zmk_config)
@@ -92,6 +85,11 @@ class HoldTapParser:
             if flavor not in self.VALID_FLAVORS:
                 raise ValueError(f"Invalid flavor '{flavor}'. Must be one of: {', '.join(self.VALID_FLAVORS)}")
         
+        # Parse advanced features
+        key_positions = self._parse_key_positions(zmk_config)
+        hold_trigger_on_release = bool(self.hold_trigger_release_pattern.search(zmk_config))
+        retro_tap = bool(self.retro_tap_pattern.search(zmk_config))
+        
         return HoldTapBehavior(
             name=name,
             label=label_match.group(1),
@@ -100,10 +98,27 @@ class HoldTapParser:
             tapping_term_ms=tapping_term,
             quick_tap_ms=quick_tap,
             require_prior_idle_ms=prior_idle,
-            flavor=flavor
+            flavor=flavor,
+            hold_trigger_key_positions=key_positions,
+            hold_trigger_on_release=hold_trigger_on_release,
+            retro_tap=retro_tap
         )
     
     def _parse_int_param(self, pattern: re.Pattern, config: str) -> Optional[int]:
         """Helper method to parse integer parameters from config."""
         match = pattern.search(config)
-        return int(match.group(1)) if match else None 
+        return int(match.group(1)) if match else None
+    
+    def _parse_key_positions(self, config: str) -> Optional[List[int]]:
+        """Parse hold-trigger-key-positions array."""
+        match = self.key_positions_pattern.search(config)
+        if not match:
+            return None
+            
+        try:
+            # Split on whitespace and filter out empty strings
+            positions = [pos for pos in match.group(1).split() if pos]
+            # Convert to integers, removing any trailing commas
+            return [int(pos.rstrip(',')) for pos in positions]
+        except ValueError as e:
+            raise ValueError(f"Invalid key position value in hold-trigger-key-positions: {e}") 

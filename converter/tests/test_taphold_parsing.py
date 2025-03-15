@@ -26,6 +26,10 @@ def test_basic_holdtap_properties():
     assert result.quick_tap_ms is None
     assert result.require_prior_idle_ms is None
     assert result.flavor is None
+    # Advanced features should have default values
+    assert result.hold_trigger_key_positions is None
+    assert result.hold_trigger_on_release is False
+    assert result.retro_tap is False
 
 def test_full_configuration():
     """Test parsing of a fully configured hold-tap behavior."""
@@ -50,6 +54,62 @@ def test_full_configuration():
     assert result.quick_tap_ms == 175
     assert result.require_prior_idle_ms == 150
     assert result.flavor == "balanced"
+
+def test_advanced_features():
+    """Test parsing of advanced hold-tap features."""
+    zmk_holdtap = dedent('''
+        lh_hm: left_home_row_mods {
+            compatible = "zmk,behavior-hold-tap";
+            label = "LEFT_HOME_ROW_MODS";
+            #binding-cells = <2>;
+            bindings = <&kp>, <&kp>;
+            flavor = "balanced";
+            hold-trigger-key-positions = <6 7 8 9 10 11>;
+            hold-trigger-on-release;
+            retro-tap;
+        };
+    ''')
+    
+    parser = HoldTapParser()
+    result = parser.parse_behavior(zmk_holdtap)
+    
+    assert result.name == "lh_hm"
+    assert result.hold_trigger_key_positions == [6, 7, 8, 9, 10, 11]
+    assert result.hold_trigger_on_release is True
+    assert result.retro_tap is True
+
+def test_key_positions_with_commas():
+    """Test parsing of key positions with comma separators."""
+    zmk_holdtap = dedent('''
+        test: test_positions {
+            compatible = "zmk,behavior-hold-tap";
+            label = "TEST";
+            #binding-cells = <2>;
+            bindings = <&kp>, <&kp>;
+            hold-trigger-key-positions = <1, 2, 3, 4>;
+        };
+    ''')
+    
+    parser = HoldTapParser()
+    result = parser.parse_behavior(zmk_holdtap)
+    
+    assert result.hold_trigger_key_positions == [1, 2, 3, 4]
+
+def test_invalid_key_positions():
+    """Test that invalid key positions are rejected."""
+    zmk_holdtap = dedent('''
+        invalid: bad_positions {
+            compatible = "zmk,behavior-hold-tap";
+            label = "INVALID";
+            #binding-cells = <2>;
+            bindings = <&kp>, <&kp>;
+            hold-trigger-key-positions = <1 2 bad 4>;
+        };
+    ''')
+    
+    parser = HoldTapParser()
+    with pytest.raises(ValueError, match="Invalid key position value"):
+        parser.parse_behavior(zmk_holdtap)
 
 def test_partial_configuration():
     """Test parsing of a partially configured hold-tap behavior."""
@@ -144,4 +204,7 @@ def test_real_world_example():
     assert result.tapping_term_ms == 280
     assert result.quick_tap_ms == 175
     assert result.require_prior_idle_ms == 150
-    assert result.flavor == "balanced" 
+    assert result.flavor == "balanced"
+    assert result.hold_trigger_key_positions == [6, 7, 8, 9, 10, 11]
+    assert result.hold_trigger_on_release is True
+    assert result.retro_tap is False 
