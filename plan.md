@@ -85,15 +85,15 @@ converter/
     - [x] Implement basic file conversion test
     - [x] Add format verification test
   - [ ] Task 22: Basic E2E Test Cases
-    - [ ] Test CLI interface functionality
-      - [ ] Test help command
-      - [ ] Test version command
-      - [ ] Test basic file conversion command
-    - [ ] Test error handling
-      - [ ] Invalid input file path
-      - [ ] Invalid input file format
-      - [ ] Invalid output file path
-      - [ ] Permission errors
+    - [x] Test CLI interface functionality
+      - [x] Test help command
+      - [x] Test version command
+      - [x] Test basic file conversion command
+    - [x] Test error handling
+      - [x] Invalid input file path
+      - [x] Invalid input file format
+      - [x] Invalid output file path
+      - [x] Permission errors
     - [ ] Test output validation
       - [ ] Verify file permissions
       - [ ] Verify file encoding
