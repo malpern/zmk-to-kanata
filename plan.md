@@ -77,6 +77,42 @@ converter/
 - [x] Unit tests for transformers
 - [x] Integration tests
 - [ ] End-to-end tests
+  - [x] Task 21: Setup E2E Test Infrastructure
+    - [x] Create e2e_tests directory with separate conftest.py
+    - [x] Setup test fixtures for file I/O operations
+    - [x] Create helper functions for test file generation
+    - [x] Add test data validation utilities
+    - [x] Implement basic file conversion test
+    - [x] Add format verification test
+  - [ ] Task 22: Basic E2E Test Cases
+    - [ ] Test CLI interface functionality
+      - [ ] Test help command
+      - [ ] Test version command
+      - [ ] Test basic file conversion command
+    - [ ] Test error handling
+      - [ ] Invalid input file path
+      - [ ] Invalid input file format
+      - [ ] Invalid output file path
+      - [ ] Permission errors
+    - [ ] Test output validation
+      - [ ] Verify file permissions
+      - [ ] Verify file encoding
+      - [ ] Verify file format
+    - [ ] Test with different input formats
+      - [ ] Single layer keymap
+      - [ ] Multiple layer keymap
+      - [ ] Empty layers
+      - [ ] Comments and whitespace handling
+  - [ ] Task 23: Advanced E2E Test Cases
+    - [ ] Test multi-layer keymap conversion
+    - [ ] Test hold-tap configuration conversion
+    - [ ] Test all supported ZMK features
+    - [ ] Test error reporting for unsupported features
+  - [ ] Task 24: Real-world E2E Test Cases
+    - [ ] Test with actual user keymap configurations
+    - [ ] Test with various keyboard layouts
+    - [ ] Test edge cases from user feedback
+    - [ ] Document test coverage and limitations
 - [ ] Performance benchmarks
 
 ## Limitations
