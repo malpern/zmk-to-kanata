@@ -8,10 +8,42 @@ def test_transform_binding():
     """Test transformation of individual ZMK bindings."""
     transformer = LayerTransformer()
     
-    # Test basic key press
+    # Test letters
     assert transformer.transform_binding("&kp A") == "a"
-    assert transformer.transform_binding("&kp B") == "b"
+    assert transformer.transform_binding("&kp Z") == "z"
+    
+    # Test numbers (both number row and numpad)
     assert transformer.transform_binding("&kp N1") == "1"
+    assert transformer.transform_binding("&kp N0") == "0"
+    assert transformer.transform_binding("&kp KP_N7") == "kp7"
+    
+    # Test symbols and punctuation
+    assert transformer.transform_binding("&kp EXCL") == "excl"
+    assert transformer.transform_binding("&kp MINUS") == "minus"
+    assert transformer.transform_binding("&kp PLUS") == "plus"
+    assert transformer.transform_binding("&kp LBKT") == "lbracket"
+    assert transformer.transform_binding("&kp DOT") == "dot"
+    
+    # Test function keys
+    assert transformer.transform_binding("&kp F1") == "f1"
+    assert transformer.transform_binding("&kp F12") == "f12"
+    
+    # Test navigation and editing
+    assert transformer.transform_binding("&kp ENTER") == "ret"
+    assert transformer.transform_binding("&kp SPACE") == "spc"
+    assert transformer.transform_binding("&kp PG_UP") == "pgup"
+    
+    # Test modifiers
+    assert transformer.transform_binding("&kp LSHIFT") == "lshift"
+    assert transformer.transform_binding("&kp RGUI") == "rmeta"
+    
+    # Test system and media
+    assert transformer.transform_binding("&kp C_MUTE") == "mute"
+    assert transformer.transform_binding("&kp C_VOL_UP") == "volu"
+    
+    # Test numpad special keys
+    assert transformer.transform_binding("&kp KP_PLUS") == "kp_plus"
+    assert transformer.transform_binding("&kp KP_DOT") == "kp_dot"
     
     # Test layer momentary switch
     assert transformer.transform_binding("&mo 1") == "@layer1"
