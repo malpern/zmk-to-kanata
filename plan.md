@@ -193,7 +193,10 @@ converter/
   - Created `test_layer_transformer.py` with comprehensive tests
   - Tests cover individual binding transformation, matrix parsing, and multi-layer handling
   - Implemented `LayerTransformer` class with key mapping and layer transformation logic
-- [ ] **Task 15:** Update integration tests to include `sample_layers.zmk` and validate output.
+- [✅] **Task 15:** Update integration tests to include `sample_layers.zmk` and validate output.
+  - Created `test_layer_integration.py` for end-to-end testing
+  - Updated parser to handle includes and global section
+  - Successfully converts multi-layer ZMK files to Kanata format
 
 ---
 
