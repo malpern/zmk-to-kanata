@@ -4,7 +4,7 @@ This module contains the intermediate representation classes for our keymap
 converter.
 """
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 
 @dataclass
@@ -14,12 +14,15 @@ class GlobalSettings:
     hold_time: int
 
 
-@dataclass
+@dataclass(frozen=True)
 class HoldTapBinding:
     """Represents a hold-tap binding with its behavior and parameters."""
     behavior_name: str  # e.g., "lh_hm", "rh_hm"
     hold_key: str      # e.g., "LGUI", "LALT"
     tap_key: str       # e.g., "A", "S"
+    hold_trigger_key_positions: Optional[Tuple[int, ...]] = None  # Key positions that trigger hold
+    hold_trigger_on_release: bool = False  # Whether to trigger hold on key release
+    retro_tap: bool = False  # Whether to allow tap on release after hold timeout
 
 
 @dataclass

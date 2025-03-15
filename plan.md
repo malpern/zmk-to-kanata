@@ -234,10 +234,15 @@ converter/
   - Successfully parse Mac-style home row mods configuration
 
 #### 3.5 Kanata Translation
-- [ ] Task 20: Implement translation to Kanata tap-hold syntax
-  - Create mapping between ZMK and Kanata tap-hold configurations
-  - Handle different flavors and timing parameters
-  - Unit tests for translation accuracy
+- [✅] Task 20: Implement translation to Kanata tap-hold syntax
+  - Created HoldTapTransformer class for converting ZMK hold-tap behaviors to Kanata format
+  - Added support for different tap-hold variants based on ZMK features:
+    - Basic tap-hold for standard behaviors
+    - tap-hold-release for hold-trigger-on-release
+    - tap-hold-release-keys for hold-trigger-key-positions
+    - tap-hold-press-timeout for retro-tap
+  - Updated KanataTransformer to handle hold-tap bindings and generate aliases
+  - Added comprehensive tests for all hold-tap variants and full keymap transformation
 
 #### 3.6 Integration and Testing
 - [ ] Task 21: Create comprehensive integration tests
