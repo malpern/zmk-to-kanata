@@ -112,7 +112,29 @@ converter/
       - [ ] Macros
       - [ ] Unicode input
     - [x] Test error reporting for unsupported features
-  - [ ] Task 24: Real-world E2E Test Cases
+  - [ ] Task 24: Implement Key Sequence Support
+    - [x] Key Sequence Behavior Model
+      - [x] Define KeySequenceBehavior class
+      - [x] Add wait-ms and tap-ms properties
+      - [x] Add bindings list property
+      - [x] Add tests for model validation
+    - [ ] Key Sequence Parser
+      - [ ] Create key_sequence_parser.py
+      - [ ] Implement parsing of wait-ms and tap-ms
+      - [ ] Implement parsing of key bindings
+      - [ ] Add support for named sequences
+      - [ ] Add support for inline sequences
+      - [ ] Add comprehensive parser tests
+    - [ ] Key Sequence Transformer
+      - [ ] Update LayerTransformer for key sequences
+      - [ ] Implement chord generation
+      - [ ] Handle case sensitivity
+      - [ ] Add transformer tests
+    - [ ] Integration
+      - [ ] Update main.py for key sequences
+      - [ ] Add end-to-end tests
+      - [ ] Test real-world key sequence examples
+  - [ ] Task 25: Real-world E2E Test Cases
     - [ ] Test with actual user keymap configurations
       - [ ] Collect sample configurations from ZMK users
       - [ ] Create test suite for each sample config
