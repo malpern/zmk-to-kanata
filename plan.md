@@ -169,3 +169,56 @@ converter/
 
 ## Next Steps
 1. Complete remaining linter fixes (Task 27)
+
+## Task 30: Support for Ben Vallack's Keymap Features
+
+### Overview
+Ben Vallack's keymap uses several advanced ZMK features that are currently not fully supported by our converter. This task outlines the work needed to enhance our converter to handle these features.
+
+### Implementation Plan
+
+#### Phase 1: Custom Hold-Tap Behaviors
+- [ ] Enhance the hold-tap parser to recognize and process custom hold-tap behaviors
+  - [ ] Add support for `hm` (homerow mods) behavior
+  - [ ] Add support for `hs` (homerow shifts) behavior
+  - [ ] Add support for `td` (tapdance) behavior
+- [ ] Create a registry for custom behaviors that maps them to their base behavior type
+- [ ] Update the layer parser to use this registry when processing bindings
+
+#### Phase 2: Complex Modifier Combinations
+- [ ] Enhance the modifier handling to support nested modifiers (e.g., `LC(LS(LALT))`)
+- [ ] Add support for multi-modifier combinations in hold-tap bindings
+- [ ] Implement proper translation of complex modifiers to Kanata format
+- [ ] Add validation for modifier combinations to ensure they're supported in Kanata
+
+#### Phase 3: Media and Special Keys
+- [ ] Add support for media control keys (`C_PP`, `C_PREV`, `C_NEXT`, etc.)
+- [ ] Add support for volume control keys (`C_VOL_UP`, `C_VOL_DN`)
+- [ ] Create a mapping table for ZMK media keys to Kanata equivalents
+- [ ] Implement fallback behavior for keys without direct Kanata equivalents
+
+#### Phase 4: Testing and Validation
+- [ ] Update the Ben Vallack keymap test to expect success
+- [ ] Add unit tests for each new feature
+- [ ] Create integration tests for complex scenarios
+- [ ] Test with the full Ben Vallack keymap from GitHub
+
+### Risk Assessment
+This task involves incremental work rather than fundamental challenges. The main risks are:
+
+1. **Compatibility Risk**: Some ZMK features might not have direct equivalents in Kanata, requiring creative mapping solutions.
+2. **Complexity Risk**: Nested modifiers and custom behaviors add complexity to the parsing logic.
+3. **Maintenance Risk**: Supporting custom behaviors might require updates as ZMK evolves.
+
+However, these risks are manageable because:
+- The core architecture of our converter already supports behavior customization
+- The hold-tap implementation can be extended rather than rewritten
+- We can implement graceful fallbacks for unsupported features
+
+### Estimated Effort
+- Phase 1: Medium effort (2-3 days)
+- Phase 2: Medium effort (2-3 days)
+- Phase 3: Low effort (1-2 days)
+- Phase 4: Low effort (1 day)
+
+Total: 6-9 days of development time
