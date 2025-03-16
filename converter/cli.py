@@ -60,6 +60,9 @@ def main(argv: Optional[List[str]] = None) -> int:
     except ValueError as e:
         print(f"Error: {e}", file=sys.stderr)
         return 2
+    except OSError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        return 1
     except Exception as e:
         print(f"Unexpected error: {e}", file=sys.stderr)
         return 3

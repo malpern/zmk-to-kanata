@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import Dict, List, Optional
 
 from .layer_parser import Layer
+from .keymap_model import KeyMapping
 
 
 @dataclass
@@ -134,6 +135,10 @@ class LayerTransformer:
         Returns:
             Kanata binding or None if binding should be skipped
         """
+        # Handle sticky key binding
+        if hasattr(key_mapping, 'to_kanata'):
+            return key_mapping.to_kanata()
+
         # Handle hold-tap binding
         if key_mapping.hold_tap:
             hold_key = key_mapping.hold_tap.hold_key
@@ -188,32 +193,31 @@ class LayerTransformer:
         
         return matrix
     
-    def transform_layer(self, zmk_layer: Layer) -> KanataLayer:
-        """Transform a ZMK layer into Kanata format.
-        
-        Args:
-            zmk_layer: Layer object containing ZMK layer data
-            
-        Returns:
-            KanataLayer object with transformed bindings
-        """
-        # Transform the bindings matrix
-        kanata_bindings = []
-        for row in zmk_layer.keys:
+    def transform_bindings_matrix(self, matrix: List[List[KeyMapping]]) -> List[List[str]]:
+        """Transform a matrix of KeyMapping objects into a matrix of Kanata key strings."""
+        if not matrix:
+            return []
+
+        result = []
+        for row in matrix:
             transformed_row = []
-            for key in row:
-                result = self.transform_binding(key)
-                if result:
-                    transformed_row.append(result)
-            if transformed_row:  # Only add non-empty rows
-                kanata_bindings.append(transformed_row)
+            for binding in row:
+                if binding is None:
+                    transformed_row.append("trans")
+                else:
+                    transformed_row.append(self.transform_binding(binding))
+            result.append(transformed_row)
+        return result
+    
+    def transform_layer(self, layer: Layer) -> KanataLayer:
+        """Transform a ZMK layer into a Kanata layer."""
+        # Remove _layer suffix if present
+        name = layer.name.replace("_layer", "")
         
-        # Create Kanata layer name (strip _layer suffix if present)
-        name = zmk_layer.name
-        if name.endswith("_layer"):
-            name = name[:-6]
+        # Transform the bindings matrix
+        transformed_matrix = self.transform_bindings_matrix(layer.keys)
         
-        return KanataLayer(name=name, keys=kanata_bindings)
+        return KanataLayer(name=name, keys=transformed_matrix)
     
     def transform_layers(self, zmk_layers: List[Layer]) -> List[KanataLayer]:
         """Transform multiple ZMK layers into Kanata format.
@@ -224,24 +228,4 @@ class LayerTransformer:
         Returns:
             List of transformed KanataLayer objects
         """
-        return [self.transform_layer(layer) for layer in zmk_layers]
-    
-    def transform_bindings_matrix(self, matrix) -> List[List[str]]:
-        """Transform a matrix of KeyMapping objects into Kanata format.
-        
-        Args:
-            matrix: List of lists of KeyMapping objects
-            
-        Returns:
-            List of lists of Kanata key bindings
-        """
-        result = []
-        for row in matrix:
-            kanata_row = []
-            for key_mapping in row:
-                binding = self.transform_binding(key_mapping)
-                if binding is None:
-                    binding = key_mapping.key.lower()
-                kanata_row.append(binding)
-            result.append(kanata_row)
-        return result 
+        return [self.transform_layer(layer) for layer in zmk_layers] 

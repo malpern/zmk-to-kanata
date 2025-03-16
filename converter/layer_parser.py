@@ -1,175 +1,216 @@
-"""Module for parsing ZMK layer definitions into Kanata format."""
+"""Parser for ZMK layer configurations."""
 
 import re
 from typing import List, Optional
 
-from .model.keymap_model import Layer, KeyMapping, HoldTapBinding
+from .keymap_model import Binding, KeyMapping, Layer, HoldTap
+from .parser.sticky_key_parser import StickyKeyParser
 
 
 class LayerParser:
-    """Parser for extracting and processing ZMK layers."""
-    
+    """Parser for ZMK layer configurations."""
+
     def __init__(self):
-        """Initialize the parser with regex patterns."""
-        # Pattern to match the entire keymap section
-        self.keymap_parts = [
-            # Optional includes at start, with optional leading spaces
-            r'(?:(?:\s*#include\s+<[^>]+>\s*)*)',
-            r'/\s*{\s*',  # Root node
-            r'(?:[^}]*}\s*;\s*)*',  # Any sections before keymap
-            r'keymap\s*{\s*',  # Keymap section
-            r'compatible\s*=\s*"zmk,keymap";\s*',  # Compatible property
-            r'([\s\S]*?',  # Capture all layer content (including newlines)
-            r'}\s*;)\s*',  # Close keymap (included in capture)
-            r'}\s*;',  # Close root
-        ]
-        self.keymap_pattern = re.compile(''.join(self.keymap_parts), re.DOTALL)
-        
-        # Pattern to match individual layers
-        self.layer_pattern = re.compile(
-            r'(\w+)_layer\s*{\s*'  # Layer name
-            r'bindings\s*=\s*<\s*'  # Bindings start
-            r'([\s\S]*?)'  # Capture bindings (non-greedy)
-            r'>\s*;\s*'  # Bindings end
-            r'}\s*;',  # Layer end
-            re.DOTALL
-        )
+        self.sticky_key_parser = StickyKeyParser()
 
-        # Pattern to match hold-tap bindings
-        self.holdtap_pattern = re.compile(
-            r'&(\w+)\s+(\w+)\s+(\w+)'  # behavior, hold key, tap key
-        )
-
-        # Pattern to match basic key press
-        self.keypress_pattern = re.compile(r'&kp\s+(\w+)')
-        
-        # Pattern to match layer momentary switch
-        self.momentary_pattern = re.compile(r'&mo\s+(\d+)')
-        
-        # Pattern to match transparent key
-        self.transparent_pattern = re.compile(r'&trans\b')
-    
     def extract_keymap(self, content: str) -> Optional[str]:
-        """Extract the keymap section from ZMK content.
-        
-        Args:
-            content: The full ZMK file content
-            
-        Returns:
-            The keymap section content if found, None otherwise
-        """
-        print("Content to parse:")
-        print(repr(content))
-        print("\nTrying to match pattern:")
-        print(repr(''.join(self.keymap_parts)))
-        match = self.keymap_pattern.search(content)
-        print("\nMatch result:", match)
-        if match:
-            print("Match groups:", match.groups())
+        """Extract the keymap section from ZMK content."""
+        keymap_pattern = (
+            r'(?:(?:\s*#include\s+<[^>]+>\s*)*)'  # Include statements
+            r'/\s*{\s*'                            # Root object start
+            r'(?:[^}]*}\s*;\s*)*'                 # Optional other blocks
+            r'keymap\s*{\s*'                      # Keymap block start
+            r'compatible\s*=\s*"zmk,keymap";\s*'  # Keymap compatibility
+            r'([\s\S]*?}\s*;)\s*}\s*;'           # Layer contents
+        )
+        match = re.search(keymap_pattern, content)
         return match.group(1) if match else None
-    
-    def extract_layers(self, keymap_content: str) -> List[Layer]:
-        """Extract all layers from a keymap section.
+
+    def parse_behaviors(self, content: str) -> None:
+        """Parse behavior configurations from ZMK content."""
+        behaviors_pattern = r'behaviors\s*{\s*([^}]*?)}\s*;'
+        behaviors_match = re.search(behaviors_pattern, content)
         
-        Args:
-            keymap_content: The content of the keymap section
-            
-        Returns:
-            List of Layer objects with name and parsed key bindings
-        """
-        layers = []
-        for match in self.layer_pattern.finditer(keymap_content):
-            name, bindings = match.groups()
-            # Parse the bindings into a matrix of KeyMapping objects
-            keys = self.parse_bindings_matrix(
-                bindings.strip()
+        if behaviors_match:
+            behaviors_content = behaviors_match.group(1)
+            behavior_pattern = (
+                r'(\w+):\s*\w+\s*{\s*'
+                r'([^}]*?)}\s*;'
             )
-            layers.append(Layer(name=name, keys=keys))
-        return layers
-    
-    def parse_binding(self, binding: str) -> KeyMapping:
-        """Parse a single binding into a KeyMapping object.
-        
-        Args:
-            binding: The binding string (e.g., "&kp A", "&lh_hm LGUI A")
+            behavior_blocks = re.finditer(
+                behavior_pattern,
+                behaviors_content
+            )
             
-        Returns:
-            KeyMapping object representing the binding
-        """
-        binding = binding.strip()
-        
-        # Check for hold-tap binding
-        holdtap_match = self.holdtap_pattern.match(binding)
-        if holdtap_match:
-            behavior, hold_key, tap_key = holdtap_match.groups()
+            for block in behavior_blocks:
+                name = block.group(1)
+                config_str = block.group(2)
+                
+                # Parse config into dict
+                config = {}
+                for line in config_str.split('\n'):
+                    line = line.strip()
+                    if '=' in line:
+                        key, val = line.split('=', 1)
+                        config[key.strip()] = val.strip().rstrip(';')
+                    elif line and not line.startswith('//'):
+                        config[line] = True
+                
+                # Try parsing as sticky key behavior
+                is_sticky = (
+                    'compatible' in config and
+                    config['compatible'] == '"zmk,behavior-sticky-key"'
+                )
+                if is_sticky:
+                    self.sticky_key_parser.parse_behavior(name, config)
+
+    def parse_binding(self, binding_str: str) -> Optional[KeyMapping]:
+        """Parse a single binding string into a KeyMapping object."""
+        if not binding_str or binding_str == '&none':
+            return None
+
+        if binding_str == '&trans':
+            return KeyMapping(key='trans')
+
+        # Handle sticky key binding
+        if binding_str.startswith('&sk'):
+            if binding_str == '&sk' or not binding_str.replace('&sk', '').strip():
+                raise ValueError("Invalid sticky key binding: missing key")
+            key = binding_str.replace('&sk', '').strip()
+            if key.isdigit() or key == 'INVALID':
+                msg = f"Invalid sticky key binding: invalid key '{key}'"
+                raise ValueError(msg)
+            return KeyMapping(key=f"sk {key}")
+
+        # Handle hold-tap bindings
+        hold_tap_prefixes = [
+            '&mt', '&lh_hm', '&rh_hm', '&ht'
+        ]
+        has_hold_tap_prefix = any(
+            binding_str.startswith(prefix)
+            for prefix in hold_tap_prefixes
+        )
+        if has_hold_tap_prefix:
+            parts = binding_str.split()
+            if len(parts) != 3:
+                raise ValueError(f"Invalid hold-tap binding: {binding_str}")
+
+            behavior_name = parts[0][1:]  # Remove & prefix
+            hold_key = parts[1]
+            tap_key = parts[2]
+
             return KeyMapping(
-                key=tap_key,  # Use tap key as the base key
-                hold_tap=HoldTapBinding(
-                    behavior_name=behavior,
+                key=tap_key,
+                hold_tap=HoldTap(
+                    behavior_name=behavior_name,
                     hold_key=hold_key,
                     tap_key=tap_key
                 )
             )
-        
-        # Check for basic key press
-        keypress_match = self.keypress_pattern.match(binding)
-        if keypress_match:
-            return KeyMapping(key=keypress_match.group(1))
-        
-        # Check for layer momentary switch
-        momentary_match = self.momentary_pattern.match(binding)
-        if momentary_match:
-            return KeyMapping(key=f"mo {momentary_match.group(1)}")
-        
-        # Check for transparent key
-        if self.transparent_pattern.match(binding):
-            return KeyMapping(key="trans")
-        
-        # Default to raw key if no pattern matches
-        return KeyMapping(key=binding)
-    
-    def parse_bindings_matrix(self, bindings_str: str) -> List[List[KeyMapping]]:
-        """Parse a bindings string into a matrix of KeyMapping objects.
-        
+
+        # Handle regular key binding
+        if binding_str.startswith('&kp'):
+            key = binding_str.replace('&kp', '').strip()
+            return KeyMapping(key=key)
+
+        # Handle layer switch binding
+        if binding_str.startswith('&mo'):
+            layer_num = binding_str.replace('&mo', '').strip()
+            return KeyMapping(key=f"mo {layer_num}")
+
+        # Handle invalid input
+        if not binding_str.startswith('&'):
+            raise ValueError(f"Invalid binding: {binding_str}")
+
+        raise ValueError(f"Unknown binding: {binding_str}")
+
+    def parse_bindings_matrix(self, bindings_text: str) -> List[List[KeyMapping]]:
+        """Parse a matrix of bindings into a list of lists of KeyMapping objects.
+
         Args:
-            bindings_str: The raw bindings string from the ZMK file
-            
+            bindings_text: String containing the bindings matrix
+
         Returns:
-            A matrix (list of lists) of KeyMapping objects
+            List of lists of KeyMapping objects
         """
-        # Split into rows and clean up whitespace
-        rows = [row.strip() for row in bindings_str.strip().split('\n')]
-        
+        # Clean up the text
+        bindings_text = bindings_text.strip()
+        if not bindings_text:
+            return []
+
+        # Split into rows
+        rows = [row.strip() for row in bindings_text.split('\n')]
+        rows = [row for row in rows if row]  # Remove empty rows
+
+        # Parse each row
         matrix = []
         for row in rows:
-            if not row:  # Skip empty rows
-                continue
-                
-            # Split the row into individual bindings
-            # First split by '&' to get each binding, then recombine with '&'
-            bindings = ['&' + b.strip() for b in row.split('&') if b.strip()]
-            
-            # Parse each binding
-            row_bindings = [self.parse_binding(b) for b in bindings]
-            if row_bindings:  # Only add non-empty rows
-                matrix.append(row_bindings)
-        
+            # Split row into individual bindings
+            bindings = [b.strip() for b in row.split('&') if b.strip()]
+            # Parse each binding in the row
+            row_mappings = []
+            for binding in bindings:
+                mapping = self.parse_binding(f"&{binding}")
+                row_mappings.append(mapping)
+            matrix.append(row_mappings)
+
         return matrix
-    
-    def parse_zmk_file(self, content: str) -> List[Layer]:
-        """Parse a complete ZMK file and extract all layers.
-        
+
+    def extract_layers(self, keymap_content: str) -> List[Layer]:
+        """Extract layers from keymap content.
+
         Args:
-            content: The full content of a ZMK file
-            
+            keymap_content: String containing keymap content
+
         Returns:
-            List of Layer objects containing name and bindings
-        
-        Raises:
-            ValueError: If no valid keymap section is found
+            List of Layer objects
         """
-        keymap = self.extract_keymap(content)
-        if not keymap:
+        layers = []
+        layer_pattern = (
+            r'(\w+?)(?:_layer)?\s*{\s*'  # Layer name with optional _layer suffix
+            r'bindings\s*=\s*<\s*'  # Bindings start
+            r'([^;]*)'  # Bindings content (non-greedy)
+            r'>\s*;\s*'  # Bindings end
+        )
+        matches = re.finditer(layer_pattern, keymap_content)
+
+        for match in matches:
+            name = match.group(1)
+            bindings_text = match.group(2)
+
+            # Clean up bindings text by removing comments
+            bindings_text = re.sub(r'//[^\n]*', '', bindings_text)
+            bindings_text = re.sub(
+                r'/\*.*?\*/', 
+                '', 
+                bindings_text, 
+                flags=re.DOTALL
+            )
+            bindings_text = bindings_text.strip()
+
+            # Parse the bindings matrix
+            matrix = self.parse_bindings_matrix(bindings_text)
+            layers.append(Layer(name=name, keys=matrix))
+
+        return layers
+
+    def parse_zmk_file(self, content: str) -> List[Layer]:
+        """Parse a ZMK file and extract layers."""
+        # First parse behaviors
+        self.parse_behaviors(content)
+        
+        # Extract keymap section
+        keymap_pattern = (
+            r'/\s*{\s*'                            # Root object start
+            r'(?:[^}]*}\s*;\s*)*'                 # Optional other blocks
+            r'keymap\s*{\s*'                      # Keymap block start
+            r'compatible\s*=\s*"zmk,keymap";\s*'  # Keymap compatibility
+            r'([\s\S]*?)\s*}\s*;\s*}\s*;'        # Layer contents
+        )
+        
+        match = re.search(keymap_pattern, content)
+        if not match:
             raise ValueError("No valid keymap section found in ZMK file")
         
-        return self.extract_layers(keymap) 
+        keymap = match.group(1)
+        return self.extract_layers(keymap)
