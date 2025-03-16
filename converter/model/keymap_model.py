@@ -143,8 +143,18 @@ class KeyMapping(Binding):
 
     @classmethod
     def from_zmk(cls, binding_str: str) -> 'KeyMapping':
-        """Create a KeyMapping from a ZMK binding string."""
-        # Handle empty binding or &none
+        """Create a KeyMapping from a ZMK binding string.
+
+        Args:
+            binding_str: The ZMK binding string
+
+        Returns:
+            A KeyMapping object
+
+        Raises:
+            ValueError: If the binding string is invalid
+        """
+        # Handle empty binding
         if not binding_str or binding_str == "&none":
             return cls(key="none")
 
@@ -162,14 +172,14 @@ class KeyMapping(Binding):
 
         # Handle hold-tap bindings
         hold_tap_prefixes = [
-            '&mt', '&lh_hm', '&rh_hm', '&ht'
+            '&mt', '&lh_hm', '&rh_hm', '&ht', '&hm', '&hs', '&td'
         ]
         has_hold_tap_prefix = any(
             binding_str.startswith(prefix)
             for prefix in hold_tap_prefixes
         )
         if has_hold_tap_prefix:
-            parts = binding_str.split()
+            parts = binding_str.split(maxsplit=2)
             if len(parts) != 3:
                 raise ValueError(
                     f"Invalid hold-tap binding: {binding_str}"
@@ -198,20 +208,15 @@ class KeyMapping(Binding):
             layer_num = parts[1]
             return cls(key=f"mo {layer_num}")
 
-        # Handle Unicode bindings
-        unicode_prefixes = ["&unicode_", "&pi", "&n_tilde"]
-        is_unicode = any(binding_str.startswith(prefix)
-                         for prefix in unicode_prefixes)
-        if is_unicode:
-            # For now, we'll use a placeholder for the Unicode character
-            # In a real implementation, we would parse the macro definition
-            # to get the actual character
-            if binding_str.startswith("&pi"):
-                return cls(key="(unicode π)")
-            elif binding_str.startswith("&n_tilde"):
-                return cls(key="(unicode ñ)")
-            else:
-                return cls(key="(unicode ?)")
+        # Handle layer toggle bindings
+        if binding_str.startswith("&to"):
+            parts = binding_str.split()
+            if len(parts) != 2:
+                raise ValueError(
+                    f"Invalid layer toggle binding: {binding_str}"
+                )
+            layer_num = parts[1]
+            return cls(key=f"to {layer_num}")
 
         # Handle regular key bindings
         if binding_str.startswith("&kp"):
@@ -221,18 +226,13 @@ class KeyMapping(Binding):
             key = parts[1]
             return cls(key=key)
 
-        # Special case for test files that don't use the &kp prefix
-        if not binding_str.startswith("&"):
-            return cls(key=binding_str)
-
-        # Handle macro bindings (any other binding starting with &)
+        # Special case for test files that don't use &kp prefix
         if binding_str.startswith("&"):
-            # Extract the macro name (remove the & prefix)
-            macro_name = binding_str[1:].split()[0]
-            return cls(key=f"(macro {macro_name})")
-
-        # Unknown binding
-        raise ValueError(f"Unknown binding: {binding_str}")
+            # This is some other binding type we don't support yet
+            raise ValueError(f"Unknown binding: {binding_str}")
+        else:
+            # Assume this is a direct key reference (for test files)
+            return cls(key=binding_str)
 
 
 @dataclass

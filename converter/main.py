@@ -116,13 +116,18 @@ def main():
             print(f"Error parsing input file: {e}", file=sys.stderr)
             return 2
 
-        transformer = LayerTransformer()
-        kanata_layers = [
-            transformer.transform_layer(layer)
-            for layer in layers
-        ]
+        # Create a keymap config with the parsed layers
+        from .model.keymap_model import GlobalSettings, KeymapConfig
+        config = KeymapConfig(
+            global_settings=GlobalSettings(tap_time=200, hold_time=250),
+            layers=layers
+        )
 
-        output = generate_kanata_keymap(kanata_layers)
+        # Use the KanataTransformer to transform the config
+        from .transformer.kanata_transformer import KanataTransformer
+        transformer = KanataTransformer()
+        output = transformer.transform(config)
+        
         with open(args.output_file, 'w') as f:
             f.write(output)
 

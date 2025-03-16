@@ -4,11 +4,15 @@ import re
 from typing import List
 
 from .behaviors.key_sequence import is_key_sequence_binding
+from .behaviors.macro import is_macro_binding
 from .behaviors.sticky_key import is_sticky_key_binding
+from .behaviors.unicode import is_unicode_binding
 from .model.keymap_model import Binding, Layer
-from .parser.sticky_key_parser import StickyKeyParser
 from .parser.key_sequence_parser import KeySequenceParser
 from .parser.macro_parser import MacroParser
+from .parser.sticky_key_parser import StickyKeyParser
+from .parser.unicode_parser import UnicodeParser
+from .taphold_parser import TapHoldParser, is_hold_tap_binding
 
 
 class LayerParser:
@@ -18,6 +22,8 @@ class LayerParser:
         self.sticky_key_parser = StickyKeyParser()
         self.key_sequence_parser = KeySequenceParser()
         self.macro_parser = MacroParser()
+        self.unicode_parser = UnicodeParser()
+        self.taphold_parser = TapHoldParser()
 
     def parse_behaviors(self, content: str) -> None:
         """Parse behavior configurations from ZMK content."""
@@ -49,39 +55,39 @@ class LayerParser:
                     elif line and not line.startswith('//'):
                         config[line] = True
 
-                # Try parsing as sticky key behavior
-                is_sticky = (
-                    'compatible' in config and
-                    config['compatible'] == '"zmk,behavior-sticky-key"'
-                )
-                if is_sticky:
+                # Check for hold-tap behaviors
+                if config.get('compatible') == '"zmk,behavior-hold-tap"':
+                    # Parse the hold-tap behavior
+                    behavior_text = block.group(0)
+                    try:
+                        self.taphold_parser.parse_behavior(behavior_text)
+                    except ValueError:
+                        # If we can't parse it, just continue
+                        pass
+                    continue
+
+                # Check for sticky key behaviors
+                if config.get('compatible') == '"zmk,behavior-sticky-key"':
                     self.sticky_key_parser.parse_behavior(name, config)
                     continue
 
-                # Try parsing as key sequence behavior
-                is_key_sequence = (
-                    'compatible' in config and
-                    config['compatible'] == '"zmk,behavior-key-sequence"'
-                )
-                if is_key_sequence:
+                # Check for key sequence behaviors
+                if config.get('compatible') == '"zmk,behavior-key-sequence"':
                     self.key_sequence_parser.parse_behavior(name, config)
                     continue
 
-                # Try parsing as macro behavior
-                is_macro = (
-                    'compatible' in config and
-                    config['compatible'].startswith('"zmk,behavior-macro')
-                )
-                if is_macro:
-                    behavior = self.macro_parser.parse_behavior(name, config)
-
-                    # Parse bindings if present
-                    if behavior and 'bindings' in config:
+                # Check for macro behaviors
+                if config.get('compatible') == '"zmk,behavior-macro"':
+                    if 'bindings' in config:
+                        behavior = name
                         self.macro_parser.parse_bindings(
                             behavior,
                             config['bindings']
                         )
                     continue
+
+                # Parse Unicode mappings
+                self.unicode_parser.parse_unicode_mappings(config_str)
 
     def parse_binding(self, binding_str: str) -> Binding:
         """Parse a binding string into a Binding object."""
@@ -98,11 +104,28 @@ class LayerParser:
                 return binding
 
         # Try parsing as a macro binding
-        from .behaviors.macro import is_macro_binding
         if is_macro_binding(binding_str):
             binding = self.macro_parser.parse_binding(binding_str)
             if binding:
                 return binding
+
+        # Try parsing as a Unicode binding
+        if is_unicode_binding(binding_str):
+            binding = self.unicode_parser.parse_binding(binding_str)
+            if binding:
+                return binding
+
+        # Try parsing as a hold-tap binding
+        if is_hold_tap_binding(binding_str):
+            # Extract the behavior name from the binding string
+            behavior_name = binding_str.split()[0][1:]  # Remove & prefix
+            
+            # Check if this is a registered custom behavior
+            if self.taphold_parser.is_registered_behavior(behavior_name):
+                # Default to a regular key binding that will be processed
+                # by the KeyMapping.from_zmk method
+                from .model.keymap_model import KeyMapping
+                return KeyMapping.from_zmk(binding_str)
 
         # Default to a regular key binding
         from .model.keymap_model import KeyMapping
@@ -124,23 +147,25 @@ class LayerParser:
 
             # Parse bindings
             bindings = []
-
-            # Process all bindings using a single regex pattern
-            binding_pattern = r'&(\w+)(?:\s+([A-Z0-9_]+)(?:\s+([A-Z0-9_]+))?)?'
-            for binding_match in re.finditer(binding_pattern, bindings_str):
-                behavior = binding_match.group(1)
-                param1 = binding_match.group(2)
-                param2 = binding_match.group(3)
-
-                if param2:  # Hold-tap binding
-                    binding_str = f"&{behavior} {param1} {param2}"
-                elif param1:  # Regular binding
-                    binding_str = f"&{behavior} {param1}"
-                else:  # Simple binding like &none
-                    binding_str = f"&{behavior}"
-
-                binding = self.parse_binding(binding_str)
-                bindings.append(binding)
+            
+            # Split the bindings string by & to get individual bindings
+            # First, remove extra whitespace
+            bindings_str = re.sub(r'\s+', ' ', bindings_str.strip())
+            
+            # Then split by & but keep the & with each binding
+            binding_parts = []
+            for part in bindings_str.split('&'):
+                if part.strip():  # Skip empty parts
+                    binding_parts.append('&' + part.strip())
+            
+            # Process each binding
+            for binding_str in binding_parts:
+                try:
+                    binding = self.parse_binding(binding_str)
+                    bindings.append(binding)
+                except ValueError:
+                    # If we can't parse it, just continue
+                    pass
 
             # Create layer
             layer = Layer(name=layer_name, bindings=bindings)
@@ -176,23 +201,25 @@ class LayerParser:
 
             # Parse bindings
             bindings = []
-
-            # Process all bindings using a single regex pattern
-            binding_pattern = r'&(\w+)(?:\s+([A-Z0-9_]+)(?:\s+([A-Z0-9_]+))?)?'
-            for binding_match in re.finditer(binding_pattern, bindings_str):
-                behavior = binding_match.group(1)
-                param1 = binding_match.group(2)
-                param2 = binding_match.group(3)
-
-                if param2:  # Hold-tap binding
-                    binding_str = f"&{behavior} {param1} {param2}"
-                elif param1:  # Regular binding
-                    binding_str = f"&{behavior} {param1}"
-                else:  # Simple binding like &none
-                    binding_str = f"&{behavior}"
-
-                binding = self.parse_binding(binding_str)
-                bindings.append(binding)
+            
+            # Split the bindings string by & to get individual bindings
+            # First, remove extra whitespace
+            bindings_str = re.sub(r'\s+', ' ', bindings_str.strip())
+            
+            # Then split by & but keep the & with each binding
+            binding_parts = []
+            for part in bindings_str.split('&'):
+                if part.strip():  # Skip empty parts
+                    binding_parts.append('&' + part.strip())
+            
+            # Process each binding
+            for binding_str in binding_parts:
+                try:
+                    binding = self.parse_binding(binding_str)
+                    bindings.append(binding)
+                except ValueError:
+                    # If we can't parse it, just continue
+                    pass
 
             # Create layer
             layer = Layer(name=layer_name, bindings=bindings)

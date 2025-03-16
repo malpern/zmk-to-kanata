@@ -169,6 +169,8 @@ converter/
 
 ## Next Steps
 1. Complete remaining linter fixes (Task 27)
+2. Add regression tests for fixed issues (Task 31)
+3. Eventually remove the root keymap_model.py once all code is migrated (Task 26)
 
 ## Task 30: Support for Ben Vallack's Keymap Features
 
@@ -178,30 +180,30 @@ Ben Vallack's keymap uses several advanced ZMK features that are currently not f
 ### Implementation Plan
 
 #### Phase 1: Custom Hold-Tap Behaviors
-- [ ] Enhance the hold-tap parser to recognize and process custom hold-tap behaviors
-  - [ ] Add support for `hm` (homerow mods) behavior
-  - [ ] Add support for `hs` (homerow shifts) behavior
-  - [ ] Add support for `td` (tapdance) behavior
-- [ ] Create a registry for custom behaviors that maps them to their base behavior type
-- [ ] Update the layer parser to use this registry when processing bindings
+- [x] Enhance the hold-tap parser to recognize and process custom hold-tap behaviors
+  - [x] Add support for `hm` (homerow mods) behavior
+  - [x] Add support for `hs` (homerow shifts) behavior
+  - [x] Add support for `td` (tapdance) behavior
+- [x] Create a registry for custom behaviors that maps them to their base behavior type
+- [x] Update the layer parser to use this registry when processing bindings
 
 #### Phase 2: Complex Modifier Combinations
-- [ ] Enhance the modifier handling to support nested modifiers (e.g., `LC(LS(LALT))`)
-- [ ] Add support for multi-modifier combinations in hold-tap bindings
-- [ ] Implement proper translation of complex modifiers to Kanata format
-- [ ] Add validation for modifier combinations to ensure they're supported in Kanata
+- [x] Enhance the modifier handling to support nested modifiers (e.g., `LC(LS(LALT))`)
+- [x] Add support for multi-modifier combinations in hold-tap bindings
+- [x] Implement proper translation of complex modifiers to Kanata format
+- [x] Add validation for modifier combinations to ensure they're supported in Kanata
 
 #### Phase 3: Media and Special Keys
-- [ ] Add support for media control keys (`C_PP`, `C_PREV`, `C_NEXT`, etc.)
-- [ ] Add support for volume control keys (`C_VOL_UP`, `C_VOL_DN`)
-- [ ] Create a mapping table for ZMK media keys to Kanata equivalents
-- [ ] Implement fallback behavior for keys without direct Kanata equivalents
+- [x] Add support for media control keys (`C_PP`, `C_PREV`, `C_NEXT`, etc.)
+- [x] Add support for volume control keys (`C_VOL_UP`, `C_VOL_DN`)
+- [x] Create a mapping table for ZMK media keys to Kanata equivalents
+- [x] Implement fallback behavior for keys without direct Kanata equivalents
 
 #### Phase 4: Testing and Validation
-- [ ] Update the Ben Vallack keymap test to expect success
-- [ ] Add unit tests for each new feature
-- [ ] Create integration tests for complex scenarios
-- [ ] Test with the full Ben Vallack keymap from GitHub
+- [x] Update the Ben Vallack keymap test to expect success
+- [x] Add unit tests for each new feature
+- [x] Create integration tests for complex scenarios
+- [x] Test with the full Ben Vallack keymap from GitHub
 
 ### Risk Assessment
 This task involves incremental work rather than fundamental challenges. The main risks are:
@@ -214,6 +216,9 @@ However, these risks are manageable because:
 - The core architecture of our converter already supports behavior customization
 - The hold-tap implementation can be extended rather than rewritten
 - We can implement graceful fallbacks for unsupported features
+
+### Status
+✅ Completed. The converter now successfully handles Ben Vallack's keymap, including custom hold-tap behaviors, complex modifier combinations, and special keys.
 
 ### Estimated Effort
 - Phase 1: Medium effort (2-3 days)

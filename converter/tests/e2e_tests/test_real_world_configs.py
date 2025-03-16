@@ -336,17 +336,21 @@ def test_ergonomic_layout_with_homerow_mods(tmp_path, monkeypatch):
     sys.stderr = stderr_capture
 
     try:
-        main()
-    except SystemExit:
-        # The main function might exit due to the error
-        pass
+        exit_code = main()
+        # Print the error message for debugging
+        error_output = stderr_capture.getvalue()
+        print(f"Error output: {error_output}")
+        # The main function should now succeed
+        assert exit_code == 0
+    except SystemExit as e:
+        # Print the error message for debugging
+        error_output = stderr_capture.getvalue()
+        print(f"Error output: {error_output}")
+        # If it exits, it should exit with code 0
+        assert e.code == 0
     finally:
         # Restore stderr
         sys.stderr = old_stderr
-
-    # Check that the error message contains information about the unknown binding
-    error_output = stderr_capture.getvalue()
-    assert "Unknown binding: &hm" in error_output
 
 
 def test_ben_vallack_cradio_layout(tmp_path, monkeypatch):
@@ -457,22 +461,41 @@ def test_ben_vallack_cradio_layout(tmp_path, monkeypatch):
     sys.stderr = stderr_capture
 
     try:
-        main()
-    except SystemExit:
-        # The main function might exit due to the error
-        pass
+        exit_code = main()
+        # Print the error message for debugging
+        error_output = stderr_capture.getvalue()
+        print(f"Error output: {error_output}")
+        # The main function should now succeed
+        assert exit_code == 0
+    except SystemExit as e:
+        # Print the error message for debugging
+        error_output = stderr_capture.getvalue()
+        print(f"Error output: {error_output}")
+        # If it exits, it should exit with code 0
+        assert e.code == 0
     finally:
         # Restore stderr
         sys.stderr = old_stderr
 
-    # Check that the error message contains information about the unknown binding
-    error_output = stderr_capture.getvalue()
-
-    # This test is expected to fail with the current implementation
-    # because the converter doesn't support the custom behaviors directly
-    assert ("Unknown binding: &hm" in error_output or
-            "Unknown binding: &hs" in error_output or
-            "Unknown binding: &td" in error_output)
+    # Check that the output file exists
+    assert kanata_file.exists()
+    
+    # Read the output file
+    kanata_content = kanata_file.read_text()
+    
+    # Check that the output contains expected content
+    assert "(deflayer default" in kanata_content
+    assert "(deflayer left" in kanata_content
+    assert "(deflayer right" in kanata_content
+    
+    # Check for custom hold-tap behaviors
+    assert ";; Hold-tap aliases" in kanata_content
+    assert "(defalias" in kanata_content
+    
+    # Check for specific keys from Ben's layout
+    assert "tab" in kanata_content
+    assert "c" in kanata_content
+    assert "l" in kanata_content
 
 
 def test_dvorak_layout(tmp_path, monkeypatch):

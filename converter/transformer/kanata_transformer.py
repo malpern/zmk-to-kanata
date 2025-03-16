@@ -94,10 +94,62 @@ class KanataTransformer:
         Returns:
             A list of alias definitions.
         """
-        # For now, we don't extract hold-tap bindings from KanataLayer objects
-        # This would require changes to the Layer and KanataLayer classes
-        # to preserve the hold-tap information
-        return []
+        # Collect all unique hold-tap bindings from all layers
+        hold_tap_bindings = {}
+        
+        for layer in config.layers:
+            for binding in layer.bindings:
+                if isinstance(binding, KeyMapping) and binding.hold_tap:
+                    # Create a unique identifier for this hold-tap binding
+                    binding_id = (
+                        f"{binding.hold_tap.behavior_name}_"
+                        f"{binding.hold_tap.hold_key}_"
+                        f"{binding.hold_tap.tap_key}"
+                    )
+                    
+                    # Store the binding with its ID
+                    if binding_id not in hold_tap_bindings:
+                        hold_tap_bindings[binding_id] = binding.hold_tap
+        
+        # If no hold-tap bindings, return empty list
+        if not hold_tap_bindings:
+            return []
+            
+        # Generate alias definitions
+        lines = [";; Hold-tap aliases"]
+        
+        for binding_id, hold_tap in hold_tap_bindings.items():
+            # Convert hold_key to short form if needed
+            hold_key = hold_tap.hold_key
+            if hold_key in [
+                "LSHIFT", "RSHIFT", "LCTRL", "RCTRL", 
+                "LALT", "RALT", "LGUI", "RGUI"
+            ]:
+                hold_key = {
+                    "LSHIFT": "lsft",
+                    "RSHIFT": "rsft",
+                    "LCTRL": "lctl",
+                    "RCTRL": "rctl",
+                    "LALT": "lalt",
+                    "RALT": "ralt",
+                    "LGUI": "lmet",
+                    "RGUI": "rmet"
+                }[hold_key]
+            
+            # Convert tap_key if needed
+            tap_key = hold_tap.tap_key
+            # Remove leading 'N' from number keys if followed by digits
+            if tap_key.startswith('N') and tap_key[1:].isdigit():
+                tap_key = tap_key[1:]
+                
+            # Create the alias definition
+            alias_def = (
+                f"(defalias {binding_id} "
+                f"(tap-hold {hold_key} {tap_key.lower()}))"
+            )
+            lines.append(alias_def)
+            
+        return lines
 
     def _transform_key(self, key: KeyMapping) -> str:
         """Transform a single key mapping to Kanata format.
@@ -144,12 +196,11 @@ class KanataTransformer:
         lines = []
         for i, layer in enumerate(config.layers):
             lines.append(f"(deflayer {layer.name}")
-            # Transform each row of keys
-            for row in layer.keys:
-                key_line = "  " + "  ".join(
-                    self._transform_key(k) for k in row
-                )
-                lines.append(key_line)
+            # Transform each binding
+            binding_line = "  " + " ".join(
+                self._transform_key(binding) for binding in layer.bindings
+            )
+            lines.append(binding_line)
             lines.append(")")
             # Add spacing between layers, but not after the last one
             if i < len(config.layers) - 1:
