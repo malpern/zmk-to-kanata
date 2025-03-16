@@ -1,0 +1,19 @@
+(deflayer default
+  a b c
+  d e f
+)
+
+(deflayer nav
+  left right _
+  up down @layer3
+)
+
+(deflayer num
+  1 2 _
+  3 4 _
+)
+
+(deflayer fn
+  f1 f2 _
+  f3 f4 _
+)
