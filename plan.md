@@ -140,6 +140,7 @@ converter/
       - [x] Add tests for Colemak layout
       - [x] Add tests for split keyboards
       - [x] Add tests for homerow mods (with error handling)
+      - [x] Add test for Ben Vallack's Cradio layout
       - [ ] Validate conversion accuracy with more complex examples
     - [x] Test with various keyboard layouts
       - [x] QWERTY
@@ -187,6 +188,7 @@ converter/
 - Updated HoldTap class to use new key mappings
 - Fixed linter errors in various files
 - Started Task 25: Added real-world configuration tests for QWERTY, Colemak, and split keyboards
+- Added Ben Vallack's Cradio layout as a real-world test case
 
 ## Task 26: Resolve Keymap Model Duplication
 ### Problem Statement
