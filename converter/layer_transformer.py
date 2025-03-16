@@ -5,6 +5,7 @@ from typing import Dict, List, Optional
 
 from .layer_parser import Layer
 from .keymap_model import KeyMapping
+from .behaviors.sticky_key import StickyKeyBinding
 
 
 @dataclass
@@ -139,14 +140,26 @@ class LayerTransformer:
         if hasattr(key_mapping, 'to_kanata'):
             return key_mapping.to_kanata()
 
+        # Handle sticky key format from parser
+        if key_mapping.key.startswith('sk '):
+            key = key_mapping.key.replace('sk ', '')
+            sticky_binding = StickyKeyBinding(key)
+            return sticky_binding.to_kanata()
+
         # Handle hold-tap binding
         if key_mapping.hold_tap:
             hold_key = key_mapping.hold_tap.hold_key
             tap_key = key_mapping.hold_tap.tap_key
             
             # Transform the keys using the key map
-            hold_key = self.key_map.get(hold_key, hold_key.lower())
-            tap_key = self.key_map.get(tap_key, tap_key.lower())
+            hold_key = self.key_map.get(
+                hold_key,
+                hold_key.lower()
+            )
+            tap_key = self.key_map.get(
+                tap_key,
+                tap_key.lower()
+            )
             
             return f"tap-hold {hold_key} {tap_key}"
         

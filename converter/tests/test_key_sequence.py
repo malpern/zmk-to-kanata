@@ -54,7 +54,7 @@ def test_key_sequence_binding_creation():
 def test_key_sequence_binding_to_kanata():
     """Test converting key sequence binding to Kanata format."""
     binding = KeySequenceBinding(keys=["LSHIFT", "A", "B"])
-    assert binding.to_kanata() == "(chord lshift a b)"
+    assert binding.to_kanata() == "(chord lsft a b)"
 
 
 def test_key_sequence_binding_from_zmk():

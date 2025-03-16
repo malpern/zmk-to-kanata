@@ -35,6 +35,24 @@ class KeySequenceBehavior:
 
 class KeySequenceBinding(Binding):
     """Represents a key sequence binding in the keymap."""
+    # Map ZMK key names to Kanata format
+    key_mapping = {
+        'LSHIFT': 'lsft',
+        'RSHIFT': 'rsft',
+        'LCTRL': 'lctl',
+        'RCTRL': 'rctl',
+        'LALT': 'lalt',
+        'RALT': 'ralt',
+        'LGUI': 'lmet',
+        'RGUI': 'rmet',
+        'ENTER': 'ret',
+        'SPACE': 'spc',
+        'TAB': 'tab',
+        'ESCAPE': 'esc',
+        'BACKSPACE': 'bspc',
+        'DELETE': 'del',
+    }
+
     def __init__(
         self,
         keys: List[str],
@@ -46,8 +64,10 @@ class KeySequenceBinding(Binding):
     def to_kanata(self) -> str:
         """Convert the key sequence binding to Kanata format."""
         # Kanata uses (chord ...) for key sequences
-        # Convert each key to lowercase and join with spaces
-        key_str = " ".join(key.lower() for key in self.keys)
+        # Convert each key using the mapping or lowercase
+        key_str = " ".join(
+            self.key_mapping.get(k, k.lower()) for k in self.keys
+        )
         return f"(chord {key_str})"
 
     @classmethod
@@ -64,24 +84,7 @@ class KeySequenceBinding(Binding):
         keys = [k.strip() for k in keys_str.split()]
         
         # Convert ZMK key names to Kanata format
-        key_mapping = {
-            'LSHIFT': 'lsft',
-            'RSHIFT': 'rsft',
-            'LCTRL': 'lctl',
-            'RCTRL': 'rctl',
-            'LALT': 'lalt',
-            'RALT': 'ralt',
-            'LGUI': 'lmet',
-            'RGUI': 'rmet',
-            'ENTER': 'ret',
-            'SPACE': 'spc',
-            'TAB': 'tab',
-            'ESCAPE': 'esc',
-            'BACKSPACE': 'bspc',
-            'DELETE': 'del',
-        }
-        
-        keys = [key_mapping.get(k, k.lower()) for k in keys]
+        keys = [cls.key_mapping.get(k, k.lower()) for k in keys]
         return cls(keys, behavior)
 
 

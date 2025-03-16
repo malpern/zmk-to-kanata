@@ -26,8 +26,19 @@ class StickyKeyBinding(Binding):
 
     def to_kanata(self) -> str:
         """Convert the sticky key binding to Kanata format."""
-        # Kanata uses sticky- prefix for sticky keys
-        return f"sticky-{self.key.lower()}"
+        # Use the key mapping for consistent key names
+        key_mapping = {
+            'LSHIFT': 'lsft',
+            'RSHIFT': 'rsft',
+            'LCTRL': 'lctl',
+            'RCTRL': 'rctl',
+            'LALT': 'lalt',
+            'RALT': 'ralt',
+            'LGUI': 'lmet',
+            'RGUI': 'rmet',
+        }
+        key = key_mapping.get(self.key, self.key.lower())
+        return f"sticky-{key}"
 
     @classmethod
     def from_zmk(
