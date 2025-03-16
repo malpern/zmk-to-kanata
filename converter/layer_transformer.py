@@ -1,11 +1,12 @@
 """Module for transforming ZMK layer bindings into Kanata format."""
 
 from dataclasses import dataclass
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 from .layer_parser import Layer
 from converter.model.keymap_model import KeyMapping
 from .behaviors.sticky_key import StickyKeyBinding
+from .behaviors.key_sequence import KeySequenceBinding
 
 
 @dataclass
@@ -52,68 +53,70 @@ class LayerTransformer:
             "UNDER": "underscore",    # _
             "PLUS": "plus",           # +
             "EQUAL": "equal",         # =
-            "LBKT": "lbracket",       # [
-            "RBKT": "rbracket",       # ]
-            "LBRC": "lbrace",         # {
-            "RBRC": "rbrace",         # }
-            "BSLH": "bslash",         # \
+            "LBRC": "lbrc",           # {
+            "RBRC": "rbrc",           # }
+            "LBKT": "lbkt",           # [
+            "RBKT": "rbkt",           # ]
             "PIPE": "pipe",           # |
-            "SEMI": "semicolon",      # ;
+            "BSLH": "bslh",           # \
             "COLON": "colon",         # :
-            "SQT": "quote",           # '
-            "DQT": "dquote",          # "
+            "SEMI": "semi",           # ;
+            "DQT": "dqt",             # "
+            "SQT": "sqt",             # '
+            "LT": "lt",               # <
+            "GT": "gt",               # >
             "COMMA": "comma",         # ,
-            "DOT": "dot",            # .
-            "FSLH": "slash",         # /
-            "QMARK": "question",      # ?
+            "DOT": "dot",             # .
+            "FSLH": "fslh",           # /
+            "QMARK": "qmark",         # ?
             "GRAVE": "grave",         # `
-            "TILDE": "tilde",        # ~
+            "TILDE": "tilde",         # ~
             
-            # Function Keys
+            # Function keys
             "F1": "f1", "F2": "f2", "F3": "f3", "F4": "f4",
             "F5": "f5", "F6": "f6", "F7": "f7", "F8": "f8",
             "F9": "f9", "F10": "f10", "F11": "f11", "F12": "f12",
             
-            # Navigation and Editing
-            "ENTER": "ret",
+            # Navigation and editing
+            "ENTER": "enter",
+            "SPACE": "space",
+            "TAB": "tab",
             "ESC": "esc",
             "BSPC": "bspc",
-            "TAB": "tab",
-            "SPACE": "spc",
             "DEL": "del",
+            "INS": "ins",
             "HOME": "home",
             "END": "end",
-            "PG_UP": "pgup",
-            "PG_DN": "pgdn",
-            "RIGHT": "right",
+            "PG_UP": "pg_up",
+            "PG_DN": "pg_dn",
             "LEFT": "left",
-            "DOWN": "down",
+            "RIGHT": "right",
             "UP": "up",
+            "DOWN": "down",
             
             # Modifiers
-            "LSHIFT": "lsft",
-            "RSHIFT": "rsft",
-            "LCTRL": "lctl",
-            "RCTRL": "rctl",
+            "LSHIFT": "lshift",
+            "RSHIFT": "rshift",
+            "LCTRL": "lctrl",
+            "RCTRL": "rctrl",
             "LALT": "lalt",
             "RALT": "ralt",
-            "LGUI": "lmet",
-            "RGUI": "rmet",
+            "LGUI": "lgui",
+            "RGUI": "rgui",
             
-            # System and Media
+            # System and media keys
             "CAPS": "caps",
-            "INS": "ins",
-            "PSCRN": "prtsc",
+            "PSCRN": "pscrn",
             "SLCK": "slck",
             "PAUSE_BREAK": "pause",
-            "C_MUTE": "mute",
-            "C_VOL_UP": "volu",
-            "C_VOL_DN": "vold",
-            "C_PP": "pp",             # Play/Pause
-            "C_NEXT": "next",
-            "C_PREV": "prev",
+            "C_MUTE": "c_mute",
+            "C_VOL_UP": "c_vol_up",
+            "C_VOL_DN": "c_vol_dn",
+            "C_PP": "c_pp",
+            "C_NEXT": "c_next",
+            "C_PREV": "c_prev",
             
-            # Numpad Special Keys
+            # Numpad special keys
             "KP_PLUS": "kp_plus",
             "KP_MINUS": "kp_minus",
             "KP_MULTIPLY": "kp_multiply",
@@ -122,30 +125,28 @@ class LayerTransformer:
             "KP_DOT": "kp_dot",
             "KP_EQUAL": "kp_equal",
             
-            # International and Special Characters
-            "NON_US_BSLH": "iso_bslash",
-            "NON_US_HASH": "iso_hash",
+            # International characters
+            "NON_US_HASH": "non_us_hash",
+            "NON_US_BSLH": "non_us_bslh",
         }
     
-    def transform_binding(self, key_mapping) -> Optional[str]:
-        """Transform a single key mapping to Kanata format.
+    def transform_binding(self, key_mapping: KeyMapping) -> str:
+        """Transform a ZMK key binding into Kanata format.
         
         Args:
-            key_mapping: KeyMapping object containing the binding info
+            key_mapping: KeyMapping object to transform
             
         Returns:
-            Kanata binding or None if binding should be skipped
+            Kanata key binding string
         """
         # Handle sticky key binding
-        if hasattr(key_mapping, 'to_kanata'):
+        if isinstance(key_mapping, StickyKeyBinding):
             return key_mapping.to_kanata()
-
-        # Handle sticky key format from parser
-        if key_mapping.key.startswith('sk '):
-            key = key_mapping.key.replace('sk ', '')
-            sticky_binding = StickyKeyBinding(key)
-            return sticky_binding.to_kanata()
-
+            
+        # Handle key sequence binding
+        if isinstance(key_mapping, KeySequenceBinding):
+            return key_mapping.to_kanata()
+            
         # Handle hold-tap binding
         if key_mapping.hold_tap:
             hold_key = key_mapping.hold_tap.hold_key
@@ -157,6 +158,12 @@ class LayerTransformer:
             
             return f"tap-hold {hold_key} {tap_key}"
         
+        # Handle sticky key format from parser
+        if key_mapping.key.startswith('sk '):
+            key = key_mapping.key.replace('sk ', '')
+            sticky_binding = StickyKeyBinding(key)
+            return sticky_binding.to_kanata()
+            
         # Handle layer momentary switch
         if key_mapping.key.startswith("mo "):
             layer_num = key_mapping.key.split(" ")[1]

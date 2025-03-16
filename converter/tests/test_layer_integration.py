@@ -75,7 +75,7 @@ def test_key_sequence_layer_conversion():
 def test_mixed_behavior_layer():
     """Test layer conversion with mixed behaviors."""
     transformer = LayerTransformer()
-
+    
     # Create a layer with mixed behaviors
     zmk_layer = Layer(
         name="mixed_layer",
@@ -92,7 +92,7 @@ def test_mixed_behavior_layer():
             ]
         ]
     )
-
+    
     kanata_layer = transformer.transform_layer(zmk_layer)
     assert kanata_layer.name == "mixed"
     assert len(kanata_layer.keys) == 2
@@ -100,7 +100,7 @@ def test_mixed_behavior_layer():
     # First row: key sequence, sticky key, layer switch
     assert kanata_layer.keys[0] == ["(chord lsft a)", "sticky-lctl", "@layer1"]
     
-    # Second row: transparent, key sequence, number
+    # Second row: transparent, key sequence, number key
     assert kanata_layer.keys[1] == ["_", "(chord lmet tab)", "1"]
 
 

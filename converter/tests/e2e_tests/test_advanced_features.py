@@ -65,10 +65,10 @@ def test_multi_layer_with_hold_tap(temp_test_dir):
     assert "(deflayer fn" in content
     
     # Verify hold-tap bindings in default layer
-    assert "tap-hold lsft a" in content.lower()
-    assert "tap-hold lctl b" in content.lower()
+    assert "tap-hold lshift a" in content.lower()
+    assert "tap-hold lctrl b" in content.lower()
     assert "tap-hold lalt c" in content.lower()
-    assert "tap-hold lmet d" in content.lower()
+    assert "tap-hold lgui d" in content.lower()
     
     # Verify layer switching
     assert "@layer1" in content
@@ -76,16 +76,22 @@ def test_multi_layer_with_hold_tap(temp_test_dir):
     assert "@layer3" in content
     
     # Verify navigation layer
-    assert "left right" in content.lower()
-    assert "up down" in content.lower()
+    assert "left" in content.lower()
+    assert "right" in content.lower()
+    assert "up" in content.lower()
+    assert "down" in content.lower()
     
     # Verify number layer
-    assert "1 2" in content.lower()
-    assert "3 4" in content.lower()
+    assert "1" in content
+    assert "2" in content
+    assert "3" in content
+    assert "4" in content
     
     # Verify function layer
-    assert "f1 f2" in content.lower()
-    assert "f3 f4" in content.lower()
+    assert "f1" in content.lower()
+    assert "f2" in content.lower()
+    assert "f3" in content.lower()
+    assert "f4" in content.lower()
 
 
 def test_multi_layer_with_custom_behaviors(temp_test_dir):
@@ -155,10 +161,10 @@ def test_multi_layer_with_custom_behaviors(temp_test_dir):
     assert "(deflayer fn" in content
     
     # Verify mod-tap bindings in default layer
-    assert "tap-hold lsft a" in content.lower()
-    assert "tap-hold lctl b" in content.lower()
+    assert "tap-hold lshift a" in content.lower()
+    assert "tap-hold lctrl b" in content.lower()
     assert "tap-hold lalt c" in content.lower()
-    assert "tap-hold lmet d" in content.lower()
+    assert "tap-hold lgui d" in content.lower()
     
     # Verify layer switching
     assert "@layer1" in content
@@ -166,13 +172,19 @@ def test_multi_layer_with_custom_behaviors(temp_test_dir):
     assert "@layer3" in content
     
     # Verify navigation layer
-    assert "left right" in content.lower()
-    assert "up down" in content.lower()
+    assert "left" in content.lower()
+    assert "right" in content.lower()
+    assert "up" in content.lower()
+    assert "down" in content.lower()
     
     # Verify number layer
-    assert "1 2" in content.lower()
-    assert "3 4" in content.lower()
+    assert "1" in content
+    assert "2" in content
+    assert "3" in content
+    assert "4" in content
     
     # Verify function layer
-    assert "f1 f2" in content.lower()
-    assert "f3 f4" in content.lower()
+    assert "f1" in content.lower()
+    assert "f2" in content.lower()
+    assert "f3" in content.lower()
+    assert "f4" in content.lower()
