@@ -2,7 +2,7 @@
 
 from typing import Dict, List, Optional
 
-from ..behaviors.macro import (
+from converter.behaviors.macro import (
     MacroActivationMode,
     MacroBehavior,
     MacroBinding,
@@ -108,8 +108,33 @@ class MacroParser:
         # Remove the control part
         behaviors_str = part.replace(control, '').strip()
         
-        # Split by whitespace to get individual behaviors
-        return [b.strip() for b in behaviors_str.split() if b.strip()]
+        # Process the behaviors
+        result = []
+        current_behavior = None
+        
+        # Split by whitespace to get individual tokens
+        tokens = behaviors_str.split()
+        
+        i = 0
+        while i < len(tokens):
+            if tokens[i].startswith('&'):
+                # This is a behavior
+                current_behavior = tokens[i]
+                
+                # Check if there's a parameter
+                if i + 1 < len(tokens) and not tokens[i + 1].startswith('&'):
+                    # This is a parameter
+                    result.append(f"{current_behavior} {tokens[i + 1]}")
+                    i += 2
+                else:
+                    # No parameter
+                    result.append(current_behavior)
+                    i += 1
+            else:
+                # Skip unexpected tokens
+                i += 1
+        
+        return result
 
     def parse_binding(self, binding_str: str) -> Optional[MacroBinding]:
         """Parse a macro binding string."""

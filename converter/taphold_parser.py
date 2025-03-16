@@ -170,3 +170,6 @@ class TapHoldParser:
         Returns:
             Dictionary with parsed behavior properties
         """
+
+# Alias for backward compatibility
+HoldTapParser = TapHoldParser

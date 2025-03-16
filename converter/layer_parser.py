@@ -111,10 +111,11 @@ class LayerParser:
     def extract_layers(self, keymap_content: str) -> List[Layer]:
         """Extract layers from a ZMK keymap content."""
         layers = []
+        # Updated pattern to be more flexible with whitespace
         layer_pattern = (
             r'(\w+)_layer\s*{\s*'
-            r'bindings\s*=\s*<([^>]*)>\s*;\s*'
-            r'}\s*;'
+            r'bindings\s*=\s*<([^>]*)>'
+            r'[^}]*}\s*;'
         )
 
         for match in re.finditer(layer_pattern, keymap_content):
@@ -123,10 +124,23 @@ class LayerParser:
 
             # Parse bindings
             bindings = []
-            for binding_str in bindings_str.split():
-                if binding_str.strip():
-                    binding = self.parse_binding(binding_str.strip())
-                    bindings.append(binding)
+            
+            # Process all bindings using a single regex pattern
+            binding_pattern = r'&(\w+)(?:\s+([A-Z0-9_]+)(?:\s+([A-Z0-9_]+))?)?'
+            for binding_match in re.finditer(binding_pattern, bindings_str):
+                behavior = binding_match.group(1)
+                param1 = binding_match.group(2)
+                param2 = binding_match.group(3)
+                
+                if param2:  # Hold-tap binding
+                    binding_str = f"&{behavior} {param1} {param2}"
+                elif param1:  # Regular binding
+                    binding_str = f"&{behavior} {param1}"
+                else:  # Simple binding like &none
+                    binding_str = f"&{behavior}"
+                
+                binding = self.parse_binding(binding_str)
+                bindings.append(binding)
 
             # Create layer
             layer = Layer(name=layer_name, bindings=bindings)
@@ -139,18 +153,49 @@ class LayerParser:
         # First parse behaviors
         self.parse_behaviors(content)
 
-        # Extract keymap section
+        # Extract keymap section - simplified pattern
         keymap_pattern = (
-            r'/\s*{\s*'                            # Root object start
-            r'(?:[^}]*}\s*;\s*)*'                 # Optional other blocks
-            r'keymap\s*{\s*'                      # Keymap block start
-            r'compatible\s*=\s*"zmk,keymap";\s*'  # Keymap compatibility
-            r'([\s\S]*?)\s*}\s*;\s*}\s*;'        # Layer contents
+            r'keymap\s*{\s*compatible\s*=\s*"zmk,keymap";\s*'
+            r'([\s\S]*?)}\s*;'
         )
-
         match = re.search(keymap_pattern, content)
         if not match:
             raise ValueError("No valid keymap section found in ZMK file")
-
-        keymap = match.group(1)
-        return self.extract_layers(keymap)
+        
+        # Extract layers directly from the content
+        layers = []
+        layer_pattern = (
+            r'(\w+)_layer\s*{\s*'
+            r'bindings\s*=\s*<([^>]*)>'
+            r'[^}]*}\s*;'
+        )
+        
+        for match in re.finditer(layer_pattern, content):
+            layer_name = match.group(1)
+            bindings_str = match.group(2)
+            
+            # Parse bindings
+            bindings = []
+            
+            # Process all bindings using a single regex pattern
+            binding_pattern = r'&(\w+)(?:\s+([A-Z0-9_]+)(?:\s+([A-Z0-9_]+))?)?'
+            for binding_match in re.finditer(binding_pattern, bindings_str):
+                behavior = binding_match.group(1)
+                param1 = binding_match.group(2)
+                param2 = binding_match.group(3)
+                
+                if param2:  # Hold-tap binding
+                    binding_str = f"&{behavior} {param1} {param2}"
+                elif param1:  # Regular binding
+                    binding_str = f"&{behavior} {param1}"
+                else:  # Simple binding like &none
+                    binding_str = f"&{behavior}"
+                
+                binding = self.parse_binding(binding_str)
+                bindings.append(binding)
+            
+            # Create layer
+            layer = Layer(name=layer_name, bindings=bindings)
+            layers.append(layer)
+        
+        return layers
