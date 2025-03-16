@@ -3,16 +3,18 @@
 This module contains the intermediate representation classes for our keymap
 converter.
 
-TODO(tech-debt): This file will become the single source of truth for keymap models.
-Currently, there is duplicate functionality in converter/keymap_model.py which will
-eventually be merged into this file. The plan is to:
+TODO(tech-debt): This file will become the single source of truth for keymap
+models. Currently, there is duplicate functionality in 
+converter/keymap_model.py which will eventually be merged into this file. 
+The plan is to:
 
 1. Move all conversion logic (to_kanata methods) here
 2. Update the root keymap_model.py to re-export from this file
 3. Eventually remove the root version
 
-This file contains the more complete model with GlobalSettings and KeymapConfig,
-while the root version has the conversion logic. These will be unified here.
+This file contains the more complete model with GlobalSettings and
+KeymapConfig, while the root version has the conversion logic. These will be
+unified here.
 
 See plan.md Task 26 for full details.
 """
@@ -36,21 +38,33 @@ class GlobalSettings:
 
 @dataclass
 class HoldTap:
-    """Represents a hold-tap key binding."""
+    """Hold-tap key binding."""
     behavior_name: str
     hold_key: str
     tap_key: str
 
     def to_kanata(self) -> str:
         """Convert to Kanata format."""
-        # Convert keys to lowercase
+        # Convert hold key to short form
         hold_key = self.hold_key.lower()
+        # Map modifier keys to their short forms
+        mod_map = {
+            'lshift': 'lsft',
+            'rshift': 'rsft',
+            'lcontrol': 'lctl',
+            'rcontrol': 'rctl',
+            'lctrl': 'lctl',
+            'rctrl': 'rctl',
+            'lgui': 'lmet',
+            'rgui': 'rmet'
+        }
+        if hold_key in mod_map:
+            hold_key = mod_map[hold_key]
+
+        # Convert tap key
         tap_key = self.tap_key.lower()
-        
-        # Handle number keys
-        if (tap_key.startswith('n') and tap_key[1:].isdigit()):
-            # Remove 'n' prefix for number keys
-            tap_key = tap_key[1:]
+        if tap_key.startswith('n') and tap_key[1:].isdigit():
+            tap_key = tap_key[1:]  # Remove 'n' prefix for number keys
 
         return f"tap-hold {hold_key} {tap_key}"
 
@@ -121,22 +135,19 @@ class KeyMapping(Binding):
         # Handle sticky keys
         if key.startswith('sk '):
             mod = key[3:]  # Remove 'sk ' prefix
-            if mod == 'lshift':
-                mod = 'lsft'
-            elif mod == 'rshift':
-                mod = 'rsft'
-            elif mod == 'lcontrol':
-                mod = 'lctl'
-            elif mod == 'rcontrol':
-                mod = 'rctl'
-            elif mod == 'lctrl':
-                mod = 'lctl'
-            elif mod == 'rctrl':
-                mod = 'rctl'
-            elif mod == 'lgui':
-                mod = 'lmet'
-            elif mod == 'rgui':
-                mod = 'rmet'
+            # Map modifier keys to their short forms
+            mod_map = {
+                'lshift': 'lsft',
+                'rshift': 'rsft',
+                'lcontrol': 'lctl',
+                'rcontrol': 'rctl',
+                'lctrl': 'lctl',
+                'rctrl': 'rctl',
+                'lgui': 'lmet',
+                'rgui': 'rmet'
+            }
+            if mod in mod_map:
+                mod = mod_map[mod]
             return f"sticky-{mod}"
 
         # Handle layer switches

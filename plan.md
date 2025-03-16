@@ -195,66 +195,33 @@ converter/
 - Added user guide, API documentation, and example configurations
 
 ## Task 26: Resolve Keymap Model Duplication
-### Problem Statement
-Currently, there are two versions of the keymap model:
-1. `converter/keymap_model.py` (root):
-   - Has Binding base class and to_kanata() methods
-   - Handles sticky keys, layer switches, and number keys
-   - Used by behavior classes and some transformers
-2. `converter/model/keymap_model.py`:
-   - Has GlobalSettings and KeymapConfig classes
-   - More detailed HoldTapBinding with additional parameters
-   - Used by parsers and some transformers
 
-This duplication causes:
-- Inconsistent behavior depending on which file is imported
-- Potential type mismatches and bugs
-- Maintenance issues and confusion
-- Missing features in code using the older version
+Currently, we have two keymap model files:
+- `converter/model/keymap_model.py` - The intended source of truth
+- `converter/keymap_model.py` - A duplicate with some unique functionality
 
-### Implementation Plan
-#### Short-term Solution
-1. Immediate Fix (1-2 days)
-   - [x] Add HoldTap class to model/keymap_model.py
-   - [x] Update imports across the codebase to use converter.model.keymap_model
-     - [x] Update layer_parser.py
-     - [x] Update layer_transformer.py
-     - [x] Update behaviors/sticky_key.py
-     - [x] Update behaviors/key_sequence.py
-   - [x] Add deprecation warnings in root keymap_model.py
-   - [x] Run tests and fix any import issues
-   - [x] Fix linter errors in model/keymap_model.py
+### Short-term solution (completed)
+- [x] Make the root keymap_model.py re-export from the model directory version
+- [x] Add deprecation warning to the root version
+- [x] Update imports in new code to use the model directory version
 
-#### Long-term Solution (Future Work)
-1. Analysis Phase
-   - [ ] Create comprehensive test suite for both model versions
-   - [ ] Document all current usages and dependencies
-   - [ ] Identify unique features in each version
-   - [ ] Map out required changes for dependent files
+### Long-term solution (in progress)
+- [x] Move all conversion logic (to_kanata methods) to the model directory version
+- [x] Update the HoldTap class in the model directory version to include the more complete to_kanata() method
+- [x] Update the KeyMapping class to use a consistent approach for key mapping
+- [x] Remove duplicate implementations from the root version
+- [ ] Update any remaining imports across the codebase to use converter.model.keymap_model directly
+- [ ] Eventually remove the root version once all code is migrated
 
-2. Model Consolidation
-   - [ ] Create new unified model in `converter/model/keymap.py`
-   - [ ] Merge features from both versions:
-     - [ ] Binding base class and conversion methods
-     - [ ] Global configuration classes
-     - [ ] Enhanced HoldTapBinding
-     - [ ] Layer and KeyMapping classes
-   - [ ] Add comprehensive docstrings
-   - [ ] Add type hints
-   - [ ] Add validation methods
+### Analysis
+- [x] Document all current usages of both model versions
+- [x] Identify unique features in each model version
+- [x] Create a migration strategy
 
-3. Migration Strategy
-   - [ ] Create deprecation warnings in old files
-   - [ ] Update imports in behavior classes
-   - [ ] Update imports in parser classes
-   - [ ] Update imports in transformer classes
-   - [ ] Update imports in test files
-   - [ ] Verify all tests pass with new model
-
-4. Cleanup
-   - [ ] Remove old model files
-   - [ ] Update documentation
-   - [ ] Add migration guide for any external users
+### Implementation
+- [x] Consolidate the models by moving all functionality to the model directory version
+- [x] Ensure all tests pass with the consolidated model
+- [ ] Update documentation to reflect the changes
 
 ### Success Criteria
 Short-term:

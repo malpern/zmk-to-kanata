@@ -200,74 +200,110 @@ kanata_config = generate_kanata_config(keymap)
 
 ### `model/keymap_model.py`
 
-#### `KeymapConfig`
+#### Keymap Model
 
-Class representing a complete keymap configuration.
-
-**Attributes**:
-- `global_settings` (GlobalSettings): Global settings
-- `layers` (list): List of `Layer` objects
-
-**Methods**:
-- `add_layer(layer)`: Add a layer to the configuration
-- `get_layer_by_name(name)`: Get a layer by name
-
-**Example**:
+The keymap model is the central data structure used throughout the converter. It represents the keyboard layout and its layers.
 
 ```python
-from converter.model.keymap_model import KeymapConfig, Layer
-
-# Create a keymap configuration
-keymap = KeymapConfig()
-layer = Layer(name="default")
-keymap.add_layer(layer)
+from converter.model.keymap_model import KeymapConfig, Layer, KeyMapping, HoldTap
 ```
 
-#### `Layer`
+> **Note**: There is a deprecated module at `converter.keymap_model` that re-exports from `converter.model.keymap_model`. Always use the model directory version directly.
 
-Class representing a keyboard layer.
+#### KeymapConfig
 
-**Attributes**:
-- `name` (str): Layer name
-- `bindings` (list): List of `KeyMapping` objects
-
-**Methods**:
-- `add_binding(binding)`: Add a binding to the layer
-- `get_binding_at(row, col)`: Get a binding at a specific position
-
-**Example**:
+The `KeymapConfig` class is the top-level container for all keymap data:
 
 ```python
-from converter.model.keymap_model import Layer, KeyMapping
-
-# Create a layer
-layer = Layer(name="default")
-binding = KeyMapping(key="A")
-layer.add_binding(binding)
+@dataclass
+class KeymapConfig:
+    """Top-level configuration containing all keymap data."""
+    global_settings: GlobalSettings
+    layers: List[Layer]
 ```
 
-#### `KeyMapping`
+#### GlobalSettings
 
-Class representing a key mapping.
-
-**Attributes**:
-- `key` (str): Key name
-- `modifiers` (list): List of modifiers
-- `layer` (int): Layer number (for layer switching)
-- `behavior` (str): Behavior name
-
-**Methods**:
-- `is_transparent()`: Check if the mapping is transparent
-- `is_layer_switch()`: Check if the mapping is a layer switch
-- `to_kanata()`: Convert to Kanata format
-
-**Example**:
+The `GlobalSettings` class contains global configuration for the keymap:
 
 ```python
-from converter.model.keymap_model import KeyMapping
+@dataclass
+class GlobalSettings:
+    """Global keymap settings."""
+    tap_time: int
+    hold_time: int
+```
 
-# Create a key mapping
-mapping = KeyMapping(key="A", modifiers=["LSHIFT"])
+#### Layer
+
+The `Layer` class represents a keyboard layer with its key bindings:
+
+```python
+@dataclass
+class Layer(Binding):
+    """Represents a layer with its name and key bindings."""
+    name: str
+    keys: List[List[KeyMapping]]
+    
+    def to_kanata(self) -> str:
+        """Convert the layer to Kanata format."""
+        # Implementation details...
+```
+
+#### KeyMapping
+
+The `KeyMapping` class represents a single key binding:
+
+```python
+@dataclass
+class KeyMapping(Binding):
+    """Represents a single key mapping."""
+    key: str  # For basic key press (e.g., "A", "B")
+    hold_tap: Optional[HoldTap] = None  # For hold-tap behavior
+    
+    def to_kanata(self) -> str:
+        """Convert to Kanata format."""
+        # Implementation details...
+```
+
+#### HoldTap
+
+The `HoldTap` class represents a hold-tap key binding:
+
+```python
+@dataclass
+class HoldTap:
+    """Hold-tap key binding."""
+    behavior_name: str
+    hold_key: str
+    tap_key: str
+    
+    def to_kanata(self) -> str:
+        """Convert to Kanata format."""
+        # Implementation details...
+```
+
+#### HoldTapBinding
+
+The `HoldTapBinding` class represents a more detailed hold-tap binding with additional parameters:
+
+```python
+@dataclass(frozen=True)
+class HoldTapBinding:
+    """Represents a hold-tap binding with its behavior and parameters."""
+    behavior_name: str  # e.g., "lh_hm", "rh_hm"
+    hold_key: str      # e.g., "LGUI", "LALT"
+    tap_key: str       # e.g., "A", "S"
+    # Key positions that trigger hold
+    hold_trigger_key_positions: Optional[Tuple[int, ...]] = None
+    # Whether to trigger hold on key release
+    hold_trigger_on_release: bool = False
+    # Whether to allow tap on release after hold timeout
+    retro_tap: bool = False
+    
+    def to_kanata(self) -> str:
+        """Convert to Kanata format."""
+        # Implementation details...
 ```
 
 ## Behaviors API
