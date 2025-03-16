@@ -27,16 +27,32 @@ zmk-to-kanata examples/multi_layer_keymap.dtsi multi_layer_keymap.kbd
 ### Advanced Features (`advanced_features.dtsi`)
 
 A comprehensive ZMK keymap that demonstrates advanced features such as:
-- Homerow mods
+- Homerow mods (mod-tap)
 - Sticky keys
-- Tap dance
-- Key sequences
-- Bluetooth controls
+- Layer momentary switches
 
 To convert this example:
 
 ```bash
 zmk-to-kanata examples/advanced_features.dtsi advanced_features.kbd
+```
+
+### Complex Keymap (`complex_keymap.dtsi`)
+
+A feature-rich ZMK keymap that demonstrates a combination of supported features:
+- Multiple layers (5 layers)
+- Mod-tap keys (homerow mods)
+- Sticky keys
+- Layer momentary switches
+- Transparent keys
+- Colemak-DH layout
+
+This example is designed to showcase a real-world keyboard configuration with a Colemak-DH layout and multiple specialized layers for numbers, symbols, navigation, function keys, and a numpad.
+
+To convert this example:
+
+```bash
+zmk-to-kanata examples/complex_keymap.dtsi complex_keymap.kbd
 ```
 
 Note: Some advanced features may not be fully supported by the converter. See the [Known Limitations](../docs/known_limitations.md) document for more information.

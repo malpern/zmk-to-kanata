@@ -1,0 +1,79 @@
+/*
+ * Complex keymap example for ZMK to Kanata Converter
+ * This example demonstrates a combination of supported features:
+ * - Multiple layers (5 layers)
+ * - Mod-tap keys (homerow mods)
+ * - Sticky keys
+ * - Layer momentary switches
+ * - Transparent keys
+ */
+
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/keys.h>
+
+/ {
+    behaviors {
+        sk: sticky_key {
+            compatible = "zmk,behavior-sticky-key";
+            label = "STICKY_KEY";
+            #binding-cells = <1>;
+            bindings = <&kp>;
+            release-after-ms = <1000>;
+            quick-release;
+        };
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+        
+        // Base layer - Colemak-DH
+        default_layer {
+            bindings = <
+                &kp TAB   &kp Q &kp W &kp F &kp P &kp B   &kp J &kp L  &kp U     &kp Y   &kp SEMI &kp BSPC
+                &kp ESC   &mt LCTRL A &mt LALT R &mt LGUI S &mt LSHIFT T &kp G   &kp M &mt RSHIFT N  &mt RGUI E &mt RALT I &mt RCTRL O &kp SQT
+                &sk LSHFT &kp Z &kp X &kp C &kp D &kp V   &kp K &kp H  &kp COMMA &kp DOT &kp FSLH &sk RSHFT
+                &kp LCTRL &kp LGUI &kp LALT &mo 1 &mo 2 &mo 3 &mo 4 &kp RALT &kp RGUI &kp RCTRL
+            >;
+        };
+        
+        // Layer 1 - Numbers and symbols
+        num_sym_layer {
+            bindings = <
+                &kp GRAVE &kp N1 &kp N2 &kp N3 &kp N4 &kp N5   &kp N6 &kp N7 &kp N8 &kp N9 &kp N0 &kp DEL
+                &trans    &kp EXCL &kp AT &kp HASH &kp DLLR &kp PRCNT   &kp CARET &kp AMPS &kp STAR &kp LPAR &kp RPAR &kp BSLH
+                &trans    &kp TILDE &kp PIPE &kp MINUS &kp PLUS &kp EQUAL   &kp LBKT &kp RBKT &kp LBRC &kp RBRC &kp UNDER &trans
+                &trans    &trans &trans &trans &kp SPACE &kp RET &trans &trans &trans &trans
+            >;
+        };
+        
+        // Layer 2 - Navigation
+        nav_layer {
+            bindings = <
+                &trans    &kp INS &kp HOME &kp UP &kp END &kp PG_UP   &kp C_VOL_UP &kp C_PREV &kp C_PP &kp C_NEXT &kp C_MUTE &trans
+                &trans    &kp DEL &kp LEFT &kp DOWN &kp RIGHT &kp PG_DN   &kp C_VOL_DN &kp RSHIFT &kp RGUI &kp RALT &kp RCTRL &trans
+                &trans    &trans &trans &trans &trans &trans   &trans &trans &trans &trans &trans &trans
+                &trans    &trans &trans &trans &kp SPACE &kp RET &trans &trans &trans &trans
+            >;
+        };
+        
+        // Layer 3 - Function keys
+        function_layer {
+            bindings = <
+                &trans    &kp F1 &kp F2 &kp F3 &kp F4 &kp F5   &kp F6 &kp F7 &kp F8 &kp F9 &kp F10 &trans
+                &trans    &kp F11 &kp F12 &kp CAPS &kp SLCK &kp PSCRN   &kp K_APP &kp RSHIFT &kp RGUI &kp RALT &kp RCTRL &trans
+                &trans    &trans &trans &trans &trans &trans   &trans &trans &trans &trans &trans &trans
+                &trans    &trans &trans &trans &kp SPACE &kp RET &trans &trans &trans &trans
+            >;
+        };
+        
+        // Layer 4 - Gaming/Numpad
+        gaming_layer {
+            bindings = <
+                &kp ESC   &kp KP_N7 &kp KP_N8 &kp KP_N9 &kp KP_PLUS &kp KP_MULTIPLY   &trans &trans &trans &trans &trans &trans
+                &kp TAB   &kp KP_N4 &kp KP_N5 &kp KP_N6 &kp KP_MINUS &kp KP_DIVIDE   &trans &trans &trans &trans &trans &trans
+                &kp LSHFT &kp KP_N1 &kp KP_N2 &kp KP_N3 &kp KP_EQUAL &kp KP_DOT   &trans &trans &trans &trans &trans &trans
+                &kp LCTRL &kp KP_N0 &kp LALT &trans &kp SPACE &kp KP_ENTER   &trans &trans &trans &trans
+            >;
+        };
+    };
+}; 
