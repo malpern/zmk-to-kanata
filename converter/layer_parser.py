@@ -3,7 +3,7 @@
 import re
 from typing import List, Optional
 
-from .keymap_model import Binding, KeyMapping, Layer, HoldTap
+from converter.model.keymap_model import KeyMapping, Layer, HoldTap
 from .parser.sticky_key_parser import StickyKeyParser
 
 
@@ -93,7 +93,9 @@ class LayerParser:
         if has_hold_tap_prefix:
             parts = binding_str.split()
             if len(parts) != 3:
-                raise ValueError(f"Invalid hold-tap binding: {binding_str}")
+                raise ValueError(
+                    f"Invalid hold-tap binding: {binding_str}"
+                )
 
             behavior_name = parts[0][1:]  # Remove & prefix
             hold_key = parts[1]
@@ -124,7 +126,9 @@ class LayerParser:
 
         raise ValueError(f"Unknown binding: {binding_str}")
 
-    def parse_bindings_matrix(self, bindings_text: str) -> List[List[KeyMapping]]:
+    def parse_bindings_matrix(
+        self, bindings_text: str
+    ) -> List[List[KeyMapping]]:
         """Parse a matrix of bindings into a list of lists of KeyMapping objects.
 
         Args:

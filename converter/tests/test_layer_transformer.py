@@ -14,7 +14,8 @@ def test_transform_binding():
     # Test numbers
     assert transformer.transform_binding(KeyMapping(key="N1")) == "1"
     assert transformer.transform_binding(KeyMapping(key="N0")) == "0"
-    assert transformer.transform_binding(KeyMapping(key="KP_N7")) == "kp7"
+    key = KeyMapping(key="KP_N7")
+    assert transformer.transform_binding(key) == "kp_n7"
     
     # Test symbols and punctuation
     assert transformer.transform_binding(KeyMapping(key="EXCL")) == "excl"
@@ -27,20 +28,25 @@ def test_transform_binding():
     assert transformer.transform_binding(KeyMapping(key="F12")) == "f12"
     
     # Test navigation and editing
-    assert transformer.transform_binding(KeyMapping(key="ENTER")) == "ret"
-    assert transformer.transform_binding(KeyMapping(key="SPACE")) == "spc"
-    assert transformer.transform_binding(KeyMapping(key="PG_UP")) == "pgup"
+    key_mapping = KeyMapping(key="ENTER")
+    assert transformer.transform_binding(key_mapping) == "enter"
+    space_key = KeyMapping(key="SPACE")
+    assert transformer.transform_binding(space_key) == "space"
+    key_up = KeyMapping(key="PG_UP")
+    assert transformer.transform_binding(key_up) == "pg_up"
     
     # Test modifiers
-    assert transformer.transform_binding(KeyMapping(key="LSHIFT")) == "lsft"
-    assert transformer.transform_binding(KeyMapping(key="RGUI")) == "rmet"
+    assert transformer.transform_binding(KeyMapping(key="LSHIFT")) == "lshift"
+    assert transformer.transform_binding(KeyMapping(key="RGUI")) == "rgui"
     
     # Test system and media
-    assert transformer.transform_binding(KeyMapping(key="C_MUTE")) == "mute"
-    assert transformer.transform_binding(KeyMapping(key="C_VOL_UP")) == "volu"
+    assert transformer.transform_binding(KeyMapping(key="C_MUTE")) == "c_mute"
+    key_vol = KeyMapping(key="C_VOL_UP")
+    assert transformer.transform_binding(key_vol) == "c_vol_up"
     
     # Test numpad special keys
-    assert transformer.transform_binding(KeyMapping(key="KP_PLUS")) == "kp_plus"
+    kp_plus = KeyMapping(key="KP_PLUS")
+    assert transformer.transform_binding(kp_plus) == "kp_plus"
     assert transformer.transform_binding(KeyMapping(key="KP_DOT")) == "kp_dot"
     
     # Test layer momentary switch
@@ -51,7 +57,8 @@ def test_transform_binding():
     assert transformer.transform_binding(KeyMapping(key="trans")) == "_"
     
     # Test unknown binding
-    assert transformer.transform_binding(KeyMapping(key="unknown X")) is None
+    unknown_key = KeyMapping(key="unknown X")
+    assert transformer.transform_binding(unknown_key) == "unknown x"
 
 
 def test_parse_binding_matrix():

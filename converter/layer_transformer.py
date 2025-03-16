@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import Dict, List, Optional
 
 from .layer_parser import Layer
-from .keymap_model import KeyMapping
+from converter.model.keymap_model import KeyMapping
 from .behaviors.sticky_key import StickyKeyBinding
 
 
@@ -152,14 +152,8 @@ class LayerTransformer:
             tap_key = key_mapping.hold_tap.tap_key
             
             # Transform the keys using the key map
-            hold_key = self.key_map.get(
-                hold_key,
-                hold_key.lower()
-            )
-            tap_key = self.key_map.get(
-                tap_key,
-                tap_key.lower()
-            )
+            hold_key = self.key_map.get(hold_key) or hold_key.lower()
+            tap_key = self.key_map.get(tap_key) or tap_key.lower()
             
             return f"tap-hold {hold_key} {tap_key}"
         
@@ -172,10 +166,19 @@ class LayerTransformer:
         if key_mapping.key == "trans":
             return "_"
         
-        # Handle basic key press
-        if key_mapping.key in self.key_map:
-            return self.key_map[key_mapping.key]
-        return None
+        # Handle basic key press using key map
+        mapped_key = self.key_map.get(key_mapping.key)
+        if mapped_key:
+            return mapped_key
+        
+        # Special case for KP_N keys
+        if (key_mapping.key.startswith("KP_N") and 
+                key_mapping.key[4:].isdigit()):
+            num = key_mapping.key[4:]
+            return f"kp{num}"
+        
+        # Handle unknown keys by lowercasing
+        return key_mapping.key.lower()
     
     def parse_binding_matrix(self, zmk_bindings: str) -> List[List[str]]:
         """Parse ZMK bindings string into a matrix of bindings.
@@ -206,8 +209,10 @@ class LayerTransformer:
         
         return matrix
     
-    def transform_bindings_matrix(self, matrix: List[List[KeyMapping]]) -> List[List[str]]:
-        """Transform a matrix of KeyMapping objects into a matrix of Kanata key strings."""
+    def transform_bindings_matrix(
+        self, matrix: List[List[KeyMapping]]
+    ) -> List[List[str]]:
+        """Transform a matrix of KeyMapping objects into Kanata key strings."""
         if not matrix:
             return []
 
@@ -241,4 +246,4 @@ class LayerTransformer:
         Returns:
             List of transformed KanataLayer objects
         """
-        return [self.transform_layer(layer) for layer in zmk_layers] 
+        return [self.transform_layer(layer) for layer in zmk_layers]

@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 from typing import List, Optional
 
-from ..keymap_model import Binding
+from converter.model.keymap_model import Binding
 
 
 @dataclass
