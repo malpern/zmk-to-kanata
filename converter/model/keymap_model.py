@@ -4,8 +4,8 @@ This module contains the intermediate representation classes for our keymap
 converter.
 
 TODO(tech-debt): This file will become the single source of truth for keymap
-models. Currently, there is duplicate functionality in 
-converter/keymap_model.py which will eventually be merged into this file. 
+models. Currently, there is duplicate functionality in
+converter/keymap_model.py which will eventually be merged into this file.
 The plan is to:
 
 1. Move all conversion logic (to_kanata methods) here

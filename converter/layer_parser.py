@@ -31,7 +31,7 @@ class LayerParser:
         """Parse behavior configurations from ZMK content."""
         behaviors_pattern = r'behaviors\s*{\s*([^}]*?)}\s*;'
         behaviors_match = re.search(behaviors_pattern, content)
-        
+
         if behaviors_match:
             behaviors_content = behaviors_match.group(1)
             behavior_pattern = (
@@ -42,11 +42,11 @@ class LayerParser:
                 behavior_pattern,
                 behaviors_content
             )
-            
+
             for block in behavior_blocks:
                 name = block.group(1)
                 config_str = block.group(2)
-                
+
                 # Parse config into dict
                 config = {}
                 for line in config_str.split('\n'):
@@ -56,7 +56,7 @@ class LayerParser:
                         config[key.strip()] = val.strip().rstrip(';')
                     elif line and not line.startswith('//'):
                         config[line] = True
-                
+
                 # Try parsing as sticky key behavior
                 is_sticky = (
                     'compatible' in config and
@@ -75,8 +75,12 @@ class LayerParser:
 
         # Handle sticky key binding
         if binding_str.startswith('&sk'):
-            if (binding_str == '&sk' or 
-                    not binding_str.replace('&sk', '').strip()):
+            # Check if sticky key binding is missing a key
+            is_missing_key = (
+                binding_str == '&sk' or
+                not binding_str.replace('&sk', '').strip()
+            )
+            if is_missing_key:
                 raise ValueError("Invalid sticky key binding: missing key")
             key = binding_str.replace('&sk', '').strip()
             if key.isdigit() or key == 'INVALID':
@@ -179,9 +183,12 @@ class LayerParser:
         layer_pattern = (
             # Layer name with optional _layer suffix
             r'(\w+?)(?:_layer)?\s*{\s*'
-            r'bindings\s*=\s*<\s*'  # Bindings start
-            r'([^;]*)'  # Bindings content (non-greedy)
-            r'>\s*;\s*'  # Bindings end
+            # Bindings start
+            r'bindings\s*=\s*<\s*'
+            # Bindings content (non-greedy)
+            r'([^;]*)'
+            # Bindings end
+            r'>\s*;\s*'
         )
         matches = re.finditer(layer_pattern, keymap_content)
 
@@ -192,9 +199,9 @@ class LayerParser:
             # Clean up bindings text by removing comments
             bindings_text = re.sub(r'//[^\n]*', '', bindings_text)
             bindings_text = re.sub(
-                r'/\*.*?\*/', 
-                '', 
-                bindings_text, 
+                r'/\*.*?\*/',
+                '',
+                bindings_text,
                 flags=re.DOTALL
             )
             bindings_text = bindings_text.strip()
@@ -209,7 +216,7 @@ class LayerParser:
         """Parse a ZMK file and extract layers."""
         # First parse behaviors
         self.parse_behaviors(content)
-        
+
         # Extract keymap section
         keymap_pattern = (
             r'/\s*{\s*'                            # Root object start
@@ -218,10 +225,10 @@ class LayerParser:
             r'compatible\s*=\s*"zmk,keymap";\s*'  # Keymap compatibility
             r'([\s\S]*?)\s*}\s*;\s*}\s*;'        # Layer contents
         )
-        
+
         match = re.search(keymap_pattern, content)
         if not match:
             raise ValueError("No valid keymap section found in ZMK file")
-        
+
         keymap = match.group(1)
         return self.extract_layers(keymap)
