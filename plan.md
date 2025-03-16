@@ -210,7 +210,7 @@ Currently, we have two keymap model files:
 - [x] Update the HoldTap class in the model directory version to include the more complete to_kanata() method
 - [x] Update the KeyMapping class to use a consistent approach for key mapping
 - [x] Remove duplicate implementations from the root version
-- [ ] Update any remaining imports across the codebase to use converter.model.keymap_model directly
+- [x] Update any remaining imports across the codebase to use converter.model.keymap_model directly
 - [ ] Eventually remove the root version once all code is migrated
 
 ### Analysis
@@ -221,7 +221,7 @@ Currently, we have two keymap model files:
 ### Implementation
 - [x] Consolidate the models by moving all functionality to the model directory version
 - [x] Ensure all tests pass with the consolidated model
-- [ ] Update documentation to reflect the changes
+- [x] Update documentation to reflect the changes
 
 ### Success Criteria
 Short-term:
@@ -231,10 +231,10 @@ Short-term:
 - [x] Deprecation warnings in place
 
 Long-term:
-- [ ] Single source of truth for keymap model
-- [ ] No duplicate code
-- [ ] Type-safe implementation
-- [ ] Clear documentation
+- [x] Single source of truth for keymap model
+- [x] No duplicate code
+- [x] Type-safe implementation
+- [x] Clear documentation
 - [ ] Migration guide for users
 
 ### Dependencies
@@ -242,21 +242,21 @@ Long-term:
 
 ### Estimated Timeline
 Short-term: 1-2 days (COMPLETED)
-Long-term: 4-6 days (when prioritized)
+Long-term: 4-6 days (COMPLETED except for final removal)
 
 ### Risks
 Short-term:
-- Minor import adjustments needed
-- Potential test failures during transition
+- Minor import adjustments needed (MITIGATED)
+- Potential test failures during transition (MITIGATED)
 
 Long-term:
-- Potential breaking changes for external users
-- Complex migration if model differences are significant
-- Need to maintain backward compatibility
-- Test coverage might need enhancement
+- Potential breaking changes for external users (MITIGATED with deprecation warnings)
+- Complex migration if model differences are significant (RESOLVED)
+- Need to maintain backward compatibility (IMPLEMENTED)
+- Test coverage might need enhancement (VERIFIED)
 
 ### Notes
-The short-term solution has been completed. All imports now use converter.model.keymap_model directly, and the HoldTap class has been added to model/keymap_model.py. All tests are passing with no warnings. The long-term solution remains open for future work.
+Task 26 has been completed. The keymap models have been consolidated with the model directory version as the source of truth. The root version now properly re-exports from the model directory version with deprecation warnings. All tests are passing with no warnings. The only remaining step is to eventually remove the root version once we're confident all external code has migrated.
 
 ## Task 27: Fix Remaining Linter Errors
 ### Problem Statement
