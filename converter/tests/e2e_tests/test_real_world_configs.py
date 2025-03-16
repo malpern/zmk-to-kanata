@@ -582,3 +582,95 @@ def test_dvorak_layout(tmp_path, monkeypatch):
     assert "d" in default_layer.lower() and "h" in default_layer.lower()
     assert "t" in default_layer.lower() and "n" in default_layer.lower()
     assert "s" in default_layer.lower() 
+
+
+def test_ergonomic_kyria_layout(tmp_path, monkeypatch):
+    """Test conversion of an ergonomic Kyria layout.
+    
+    The Kyria is a popular ergonomic split keyboard with thumb clusters
+    and a columnar staggered layout. This test verifies that the converter
+    correctly handles the unique layout and features of ergonomic keyboards.
+    """
+    # Setup test files
+    zmk_file = tmp_path / "kyria_ergonomic.dtsi"
+    kanata_file = tmp_path / "kyria_ergonomic.kbd"
+    
+    # Kyria ergonomic layout
+    zmk_content = """
+    / {
+        keymap {
+            compatible = "zmk,keymap";
+            
+            default_layer {
+                bindings = <
+                    &kp TAB   &kp Q &kp W &kp E &kp R &kp T                 &kp Y &kp U  &kp I     &kp O   &kp P    &kp BSPC
+                    &kp ESC   &kp A &kp S &kp D &kp F &kp G                 &kp H &kp J  &kp K     &kp L   &kp SEMI &kp SQT
+                    &kp LSHFT &kp Z &kp X &kp C &kp V &kp B &kp LBKT     &kp RBKT &kp N &kp M  &kp COMMA &kp DOT &kp FSLH &kp RSHFT
+                                 &kp LGUI &kp LALT &kp LCTRL &kp SPACE   &kp RET &mo 1 &mo 2 &kp RALT
+                >;
+            };
+            
+            lower_layer {
+                bindings = <
+                    &kp GRAVE &kp N1 &kp N2 &kp N3 &kp N4 &kp N5           &kp N6 &kp N7 &kp N8 &kp N9 &kp N0 &kp DEL
+                    &trans    &trans &trans &trans &trans &trans           &kp LEFT &kp DOWN &kp UP &kp RIGHT &trans &trans
+                    &trans    &trans &trans &trans &trans &trans &trans  &trans &trans &trans &trans &trans &trans &trans
+                                 &trans &trans &trans &trans              &trans &trans &trans &trans
+                >;
+            };
+            
+            raise_layer {
+                bindings = <
+                    &kp F1    &kp F2 &kp F3 &kp F4 &kp F5 &kp F6           &kp F7 &kp F8 &kp F9 &kp F10 &kp F11 &kp F12
+                    &trans    &trans &trans &trans &trans &trans           &trans &trans &trans &trans &trans &trans
+                    &trans    &trans &trans &trans &trans &trans &trans  &trans &trans &trans &trans &trans &trans &trans
+                                 &trans &trans &trans &trans              &trans &trans &trans &trans
+                >;
+            };
+        };
+    };
+    """
+    
+    # Write the ZMK content to the file
+    zmk_file.write_text(zmk_content)
+    
+    # Set up sys.argv for the main function
+    monkeypatch.setattr(
+        sys, 'argv', ['converter', str(zmk_file), str(kanata_file)]
+    )
+    
+    # Run the converter
+    from converter.main import main
+    main()
+    
+    # Check that the conversion was successful
+    assert kanata_file.exists()
+    
+    # Read the generated Kanata file
+    kanata_content = kanata_file.read_text()
+    
+    # Verify the content
+    assert ";; ZMK to Kanata Configuration" in kanata_content
+    assert "(defvar tap-time 200)" in kanata_content
+    assert "(defvar hold-time 250)" in kanata_content
+    assert "(deflayer default" in kanata_content
+    assert "(deflayer lower" in kanata_content
+    assert "(deflayer raise" in kanata_content
+    
+    # Check for specific ergonomic keyboard features
+    default_layer = kanata_content.split("(deflayer default")[1].split("(deflayer")[0]
+    lower_layer = kanata_content.split("(deflayer lower")[1].split("(deflayer")[0]
+    
+    # Check for thumb cluster keys
+    assert "space" in default_layer.lower()
+    assert "ret" in default_layer.lower() or "enter" in default_layer.lower()
+    
+    # Check for layer switching
+    assert "@layer1" in default_layer.lower() or "@lower" in default_layer.lower()
+    assert "@layer2" in default_layer.lower() or "@raise" in default_layer.lower()
+    
+    # Check for navigation keys in lower layer
+    assert "left" in lower_layer.lower()
+    assert "down" in lower_layer.lower()
+    assert "up" in lower_layer.lower()
+    assert "right" in lower_layer.lower() 

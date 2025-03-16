@@ -147,7 +147,7 @@ converter/
       - [x] Colemak
       - [x] Dvorak
       - [x] Split keyboards
-      - [ ] Ergonomic layouts (more examples)
+      - [x] Ergonomic layouts (Kyria)
     - [ ] Test edge cases from user feedback
       - [ ] Create issue tracking system for user-reported cases
       - [ ] Add regression tests for fixed issues
@@ -190,6 +190,7 @@ converter/
 - Started Task 25: Added real-world configuration tests for QWERTY, Colemak, and split keyboards
 - Added Ben Vallack's Cradio layout as a real-world test case
 - Added Dvorak layout test to complete keyboard layout testing
+- Added Kyria ergonomic layout test
 
 ## Task 26: Resolve Keymap Model Duplication
 ### Problem Statement
