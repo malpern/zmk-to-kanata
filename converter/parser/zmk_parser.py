@@ -15,6 +15,9 @@ from converter.model.keymap_model import (
     KeymapConfig,
 )
 from converter.parser.sticky_key_parser import StickyKeyParser
+from .parser_error import ParserError
+from .layer_parser import LayerParser
+from .global_settings_parser import GlobalSettingsParser
 
 
 logger = logging.getLogger(__name__)
@@ -32,11 +35,6 @@ class ParserState(Enum):
         return self.name
 
 
-class ParserError(Exception):
-    """Base class for parser errors."""
-    pass
-
-
 class InvalidStateTransitionError(ParserError):
     """Error raised when an invalid state transition is attempted."""
     def __init__(
@@ -49,181 +47,6 @@ class InvalidStateTransitionError(ParserError):
         super().__init__(
             f"Invalid state transition from {from_state} to {to_state}"
         )
-
-
-class LayerParser:
-    """Parser for ZMK layer definitions."""
-    
-    def __init__(self):
-        """Initialize the layer parser."""
-        self.current_layer: Optional[str] = None
-        self.current_bindings: List[List[KeyMapping]] = []
-        self.has_bindings_declaration: bool = False
-        self.sticky_key_parser = StickyKeyParser()
-
-    def start_layer(self, line: str) -> str:
-        """Start parsing a new layer.
-        
-        Args:
-            line: The line containing the layer definition.
-            
-        Returns:
-            The name of the layer.
-            
-        Raises:
-            ValueError: If the layer name cannot be extracted.
-        """
-        try:
-            layer_name = line.split('_layer')[0].strip()
-            if not layer_name:
-                raise ValueError("Empty layer name")
-            self.current_layer = layer_name
-            self.current_bindings = []
-            self.has_bindings_declaration = False
-            return layer_name
-        except Exception as e:
-            raise ValueError(
-                f"Failed to parse layer name from line: {line}"
-            ) from e
-
-    def finish_layer(self) -> Layer:
-        """Finish parsing the current layer.
-        
-        Returns:
-            The completed Layer object.
-            
-        Raises:
-            ValueError: If no layer is being parsed, or if the layer has no
-                bindings declaration.
-        """
-        if not self.current_layer:
-            raise ValueError("No layer currently being parsed")
-        
-        # Check if we've seen a bindings declaration
-        if not self.has_bindings_declaration:
-            raise ValueError("Layer must have a bindings declaration")
-        
-        # Flatten the bindings list into a single list
-        bindings = [
-            binding for row in self.current_bindings 
-            for binding in row
-        ]
-        
-        layer = Layer(
-            name=self.current_layer,
-            bindings=bindings
-        )
-        self.current_layer = None
-        self.current_bindings = []
-        self.has_bindings_declaration = False
-        return layer
-
-    def parse_binding(self, binding: str) -> KeyMapping:
-        """Parse a single key binding.
-        
-        Args:
-            binding: The binding string to parse.
-            
-        Returns:
-            A KeyMapping object representing the binding.
-            
-        Raises:
-            ValueError: If the binding is invalid.
-        """
-        binding = binding.strip()
-        if not binding:
-            raise ValueError("Empty binding")
-
-        if binding == 'trans':
-            return KeyMapping(key='trans')
-        
-        if binding.startswith('sk '):
-            # Use the sticky key parser for validation
-            try:
-                sticky_binding = self.sticky_key_parser.parse_binding(
-                    f"&{binding}"
-                )
-                if sticky_binding is None:
-                    raise ValueError(f"Invalid sticky key binding: {binding}")
-                return sticky_binding
-            except ValueError as e:
-                raise ValueError(str(e))
-        
-        if binding.startswith('kp '):
-            key = binding[3:].strip()
-            if not key:
-                raise ValueError("Empty key press binding")
-            return KeyMapping(key=key)
-        
-        return KeyMapping(key=binding)
-
-    def parse_bindings_line(self, line: str) -> List[KeyMapping]:
-        """Parse a line of bindings into a list of KeyMappings.
-        
-        Args:
-            line: The line containing bindings.
-            
-        Returns:
-            A list of KeyMapping objects.
-            
-        Raises:
-            ValueError: If the line contains invalid bindings.
-        """
-        logger.debug("Raw binding line: %s", line)
-        
-        # Skip binding declaration lines without content
-        if line.strip() == 'bindings = <':
-            return []
-        
-        # Skip binding end lines
-        if line.strip() == '>;':
-            return []
-        
-        # Extract content between < and >
-        if '<' in line and '>' in line:
-            content = line.split('<')[1].split('>')[0].strip()
-            logger.debug("Extracted binding content: %s", content)
-            if not content:  # Empty bindings block
-                return []
-            line = content
-        
-        line = line.rstrip(';').strip()
-        if not line:
-            return []
-
-        bindings = [b.strip() for b in line.split('&') if b.strip()]
-        logger.debug("Parsed bindings: %s", bindings)
-        if not bindings:
-            return []
-
-        try:
-            result = [self.parse_binding(b) for b in bindings]
-            logger.debug("Created bindings: %s", result)
-            return result
-        except ValueError as e:
-            raise ValueError(
-                f"Invalid binding in line: {line}"
-            ) from e
-
-    def add_bindings_line(self, line: str) -> None:
-        """Add a line of bindings to the current layer.
-        
-        Args:
-            line: The line containing bindings.
-            
-        Raises:
-            ValueError: If the bindings are invalid or no layer is being
-                parsed.
-        """
-        if not self.current_layer:
-            raise ValueError("No layer currently being parsed")
-        
-        if 'bindings = <' in line:
-            self.has_bindings_declaration = True
-        
-        bindings = self.parse_bindings_line(line)
-        if bindings:
-            self.current_bindings.append(bindings)
 
 
 class ZMKParser:
@@ -240,11 +63,10 @@ class ZMKParser:
 
     def __init__(self):
         """Initialize the parser."""
-        self.layer_parser = LayerParser()
         self.state = ParserState.INITIAL
+        self.layer_parser = LayerParser()
+        self.global_settings_parser = GlobalSettingsParser()
         self.layers: List[Layer] = []
-        self.tap_time: int = 200  # Default tap time
-        self.hold_time: int = 250  # Default hold time
 
     def _transition_to(self, new_state: ParserState) -> None:
         """Transition to a new state.
@@ -261,57 +83,35 @@ class ZMKParser:
         self.state = new_state
 
     def _parse_global_settings(self, line: str) -> None:
-        """Parse global settings from a line.
+        """Parse global settings.
         
         Args:
-            line: The line to parse.
+            line: The line containing global settings.
             
         Raises:
             ParserError: If the setting is invalid or malformed.
         """
-        line = line.strip()
         try:
-            if 'tap-time' in line:
-                # Extract number from line like "tap-time = <200>;"
-                if '<' not in line or '>' not in line:
-                    raise ParserError(f"Invalid tap-time setting: {line}")
-                value = line.split('<')[1].split('>')[0].strip()
-                try:
-                    self.tap_time = int(value)
-                except ValueError:
-                    raise ParserError(f"Invalid tap-time setting: {line}")
-            elif 'hold-time' in line:
-                # Extract number from line like "hold-time = <250>;"
-                if '<' not in line or '>' not in line:
-                    raise ParserError(f"Invalid hold-time setting: {line}")
-                value = line.split('<')[1].split('>')[0].strip()
-                try:
-                    self.hold_time = int(value)
-                except ValueError:
-                    raise ParserError(f"Invalid hold-time setting: {line}")
-        except IndexError:
-            raise ParserError(f"Invalid setting format: {line}")
+            self.global_settings_parser.parse_setting(line)
+        except ValueError as e:
+            raise ParserError(str(e)) from e
 
     def parse(self, file_path: Path) -> KeymapConfig:
-        """Parse a ZMK keymap file into a KeymapConfig object.
+        """Parse a ZMK keymap file.
         
         Args:
-            file_path: Path to the ZMK keymap file.
+            file_path: Path to the keymap file.
             
         Returns:
-            A KeymapConfig object representing the parsed keymap.
+            A KeymapConfig object containing the parsed keymap.
             
         Raises:
-            ValueError: If the file cannot be parsed or no layers are found.
             ParserError: If there are any parsing errors.
         """
         try:
-            with open(file_path, 'r') as f:
-                content = f.read()
-        except Exception as e:
-            raise ValueError(f"Failed to read file {file_path}") from e
-
-        try:
+            # Read and process file
+            content = file_path.read_text()
+            
             # Process file line by line
             for line in content.split('\n'):
                 self._process_line(line.strip())
@@ -320,10 +120,7 @@ class ZMKParser:
                 raise ValueError("No layers found in ZMK file")
 
             return KeymapConfig(
-                global_settings=GlobalSettings(
-                    tap_time=self.tap_time,
-                    hold_time=self.hold_time
-                ),
+                global_settings=self.global_settings_parser.finish(),
                 layers=self.layers
             )
         except ParserError as e:
