@@ -30,4 +30,4 @@ class KeySequenceParser:
             return KeySequenceBinding.from_zmk(binding_str)
         except ValueError:
             # If we can't parse it as a key sequence binding, return None
-            return None 
+            return None

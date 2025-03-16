@@ -63,13 +63,13 @@ class HoldTap:
             hold_key = 'lmet'
         elif hold_key == 'RGUI':
             hold_key = 'rmet'
-        
+
         # Convert tap_key if needed
         tap_key = self.tap_key
         # Remove leading 'n' from number keys if followed by digits
         if tap_key.startswith('N') and tap_key[1:].isdigit():
             tap_key = tap_key[1:]
-        
+
         return f"tap-hold {hold_key} {tap_key.lower()}"
 
 
@@ -211,7 +211,7 @@ class KeyMapping(Binding):
 
         # Handle Unicode bindings
         unicode_prefixes = ["&unicode_", "&pi", "&n_tilde"]
-        is_unicode = any(binding_str.startswith(prefix) 
+        is_unicode = any(binding_str.startswith(prefix)
                          for prefix in unicode_prefixes)
         if is_unicode:
             # For now, we'll use a placeholder for the Unicode character
@@ -258,12 +258,12 @@ class Layer:
         kanata_bindings = []
         for binding in self.bindings:
             kanata_bindings.append(binding.to_kanata())
-        
+
         # Format the layer definition
         layer_def = f"(deflayer {self.name}\n"
         layer_def += "  " + " ".join(kanata_bindings) + "\n"
         layer_def += ")"
-        
+
         return layer_def
 
 

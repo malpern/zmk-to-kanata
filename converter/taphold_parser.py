@@ -173,3 +173,7 @@ class TapHoldParser:
 
 # Alias for backward compatibility
 HoldTapParser = TapHoldParser
+
+def is_hold_tap_binding(binding_str: str) -> bool:
+    """Check if a binding string is a hold-tap binding."""
+    return binding_str.startswith("&ht") or binding_str.startswith("&lt") or binding_str.startswith("&mt")

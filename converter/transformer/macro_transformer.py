@@ -1,6 +1,6 @@
 """Macro Transformer Module
 
-This module provides functionality for transforming ZMK macro behaviors to 
+This module provides functionality for transforming ZMK macro behaviors to
 Kanata format.
 """
 
@@ -68,41 +68,41 @@ class MacroTransformer:
             The Kanata macro definition string.
         """
         lines = [f"(defsrc {behavior.name})"]
-        
+
         # Add the macro bindings
         binding_lines = []
         for binding in behavior.bindings:
             binding_str = binding.to_kanata()
             if binding_str:
                 binding_lines.append(binding_str)
-        
+
         if binding_lines:
             lines.append(f"(deflayer {behavior.name}")
             lines.append("  " + " ".join(binding_lines))
             lines.append(")")
-        
+
         return "\n".join(lines)
 
     def transform_macro(self, behavior: MacroBehavior) -> str:
         """Transform a ZMK macro behavior to Kanata format.
-        
+
         Args:
             behavior: The ZMK macro behavior to transform
-            
+
         Returns:
             String containing the Kanata macro definition
         """
         # Start building the macro definition
         macro_def = f"(defmacro {behavior.name}\n"
-        
+
         # Process each binding in the macro
         current_mode = MacroActivationMode.TAP
         pressed_keys = set()
-        
+
         i = 0
         while i < len(behavior.bindings):
             binding = behavior.bindings[i]
-            
+
             # Handle mode changes
             if binding == "&macro_tap":
                 current_mode = MacroActivationMode.TAP
@@ -116,23 +116,23 @@ class MacroTransformer:
                 current_mode = MacroActivationMode.RELEASE
                 i += 1
                 continue
-            
+
             # Handle wait times
             elif binding.startswith("&macro_wait_time "):
                 wait_time = binding.split(" ")[1]
                 macro_def += f"  delay {wait_time}\n"
                 i += 1
                 continue
-            
+
             # Extract the key from the binding string
             if binding.startswith("&kp "):
                 key = binding[4:]
                 kanata_key = self._convert_key(key)
-                
+
                 # Special case for the first key after &macro_press
                 # In ZMK, this is the modifier key that should be pressed
                 if current_mode == MacroActivationMode.PRESS and key in [
-                    "LSHIFT", "RSHIFT", "LCTRL", "RCTRL", 
+                    "LSHIFT", "RSHIFT", "LCTRL", "RCTRL",
                     "LALT", "RALT", "LGUI", "RGUI"
                 ]:
                     pressed_keys.add(kanata_key)
@@ -146,26 +146,26 @@ class MacroTransformer:
                     if kanata_key in pressed_keys:
                         pressed_keys.remove(kanata_key)
                     macro_def += f"  release {kanata_key}\n"
-            
+
             i += 1
-        
+
         # Make sure all pressed keys are released at the end of the macro
         # Only if they haven't been explicitly released
         for key in pressed_keys:
             macro_def += f"  release {key}\n"
-        
+
         # Close the macro definition
         macro_def += ")"
-        
+
         return macro_def
 
     def _convert_key(self, zmk_key: str) -> str:
         """Convert a ZMK key name to Kanata key name.
-        
+
         Args:
             zmk_key: The ZMK key name
-            
+
         Returns:
             The corresponding Kanata key name
         """
-        return self.key_map.get(zmk_key, zmk_key.lower()) 
+        return self.key_map.get(zmk_key, zmk_key.lower())

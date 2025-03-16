@@ -32,10 +32,10 @@ class StickyKeyParser:
                 name=name,
                 release_after_ms=release_after_ms
             )
-            
+
             self.behaviors[name] = behavior
             return behavior
-        
+
         return None
 
     def parse_binding(self, binding_str: str) -> Optional[StickyKeyBinding]:
@@ -46,11 +46,11 @@ class StickyKeyParser:
         try:
             # Extract the key from the binding string
             key = binding_str.replace('&sk', '').strip()
-            
+
             # Check if the key is valid
             if not key or key.isdigit() or key == 'INVALID':
                 return None
-            
+
             # Create the binding
             return StickyKeyBinding(key=key)
         except ValueError:

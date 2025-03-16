@@ -54,10 +54,10 @@ class TestMacroTransformer(unittest.TestCase):
         class MockBinding:
             def __init__(self, kanata_str):
                 self.kanata_str = kanata_str
-                
+
             def to_kanata(self):
                 return self.kanata_str
-        
+
         macro = MacroBehavior(
             name="test_macro",
             wait_ms=50,
@@ -82,4 +82,4 @@ class TestMacroTransformer(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main() 
+    unittest.main()

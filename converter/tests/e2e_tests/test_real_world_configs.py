@@ -25,9 +25,9 @@ def test_qwerty_standard_layout(tmp_path, monkeypatch):
                 bindings = <
                     &kp ESC   &kp N1 &kp N2 &kp N3 &kp N4 &kp N5 &kp N6 &kp N7 &kp N8 &kp N9
                     &kp N0 &kp MINUS &kp EQUAL &kp BSPC
-                    &kp TAB   &kp Q  &kp W  &kp E  &kp R  &kp T  &kp Y  &kp U  &kp I  &kp O 
+                    &kp TAB   &kp Q  &kp W  &kp E  &kp R  &kp T  &kp Y  &kp U  &kp I  &kp O
                     &kp P  &kp LBKT  &kp RBKT  &kp BSLH
-                    &kp LCTRL &kp A  &kp S  &kp D  &kp F  &kp G  &kp H  &kp J  &kp K  &kp L 
+                    &kp LCTRL &kp A  &kp S  &kp D  &kp F  &kp G  &kp H  &kp J  &kp K  &kp L
                     &kp SEMI &kp SQT  &kp RET
                     &kp LSHFT &kp Z  &kp X  &kp C  &kp V  &kp B  &kp N  &kp M  &kp COMMA
                     &kp DOT &kp FSLH &kp RSHFT
@@ -99,9 +99,9 @@ def test_colemak_layout(tmp_path, monkeypatch):
                 bindings = <
                     &kp ESC   &kp N1 &kp N2 &kp N3 &kp N4 &kp N5 &kp N6 &kp N7 &kp N8 &kp N9
                     &kp N0 &kp MINUS &kp EQUAL &kp BSPC
-                    &kp TAB   &kp Q  &kp W  &kp F  &kp P  &kp G  &kp J  &kp L  &kp U  &kp Y 
+                    &kp TAB   &kp Q  &kp W  &kp F  &kp P  &kp G  &kp J  &kp L  &kp U  &kp Y
                     &kp SEMI &kp LBKT &kp RBKT &kp BSLH
-                    &kp LCTRL &kp A  &kp R  &kp S  &kp T  &kp D  &kp H  &kp N  &kp E  &kp I 
+                    &kp LCTRL &kp A  &kp R  &kp S  &kp T  &kp D  &kp H  &kp N  &kp E  &kp I
                     &kp O  &kp SQT   &kp RET
                     &kp LSHFT &kp Z  &kp X  &kp C  &kp V  &kp B  &kp K  &kp M  &kp COMMA
                     &kp DOT &kp FSLH &kp RSHFT
@@ -181,26 +181,26 @@ def test_split_keyboard_layout(tmp_path, monkeypatch):
 
             lower_layer {
                 bindings = <
-                    &kp ESC   &kp N1   &kp N2 &kp N3   &kp N4   &kp N5    
+                    &kp ESC   &kp N1   &kp N2 &kp N3   &kp N4   &kp N5
                     &kp N6   &kp N7   &kp N8 &kp N9    &kp N0   &kp DEL
-                    &kp LCTRL &kp LGUI &trans &kp LALT &kp LSHFT &trans   
+                    &kp LCTRL &kp LGUI &trans &kp LALT &kp LSHFT &trans
                     &kp LEFT &kp DOWN &kp UP &kp RIGHT &trans   &trans
-                    &trans    &trans   &trans &trans   &trans   &trans    
+                    &trans    &trans   &trans &trans   &trans   &trans
                     &trans   &trans   &trans &trans    &trans   &trans
-                                       &trans &trans   &trans   
+                                       &trans &trans   &trans
                                        &trans   &trans   &trans
                 >;
             };
 
             raise_layer {
                 bindings = <
-                    &kp GRAVE &kp F1 &kp F2 &kp F3 &kp F4 &kp F5  
+                    &kp GRAVE &kp F1 &kp F2 &kp F3 &kp F4 &kp F5
                     &kp F6 &kp F7 &kp F8 &kp F9 &kp F10 &kp F11
-                    &trans    &trans &trans &trans &trans &trans   
+                    &trans    &trans &trans &trans &trans &trans
                     &trans &trans &trans &trans &trans  &kp F12
-                    &trans    &trans &trans &trans &trans &trans   
+                    &trans    &trans &trans &trans &trans &trans
                     &trans &trans &trans &trans &trans  &trans
-                                     &trans &trans &trans          
+                                     &trans &trans &trans
                                      &trans &trans &trans
                 >;
             };
@@ -285,7 +285,7 @@ def test_ergonomic_layout_with_homerow_mods(tmp_path, monkeypatch):
             default_layer {
                 bindings = <
                     &kp TAB   &kp Q &kp W &kp E &kp R &kp T   &kp Y &kp U  &kp I     &kp O   &kp P    &kp BSPC
-                    &kp ESC   &hm LGUI A &hm LALT S &hm LCTRL D &hm LSHFT F &kp G  
+                    &kp ESC   &hm LGUI A &hm LALT S &hm LCTRL D &hm LSHFT F &kp G
                     &kp H &hm RSHFT J  &hm RCTRL K &hm RALT L &hm RGUI SEMI &kp SQT
                     &kp LSHFT &kp Z &kp X &kp C &kp V &kp B   &kp N &kp M  &kp COMMA &kp DOT &kp FSLH &kp RSHFT
                                     &kp LGUI &mo 1 &kp SPACE   &kp RET &mo 2 &kp RALT
@@ -294,26 +294,26 @@ def test_ergonomic_layout_with_homerow_mods(tmp_path, monkeypatch):
 
             lower_layer {
                 bindings = <
-                    &kp ESC   &kp N1   &kp N2 &kp N3   &kp N4   &kp N5    
+                    &kp ESC   &kp N1   &kp N2 &kp N3   &kp N4   &kp N5
                     &kp N6   &kp N7   &kp N8 &kp N9    &kp N0   &kp DEL
-                    &kp LCTRL &kp LGUI &trans &kp LALT &kp LSHFT &trans   
+                    &kp LCTRL &kp LGUI &trans &kp LALT &kp LSHFT &trans
                     &kp LEFT &kp DOWN &kp UP &kp RIGHT &trans   &trans
-                    &trans    &trans   &trans &trans   &trans   &trans    
+                    &trans    &trans   &trans &trans   &trans   &trans
                     &trans   &trans   &trans &trans    &trans   &trans
-                                       &trans &trans   &trans   
+                                       &trans &trans   &trans
                                        &trans   &trans   &trans
                 >;
             };
 
             raise_layer {
                 bindings = <
-                    &kp GRAVE &kp F1 &kp F2 &kp F3 &kp F4 &kp F5  
+                    &kp GRAVE &kp F1 &kp F2 &kp F3 &kp F4 &kp F5
                     &kp F6 &kp F7 &kp F8 &kp F9 &kp F10 &kp F11
-                    &trans    &trans &trans &trans &trans &trans   
+                    &trans    &trans &trans &trans &trans &trans
                     &trans &trans &trans &trans &trans  &kp F12
-                    &trans    &trans &trans &trans &trans &trans   
+                    &trans    &trans &trans &trans &trans &trans
                     &trans &trans &trans &trans &trans  &trans
-                                     &trans &trans &trans          
+                                     &trans &trans &trans
                                      &trans &trans &trans
                 >;
             };
@@ -400,9 +400,9 @@ def test_ben_vallack_cradio_layout(tmp_path, monkeypatch):
 
             default_layer {
                 bindings = <
-                    &kp TAB &kp C &kp L &kp M &trans            
+                    &kp TAB &kp C &kp L &kp M &trans
                     &trans &kp F  &kp U    &kp Z  &kp BKSP
-                    &kp I &hm LCTL S &hm LALT R &hm LGUI T &trans       
+                    &kp I &hm LCTL S &hm LALT R &hm LGUI T &trans
                     &trans  &hm RGUI N &hm RALT K &hm RCTL A &kp O
                     &hs LSHIFT Q &kp V &kp W &kp D &mt LC(LS(LALT)) SPC
                     &kp E &kp H  &kp Y &td EXCL DOT &hs RSHIFT X
@@ -413,7 +413,7 @@ def test_ben_vallack_cradio_layout(tmp_path, monkeypatch):
 
             left_layer {
                 bindings = <
-                    &trans  &kp ATSN   &td LC(LG(LS(N4))) LS(N3) &kp DLLR &trans       
+                    &trans  &kp ATSN   &td LC(LG(LS(N4))) LS(N3) &kp DLLR &trans
                     &trans &kp LS(COMMA) &kp LS(DOT) &kp CARET &trans
                     &kp TAB &hm LCTL EQUAL &hm LALT LA(RBKT) &hm LGUI LA(LS(RBKT)) &trans
                     &trans &hm RGUI LBRC &hm RALT RBRC &hm RCTL PIPE &kp AMPS

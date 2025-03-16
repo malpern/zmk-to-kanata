@@ -28,10 +28,10 @@ class TestTapHoldKeymap(unittest.TestCase):
         """
         layers = self.parser.parse_zmk_file(zmk_content)
         self.assertEqual(len(layers), 1)
-        
+
         layer = layers[0]
         self.assertEqual(len(layer.bindings), 2)
-        
+
         # Check first binding (mt LSHIFT A)
         binding1 = layer.bindings[0]
         self.assertEqual(binding1.key, "A")
@@ -39,7 +39,7 @@ class TestTapHoldKeymap(unittest.TestCase):
         self.assertEqual(binding1.hold_tap.behavior_name, "mt")
         self.assertEqual(binding1.hold_tap.hold_key, "LSHIFT")
         self.assertEqual(binding1.hold_tap.tap_key, "A")
-        
+
         # Check second binding (ht LCTRL B)
         binding2 = layer.bindings[1]
         self.assertEqual(binding2.key, "B")

@@ -32,7 +32,7 @@ class MacroBinding(Binding):
 
     def to_kanata(self) -> str:
         """Convert the binding to Kanata format.
-        
+
         Returns:
             String containing the Kanata binding
         """
@@ -50,18 +50,18 @@ class MacroBinding(Binding):
         # Extract behavior name and optional parameter
         parts = zmk_binding.replace('&', '').strip().split()
         behavior_name = parts[0]
-        
+
         # Look up the behavior
         if behavior_name not in behaviors:
             raise ValueError(f"Unknown macro behavior: {behavior_name}")
-        
+
         behavior = behaviors[behavior_name]
-        
+
         # Check for parameter
         param = None
         if len(parts) > 1 and behavior.binding_cells > 0:
             param = int(parts[1])
-            
+
         return cls(behavior=behavior, param=param)
 
 
@@ -74,4 +74,4 @@ def is_macro_binding(binding_str: str) -> bool:
     ]
     return binding_str.startswith('&') and not any(
         binding_str.startswith(prefix) for prefix in excluded_prefixes
-    ) 
+    )

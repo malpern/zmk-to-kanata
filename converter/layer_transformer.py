@@ -11,7 +11,7 @@ class KanataLayer:
 
     def __init__(self, name: str, keys: List[List[str]]):
         """Initialize a Kanata layer.
-        
+
         Args:
             name: The name of the layer
             keys: A 2D list of key bindings in Kanata format
@@ -100,23 +100,23 @@ class LayerTransformer:
                 # Look up the key in the key map
                 kanata_key = self.key_map.get(key, key.lower())
                 kanata_keys.append(kanata_key)
-            
+
             # Format as a chord
             return f"(chord {' '.join(kanata_keys)})"
-        
+
         # Handle regular key mappings
         if isinstance(binding, KeyMapping):
             return binding.to_kanata()
-        
+
         # Default case
         return str(binding)
 
     def transform_layer(self, layer: Layer) -> KanataLayer:
         """Transform a ZMK layer to Kanata format.
-        
+
         Args:
             layer: The ZMK layer to transform
-            
+
         Returns:
             A KanataLayer object representing the layer in Kanata format
         """
@@ -124,40 +124,40 @@ class LayerTransformer:
         kanata_bindings = []
         for binding in layer.bindings:
             kanata_bindings.append(self.transform_binding(binding))
-        
+
         # For simplicity, we're putting all keys in a single row
         # In a real implementation, we would respect the original layout
         keys = [kanata_bindings]
-        
+
         return KanataLayer(layer.name, keys)
 
     def transform_layers(self, zmk_layers: List[Layer]) -> str:
         """Transform ZMK layers to Kanata format.
-        
+
         Args:
             zmk_layers: List of ZMK Layer objects
-            
+
         Returns:
             String containing the complete Kanata keymap configuration
         """
         # Define the source keys
         source_keys = self._get_source_keys()
-        
+
         # Transform each layer
         kanata_layers = []
         for layer in zmk_layers:
             kanata_layers.append(self.transform_layer(layer))
-        
+
         # Combine everything
         kanata_content = f"(defsrc\n  {source_keys}\n)\n\n"
-        
+
         # Add each layer definition
         for layer in kanata_layers:
             kanata_content += f"(deflayer {layer.name}\n"
             for row in layer.keys:
                 kanata_content += "  " + " ".join(row) + "\n"
             kanata_content += ")\n\n"
-        
+
         return kanata_content.rstrip()
 
     def _get_source_keys(self) -> str:

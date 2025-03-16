@@ -149,7 +149,7 @@ class TestMacroParser(unittest.TestCase):
             "&kp B, &macro_release &kp LSHIFT>"
         )
         self.parser.parse_bindings(behavior, bindings_str)
-        
+
         # Check that bindings were parsed correctly
         self.assertIn("&kp A", behavior.bindings)
         self.assertIn("&kp LSHIFT", behavior.bindings)
@@ -178,4 +178,4 @@ class TestMacroParser(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main() 
+    unittest.main()

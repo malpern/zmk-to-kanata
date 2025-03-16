@@ -34,14 +34,14 @@ def convert_zmk_to_kanata(input_file: str) -> str:
     layer_parser = LayerParser()
     macro_parser = MacroParser()
     unicode_parser = UnicodeParser()
-    
+
     try:
         # Parse layers
         layers = layer_parser.parse_zmk_file(content)
-        
+
         # Parse macros
         macro_behaviors = macro_parser.parse_behaviors(content)
-        
+
         # Parse Unicode mappings
         unicode_parser.parse_unicode_mappings(content)
     except ValueError as e:
@@ -56,18 +56,18 @@ def convert_zmk_to_kanata(input_file: str) -> str:
 
     # Create the Kanata transformer
     kanata_transformer = KanataTransformer()
-    
+
     # Register macro behaviors
     for macro in macro_behaviors:
         kanata_transformer.register_macro_behavior(macro)
-    
+
     # Create a KeymapConfig object with default global settings
     config = KeymapConfig(
         global_settings=GlobalSettings(tap_time=200, hold_time=250),
         layers=kanata_layers
     )
-    
+
     # Generate the Kanata configuration
     output = kanata_transformer.transform(config)
-    
-    return output 
+
+    return output

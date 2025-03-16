@@ -46,10 +46,10 @@ class MacroParser:
                 tap_ms=tap_ms,
                 binding_cells=binding_cells
             )
-            
+
             self.behaviors[name] = behavior
             return behavior
-        
+
         return None
 
     def parse_bindings(
@@ -60,16 +60,16 @@ class MacroParser:
         """Parse the bindings list for a macro behavior."""
         # Split the bindings string into individual bindings
         bindings = []
-        
+
         # Remove outer brackets and split by commas
         bindings_str = bindings_str.strip('<>').strip()
         binding_parts = bindings_str.split(',')
-        
+
         for part in binding_parts:
             part = part.strip()
             if not part:
                 continue
-                
+
             # Check for macro control behaviors
             if '&macro_tap' in part:
                 self.activation_mode = MacroActivationMode.TAP
@@ -95,7 +95,7 @@ class MacroParser:
             else:
                 # Regular binding
                 bindings.append(part)
-        
+
         # Store the parsed bindings in the behavior
         behavior.bindings = bindings
 
@@ -107,20 +107,20 @@ class MacroParser:
         """Extract behaviors after a macro control behavior."""
         # Remove the control part
         behaviors_str = part.replace(control, '').strip()
-        
+
         # Process the behaviors
         result = []
         current_behavior = None
-        
+
         # Split by whitespace to get individual tokens
         tokens = behaviors_str.split()
-        
+
         i = 0
         while i < len(tokens):
             if tokens[i].startswith('&'):
                 # This is a behavior
                 current_behavior = tokens[i]
-                
+
                 # Check if there's a parameter
                 if i + 1 < len(tokens) and not tokens[i + 1].startswith('&'):
                     # This is a parameter
@@ -133,7 +133,7 @@ class MacroParser:
             else:
                 # Skip unexpected tokens
                 i += 1
-        
+
         return result
 
     def parse_binding(self, binding_str: str) -> Optional[MacroBinding]:
@@ -146,13 +146,13 @@ class MacroParser:
         except (ValueError, KeyError):
             # If we can't parse it as a macro binding, return None
             return None
-            
+
     def parse_behaviors(self, content: str) -> List[MacroBehavior]:
         """Parse all macro behaviors from ZMK content.
-        
+
         Args:
             content: The ZMK file content
-            
+
         Returns:
             List of parsed MacroBehavior objects
         """
@@ -177,5 +177,5 @@ class MacroParser:
             )
             self.behaviors["test_macro"] = behavior
             return [behavior]
-        
-        return [] 
+
+        return []

@@ -58,7 +58,7 @@ class TestUnicodeParser(unittest.TestCase):
         ZMK_UNICODE_PAIR(n_tilde, N0, N0, F, N1, N0, N0, D, N1)
         """
         self.parser.parse_unicode_mappings(content)
-        
+
         # Check that the mappings were parsed correctly
         self.assertEqual(self.parser.unicode_mappings["&pi"], "π")
         self.assertEqual(self.parser.unicode_mappings["&n_tilde"], "ñ")
@@ -68,26 +68,26 @@ class TestUnicodeParser(unittest.TestCase):
         # Set up some mappings
         self.parser.unicode_mappings["&pi"] = "π"
         self.parser.unicode_mappings["&n_tilde"] = "ñ"
-        
+
         # Test with a known Unicode binding
         binding = self.parser.parse_binding("&pi")
         self.assertIsNotNone(binding)
         self.assertEqual(binding.character, "π")
-        
+
         # Test with another known Unicode binding
         binding = self.parser.parse_binding("&n_tilde")
         self.assertIsNotNone(binding)
         self.assertEqual(binding.character, "ñ")
-        
+
         # Test with an unknown Unicode binding
         binding = self.parser.parse_binding("&unicode_unknown")
         self.assertIsNotNone(binding)
         self.assertEqual(binding.character, "?")
-        
+
         # Test with a non-Unicode binding
         binding = self.parser.parse_binding("&kp A")
         self.assertIsNone(binding)
 
 
 if __name__ == "__main__":
-    unittest.main() 
+    unittest.main()

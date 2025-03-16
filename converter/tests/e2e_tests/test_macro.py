@@ -1,7 +1,5 @@
 """End-to-end tests for macro support."""
 
-import pytest
-
 from converter.cli import main
 
 
@@ -29,30 +27,30 @@ def test_basic_macro_conversion(tmp_path):
         };
     };
     """
-    
+
     zmk_file = tmp_path / "test_macro.keymap"
     zmk_file.write_text(zmk_content)
-    
+
     # Create a temporary output file
     output_file = tmp_path / "test_macro.kbd"
-    
+
     # Run the converter
     args = [str(zmk_file), str(output_file)]
     exit_code = main(args)
-    
+
     # Check that the conversion was successful
     assert exit_code == 0
     assert output_file.exists()
-    
+
     # Read the output file
     kanata_content = output_file.read_text()
-    
+
     # Check that the macro is defined in the output
     assert "(defmacro simple_macro" in kanata_content
     assert "tap a" in kanata_content
     assert "tap b" in kanata_content
     assert "tap c" in kanata_content
-    
+
     # Check that the macro is referenced in the keymap
     assert "(macro simple_macro)" in kanata_content
 
@@ -89,24 +87,24 @@ def test_complex_macro_conversion(tmp_path):
         };
     };
     """
-    
+
     zmk_file = tmp_path / "test_complex_macro.keymap"
     zmk_file.write_text(zmk_content)
-    
+
     # Create a temporary output file
     output_file = tmp_path / "test_complex_macro.kbd"
-    
+
     # Run the converter
     args = [str(zmk_file), str(output_file)]
     exit_code = main(args)
-    
+
     # Check that the conversion was successful
     assert exit_code == 0
     assert output_file.exists()
-    
+
     # Read the output file
     kanata_content = output_file.read_text()
-    
+
     # Check that the macro is defined in the output
     assert "(defmacro complex_macro" in kanata_content
     assert "press lsft" in kanata_content
@@ -115,7 +113,7 @@ def test_complex_macro_conversion(tmp_path):
     assert "delay 50" in kanata_content
     assert "tap b" in kanata_content
     assert "tap c" in kanata_content
-    
+
     # Check that the macro is referenced in the keymap
     assert "(macro complex_macro)" in kanata_content
 
@@ -144,26 +142,26 @@ def test_parameterized_macro_conversion(tmp_path):
         };
     };
     """
-    
+
     zmk_file = tmp_path / "test_param_macro.keymap"
     zmk_file.write_text(zmk_content)
-    
+
     # Create a temporary output file
     output_file = tmp_path / "test_param_macro.kbd"
-    
+
     # Run the converter
     args = [str(zmk_file), str(output_file)]
     exit_code = main(args)
-    
+
     # Check that the conversion was successful
     assert exit_code == 0
     assert output_file.exists()
-    
+
     # Read the output file
     kanata_content = output_file.read_text()
-    
+
     # Check that the macro is defined in the output
     assert "(defmacro param_macro" in kanata_content
-    
+
     # Check that the macro is referenced in the keymap
-    assert "(macro param_macro)" in kanata_content 
+    assert "(macro param_macro)" in kanata_content

@@ -18,7 +18,7 @@ class TestUnicodeIntegration(unittest.TestCase):
     macros {
         // Define a macro for the pi symbol
         ZMK_UNICODE_SINGLE(pi, N0, N3, C, N0)
-        
+
         // Define a macro for the n with tilde
         ZMK_UNICODE_PAIR(n_tilde, N0, N0, F, N1, N0, N0, D, N1)
     };
@@ -50,4 +50,4 @@ class TestUnicodeIntegration(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main() 
+    unittest.main()

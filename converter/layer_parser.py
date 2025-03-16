@@ -74,11 +74,11 @@ class LayerParser:
                 )
                 if is_macro:
                     behavior = self.macro_parser.parse_behavior(name, config)
-                    
+
                     # Parse bindings if present
                     if behavior and 'bindings' in config:
                         self.macro_parser.parse_bindings(
-                            behavior, 
+                            behavior,
                             config['bindings']
                         )
                     continue
@@ -124,21 +124,21 @@ class LayerParser:
 
             # Parse bindings
             bindings = []
-            
+
             # Process all bindings using a single regex pattern
             binding_pattern = r'&(\w+)(?:\s+([A-Z0-9_]+)(?:\s+([A-Z0-9_]+))?)?'
             for binding_match in re.finditer(binding_pattern, bindings_str):
                 behavior = binding_match.group(1)
                 param1 = binding_match.group(2)
                 param2 = binding_match.group(3)
-                
+
                 if param2:  # Hold-tap binding
                     binding_str = f"&{behavior} {param1} {param2}"
                 elif param1:  # Regular binding
                     binding_str = f"&{behavior} {param1}"
                 else:  # Simple binding like &none
                     binding_str = f"&{behavior}"
-                
+
                 binding = self.parse_binding(binding_str)
                 bindings.append(binding)
 
@@ -161,7 +161,7 @@ class LayerParser:
         match = re.search(keymap_pattern, content)
         if not match:
             raise ValueError("No valid keymap section found in ZMK file")
-        
+
         # Extract layers directly from the content
         layers = []
         layer_pattern = (
@@ -169,33 +169,33 @@ class LayerParser:
             r'bindings\s*=\s*<([^>]*)>'
             r'[^}]*}\s*;'
         )
-        
+
         for match in re.finditer(layer_pattern, content):
             layer_name = match.group(1)
             bindings_str = match.group(2)
-            
+
             # Parse bindings
             bindings = []
-            
+
             # Process all bindings using a single regex pattern
             binding_pattern = r'&(\w+)(?:\s+([A-Z0-9_]+)(?:\s+([A-Z0-9_]+))?)?'
             for binding_match in re.finditer(binding_pattern, bindings_str):
                 behavior = binding_match.group(1)
                 param1 = binding_match.group(2)
                 param2 = binding_match.group(3)
-                
+
                 if param2:  # Hold-tap binding
                     binding_str = f"&{behavior} {param1} {param2}"
                 elif param1:  # Regular binding
                     binding_str = f"&{behavior} {param1}"
                 else:  # Simple binding like &none
                     binding_str = f"&{behavior}"
-                
+
                 binding = self.parse_binding(binding_str)
                 bindings.append(binding)
-            
+
             # Create layer
             layer = Layer(name=layer_name, bindings=bindings)
             layers.append(layer)
-        
+
         return layers

@@ -111,7 +111,7 @@ class KanataTransformer:
         # If key is already a string, just return it
         if isinstance(key, str):
             return key
-            
+
         if key.hold_tap:
             # Use the alias we created for this hold-tap binding
             binding_id = (

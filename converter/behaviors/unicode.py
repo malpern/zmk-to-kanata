@@ -1,6 +1,6 @@
 """Unicode Behavior Module
 
-This module provides classes for representing ZMK Unicode behaviors and 
+This module provides classes for representing ZMK Unicode behaviors and
 bindings.
 """
 
@@ -47,7 +47,7 @@ class UnicodeBinding(Binding):
             # parse the macro definition to get the actual character
             # For now, we'll just use a placeholder
             return cls("?")
-        
+
         # Handle the urob/zmk-nodefree-config approach
         if zmk_binding.startswith("&pi") or zmk_binding.startswith("&n_tilde"):
             # These are examples from the urob/zmk-nodefree-config approach
@@ -56,7 +56,7 @@ class UnicodeBinding(Binding):
                 return cls("π")
             elif zmk_binding.startswith("&n_tilde"):
                 return cls("ñ")
-        
+
         return None
 
 
@@ -71,4 +71,4 @@ def is_unicode_binding(binding_str: str) -> bool:
     """
     return (binding_str.startswith("&unicode_") or
             binding_str.startswith("&pi") or
-            binding_str.startswith("&n_tilde")) 
+            binding_str.startswith("&n_tilde"))
