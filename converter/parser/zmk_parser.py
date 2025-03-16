@@ -58,6 +58,7 @@ class LayerParser:
         """Initialize the layer parser."""
         self.current_layer: Optional[str] = None
         self.current_bindings: List[List[KeyMapping]] = []
+        self.has_bindings_declaration: bool = False
         self.sticky_key_parser = StickyKeyParser()
 
     def start_layer(self, line: str) -> str:
@@ -78,6 +79,7 @@ class LayerParser:
                 raise ValueError("Empty layer name")
             self.current_layer = layer_name
             self.current_bindings = []
+            self.has_bindings_declaration = False
             return layer_name
         except Exception as e:
             raise ValueError(
@@ -91,10 +93,15 @@ class LayerParser:
             The completed Layer object.
             
         Raises:
-            ValueError: If no layer is currently being parsed.
+            ValueError: If no layer is being parsed, or if the layer has no
+                bindings declaration.
         """
-        if not self.current_layer or not self.current_bindings:
+        if not self.current_layer:
             raise ValueError("No layer currently being parsed")
+        
+        # Check if we've seen a bindings declaration
+        if not self.has_bindings_declaration:
+            raise ValueError("Layer must have a bindings declaration")
         
         # Flatten the bindings list into a single list
         bindings = [
@@ -108,6 +115,7 @@ class LayerParser:
         )
         self.current_layer = None
         self.current_bindings = []
+        self.has_bindings_declaration = False
         return layer
 
     def parse_binding(self, binding: str) -> KeyMapping:
@@ -161,24 +169,36 @@ class LayerParser:
         Raises:
             ValueError: If the line contains invalid bindings.
         """
-        print(f"Raw binding line: {line}")  # Debug
+        logger.debug("Raw binding line: %s", line)
+        
+        # Skip binding declaration lines without content
+        if line.strip() == 'bindings = <':
+            return []
+        
+        # Skip binding end lines
+        if line.strip() == '>;':
+            return []
+        
         # Extract content between < and >
         if '<' in line and '>' in line:
-            line = line.split('<')[1].split('>')[0].strip()
-            print(f"Extracted binding content: {line}")  # Debug
+            content = line.split('<')[1].split('>')[0].strip()
+            logger.debug("Extracted binding content: %s", content)
+            if not content:  # Empty bindings block
+                return []
+            line = content
         
         line = line.rstrip(';').strip()
         if not line:
             return []
 
         bindings = [b.strip() for b in line.split('&') if b.strip()]
-        print(f"Parsed bindings: {bindings}")  # Debug
+        logger.debug("Parsed bindings: %s", bindings)
         if not bindings:
             return []
 
         try:
             result = [self.parse_binding(b) for b in bindings]
-            print(f"Created bindings: {result}")  # Debug
+            logger.debug("Created bindings: %s", result)
             return result
         except ValueError as e:
             raise ValueError(
@@ -192,11 +212,14 @@ class LayerParser:
             line: The line containing bindings.
             
         Raises:
-            ValueError: If no layer is currently being parsed or if the 
-                bindings are invalid.
+            ValueError: If the bindings are invalid or no layer is being
+                parsed.
         """
-        if self.current_layer is None:
+        if not self.current_layer:
             raise ValueError("No layer currently being parsed")
+        
+        if 'bindings = <' in line:
+            self.has_bindings_declaration = True
         
         bindings = self.parse_bindings_line(line)
         if bindings:
@@ -341,26 +364,28 @@ class ZMKParser:
                     logger.debug("Finishing layer: %s", layer_name)
                     self._finish_current_layer()
             
-            elif self.state == ParserState.IN_LAYER:
-                if 'bindings = <' in line:
+            elif self.state == ParserState.IN_LAYER or self.state == ParserState.IN_BINDINGS:
+                if '_layer {' in line:
+                    raise ParserError("Nested layers are not supported")
+                elif 'bindings = <' in line:
                     logger.debug("Found bindings: %s", line)
-                    self._add_bindings_line(line)
-                    self._transition_to(ParserState.IN_BINDINGS)
+                    # Handle single-line bindings
+                    if '>;' in line:
+                        self._add_bindings_line(line)
+                    else:
+                        self._add_bindings_line(line)
+                        self._transition_to(ParserState.IN_BINDINGS)
                 elif '};' in line:
                     logger.debug("Layer end: %s", line)
                     self._finish_current_layer()
-            
-            elif self.state == ParserState.IN_BINDINGS:
-                if '};' in line:
-                    logger.debug("Layer end in bindings: %s", line)
-                    self._finish_current_layer()
-                elif '>' in line:
-                    logger.debug("Bindings end: %s", line)
-                    self._add_bindings_line(line)
-                    self._transition_to(ParserState.IN_LAYER)
-                elif ('&' in line or 'trans' in line):
-                    logger.debug("Found binding: %s", line)
-                    self._add_bindings_line(line)
+                elif self.state == ParserState.IN_BINDINGS:
+                    if '>' in line:
+                        logger.debug("Bindings end: %s", line)
+                        self._add_bindings_line(line)
+                        self._transition_to(ParserState.IN_LAYER)
+                    elif ('&' in line or 'trans' in line):
+                        logger.debug("Found binding: %s", line)
+                        self._add_bindings_line(line)
 
         except ParserError as e:
             raise e
@@ -401,7 +426,7 @@ class ZMKParser:
             logger.debug("Total layers: %d", len(self.layers))
             self._transition_to(ParserState.IN_KEYMAP)
         except ValueError as e:
-            raise ParserError("No layer currently being parsed") from e
+            raise ParserError(str(e)) from e
 
     def _add_bindings_line(self, line: str) -> None:
         """Add a line of bindings to the current layer.
