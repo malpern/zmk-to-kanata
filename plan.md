@@ -97,12 +97,12 @@ converter/
     - [x] Test output validation
       - [x] Verify file permissions
       - [x] Verify file encoding
-      - [x] Verify file format
-    - [ ] Test with different input formats
-      - [ ] Single layer keymap
-      - [ ] Multiple layer keymap
-      - [ ] Empty layers
-      - [ ] Comments and whitespace handling
+      - [x] Verify output format
+    - [x] Test input formats
+      - [x] Single layer keymap
+      - [x] Multiple layer keymap
+      - [x] Empty layer keymap
+      - [x] Comments and whitespace handling
   - [ ] Task 23: Advanced E2E Test Cases
     - [ ] Test multi-layer keymap conversion
     - [ ] Test hold-tap configuration conversion
