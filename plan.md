@@ -7,29 +7,25 @@ The parser now successfully handles:
 - Empty layers and multiline bindings
 - Nested layer detection and prevention
 - Binding declaration validation
-- Clean code with no linter errors
+- Global settings parsing with validation
+- Clean code organization with separate modules
+- Comprehensive test coverage for core features
 
 ## Remaining Tasks
 
-### 1. Global Settings Parser
-- [ ] Create GlobalSettingsParser class
-- [ ] Support tap-time and hold-time settings
-- [ ] Add validation for setting values
-- [ ] Add tests for global settings
-
-### 2. Macro Support
+### 1. Macro Support
 - [ ] Design MacroParser class
 - [ ] Implement basic macro parsing
 - [ ] Add macro validation
 - [ ] Add tests for macro parsing
 
-### 3. Testing Improvements
+### 2. Testing Improvements
 - [ ] Add tests for complex binding formats
 - [ ] Add tests for error recovery scenarios
 - [ ] Add tests for state transition edge cases
 - [ ] Document test scenarios
 
-### 4. Documentation
+### 3. Documentation
 - [ ] Document state machine behavior
 - [ ] Add binding format guide
 - [ ] Create troubleshooting guide
@@ -52,55 +48,33 @@ The parser now successfully handles:
    - Include edge cases
    - Document test purpose
 
-
-## Updated Parser Architecture
+## Parser Architecture
 
 ```
-ZMKCompiler
-├── Lexer - Tokenizes input
-├── Parser - Builds AST
-│   ├── LayerParser
-│   ├── BindingParser
-│   └── MacroParser
-├── SemanticAnalyzer - Validates semantics
-├── SymbolTable - Manages symbols
-└── KanataGenerator - Generates output
+ZMKParser
+├── ParserError - Base error class
+├── LayerParser - Handles layer parsing
+├── GlobalSettingsParser - Handles settings
+├── MacroParser (planned) - Will handle macros
+└── StickyKeyParser - Handles sticky keys
 ```
 
-### Implementation Phases
+### Next Steps
 
-1. **Phase 1: Lexical Analysis**
-   - [ ] Define token types
-   - [ ] Implement lexer
-   - [ ] Add token stream tests
+1. **Macro Support**
+   - Design macro syntax and validation rules
+   - Create MacroParser following existing patterns
+   - Add comprehensive tests
+   - Update documentation
 
-2. **Phase 2: Parsing**
-   - [ ] Define grammar rules
-   - [ ] Implement recursive descent parser
-   - [ ] Build AST
-   - [ ] Add parser tests
+2. **Testing Enhancements**
+   - Add more edge case tests
+   - Improve error messages
+   - Add performance tests
+   - Document test coverage
 
-3. **Phase 3: Semantic Analysis**
-   - [ ] Implement symbol table
-   - [ ] Add reference resolution
-   - [ ] Validate layer references
-   - [ ] Add semantic tests
-
-4. **Phase 4: Code Generation**
-   - [ ] Implement visitor pattern
-   - [ ] Add Kanata output generation
-   - [ ] Add transformation tests
-
-### Migration Strategy
-
-1. **Gradual Migration**
-   - Keep current implementation working
-   - Add new components alongside existing code
-   - Switch components one at a time
-   - Run both parsers in parallel for validation
-
-2. **Testing Strategy**
-   - Add tests for new components
-   - Verify identical output between implementations
-   - Maintain backward compatibility
-   - Add performance benchmarks
+3. **Documentation Updates**
+   - Document parser state machine
+   - Create user guide for settings
+   - Add troubleshooting section
+   - Update architecture docs
