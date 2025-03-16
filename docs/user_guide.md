@@ -134,7 +134,12 @@ The converter supports the following ZMK features:
 
 - Hold-tap behaviors (`&mt`, `&lt`)
 - Sticky keys (`&sk`, `&sl`)
-- Key sequences (basic)
+- Key sequences with customizable timing
+- Macros with support for:
+  - Tap, press, and release actions
+  - Wait times between actions
+  - Multiple key combinations
+- Unicode input for special characters
 
 For a complete list of supported features and limitations, see the [Known Limitations](known_limitations.md) document.
 
@@ -298,6 +303,99 @@ zmk-to-kanata input.dtsi output.kbd
   esc home pgdn pgup end
   caps del bspc semicolon quote
   _ tab _
+)
+```
+
+### Macro Example
+
+**ZMK File (macro_example.dtsi):**
+
+```
+/ {
+    behaviors {
+        email_macro: email_macro {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp E &kp X &kp A &kp M &kp P &kp L &kp E &kp AT &kp E &kp M &kp A &kp I &kp L &kp DOT &kp C &kp O &kp M>;
+        };
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+        
+        default_layer {
+            bindings = <
+                &kp Q &kp W &kp E &email_macro &kp T
+                &kp A &kp S &kp D &kp F &kp G
+                &kp Z &kp X &kp C &kp V &kp B
+            >;
+        };
+    };
+};
+```
+
+**Kanata Output:**
+
+```
+;; ZMK to Kanata Configuration
+;; Generated on: 2023-03-16
+
+(defvar tap-time 200)
+(defvar hold-time 250)
+
+(defmacro email_macro ()
+  (e x a m p l e @ e m a i l . c o m)
+)
+
+(deflayer default
+  q w e @email_macro t
+  a s d f g
+  z x c v b
+)
+```
+
+### Unicode Input Example
+
+**ZMK File (unicode_example.dtsi):**
+
+```
+/ {
+    behaviors {
+        pi_unicode: pi_unicode {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&macro_press &kp LALT>, <&macro_tap &kp KP_N0 &kp KP_N3 &kp C &kp KP_N0>, <&macro_release &kp LALT>;
+            label = "PI_UNICODE";
+        };
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+        
+        default_layer {
+            bindings = <
+                &kp Q &kp W &kp E &kp R &kp T
+                &kp A &kp S &kp D &pi_unicode &kp G
+                &kp Z &kp X &kp C &kp V &kp B
+            >;
+        };
+    };
+};
+```
+
+**Kanata Output:**
+
+```
+;; ZMK to Kanata Configuration
+;; Generated on: 2023-03-16
+
+(defvar tap-time 200)
+(defvar hold-time 250)
+
+(deflayer default
+  q w e r t
+  a s d (unicode π) g
+  z x c v b
 )
 ```
 
