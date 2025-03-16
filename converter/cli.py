@@ -16,41 +16,41 @@ def create_parser() -> argparse.ArgumentParser:
         description="Convert ZMK keymap files to Kanata format.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    
+
     parser.add_argument(
         "input_file",
         type=Path,
         help="Path to the input ZMK keymap file",
     )
-    
+
     parser.add_argument(
         "output_file",
         type=Path,
         help="Path where the Kanata config will be written",
     )
-    
+
     parser.add_argument(
         "--version",
         action="version",
         version=f"%(prog)s {__version__}",
         help="Show program's version number and exit",
     )
-    
+
     return parser
 
 
 def main(argv: Optional[List[str]] = None) -> int:
     """Main entry point for the CLI.
-    
+
     Args:
         argv: List of command line arguments (defaults to sys.argv[1:])
-        
+
     Returns:
         Exit code (0 for success, non-zero for error)
     """
     parser = create_parser()
     args = parser.parse_args(argv)
-    
+
     try:
         convert_keymap(args.input_file, args.output_file)
         return 0
@@ -69,4 +69,4 @@ def main(argv: Optional[List[str]] = None) -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main()) 
+    sys.exit(main())

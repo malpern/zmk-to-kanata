@@ -58,4 +58,4 @@ def test_basic_conversion():
 
     finally:
         # Clean up
-        temp_path.unlink() 
+        temp_path.unlink()

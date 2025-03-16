@@ -11,4 +11,4 @@ def temp_test_dir():
         original_dir = os.getcwd()
         os.chdir(temp_dir)
         yield Path(temp_dir)
-        os.chdir(original_dir) 
+        os.chdir(original_dir)

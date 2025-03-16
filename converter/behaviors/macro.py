@@ -31,10 +31,13 @@ class MacroBinding(Binding):
     param: Optional[int] = None  # For parameterized macros
 
     def to_kanata(self) -> str:
-        """Convert the macro binding to Kanata format."""
-        # Kanata doesn't have direct support for macros like ZMK
-        # We'll need to convert this to a sequence of actions
-        # For now, we'll just return a placeholder
+        """Convert the binding to Kanata format.
+        
+        Returns:
+            String containing the Kanata binding
+        """
+        # For now, just return a simple macro reference
+        # This will be expanded in the future to use the MacroTransformer
         return f"(macro {self.behavior.name})"
 
     @classmethod

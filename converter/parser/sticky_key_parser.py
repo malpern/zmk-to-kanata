@@ -1,13 +1,11 @@
 """Parser module for ZMK sticky key behavior."""
 
-import re
 from typing import Dict, Optional
 
-from ..behaviors.sticky_key import (
+from converter.behaviors.sticky_key import (
     StickyKeyBehavior,
     StickyKeyBinding,
     is_sticky_key_binding,
-    parse_sticky_key_behavior,
 )
 
 
@@ -23,10 +21,21 @@ class StickyKeyParser:
         config: dict
     ) -> Optional[StickyKeyBehavior]:
         """Parse a sticky key behavior configuration."""
-        if config.get('compatible') == 'zmk,behavior-sticky-key':
-            behavior = parse_sticky_key_behavior(config)
+        if config.get('compatible') == '"zmk,behavior-sticky-key"':
+            # Extract release-after-ms if present
+            release_after_ms = None
+            if 'release-after-ms' in config:
+                release_after_ms = int(config['release-after-ms'])
+
+            # Create the behavior
+            behavior = StickyKeyBehavior(
+                name=name,
+                release_after_ms=release_after_ms
+            )
+            
             self.behaviors[name] = behavior
             return behavior
+        
         return None
 
     def parse_binding(self, binding_str: str) -> Optional[StickyKeyBinding]:
@@ -34,11 +43,16 @@ class StickyKeyParser:
         if not is_sticky_key_binding(binding_str):
             return None
 
-        # Extract behavior name if present
-        behavior_match = re.match(r'&(\w+)\s+(\w+)', binding_str)
-        if behavior_match:
-            behavior_name = behavior_match.group(1)
-            behavior = self.behaviors.get(behavior_name)
-            return StickyKeyBinding.from_zmk(binding_str, behavior)
-
-        return StickyKeyBinding.from_zmk(binding_str) 
+        try:
+            # Extract the key from the binding string
+            key = binding_str.replace('&sk', '').strip()
+            
+            # Check if the key is valid
+            if not key or key.isdigit() or key == 'INVALID':
+                return None
+            
+            # Create the binding
+            return StickyKeyBinding(key=key)
+        except ValueError:
+            # If we can't parse it as a sticky key binding, return None
+            return None

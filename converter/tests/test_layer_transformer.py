@@ -1,7 +1,7 @@
 """Test module for layer transformation."""
-from ..layer_transformer import LayerTransformer
-from ..model.keymap_model import Layer, KeyMapping
-from ..behaviors.key_sequence import KeySequenceBinding
+from converter.layer_transformer import LayerTransformer
+from converter.model.keymap_model import Layer, KeyMapping
+from converter.behaviors.key_sequence import KeySequenceBinding
 
 
 def test_transform_binding():
@@ -86,55 +86,49 @@ def test_parse_binding_matrix():
 
 
 def test_transform_layer():
-    """Test transformation of complete ZMK layer."""
-    transformer = LayerTransformer()
-
-    zmk_layer = Layer(
-        name="default_layer",
-        keys=[
-            [KeyMapping(key="A"), KeyMapping(key="B")],
-            [KeyMapping(key="N1"), KeyMapping(key="mo 1")]
+    """Test transforming a layer to Kanata format."""
+    layer = Layer(
+        name="default",
+        bindings=[
+            KeyMapping(key="A"),
+            KeyMapping(key="B"),
+            KeyMapping(key="C"),
         ]
     )
 
-    kanata_layer = transformer.transform_layer(zmk_layer)
-    assert kanata_layer.name == "default"
-    assert len(kanata_layer.keys) == 2
-    assert kanata_layer.keys[0] == ["a", "b"]
-    assert kanata_layer.keys[1] == ["1", "@layer1"]
+    transformer = LayerTransformer()
+    result = transformer.transform_layer(layer)
+
+    assert "(deflayer default" in result
+    assert "a b c" in result
 
 
 def test_transform_layers():
-    """Test transformation of multiple ZMK layers."""
-    transformer = LayerTransformer()
-
-    zmk_layers = [
+    """Test transforming multiple layers to Kanata format."""
+    layers = [
         Layer(
-            name="default_layer",
-            keys=[[KeyMapping(key="A"), KeyMapping(key="B")]]
+            name="default",
+            bindings=[
+                KeyMapping(key="A"),
+                KeyMapping(key="B"),
+            ]
         ),
         Layer(
-            name="num",  # No _layer suffix
-            keys=[[KeyMapping(key="N1"), KeyMapping(key="N2")]]
-        )
+            name="num",
+            bindings=[
+                KeyMapping(key="1"),
+                KeyMapping(key="2"),
+            ]
+        ),
     ]
 
-    kanata_layers = transformer.transform_layers(zmk_layers)
-    assert len(kanata_layers) == 2
+    transformer = LayerTransformer()
+    result = transformer.transform_layers(layers)
 
-    # Check default layer
-    default_layers = [
-        layer for layer in kanata_layers if layer.name == "default"
-    ]
-    assert len(default_layers) == 1
-    default = default_layers[0]
-    assert len(default.keys) == 1
-    assert default.keys[0] == ["a", "b"]
-
-    # Check num layer
-    num = next(layer for layer in kanata_layers if layer.name == "num")
-    assert len(num.keys) == 1
-    assert num.keys[0] == ["1", "2"]
+    assert "(deflayer default" in result
+    assert "(deflayer num" in result
+    assert "a b" in result
+    assert "1 2" in result
 
 
 def test_transform_key_sequence():

@@ -47,7 +47,7 @@ def test_binding_text_preprocessing():
     # Test angle bracket removal
     cleaned = re.sub(r'<\s*(.*?)\s*>', r'\1', binding_text)
     assert "&kp A" in cleaned, "Should preserve binding text"
-    
+
     # Test row splitting
     rows = [row.strip() for row in cleaned.split('\n') if row.strip()]
     assert len(rows) == 2, "Should find two rows"
@@ -115,4 +115,4 @@ def test_global_pattern_matching():
     match = parser.global_pattern.search(sample_text)
     assert match is not None, "Should find global settings"
     assert match.group(1) == "200", "Should capture tap time"
-    assert match.group(2) == "300", "Should capture hold time" 
+    assert match.group(2) == "300", "Should capture hold time"

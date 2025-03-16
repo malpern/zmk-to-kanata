@@ -1,0 +1,41 @@
+;; ZMK to Kanata Configuration
+;; Generated automatically - DO NOT EDIT
+
+;; Global settings
+(defvar tap-time 200)
+(defvar hold-time 250)
+
+(deflayer default
+  tab q w f p b j l u y semi bspc
+  esc tap-hold lctrl a tap-hold lalt r tap-hold lgui s tap-hold lshift t g m tap-hold rshift n tap-hold rgui e tap-hold ralt i tap-hold rctrl o sqt
+  sticky-lshft z x c d v k h comma dot fslh sticky-rshft
+  lctrl lgui lalt @layer1 @layer2 @layer3 @layer4 ralt rgui rctrl
+)
+
+(deflayer num_sym
+  grave 1 2 3 4 5 6 7 8 9 0 del
+  _ excl at hash dollar percent caret amp asterisk lpar rpar bslh
+  _ tilde pipe minus plus equal lbkt rbkt lbrc rbrc underscore _
+  _ _ _ _ space ret _ _ _ _
+)
+
+(deflayer nav
+  _ ins home up end pg_up c_vol_up c_prev c_pp c_next c_mute _
+  _ del left down right pg_dn c_vol_dn rshift rgui ralt rctrl _
+  _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ space ret _ _ _ _
+)
+
+(deflayer function
+  _ f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 _
+  _ f11 f12 caps slck pscrn k_app rshift rgui ralt rctrl _
+  _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ space ret _ _ _ _
+)
+
+(deflayer gaming
+  esc kp7 kp8 kp9 kp_plus kp_multiply _ _ _ _ _ _
+  tab kp4 kp5 kp6 kp_minus kp_divide _ _ _ _ _ _
+  lshft kp1 kp2 kp3 kp_equal kp_dot _ _ _ _ _ _
+  lctrl kp0 lalt _ space kp_enter _ _ _ _
+)

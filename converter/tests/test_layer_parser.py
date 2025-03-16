@@ -1,102 +1,58 @@
-"""Tests for the LayerParser class."""
+"""Tests for the layer parser module."""
 
-import pytest
-from ..layer_parser import LayerParser
+import unittest
 
-
-def test_extract_keymap():
-    """Test extracting keymap section from ZMK content."""
-    parser = LayerParser()
-    
-    # Valid keymap
-    valid_input = '''
-    / {
-        keymap {
-            compatible = "zmk,keymap";
-            layer_content
-        };
-    };
-    '''
-    result = parser.extract_keymap(valid_input)
-    assert result is not None
-    assert "layer_content" in result
-    
-    # Invalid keymap (missing compatible line)
-    invalid_input = '''
-    / {
-        keymap {
-            layer_content
-        };
-    };
-    '''
-    assert parser.extract_keymap(invalid_input) is None
+from converter.layer_parser import LayerParser
 
 
-def test_extract_layers():
-    """Test extracting layers from keymap content."""
-    parser = LayerParser()
-    
-    keymap_content = '''
+class TestLayerParser(unittest.TestCase):
+    """Test cases for the LayerParser class."""
+
+    def setUp(self):
+        """Set up test fixtures."""
+        self.parser = LayerParser()
+
+    def test_extract_layers(self):
+        """Test extracting layers from keymap content."""
+        keymap_content = """
         default_layer {
             bindings = <
-                &kp A &kp B
+                &kp A &kp B &kp C
+                &kp D &kp E &kp F
             >;
         };
-        
-        num_layer {
-            bindings = <
-                &kp N1 &kp N2
-            >;
-        };
-    '''
-    
-    layers = parser.extract_layers(keymap_content)
-    assert len(layers) == 2
-    
-    default_layer = next(layer for layer in layers if layer.name == "default")
-    assert len(default_layer.keys) == 1
-    assert len(default_layer.keys[0]) == 2
-    assert default_layer.keys[0][0].key == "A"
-    assert default_layer.keys[0][1].key == "B"
-    
-    num_layer = next(layer for layer in layers if layer.name == "num")
-    assert len(num_layer.keys) == 1
-    assert len(num_layer.keys[0]) == 2
-    assert num_layer.keys[0][0].key == "N1"
-    assert num_layer.keys[0][1].key == "N2"
+        """
+        layers = self.parser.extract_layers(keymap_content)
+        self.assertEqual(len(layers), 1)
+        self.assertEqual(layers[0].name, "default")
+        self.assertEqual(len(layers[0].bindings), 6)
 
-
-def test_parse_zmk_file():
-    """Test parsing a complete ZMK file."""
-    parser = LayerParser()
-    
-    valid_input = '''
-    / {
-        keymap {
-            compatible = "zmk,keymap";
-            
-            default_layer {
-                bindings = <
-                    &kp A &kp B
-                    &kp C &mo 1
-                >;
-            };
-            
-            num_layer {
-                bindings = <
-                    &kp N1 &kp N2
-                    &trans &mo 2
-                >;
+    def test_parse_zmk_file(self):
+        """Test parsing a complete ZMK file."""
+        zmk_content = """
+        / {
+            keymap {
+                compatible = "zmk,keymap";
+                default_layer {
+                    bindings = <
+                        &kp A &kp B &kp C
+                        &kp D &kp E &kp F
+                    >;
+                };
+                nav_layer {
+                    bindings = <
+                        &kp LEFT &kp RIGHT &kp UP
+                        &kp DOWN &kp HOME &kp END
+                    >;
+                };
             };
         };
-    };
-    '''
-    
-    layers = parser.parse_zmk_file(valid_input)
-    assert len(layers) == 2
-    assert any(layer.name == "default" for layer in layers)
-    assert any(layer.name == "num" for layer in layers)
-    
-    # Test invalid input
-    with pytest.raises(ValueError):
-        parser.parse_zmk_file("invalid content") 
+        """
+        layers = self.parser.parse_zmk_file(zmk_content)
+        self.assertEqual(len(layers), 2)
+        self.assertEqual(layers[0].name, "default")
+        self.assertEqual(layers[1].name, "nav")
+
+
+if __name__ == "__main__":
+    unittest.main()

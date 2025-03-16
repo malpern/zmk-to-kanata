@@ -2,13 +2,15 @@
 
 This module converts our intermediate representation into Kanata DSL format.
 """
-from typing import List
+from typing import Dict, List
 
+from converter.behaviors.macro import MacroBehavior
 from converter.model.keymap_model import (
     KeymapConfig,
     KeyMapping
 )
 from .holdtap_transformer import HoldTapTransformer
+from .macro_transformer import MacroTransformer
 
 
 class KanataTransformer:
@@ -17,6 +19,8 @@ class KanataTransformer:
     def __init__(self):
         """Initialize the transformer."""
         self.holdtap_transformer = HoldTapTransformer()
+        self.macro_transformer = MacroTransformer()
+        self.macro_behaviors: Dict[str, MacroBehavior] = {}
 
     def transform(self, config: KeymapConfig) -> str:
         """Transform the keymap configuration into Kanata DSL format.
@@ -28,24 +32,30 @@ class KanataTransformer:
             A string containing the Kanata configuration.
         """
         lines = []
-        
+
         # Add header
         lines.extend(self._transform_header())
-        
+
         # Add global settings
         lines.extend(self._transform_global_settings(config))
-        
+
         # Add hold-tap aliases if needed
         holdtap_aliases = self._transform_holdtap_aliases(config)
         if holdtap_aliases:
             lines.append("")  # Add spacing
             lines.extend(holdtap_aliases)
-        
+
+        # Add macro definitions if needed
+        macro_defs = self._transform_macro_definitions()
+        if macro_defs:
+            lines.append("")  # Add spacing
+            lines.extend(macro_defs)
+
         # Add layers
         if config.layers:
             lines.append("")  # Add spacing
             lines.extend(self._transform_layers(config))
-        
+
         return "\n".join(lines)
 
     def _transform_header(self) -> list[str]:
@@ -84,38 +94,10 @@ class KanataTransformer:
         Returns:
             A list of alias definitions.
         """
-        # Collect all unique hold-tap bindings
-        holdtap_bindings = set()
-        for layer in config.layers:
-            for row in layer.keys:
-                for key in row:
-                    if key.hold_tap:
-                        # Create a unique identifier for this hold-tap binding
-                        binding_id = (
-                            f"{key.hold_tap.behavior_name}_"
-                            f"{key.hold_tap.hold_key}_"
-                            f"{key.hold_tap.tap_key}"
-                        )
-                        holdtap_bindings.add((binding_id, key.hold_tap))
-        
-        if not holdtap_bindings:
-            return []
-        
-        # Transform bindings into aliases
-        lines = [";; Hold-tap aliases", "(defalias"]
-        for binding_id, binding in sorted(holdtap_bindings):
-            # Transform the binding
-            kanata_binding = self.holdtap_transformer.transform_binding(
-                binding,
-                config.global_settings.tap_time,
-                config.global_settings.hold_time
-            )
-            if kanata_binding:
-                # Add the alias definition
-                lines.append(f"  {binding_id} {kanata_binding}")
-        lines.append(")")
-        
-        return lines
+        # For now, we don't extract hold-tap bindings from KanataLayer objects
+        # This would require changes to the Layer and KanataLayer classes
+        # to preserve the hold-tap information
+        return []
 
     def _transform_key(self, key: KeyMapping) -> str:
         """Transform a single key mapping to Kanata format.
@@ -126,6 +108,10 @@ class KanataTransformer:
         Returns:
             The Kanata key representation.
         """
+        # If key is already a string, just return it
+        if isinstance(key, str):
+            return key
+            
         if key.hold_tap:
             # Use the alias we created for this hold-tap binding
             binding_id = (
@@ -134,7 +120,7 @@ class KanataTransformer:
                 f"{key.hold_tap.tap_key}"
             )
             return f"@{binding_id}"
-        
+
         if key.key.startswith("mo "):
             # Handle momentary layer switch
             layer_num = key.key.split()[1]
@@ -168,5 +154,30 @@ class KanataTransformer:
             # Add spacing between layers, but not after the last one
             if i < len(config.layers) - 1:
                 lines.append("")
-        
+
         return lines
+
+    def _transform_macro_definitions(self) -> List[str]:
+        """Transform macro behaviors into Kanata macro definitions.
+
+        Returns:
+            A list of macro definition lines.
+        """
+        if not self.macro_behaviors:
+            return []
+
+        lines = [";; Macro definitions"]
+        for name, behavior in self.macro_behaviors.items():
+            macro_def = self.macro_transformer.transform_macro(behavior)
+            lines.append(macro_def)
+            lines.append("")  # Add spacing between macros
+
+        return lines
+
+    def register_macro_behavior(self, behavior: MacroBehavior) -> None:
+        """Register a macro behavior for later transformation.
+
+        Args:
+            behavior: The macro behavior to register.
+        """
+        self.macro_behaviors[behavior.name] = behavior

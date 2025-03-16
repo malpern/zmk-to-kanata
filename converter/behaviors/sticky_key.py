@@ -49,7 +49,7 @@ class StickyKeyBinding(Binding):
         """Create a StickyKeyBinding from a ZMK binding string."""
         # Remove &sk prefix and any whitespace
         key = zmk_binding.replace('&sk', '').strip()
-        
+
         # Convert ZMK key names to Kanata format
         key_mapping = {
             'LSHIFT': 'lsft',
@@ -61,7 +61,7 @@ class StickyKeyBinding(Binding):
             'LGUI': 'lmet',
             'RGUI': 'rmet',
         }
-        
+
         key = key_mapping.get(key, key.lower())
         return cls(key, behavior)
 
@@ -77,4 +77,4 @@ def parse_sticky_key_behavior(config: dict) -> StickyKeyBehavior:
 
 def is_sticky_key_binding(binding: str) -> bool:
     """Check if a binding string represents a sticky key."""
-    return binding.strip().startswith('&sk') 
+    return binding.strip().startswith('&sk')

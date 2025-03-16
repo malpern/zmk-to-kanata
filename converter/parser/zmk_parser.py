@@ -47,7 +47,7 @@ class ZMKParser:
         global_match = self.global_pattern.search(content)
         if not global_match:
             raise ValueError("Could not find global settings in ZMK file")
-        
+
         global_settings = GlobalSettings(
             tap_time=int(global_match.group(1)),
             hold_time=int(global_match.group(2))
@@ -76,7 +76,7 @@ class ZMKParser:
             row.strip() for row in bindings_text.split('\n')
             if row.strip()
         ]
-        
+
         result = []
         for row in rows:
             # Split the row into individual key bindings
@@ -89,5 +89,5 @@ class ZMKParser:
                 KeyMapping(key=key.strip()) for key in key_bindings
             ]
             result.append(row_mappings)
-        
+
         return result

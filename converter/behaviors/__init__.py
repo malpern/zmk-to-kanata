@@ -12,4 +12,4 @@ __all__ = [
     'StickyKeyBinding',
     'is_sticky_key_binding',
     'parse_sticky_key_behavior',
-] 
+]

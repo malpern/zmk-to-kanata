@@ -23,22 +23,22 @@ def test_single_layer_keymap(temp_test_dir):
 '''
     zmk_file = temp_test_dir / 'single_layer.dtsi'
     zmk_file.write_text(zmk_content)
-    
+
     kanata_file = temp_test_dir / 'single_layer.kbd'
-    
+
     exit_code = main([str(zmk_file), str(kanata_file)])
     assert exit_code == 0
-    
+
     content = kanata_file.read_text()
-    
+
     # Verify layer definition
     assert "(deflayer default" in content
-    
+
     # Verify all keys are present and properly formatted
     keys = ["a", "b", "c", "d", "e", "f"]
     for key in keys:
         assert key in content.lower()
-    
+
     # Verify proper indentation and structure
     lines = content.splitlines()
     # Skip header comment and empty lines
@@ -70,7 +70,7 @@ def test_multiple_layer_keymap(temp_test_dir):
                 &mo 1 &kp C
             >;
         };
-        
+
         layer_1 {
             bindings = <
                 &kp N1 &kp N2
@@ -82,14 +82,14 @@ def test_multiple_layer_keymap(temp_test_dir):
 '''
     zmk_file = temp_test_dir / 'multi_layer.dtsi'
     zmk_file.write_text(zmk_content)
-    
+
     kanata_file = temp_test_dir / 'multi_layer.kbd'
-    
+
     exit_code = main([str(zmk_file), str(kanata_file)])
     assert exit_code == 0
-    
+
     content = kanata_file.read_text()
-    
+
     # Verify default layer with layer switching
     assert "(deflayer default" in content
     assert "a b" in content.lower()
@@ -112,7 +112,7 @@ def test_empty_layer_keymap(temp_test_dir):
                 &mo 1 &none
             >;
         };
-        
+
         empty_layer {
             bindings = <
                 &none &none
@@ -124,19 +124,19 @@ def test_empty_layer_keymap(temp_test_dir):
 '''
     zmk_file = temp_test_dir / 'empty_layer.dtsi'
     zmk_file.write_text(zmk_content)
-    
+
     kanata_file = temp_test_dir / 'empty_layer.kbd'
-    
+
     exit_code = main([str(zmk_file), str(kanata_file)])
     assert exit_code == 0
-    
+
     content = kanata_file.read_text()
-    
+
     # Verify default layer with layer switching
     assert "(deflayer default" in content
     assert "a" in content.lower()
     assert "@layer1" in content  # Layer switching key
-    
+
     # Verify empty layer exists
     assert "(deflayer empty" in content
 
@@ -153,13 +153,13 @@ def test_comments_and_whitespace(temp_test_dir):
 / {
     keymap {
         compatible = "zmk,keymap";
-        
+
         // Layer comment
         default_layer {
             bindings = <
                 // Row comment
                 &kp A &kp B  // Inline comment
-                
+
                 &kp C &kp D
             >;
         };
@@ -168,20 +168,20 @@ def test_comments_and_whitespace(temp_test_dir):
 '''
     zmk_file = temp_test_dir / 'commented.dtsi'
     zmk_file.write_text(zmk_content)
-    
+
     kanata_file = temp_test_dir / 'commented.kbd'
-    
+
     exit_code = main([str(zmk_file), str(kanata_file)])
     assert exit_code == 0
-    
+
     content = kanata_file.read_text()
-    
+
     print("\nGenerated content:")
     print(content)
-    
+
     # Verify key mapping is correct despite comments/whitespace
     assert "(deflayer default" in content
-    
+
     # Check key layout
     lines = content.splitlines()
     # Skip header comment and empty lines
@@ -191,8 +191,8 @@ def test_comments_and_whitespace(temp_test_dir):
     ]
     print("\nLayer lines:")
     print(layer_lines)
-    
+
     assert layer_lines[2].startswith("(deflayer default")
     assert "a b" in layer_lines[3].lower()
     assert "c d" in layer_lines[4].lower()
-    assert lines[-1] == ")"  # Proper closing 
+    assert lines[-1] == ")"  # Proper closing

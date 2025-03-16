@@ -1,0 +1,13 @@
+;; ZMK to Kanata Configuration
+;; Generated automatically - DO NOT EDIT
+
+;; Global settings
+(defvar tap-time 200)
+(defvar hold-time 250)
+
+(deflayer default
+  q w e r t y u i o p
+  a s d f g h j k l semi
+  z x c v b n m comma dot slash
+  lctrl space enter ralt
+)

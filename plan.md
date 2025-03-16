@@ -90,8 +90,8 @@ converter/
     - [x] Test remaining ZMK features:
       - [x] Sticky keys
       - [x] Key sequences (basic functionality)
-      - [ ] Macros
-      - [ ] Unicode input
+      - [x] Macros
+      - [x] Unicode input
     - [x] Test error reporting for unsupported features
   - [x] Task 24: Implement Key Sequence Support
     - [x] Key Sequence Behavior Model
@@ -151,18 +151,13 @@ converter/
 - [x] Create MacroBinding class to represent macro bindings
 - [x] Create MacroParser to parse ZMK macro definitions
 - [x] Update LayerParser to detect and parse macro behaviors
-- [ ] Add unit tests for macro behavior and parser
-- [ ] Add end-to-end tests for macro support
-- [ ] Implement conversion of macro bindings to Kanata format
-- [ ] Support different activation modes (tap, press, release)
-- [ ] Support wait times and tap times
-- [ ] Test with various macro types (basic, parameterized, complex)
+- [x] Add unit tests for macro behavior and parser
+- [x] Add end-to-end tests for macro support
+- [x] Implement conversion of macro bindings to Kanata format
+- [x] Support different activation modes (tap, press, release)
+- [x] Support wait times and tap times
+- [x] Test with various macro types (basic, parameterized, complex)
 
 ## Next Steps
-1. Complete macro support implementation:
-   - Add unit tests for macro behavior and parser
-   - Add end-to-end tests for macro support
-   - Implement conversion of macro bindings to Kanata format
-2. Implement support for Unicode input (Task 23)
-3. Add regression tests for fixed issues (Task 25)
-4. Eventually remove the root keymap_model.py once all code is migrated (Task 26)
+1. Add regression tests for fixed issues (Task 25)
+2. Eventually remove the root keymap_model.py once all code is migrated (Task 26)

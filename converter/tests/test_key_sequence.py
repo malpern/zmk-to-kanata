@@ -93,4 +93,4 @@ def test_parse_key_sequence_behavior_defaults():
     behavior = parse_key_sequence_behavior(config)
     assert behavior.wait_ms == 30  # Default value
     assert behavior.tap_ms == 30   # Default value
-    assert behavior.bindings == ["kp A"] 
+    assert behavior.bindings == ["kp A"]

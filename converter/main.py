@@ -11,15 +11,15 @@ from .layer_transformer import LayerTransformer, KanataLayer
 
 def generate_kanata_keymap(layers: List[KanataLayer]) -> str:
     """Generate a Kanata keymap configuration from a list of layers.
-    
+
     Args:
         layers: List of KanataLayer objects
-        
+
     Returns:
         String containing the complete Kanata keymap configuration
     """
     kanata_config = []
-    
+
     # Add header comments
     kanata_config.extend([
         ";; ZMK to Kanata Configuration",
@@ -30,7 +30,7 @@ def generate_kanata_keymap(layers: List[KanataLayer]) -> str:
         "(defvar hold-time 250)",
         ""
     ])
-    
+
     # Add layers
     for i, layer in enumerate(layers):
         # Add layer definition
@@ -42,20 +42,20 @@ def generate_kanata_keymap(layers: List[KanataLayer]) -> str:
         # Add empty line between layers, but not after the last one
         if i < len(layers) - 1:
             kanata_config.append("")
-    
+
     # Ensure file ends with a newline
     kanata_config.append("")
-    
+
     return "\n".join(kanata_config)
 
 
 def convert_keymap(input_file: Path, output_file: Path) -> None:
     """Convert a ZMK keymap file to Kanata format.
-    
+
     Args:
         input_file: Path to the input ZMK keymap file
         output_file: Path where the Kanata config will be written
-        
+
     Raises:
         FileNotFoundError: If input_file doesn't exist
         ValueError: If input file format is invalid

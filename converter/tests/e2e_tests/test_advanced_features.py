@@ -47,46 +47,46 @@ def test_multi_layer_with_hold_tap(temp_test_dir):
         };
     };
 }; '''
-    
+
     zmk_file = temp_test_dir / 'multi_layer_advanced.dtsi'
     zmk_file.write_text(zmk_content)
-    
+
     kanata_file = temp_test_dir / 'multi_layer_advanced.kbd'
-    
+
     exit_code = main([str(zmk_file), str(kanata_file)])
     assert exit_code == 0
-    
+
     content = kanata_file.read_text()
-    
+
     # Verify layer definitions
     assert "(deflayer default" in content
     assert "(deflayer nav" in content
     assert "(deflayer num" in content
     assert "(deflayer fn" in content
-    
+
     # Verify hold-tap bindings in default layer
     assert "tap-hold lshift a" in content.lower()
     assert "tap-hold lctrl b" in content.lower()
     assert "tap-hold lalt c" in content.lower()
     assert "tap-hold lgui d" in content.lower()
-    
+
     # Verify layer switching
     assert "@layer1" in content
     assert "@layer2" in content
     assert "@layer3" in content
-    
+
     # Verify navigation layer
     assert "left" in content.lower()
     assert "right" in content.lower()
     assert "up" in content.lower()
     assert "down" in content.lower()
-    
+
     # Verify number layer
     assert "1" in content
     assert "2" in content
     assert "3" in content
     assert "4" in content
-    
+
     # Verify function layer
     assert "f1" in content.lower()
     assert "f2" in content.lower()
@@ -146,43 +146,43 @@ def test_multi_layer_with_custom_behaviors(temp_test_dir):
 
     zmk_file = temp_test_dir / 'multi_layer_behaviors.dtsi'
     zmk_file.write_text(zmk_content)
-    
+
     kanata_file = temp_test_dir / 'multi_layer_behaviors.kbd'
-    
+
     exit_code = main([str(zmk_file), str(kanata_file)])
     assert exit_code == 0
-    
+
     content = kanata_file.read_text()
-    
+
     # Verify layer definitions
     assert "(deflayer default" in content
     assert "(deflayer nav" in content
     assert "(deflayer num" in content
     assert "(deflayer fn" in content
-    
+
     # Verify mod-tap bindings in default layer
     assert "tap-hold lshift a" in content.lower()
     assert "tap-hold lctrl b" in content.lower()
     assert "tap-hold lalt c" in content.lower()
     assert "tap-hold lgui d" in content.lower()
-    
+
     # Verify layer switching
     assert "@layer1" in content
     assert "@layer2" in content
     assert "@layer3" in content
-    
+
     # Verify navigation layer
     assert "left" in content.lower()
     assert "right" in content.lower()
     assert "up" in content.lower()
     assert "down" in content.lower()
-    
+
     # Verify number layer
     assert "1" in content
     assert "2" in content
     assert "3" in content
     assert "4" in content
-    
+
     # Verify function layer
     assert "f1" in content.lower()
     assert "f2" in content.lower()

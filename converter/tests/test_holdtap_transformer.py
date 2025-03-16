@@ -22,7 +22,7 @@ def test_basic_holdtap_transformation():
         hold_trigger_on_release=False,
         retro_tap=False
     )
-    
+
     result = transformer.transform_binding(binding, 200, 250)
     assert result == "(tap-hold 200 250 a lmet)"
 
@@ -38,7 +38,7 @@ def test_holdtap_with_release():
         hold_trigger_on_release=True,
         retro_tap=False
     )
-    
+
     result = transformer.transform_binding(binding, 200, 250)
     assert result == "(tap-hold-release 200 250 j rsft)"
 
@@ -54,7 +54,7 @@ def test_holdtap_with_key_positions():
         hold_trigger_on_release=False,
         retro_tap=False
     )
-    
+
     result = transformer.transform_binding(binding, 200, 250)
     assert result == "(tap-hold-release-keys 200 250 d lctl (1 2 3))"
 
@@ -70,7 +70,7 @@ def test_holdtap_with_retro_tap():
         hold_trigger_on_release=False,
         retro_tap=True
     )
-    
+
     result = transformer.transform_binding(binding, 200, 250)
     assert result == "(tap-hold-press-timeout 200 250 l ralt l)"
 
@@ -127,10 +127,10 @@ def test_full_keymap_transformation():
             )
         ]
     )
-    
+
     transformer = KanataTransformer()
     result = transformer.transform(config)
-    
+
     expected_lines = [
         ";; ZMK to Kanata Configuration",
         ";; Generated automatically - DO NOT EDIT",
@@ -151,5 +151,5 @@ def test_full_keymap_transformation():
         "  @lh_hm_LGUI_A  @lh_hm_LCTRL_S  d",
         ")"
     ]
-    
-    assert result.splitlines() == expected_lines 
+
+    assert result.splitlines() == expected_lines

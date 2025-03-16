@@ -7,7 +7,7 @@ from pathlib import Path
 @pytest.fixture
 def temp_test_dir():
     """Create a temporary directory for test files.
-    
+
     This fixture provides a clean temporary directory for each test,
     which is automatically cleaned up after the test completes.
     """
@@ -88,4 +88,4 @@ def cli_runner():
             return main(args)
         except SystemExit as e:
             return e.code
-    return run 
+    return run

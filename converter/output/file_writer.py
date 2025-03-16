@@ -8,7 +8,7 @@ import os
 
 class KanataFileWriter:
     """Writes Kanata configuration to a file.
-    
+
     This class provides functionality to write Kanata configuration strings
     to files, with proper error handling for common file operations.
     """

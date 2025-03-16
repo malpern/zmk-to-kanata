@@ -1,10 +1,12 @@
+"""Tests for tap-hold behavior parsing."""
+
 import pytest
 from textwrap import dedent
 
 from converter.taphold_parser import HoldTapParser
 
 def test_basic_holdtap_properties():
-    """Test parsing of basic hold-tap behavior properties."""
+    """Test basic properties of hold-tap behavior parsing."""
     zmk_holdtap = dedent('''
         my_holdtap: example_hold_tap {
             compatible = "zmk,behavior-hold-tap";
@@ -13,10 +15,10 @@ def test_basic_holdtap_properties():
             bindings = <&kp>, <&kp>;
         };
     ''')
-    
+
     parser = HoldTapParser()
     result = parser.parse_behavior(zmk_holdtap)
-    
+
     assert result.name == "my_holdtap"
     assert result.label == "MY_HOLD_TAP"
     assert result.binding_cells == 2
@@ -45,10 +47,10 @@ def test_full_configuration():
             flavor = "balanced";
         };
     ''')
-    
+
     parser = HoldTapParser()
     result = parser.parse_behavior(zmk_holdtap)
-    
+
     assert result.name == "hm"
     assert result.tapping_term_ms == 280
     assert result.quick_tap_ms == 175
@@ -69,10 +71,10 @@ def test_advanced_features():
             retro-tap;
         };
     ''')
-    
+
     parser = HoldTapParser()
     result = parser.parse_behavior(zmk_holdtap)
-    
+
     assert result.name == "lh_hm"
     assert result.hold_trigger_key_positions == [6, 7, 8, 9, 10, 11]
     assert result.hold_trigger_on_release is True
@@ -89,10 +91,10 @@ def test_key_positions_with_commas():
             hold-trigger-key-positions = <1, 2, 3, 4>;
         };
     ''')
-    
+
     parser = HoldTapParser()
     result = parser.parse_behavior(zmk_holdtap)
-    
+
     assert result.hold_trigger_key_positions == [1, 2, 3, 4]
 
 def test_invalid_key_positions():
@@ -106,7 +108,7 @@ def test_invalid_key_positions():
             hold-trigger-key-positions = <1 2 bad 4>;
         };
     ''')
-    
+
     parser = HoldTapParser()
     with pytest.raises(ValueError, match="Invalid key position value"):
         parser.parse_behavior(zmk_holdtap)
@@ -124,10 +126,10 @@ def test_partial_configuration():
             // Missing quick-tap-ms and require-prior-idle-ms
         };
     ''')
-    
+
     parser = HoldTapParser()
     result = parser.parse_behavior(zmk_holdtap)
-    
+
     assert result.name == "partial"
     assert result.tapping_term_ms == 200
     assert result.quick_tap_ms is None
@@ -145,7 +147,7 @@ def test_invalid_flavor():
             flavor = "not-a-real-flavor";
         };
     ''')
-    
+
     parser = HoldTapParser()
     with pytest.raises(ValueError, match="Invalid flavor"):
         parser.parse_behavior(zmk_holdtap)
@@ -158,7 +160,7 @@ def test_invalid_behavior():
             label = "OTHER";
         };
     ''')
-    
+
     parser = HoldTapParser()
     with pytest.raises(ValueError, match="Not a hold-tap behavior"):
         parser.parse_behavior(zmk_other)
@@ -172,7 +174,7 @@ def test_missing_required_fields():
             bindings = <&kp>, <&kp>;
         };
     ''')
-    
+
     parser = HoldTapParser()
     with pytest.raises(ValueError, match="Missing required fields"):
         parser.parse_behavior(zmk_incomplete)
@@ -193,10 +195,10 @@ def test_real_world_example():
             hold-trigger-on-release;
         };
     ''')
-    
+
     parser = HoldTapParser()
     result = parser.parse_behavior(zmk_holdtap)
-    
+
     assert result.name == "lh_hm"
     assert result.label == "LEFT_HOME_ROW_MODS"
     assert result.binding_cells == 2
@@ -207,4 +209,4 @@ def test_real_world_example():
     assert result.flavor == "balanced"
     assert result.hold_trigger_key_positions == [6, 7, 8, 9, 10, 11]
     assert result.hold_trigger_on_release is True
-    assert result.retro_tap is False 
+    assert result.retro_tap is False
