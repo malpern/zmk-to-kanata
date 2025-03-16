@@ -15,9 +15,9 @@ class KeySequenceBehavior:
         tap_ms: Duration of key press in milliseconds
         bindings: List of keys in the sequence
     """
-    wait_ms: int
-    tap_ms: int
-    bindings: List[str]
+    wait_ms: int = 30
+    tap_ms: int = 30
+    bindings: List[str] = None
 
     def __post_init__(self):
         """Validate the behavior configuration."""
@@ -25,13 +25,21 @@ class KeySequenceBehavior:
             raise ValueError("wait_ms must be non-negative")
         if self.tap_ms < 0:
             raise ValueError("tap_ms must be non-negative")
-        if not self.bindings:
+        # Initialize empty bindings list if None
+        if self.bindings is None:
+            self.bindings = []
+        # Validate that bindings list is not empty when explicitly provided
+        elif not self.bindings:
             raise ValueError("bindings list cannot be empty")
 
 
 class KeySequenceBinding(Binding):
     """Represents a key sequence binding in the keymap."""
-    def __init__(self, keys: List[str], behavior: Optional[KeySequenceBehavior] = None):
+    def __init__(
+        self,
+        keys: List[str],
+        behavior: Optional[KeySequenceBehavior] = None
+    ):
         self.keys = keys
         self.behavior = behavior or KeySequenceBehavior()
 
@@ -91,7 +99,11 @@ def parse_key_sequence_behavior(config: dict) -> KeySequenceBehavior:
     bindings = []
     if 'bindings' in config:
         bindings_str = config['bindings'].strip('<>').strip()
-        bindings = [b.strip('&') for b in bindings_str.split(',')]
+        # Split by comma and clean up each binding
+        bindings = [
+            b.strip().replace('&', '').strip()
+            for b in bindings_str.split(',')
+        ]
     
     return KeySequenceBehavior(
         wait_ms=wait_ms,
