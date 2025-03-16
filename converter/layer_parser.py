@@ -1,17 +1,9 @@
 """Module for parsing ZMK layer definitions into Kanata format."""
 
 import re
-from dataclasses import dataclass
 from typing import List, Optional
 
 from .model.keymap_model import Layer, KeyMapping, HoldTapBinding
-
-
-@dataclass
-class Layer:
-    """Represents a layer with its name and key bindings."""
-    name: str
-    bindings: str
 
 
 class LayerParser:
@@ -20,17 +12,18 @@ class LayerParser:
     def __init__(self):
         """Initialize the parser with regex patterns."""
         # Pattern to match the entire keymap section
-        keymap_parts = [
-            r'(?:(?:#include\s+<[^>]+>\s*)*)',  # Optional includes at start
+        self.keymap_parts = [
+            # Optional includes at start, with optional leading spaces
+            r'(?:(?:\s*#include\s+<[^>]+>\s*)*)',
             r'/\s*{\s*',  # Root node
-            r'(?:global\s*{\s*[^}]*}\s*;\s*)*',  # Optional global section
+            r'(?:[^}]*}\s*;\s*)*',  # Any sections before keymap
             r'keymap\s*{\s*',  # Keymap section
             r'compatible\s*=\s*"zmk,keymap";\s*',  # Compatible property
             r'([\s\S]*?',  # Capture all layer content (including newlines)
             r'}\s*;)\s*',  # Close keymap (included in capture)
             r'}\s*;',  # Close root
         ]
-        self.keymap_pattern = re.compile(''.join(keymap_parts), re.DOTALL)
+        self.keymap_pattern = re.compile(''.join(self.keymap_parts), re.DOTALL)
         
         # Pattern to match individual layers
         self.layer_pattern = re.compile(
@@ -65,7 +58,14 @@ class LayerParser:
         Returns:
             The keymap section content if found, None otherwise
         """
+        print("Content to parse:")
+        print(repr(content))
+        print("\nTrying to match pattern:")
+        print(repr(''.join(self.keymap_parts)))
         match = self.keymap_pattern.search(content)
+        print("\nMatch result:", match)
+        if match:
+            print("Match groups:", match.groups())
         return match.group(1) if match else None
     
     def extract_layers(self, keymap_content: str) -> List[Layer]:
@@ -75,12 +75,16 @@ class LayerParser:
             keymap_content: The content of the keymap section
             
         Returns:
-            List of Layer objects containing name and bindings
+            List of Layer objects with name and parsed key bindings
         """
         layers = []
         for match in self.layer_pattern.finditer(keymap_content):
             name, bindings = match.groups()
-            layers.append(Layer(name=name, bindings=bindings.strip()))
+            # Parse the bindings into a matrix of KeyMapping objects
+            keys = self.parse_bindings_matrix(
+                bindings.strip()
+            )
+            layers.append(Layer(name=name, keys=keys))
         return layers
     
     def parse_binding(self, binding: str) -> KeyMapping:

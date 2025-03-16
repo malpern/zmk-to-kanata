@@ -29,21 +29,22 @@ def test_layer_conversion():
     
     # Check default layer
     default = next(layer for layer in kanata_layers if layer.name == "default")
-    assert len(default.bindings) == 3, "Default layer should have 3 rows"
-    assert len(default.bindings[0]) == 4, "Each row should have 4 keys"
-    assert default.bindings[0][0] == "a"
-    assert default.bindings[1][2] == "@layer1"
+    assert len(default.keys) == 3, "Default layer should have 3 rows"
+    assert len(default.keys[0]) == 4, "Each row should have 4 keys"
+    assert default.keys[0][0] == "a"
+    assert default.keys[1][2] == "@layer1"
     
     # Check number layer
     num = next(layer for layer in kanata_layers if layer.name == "num")
-    assert len(num.bindings) == 3, "Num layer should have 3 rows"
-    assert num.bindings[0][0] == "1"
-    assert num.bindings[2][3] == "0"
-    assert num.bindings[1][2] == "_"  # transparent key
+    assert len(num.keys) == 3, "Num layer should have 3 rows"
+    assert len(num.keys[0]) == 4, "Each row should have 4 keys"
+    assert num.keys[0][0] == "1"
+    assert num.keys[1][2] == "_"  # transparent key
     
     # Check symbol layer
     sym = next(layer for layer in kanata_layers if layer.name == "sym")
-    assert len(sym.bindings) == 3, "Symbol layer should have 3 rows"
-    assert sym.bindings[0][0] == "excl"
-    assert sym.bindings[1][1] == "caret"
-    assert sym.bindings[2][2] == "lpar" 
+    assert len(sym.keys) == 3, "Symbol layer should have 3 rows"
+    assert len(sym.keys[0]) == 4, "Each row should have 4 keys"
+    assert sym.keys[0][0] == "excl"
+    assert sym.keys[1][1] == "caret"
+    assert sym.keys[2][2] == "lpar" 

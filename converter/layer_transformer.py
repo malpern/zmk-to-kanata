@@ -10,7 +10,7 @@ from .layer_parser import Layer
 class KanataLayer:
     """Represents a layer in Kanata format."""
     name: str
-    bindings: List[List[str]]  # Matrix of key bindings
+    keys: List[List[str]]  # Matrix of key bindings
 
 
 class LayerTransformer:
@@ -89,14 +89,14 @@ class LayerTransformer:
             "UP": "up",
             
             # Modifiers
-            "LSHIFT": "lshift",
-            "RSHIFT": "rshift",
-            "LCTRL": "lctrl",
-            "RCTRL": "rctrl",
+            "LSHIFT": "lsft",
+            "RSHIFT": "rsft",
+            "LCTRL": "lctl",
+            "RCTRL": "rctl",
             "LALT": "lalt",
             "RALT": "ralt",
-            "LGUI": "lmeta",
-            "RGUI": "rmeta",
+            "LGUI": "lmet",
+            "RGUI": "rmet",
             
             # System and Media
             "CAPS": "caps",
@@ -125,33 +125,38 @@ class LayerTransformer:
             "NON_US_HASH": "iso_hash",
         }
     
-    def transform_binding(self, zmk_binding: str) -> Optional[str]:
-        """Transform a single ZMK binding to Kanata format.
+    def transform_binding(self, key_mapping) -> Optional[str]:
+        """Transform a single key mapping to Kanata format.
         
         Args:
-            zmk_binding: ZMK binding (e.g., "&kp A", "&mo 1")
+            key_mapping: KeyMapping object containing the binding info
             
         Returns:
             Kanata binding or None if binding should be skipped
         """
-        binding = zmk_binding.strip()
+        # Handle hold-tap binding
+        if key_mapping.hold_tap:
+            hold_key = key_mapping.hold_tap.hold_key
+            tap_key = key_mapping.hold_tap.tap_key
+            
+            # Transform the keys using the key map
+            hold_key = self.key_map.get(hold_key, hold_key.lower())
+            tap_key = self.key_map.get(tap_key, tap_key.lower())
+            
+            return f"tap-hold {hold_key} {tap_key}"
         
         # Handle layer momentary switch
-        if binding.startswith("&mo "):
-            layer_num = binding.split(" ")[1]
+        if key_mapping.key.startswith("mo "):
+            layer_num = key_mapping.key.split(" ")[1]
             return f"@layer{layer_num}"
         
         # Handle transparent key
-        if binding == "&trans":
+        if key_mapping.key == "trans":
             return "_"
         
         # Handle basic key press
-        if binding.startswith("&kp "):
-            key = binding.split(" ")[1]
-            if key in self.key_map:
-                return self.key_map[key]
-        
-        # Skip or log unhandled bindings for now
+        if key_mapping.key in self.key_map:
+            return self.key_map[key_mapping.key]
         return None
     
     def parse_binding_matrix(self, zmk_bindings: str) -> List[List[str]]:
@@ -175,7 +180,7 @@ class LayerTransformer:
             bindings = [b.strip() for b in row.split("&") if b.strip()]
             transformed = []
             for binding in bindings:
-                result = self.transform_binding("&" + binding)
+                result = self.transform_binding(binding)
                 if result:
                     transformed.append(result)
             if transformed:  # Only add non-empty rows
@@ -193,14 +198,22 @@ class LayerTransformer:
             KanataLayer object with transformed bindings
         """
         # Transform the bindings matrix
-        kanata_bindings = self.parse_binding_matrix(zmk_layer.bindings)
+        kanata_bindings = []
+        for row in zmk_layer.keys:
+            transformed_row = []
+            for key in row:
+                result = self.transform_binding(key)
+                if result:
+                    transformed_row.append(result)
+            if transformed_row:  # Only add non-empty rows
+                kanata_bindings.append(transformed_row)
         
         # Create Kanata layer name (strip _layer suffix if present)
         name = zmk_layer.name
         if name.endswith("_layer"):
             name = name[:-6]
         
-        return KanataLayer(name=name, bindings=kanata_bindings)
+        return KanataLayer(name=name, keys=kanata_bindings)
     
     def transform_layers(self, zmk_layers: List[Layer]) -> List[KanataLayer]:
         """Transform multiple ZMK layers into Kanata format.
@@ -211,4 +224,24 @@ class LayerTransformer:
         Returns:
             List of transformed KanataLayer objects
         """
-        return [self.transform_layer(layer) for layer in zmk_layers] 
+        return [self.transform_layer(layer) for layer in zmk_layers]
+    
+    def transform_bindings_matrix(self, matrix) -> List[List[str]]:
+        """Transform a matrix of KeyMapping objects into Kanata format.
+        
+        Args:
+            matrix: List of lists of KeyMapping objects
+            
+        Returns:
+            List of lists of Kanata key bindings
+        """
+        result = []
+        for row in matrix:
+            kanata_row = []
+            for key_mapping in row:
+                binding = self.transform_binding(key_mapping)
+                if binding is None:
+                    binding = key_mapping.key.lower()
+                kanata_row.append(binding)
+            result.append(kanata_row)
+        return result 

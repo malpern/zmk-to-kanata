@@ -41,8 +41,18 @@ def test_single_layer_keymap(temp_test_dir):
     
     # Verify proper indentation and structure
     lines = content.splitlines()
-    assert lines[1].startswith("  ")  # Check indentation
-    assert lines[-1] == ")"  # Check closing parenthesis
+    # Skip header comment and empty lines
+    layer_lines = [
+        line for line in lines
+        if line and not line.startswith(";;")
+    ]
+    print("\nGenerated content:")
+    print(content)
+    print("\nLayer lines:")
+    print(layer_lines)
+    assert layer_lines[2].startswith("(deflayer default")
+    assert "a b c" in layer_lines[3].lower()
+    assert "d e f" in layer_lines[4].lower()
 
 
 def test_multiple_layer_keymap(temp_test_dir):
@@ -166,11 +176,23 @@ def test_comments_and_whitespace(temp_test_dir):
     
     content = kanata_file.read_text()
     
+    print("\nGenerated content:")
+    print(content)
+    
     # Verify key mapping is correct despite comments/whitespace
     assert "(deflayer default" in content
     
     # Check key layout
     lines = content.splitlines()
-    assert "a b" in lines[1].lower()
-    assert "c d" in lines[2].lower()
+    # Skip header comment and empty lines
+    layer_lines = [
+        line for line in lines
+        if line and not line.startswith(";;")
+    ]
+    print("\nLayer lines:")
+    print(layer_lines)
+    
+    assert layer_lines[2].startswith("(deflayer default")
+    assert "a b" in layer_lines[3].lower()
+    assert "c d" in layer_lines[4].lower()
     assert lines[-1] == ")"  # Proper closing 

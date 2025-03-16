@@ -54,10 +54,16 @@ def test_extract_layers():
     assert len(layers) == 2
     
     default_layer = next(layer for layer in layers if layer.name == "default")
-    assert "&kp A &kp B" in default_layer.bindings
+    assert len(default_layer.keys) == 1
+    assert len(default_layer.keys[0]) == 2
+    assert default_layer.keys[0][0].key == "A"
+    assert default_layer.keys[0][1].key == "B"
     
     num_layer = next(layer for layer in layers if layer.name == "num")
-    assert "&kp N1 &kp N2" in num_layer.bindings
+    assert len(num_layer.keys) == 1
+    assert len(num_layer.keys[0]) == 2
+    assert num_layer.keys[0][0].key == "N1"
+    assert num_layer.keys[0][1].key == "N2"
 
 
 def test_parse_zmk_file():

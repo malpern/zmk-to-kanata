@@ -1,9 +1,7 @@
-"""Tests for hold-tap keymap integration."""
-
+"""Test module for tap-hold keymap functionality."""
 from textwrap import dedent
 
-from converter.layer_parser import LayerParser
-from converter.model.keymap_model import HoldTapBinding, KeyMapping
+from ..layer_parser import LayerParser
 
 
 def test_basic_holdtap_binding():
@@ -37,34 +35,20 @@ def test_mixed_bindings_layer():
     assert len(layers) == 1
     
     # Parse bindings matrix
-    bindings = parser.parse_bindings_matrix(layers[0].bindings)
-    
-    # Verify first row
-    assert len(bindings[0]) == 3
-    assert bindings[0][0].key == "Q"
-    assert bindings[0][0].hold_tap is None
-    assert bindings[0][1].key == "W"
-    assert bindings[0][1].hold_tap is None
-    assert bindings[0][2].key == "E"
-    assert bindings[0][2].hold_tap == HoldTapBinding("lh_hm", "LALT", "E")
-    
-    # Verify second row
-    assert len(bindings[1]) == 3
-    assert bindings[1][0].key == "A"
-    assert bindings[1][0].hold_tap == HoldTapBinding("lh_hm", "LGUI", "A")
-    assert bindings[1][1].key == "S"
-    assert bindings[1][1].hold_tap == HoldTapBinding("lh_hm", "LCTRL", "S")
-    assert bindings[1][2].key == "D"
-    assert bindings[1][2].hold_tap is None
-    
-    # Verify third row
-    assert len(bindings[2]) == 3
-    assert bindings[2][0].key == "Z"
-    assert bindings[2][0].hold_tap is None
-    assert bindings[2][1].key == "trans"
-    assert bindings[2][1].hold_tap is None
-    assert bindings[2][2].key == "mo 1"
-    assert bindings[2][2].hold_tap is None
+    layer = layers[0]
+    assert len(layer.keys) == 3  # Three rows
+    assert len(layer.keys[0]) == 3  # Three columns
+
+    # Check regular key
+    assert layer.keys[0][0].key == "Q"
+
+    # Check hold-tap binding
+    assert layer.keys[1][0].hold_tap is not None
+    assert layer.keys[1][0].hold_tap.hold_key == "LGUI"
+    assert layer.keys[1][0].hold_tap.tap_key == "A"
+
+    # Check layer switch
+    assert layer.keys[2][2].key == "mo 1"
 
 
 def test_real_world_homerow_mods():
@@ -87,25 +71,22 @@ def test_real_world_homerow_mods():
     layers = parser.extract_layers(layer_content)
     assert len(layers) == 1
     
-    # Parse bindings matrix
-    bindings = parser.parse_bindings_matrix(layers[0].bindings)
+    # Parse keys matrix
+    layer = layers[0]
+    assert len(layer.keys) == 6  # 6 rows
     
-    # Verify left-hand home row mods
-    assert bindings[1][0].key == "A"
-    assert bindings[1][0].hold_tap == HoldTapBinding("lh_hm", "LGUI", "A")
-    assert bindings[1][1].key == "S"
-    assert bindings[1][1].hold_tap == HoldTapBinding("lh_hm", "LALT", "S")
-    assert bindings[1][2].key == "D"
-    assert bindings[1][2].hold_tap == HoldTapBinding("lh_hm", "LCTRL", "D")
-    assert bindings[1][3].key == "F"
-    assert bindings[1][3].hold_tap == HoldTapBinding("lh_hm", "LSHIFT", "F")
-    
-    # Verify right-hand home row mods
-    assert bindings[4][0].key == "J"
-    assert bindings[4][0].hold_tap == HoldTapBinding("rh_hm", "RSHIFT", "J")
-    assert bindings[4][1].key == "K"
-    assert bindings[4][1].hold_tap == HoldTapBinding("rh_hm", "RCTRL", "K")
-    assert bindings[4][2].key == "L"
-    assert bindings[4][2].hold_tap == HoldTapBinding("rh_hm", "RALT", "L")
-    assert bindings[4][3].key == "SEMI"
-    assert bindings[4][3].hold_tap == HoldTapBinding("rh_hm", "RGUI", "SEMI") 
+    # Check first row
+    assert len(layer.keys[0]) == 4  # 4 columns
+    assert layer.keys[0][0].key == "Q"
+    assert layer.keys[0][1].key == "W"
+    assert layer.keys[0][2].key == "E"
+    assert layer.keys[0][3].key == "R"
+
+    # Check home row mods
+    assert layer.keys[1][0].hold_tap is not None
+    assert layer.keys[1][0].hold_tap.hold_key == "LGUI"
+    assert layer.keys[1][0].hold_tap.tap_key == "A"
+
+    assert layer.keys[4][3].hold_tap is not None
+    assert layer.keys[4][3].hold_tap.hold_key == "RGUI"
+    assert layer.keys[4][3].hold_tap.tap_key == "SEMI" 

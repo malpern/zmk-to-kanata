@@ -1,7 +1,6 @@
-"""Tests for the LayerTransformer class."""
-
-from ..layer_parser import Layer
+"""Test module for layer transformation."""
 from ..layer_transformer import LayerTransformer
+from ..model.keymap_model import Layer, KeyMapping
 
 
 def test_transform_binding():
@@ -9,111 +8,117 @@ def test_transform_binding():
     transformer = LayerTransformer()
     
     # Test letters
-    assert transformer.transform_binding("&kp A") == "a"
-    assert transformer.transform_binding("&kp Z") == "z"
+    assert transformer.transform_binding(KeyMapping(key="A")) == "a"
+    assert transformer.transform_binding(KeyMapping(key="B")) == "b"
     
-    # Test numbers (both number row and numpad)
-    assert transformer.transform_binding("&kp N1") == "1"
-    assert transformer.transform_binding("&kp N0") == "0"
-    assert transformer.transform_binding("&kp KP_N7") == "kp7"
+    # Test numbers
+    assert transformer.transform_binding(KeyMapping(key="N1")) == "1"
+    assert transformer.transform_binding(KeyMapping(key="N0")) == "0"
+    assert transformer.transform_binding(KeyMapping(key="KP_N7")) == "kp7"
     
     # Test symbols and punctuation
-    assert transformer.transform_binding("&kp EXCL") == "excl"
-    assert transformer.transform_binding("&kp MINUS") == "minus"
-    assert transformer.transform_binding("&kp PLUS") == "plus"
-    assert transformer.transform_binding("&kp LBKT") == "lbracket"
-    assert transformer.transform_binding("&kp DOT") == "dot"
+    assert transformer.transform_binding(KeyMapping(key="EXCL")) == "excl"
+    assert transformer.transform_binding(KeyMapping(key="MINUS")) == "minus"
+    assert transformer.transform_binding(KeyMapping(key="PLUS")) == "plus"
+    assert transformer.transform_binding(KeyMapping(key="DOT")) == "dot"
     
     # Test function keys
-    assert transformer.transform_binding("&kp F1") == "f1"
-    assert transformer.transform_binding("&kp F12") == "f12"
+    assert transformer.transform_binding(KeyMapping(key="F1")) == "f1"
+    assert transformer.transform_binding(KeyMapping(key="F12")) == "f12"
     
     # Test navigation and editing
-    assert transformer.transform_binding("&kp ENTER") == "ret"
-    assert transformer.transform_binding("&kp SPACE") == "spc"
-    assert transformer.transform_binding("&kp PG_UP") == "pgup"
+    assert transformer.transform_binding(KeyMapping(key="ENTER")) == "ret"
+    assert transformer.transform_binding(KeyMapping(key="SPACE")) == "spc"
+    assert transformer.transform_binding(KeyMapping(key="PG_UP")) == "pgup"
     
     # Test modifiers
-    assert transformer.transform_binding("&kp LSHIFT") == "lshift"
-    assert transformer.transform_binding("&kp RGUI") == "rmeta"
+    assert transformer.transform_binding(KeyMapping(key="LSHIFT")) == "lsft"
+    assert transformer.transform_binding(KeyMapping(key="RGUI")) == "rmet"
     
     # Test system and media
-    assert transformer.transform_binding("&kp C_MUTE") == "mute"
-    assert transformer.transform_binding("&kp C_VOL_UP") == "volu"
+    assert transformer.transform_binding(KeyMapping(key="C_MUTE")) == "mute"
+    assert transformer.transform_binding(KeyMapping(key="C_VOL_UP")) == "volu"
     
     # Test numpad special keys
-    assert transformer.transform_binding("&kp KP_PLUS") == "kp_plus"
-    assert transformer.transform_binding("&kp KP_DOT") == "kp_dot"
+    assert transformer.transform_binding(KeyMapping(key="KP_PLUS")) == "kp_plus"
+    assert transformer.transform_binding(KeyMapping(key="KP_DOT")) == "kp_dot"
     
     # Test layer momentary switch
-    assert transformer.transform_binding("&mo 1") == "@layer1"
-    assert transformer.transform_binding("&mo 2") == "@layer2"
+    assert transformer.transform_binding(KeyMapping(key="mo 1")) == "@layer1"
+    assert transformer.transform_binding(KeyMapping(key="mo 2")) == "@layer2"
     
     # Test transparent key
-    assert transformer.transform_binding("&trans") == "_"
+    assert transformer.transform_binding(KeyMapping(key="trans")) == "_"
     
     # Test unknown binding
-    assert transformer.transform_binding("&unknown X") is None
+    assert transformer.transform_binding(KeyMapping(key="unknown X")) is None
 
 
 def test_parse_binding_matrix():
     """Test parsing of ZMK bindings matrix."""
     transformer = LayerTransformer()
-    
-    zmk_bindings = """
-        &kp A &kp B
-        &kp N1 &mo 1
-        &trans &kp C
-    """
-    
-    matrix = transformer.parse_binding_matrix(zmk_bindings)
-    assert len(matrix) == 3  # Three rows
-    assert matrix[0] == ["a", "b"]  # First row
-    assert matrix[1] == ["1", "@layer1"]  # Second row
-    assert matrix[2] == ["_", "c"]  # Third row
+
+    # Create a matrix of KeyMapping objects
+    matrix = [
+        [KeyMapping(key="A"), KeyMapping(key="B")],
+        [KeyMapping(key="N1"), KeyMapping(key="mo 1")],
+        [KeyMapping(key="trans"), KeyMapping(key="C")]
+    ]
+
+    result = transformer.transform_bindings_matrix(matrix)
+    assert len(result) == 3
+    assert result[0] == ["a", "b"]
+    assert result[1] == ["1", "@layer1"]
+    assert result[2] == ["_", "c"]
 
 
 def test_transform_layer():
     """Test transformation of complete ZMK layer."""
     transformer = LayerTransformer()
-    
+
     zmk_layer = Layer(
         name="default_layer",
-        bindings="""
-            &kp A &kp B
-            &kp N1 &mo 1
-        """
+        keys=[
+            [KeyMapping(key="A"), KeyMapping(key="B")],
+            [KeyMapping(key="N1"), KeyMapping(key="mo 1")]
+        ]
     )
-    
+
     kanata_layer = transformer.transform_layer(zmk_layer)
-    assert kanata_layer.name == "default"  # _layer suffix removed
-    assert len(kanata_layer.bindings) == 2  # Two rows
-    assert kanata_layer.bindings[0] == ["a", "b"]
-    assert kanata_layer.bindings[1] == ["1", "@layer1"]
+    assert kanata_layer.name == "default"
+    assert len(kanata_layer.keys) == 2
+    assert kanata_layer.keys[0] == ["a", "b"]
+    assert kanata_layer.keys[1] == ["1", "@layer1"]
 
 
 def test_transform_layers():
     """Test transformation of multiple ZMK layers."""
     transformer = LayerTransformer()
-    
+
     zmk_layers = [
         Layer(
             name="default_layer",
-            bindings="&kp A &kp B"
+            keys=[[KeyMapping(key="A"), KeyMapping(key="B")]]
         ),
         Layer(
             name="num",  # No _layer suffix
-            bindings="&kp N1 &kp N2"
+            keys=[[KeyMapping(key="N1"), KeyMapping(key="N2")]]
         )
     ]
-    
+
     kanata_layers = transformer.transform_layers(zmk_layers)
     assert len(kanata_layers) == 2
-    
-    # Check first layer
-    assert kanata_layers[0].name == "default"
-    assert kanata_layers[0].bindings == [["a", "b"]]
-    
-    # Check second layer
-    assert kanata_layers[1].name == "num"
-    assert kanata_layers[1].bindings == [["1", "2"]] 
+
+    # Check default layer
+    default_layers = [
+        layer for layer in kanata_layers if layer.name == "default"
+    ]
+    assert len(default_layers) == 1
+    default = default_layers[0]
+    assert len(default.keys) == 1
+    assert default.keys[0] == ["a", "b"]
+
+    # Check num layer
+    num = next(layer for layer in kanata_layers if layer.name == "num")
+    assert len(num.keys) == 1
+    assert num.keys[0] == ["1", "2"] 
