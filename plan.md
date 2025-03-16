@@ -143,8 +143,9 @@ converter/
 - [x] Fix whitespace issues (trailing whitespace, blank lines with whitespace)
 - [x] Add missing newlines at the end of files
 - [x] Fix unused imports in key files
-- [x] Fix spacing between class definitions (E302)
-- [x] Fix remaining import issues in non-test files
+- [ ] Fix spacing between class definitions (E302)
+- [ ] Fix remaining import issues in non-test files
+- [ ] Fix lines that are too long (E501)
 
 ## Task 28: Implement Macro Support
 - [x] Create MacroBehavior class to represent ZMK macro behaviors
@@ -158,6 +159,17 @@ converter/
 - [x] Support wait times and tap times
 - [x] Test with various macro types (basic, parameterized, complex)
 
+## Task 29: Implement Unicode Input Support
+- [x] Create UnicodeBinding class to represent Unicode bindings
+- [x] Create UnicodeParser to parse ZMK Unicode definitions
+- [x] Update LayerParser to detect and parse Unicode behaviors
+- [x] Add unit tests for Unicode behavior and parser
+- [x] Add end-to-end tests for Unicode support
+- [x] Implement conversion of Unicode bindings to Kanata format
+- [x] Support different Unicode input methods
+- [x] Test with various Unicode characters
+
 ## Next Steps
-1. Add regression tests for fixed issues (Task 25)
-2. Eventually remove the root keymap_model.py once all code is migrated (Task 26)
+1. Complete remaining linter fixes (Task 27)
+2. Add regression tests for fixed issues (Task 25)
+3. Eventually remove the root keymap_model.py once all code is migrated (Task 26)
