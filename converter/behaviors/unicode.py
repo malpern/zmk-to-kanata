@@ -26,6 +26,7 @@ class UnicodeBinding(Binding):
         Returns:
             The Kanata representation of the binding
         """
+        # Return a properly formatted unicode character reference
         return f"(unicode {self.character})"
 
     @classmethod

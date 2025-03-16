@@ -18,6 +18,10 @@ class KanataLayer:
         """
         self.name = name
         self.keys = keys
+        # Add bindings attribute for compatibility with new architecture
+        self.bindings = []
+        for row in keys:
+            self.bindings.extend(row)
 
 
 class LayerTransformer:
@@ -91,7 +95,18 @@ class LayerTransformer:
         }
 
     def transform_binding(self, binding: Binding) -> str:
-        """Transform a ZMK binding to Kanata format."""
+        """Transform a binding to Kanata format.
+
+        Args:
+            binding: The binding to transform
+
+        Returns:
+            The binding in Kanata format
+        """
+        # Handle transparent key
+        if isinstance(binding, str) and binding == "trans":
+            return "_"
+
         # Handle key sequence bindings
         if isinstance(binding, KeySequenceBinding):
             # Convert each key in the sequence
@@ -104,21 +119,57 @@ class LayerTransformer:
             # Format as a chord
             return f"(chord {' '.join(kanata_keys)})"
 
+        # Handle sticky key bindings
+        from converter.behaviors.sticky_key import StickyKeyBinding
+        if isinstance(binding, StickyKeyBinding):
+            # Get the modifier key from the binding
+            mod_key = binding.key.upper()
+            # Map to shorter form if needed
+            mod_map = {
+                'LSHIFT': 'lsft', 'RSHIFT': 'rsft',
+                'LCTRL': 'lctl', 'RCTRL': 'rctl',
+                'LALT': 'lalt', 'RALT': 'ralt',
+                'LGUI': 'lmet', 'RGUI': 'rmet'
+            }
+            mod_short = mod_map.get(mod_key, mod_key.lower())
+            return f"sticky-{mod_short}"
+
         # Handle regular key mappings
         if isinstance(binding, KeyMapping):
+            # Special case for layer switching
+            if binding.key.startswith("mo "):
+                layer_num = binding.key.split()[1]
+                return f"@layer{layer_num}"
             return binding.to_kanata()
 
         # Default case
         return str(binding)
 
-    def transform_layer(self, layer: Layer) -> KanataLayer:
+    def transform_bindings_matrix(self, matrix: List[List[Binding]]) -> List[List[str]]:
+        """Transform a matrix of bindings to Kanata format.
+        
+        Args:
+            matrix: A 2D list of bindings
+            
+        Returns:
+            A 2D list of strings in Kanata format
+        """
+        result = []
+        for row in matrix:
+            kanata_row = []
+            for binding in row:
+                kanata_row.append(self.transform_binding(binding))
+            result.append(kanata_row)
+        return result
+
+    def transform_layer(self, layer: Layer) -> str:
         """Transform a ZMK layer to Kanata format.
 
         Args:
             layer: The ZMK layer to transform
 
         Returns:
-            A KanataLayer object representing the layer in Kanata format
+            A string representing the layer in Kanata format
         """
         # Convert bindings to Kanata format
         kanata_bindings = []
@@ -129,7 +180,16 @@ class LayerTransformer:
         # In a real implementation, we would respect the original layout
         keys = [kanata_bindings]
 
-        return KanataLayer(layer.name, keys)
+        # Create a KanataLayer for backward compatibility
+        kanata_layer = KanataLayer(layer.name, keys)
+        
+        # Format as a string
+        result = f"(deflayer {layer.name}\n"
+        for row in kanata_layer.keys:
+            result += "  " + " ".join(row) + "\n"
+        result += ")"
+        
+        return result
 
     def transform_layers(self, zmk_layers: List[Layer]) -> str:
         """Transform ZMK layers to Kanata format.
@@ -151,12 +211,9 @@ class LayerTransformer:
         # Combine everything
         kanata_content = f"(defsrc\n  {source_keys}\n)\n\n"
 
-        # Add each layer definition
-        for layer in kanata_layers:
-            kanata_content += f"(deflayer {layer.name}\n"
-            for row in layer.keys:
-                kanata_content += "  " + " ".join(row) + "\n"
-            kanata_content += ")\n\n"
+        # Add each layer definition - kanata_layers now contains strings, not KanataLayer objects
+        for layer_str in kanata_layers:
+            kanata_content += layer_str + "\n\n"
 
         return kanata_content.rstrip()
 

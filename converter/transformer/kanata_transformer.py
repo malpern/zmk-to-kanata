@@ -4,10 +4,12 @@ This module converts our intermediate representation into Kanata DSL format.
 """
 from typing import Dict, List
 
-from converter.behaviors.macro import MacroBehavior
+from converter.behaviors.macro import MacroBehavior, MacroBinding
+from converter.behaviors.sticky_key import StickyKeyBinding
+from converter.behaviors.unicode import UnicodeBinding
 from converter.model.keymap_model import (
     KeymapConfig,
-    KeyMapping
+    KeyMapping,
 )
 from .holdtap_transformer import HoldTapTransformer
 from .macro_transformer import MacroTransformer
@@ -23,42 +25,44 @@ class KanataTransformer:
         self.macro_behaviors: Dict[str, MacroBehavior] = {}
 
     def transform(self, config: KeymapConfig) -> str:
-        """Transform the keymap configuration into Kanata DSL format.
+        """Transform the config into Kanata DSL format.
 
         Args:
-            config: The keymap configuration to transform.
+            config: The keymap configuration.
 
         Returns:
-            A string containing the Kanata configuration.
+            The Kanata DSL format as a string.
         """
-        lines = []
+        output = []
+        output.extend(self._transform_header())
+        output.extend(self._transform_global_settings(config))
+        output.append("")
 
-        # Add header
-        lines.extend(self._transform_header())
+        # Add hold-tap aliases if there are any
+        aliases = self._generate_hold_tap_aliases(config)
+        if aliases:
+            output.append(";; Hold-tap aliases")
+            output.append("(defalias")
+            for alias in aliases:
+                output.append(f"  {alias}")
+            output.append(")")
+            output.append("")
 
-        # Add global settings
-        lines.extend(self._transform_global_settings(config))
-
-        # Add hold-tap aliases if needed
-        holdtap_aliases = self._transform_holdtap_aliases(config)
-        if holdtap_aliases:
-            lines.append("")  # Add spacing
-            lines.extend(holdtap_aliases)
-
-        # Add macro definitions if needed
-        macro_defs = self._transform_macro_definitions()
-        if macro_defs:
-            lines.append("")  # Add spacing
-            lines.extend(macro_defs)
+        # Add macros if there are any
+        macros = self._generate_macros(config)
+        if macros:
+            output.append(";; Macro definitions")
+            for macro in macros:
+                output.extend(macro)
+                output.append("")
+            output.append("")
 
         # Add layers
-        if config.layers:
-            lines.append("")  # Add spacing
-            lines.extend(self._transform_layers(config))
+        output.extend(self._transform_layers(config))
 
-        return "\n".join(lines)
+        return "\n".join(output)
 
-    def _transform_header(self) -> list[str]:
+    def _transform_header(self) -> List[str]:
         """Transform the configuration header.
 
         Returns:
@@ -71,7 +75,7 @@ class KanataTransformer:
             ";; Global settings"
         ]
 
-    def _transform_global_settings(self, config: KeymapConfig) -> list[str]:
+    def _transform_global_settings(self, config: KeymapConfig) -> List[str]:
         """Transform global settings into Kanata format.
 
         Args:
@@ -85,106 +89,7 @@ class KanataTransformer:
             f"(defvar hold-time {config.global_settings.hold_time})"
         ]
 
-    def _transform_holdtap_aliases(self, config: KeymapConfig) -> List[str]:
-        """Transform hold-tap behaviors into Kanata aliases.
-
-        Args:
-            config: The keymap configuration.
-
-        Returns:
-            A list of alias definitions.
-        """
-        # Collect all unique hold-tap bindings from all layers
-        hold_tap_bindings = {}
-        
-        for layer in config.layers:
-            for binding in layer.bindings:
-                if isinstance(binding, KeyMapping) and binding.hold_tap:
-                    # Create a unique identifier for this hold-tap binding
-                    binding_id = (
-                        f"{binding.hold_tap.behavior_name}_"
-                        f"{binding.hold_tap.hold_key}_"
-                        f"{binding.hold_tap.tap_key}"
-                    )
-                    
-                    # Store the binding with its ID
-                    if binding_id not in hold_tap_bindings:
-                        hold_tap_bindings[binding_id] = binding.hold_tap
-        
-        # If no hold-tap bindings, return empty list
-        if not hold_tap_bindings:
-            return []
-            
-        # Generate alias definitions
-        lines = [";; Hold-tap aliases"]
-        
-        for binding_id, hold_tap in hold_tap_bindings.items():
-            # Convert hold_key to short form if needed
-            hold_key = hold_tap.hold_key
-            if hold_key in [
-                "LSHIFT", "RSHIFT", "LCTRL", "RCTRL", 
-                "LALT", "RALT", "LGUI", "RGUI"
-            ]:
-                hold_key = {
-                    "LSHIFT": "lsft",
-                    "RSHIFT": "rsft",
-                    "LCTRL": "lctl",
-                    "RCTRL": "rctl",
-                    "LALT": "lalt",
-                    "RALT": "ralt",
-                    "LGUI": "lmet",
-                    "RGUI": "rmet"
-                }[hold_key]
-            
-            # Convert tap_key if needed
-            tap_key = hold_tap.tap_key
-            # Remove leading 'N' from number keys if followed by digits
-            if tap_key.startswith('N') and tap_key[1:].isdigit():
-                tap_key = tap_key[1:]
-                
-            # Create the alias definition
-            alias_def = (
-                f"(defalias {binding_id} "
-                f"(tap-hold {hold_key} {tap_key.lower()}))"
-            )
-            lines.append(alias_def)
-            
-        return lines
-
-    def _transform_key(self, key: KeyMapping) -> str:
-        """Transform a single key mapping to Kanata format.
-
-        Args:
-            key: The key mapping to transform.
-
-        Returns:
-            The Kanata key representation.
-        """
-        # If key is already a string, just return it
-        if isinstance(key, str):
-            return key
-
-        if key.hold_tap:
-            # Use the alias we created for this hold-tap binding
-            binding_id = (
-                f"{key.hold_tap.behavior_name}_"
-                f"{key.hold_tap.hold_key}_"
-                f"{key.hold_tap.tap_key}"
-            )
-            return f"@{binding_id}"
-
-        if key.key.startswith("mo "):
-            # Handle momentary layer switch
-            layer_num = key.key.split()[1]
-            return f"(layer-while-held {layer_num})"
-        elif key.key == "trans":
-            # Handle transparent key
-            return "_"
-        else:
-            # Handle regular key
-            return key.key.lower()
-
-    def _transform_layers(self, config: KeymapConfig) -> list[str]:
+    def _transform_layers(self, config: KeymapConfig) -> List[str]:
         """Transform layers into Kanata format.
 
         Args:
@@ -194,36 +99,209 @@ class KanataTransformer:
             A list of layer definition lines.
         """
         lines = []
-        for i, layer in enumerate(config.layers):
-            lines.append(f"(deflayer {layer.name}")
-            # Transform each binding
-            binding_line = "  " + " ".join(
-                self._transform_key(binding) for binding in layer.bindings
-            )
-            lines.append(binding_line)
-            lines.append(")")
-            # Add spacing between layers, but not after the last one
-            if i < len(config.layers) - 1:
+        for layer in config.layers:
+            # If layer is already a string (already transformed), just add it
+            if isinstance(layer, str):
+                lines.append(layer)
                 lines.append("")
+                continue
+                
+            # Remove _layer suffix from layer name if present
+            layer_name = layer.name.replace('_layer', '')
+            lines.append(f"(deflayer {layer_name}")
+            # Transform each row of bindings
+            for row in layer.keys:
+                binding_line = "  " + "  ".join(
+                    self._transform_key(binding) for binding in row
+                )
+                lines.append(binding_line)
+            lines.append(")")
+            lines.append("")
+
+        # Remove the last empty line if it exists
+        if lines and not lines[-1]:
+            lines.pop()
 
         return lines
 
-    def _transform_macro_definitions(self) -> List[str]:
-        """Transform macro behaviors into Kanata macro definitions.
+    def _transform_key(self, key_mapping: KeyMapping) -> str:
+        """Transform a key mapping to its Kanata representation.
+
+        Args:
+            key_mapping: The key mapping to transform.
 
         Returns:
-            A list of macro definition lines.
+            The Kanata key representation as a string.
         """
-        if not self.macro_behaviors:
-            return []
+        # Handle sticky key bindings first
+        if isinstance(key_mapping, StickyKeyBinding):
+            # Get the key from the binding
+            key = key_mapping.key
+            # Map modifiers to their shorter form
+            mod_map = {
+                "LSHIFT": "lsft", "RSHIFT": "rsft",
+                "LCTRL": "lctl", "RCTRL": "rctl",
+                "LALT": "lalt", "RALT": "ralt",
+                "LGUI": "lmet", "RGUI": "rmet"
+            }
+            # For function keys, keep the case
+            if key.startswith('F') and key[1:].isdigit():
+                return f"sticky-{key}"
+            # For modifiers, use the mapping
+            return f"sticky-{mod_map.get(key, key.lower())}"
 
-        lines = [";; Macro definitions"]
-        for name, behavior in self.macro_behaviors.items():
-            macro_def = self.macro_transformer.transform_macro(behavior)
-            lines.append(macro_def)
-            lines.append("")  # Add spacing between macros
+        # Handle transparent keys
+        if key_mapping.key == "trans":
+            return "_"
 
-        return lines
+        # Handle layer switch keys
+        if key_mapping.key.startswith("mo "):
+            layer_num = key_mapping.key.split(" ")[1]
+            # Return using @layer format for momentary layer switch
+            return f"@layer{layer_num}"
+
+        # Handle hold-tap bindings
+        if hasattr(key_mapping, 'hold_tap') and key_mapping.hold_tap:
+            alias_name = self._generate_hold_tap_alias_name(
+                key_mapping.hold_tap.behavior_name,
+                key_mapping.hold_tap.hold_key,
+                key_mapping.hold_tap.tap_key
+            )
+            return f"@{alias_name}"
+
+        # Handle Unicode bindings
+        if isinstance(key_mapping, UnicodeBinding):
+            return key_mapping.to_kanata()
+
+        # Handle macro bindings
+        if isinstance(key_mapping, MacroBinding):
+            return key_mapping.to_kanata()
+
+        # Handle regular key bindings
+        key = key_mapping.key
+        # For function keys, keep the case
+        if key.startswith('F') and key[1:].isdigit():
+            return key
+        return key.lower()
+
+    def _generate_hold_tap_alias_name(
+        self, behavior_name: str, hold_key: str, tap_key: str
+    ) -> str:
+        """Generate a consistent name for a hold-tap alias.
+
+        Args:
+            behavior_name: The name of the hold-tap behavior.
+            hold_key: The key to activate when held.
+            tap_key: The key to activate when tapped.
+
+        Returns:
+            A consistent name for the hold-tap alias.
+        """
+        return f"{behavior_name}_{hold_key}_{tap_key}"
+
+    def _generate_hold_tap_aliases(self, config: KeymapConfig) -> List[str]:
+        """Generate aliases for all hold-tap bindings in the config.
+
+        Args:
+            config: The keymap configuration.
+
+        Returns:
+            A list of hold-tap alias definitions.
+        """
+        aliases = []
+        # Collect unique hold-tap bindings
+        seen_bindings = set()
+        
+        # Scan all layers and keys for hold-tap bindings
+        for layer in config.layers:
+            # Skip if layer is a string (already transformed)
+            if isinstance(layer, str):
+                continue
+                
+            for row in layer.keys:
+                for key in row:
+                    # Skip sticky key bindings
+                    if isinstance(key, StickyKeyBinding):
+                        continue
+                        
+                    if key.hold_tap:
+                        ht = key.hold_tap
+                        alias_name = self._generate_hold_tap_alias_name(
+                            ht.behavior_name, ht.hold_key, ht.tap_key
+                        )
+                        
+                        # Only process each unique binding once
+                        binding_key = (
+                            ht.behavior_name, 
+                            ht.hold_key, 
+                            ht.tap_key,
+                            str(ht.hold_trigger_key_positions),
+                            ht.hold_trigger_on_release,
+                            ht.retro_tap
+                        )
+                        
+                        if binding_key in seen_bindings:
+                            continue
+                            
+                        seen_bindings.add(binding_key)
+                        
+                        # Format the hold-tap alias based on its properties
+                        hold_key = ht.hold_key.lower()
+                        tap_key = ht.tap_key.lower()
+                        
+                        # Map modifiers to their kanata representation
+                        mod_map = {
+                            "lshift": "lsft", "rshift": "rsft",
+                            "lctrl": "lctl", "rctrl": "rctl",
+                            "lalt": "lalt", "ralt": "ralt",
+                            "lgui": "lmet", "rgui": "rmet"
+                        }
+                        
+                        hold_key = mod_map.get(hold_key, hold_key)
+                        
+                        # Basic tap-hold format
+                        tap_time = config.global_settings.tap_time
+                        hold_time = config.global_settings.hold_time
+                        # Base format for simple tap-hold
+                        alias_def = (
+                            f"{alias_name} (tap-hold {tap_time} {hold_time} "
+                            f"{tap_key} {hold_key})"
+                        )
+                        
+                        # Add key positions if specified
+                        if ht.hold_trigger_key_positions:
+                            pos_str = " ".join(
+                                str(p) for p in ht.hold_trigger_key_positions
+                            )
+                            alias_def = (
+                                f"{alias_name} (tap-hold-release-keys "
+                                f"{tap_time} {hold_time} {tap_key} {hold_key} "
+                                f"({pos_str}))"
+                            )
+                        # Add release trigger if specified
+                        elif ht.hold_trigger_on_release:
+                            alias_def = (
+                                f"{alias_name} (tap-hold-release "
+                                f"{tap_time} {hold_time} {tap_key} {hold_key})"
+                            )
+                            
+                        aliases.append(alias_def)
+        
+        return aliases
+
+    def _generate_macros(self, config: KeymapConfig) -> List[List[str]]:
+        """Generate macro definitions for all macros in the config.
+
+        Args:
+            config: The keymap configuration.
+
+        Returns:
+            A list of macro definitions.
+        """
+        # This would need access to the MacroBehavior objects
+        # For now, we'll return an empty list as a placeholder
+        # This should be implemented later to properly support macros
+        return []
 
     def register_macro_behavior(self, behavior: MacroBehavior) -> None:
         """Register a macro behavior for later transformation.

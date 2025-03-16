@@ -36,8 +36,7 @@ class MacroBinding(Binding):
         Returns:
             String containing the Kanata binding
         """
-        # For now, just return a simple macro reference
-        # This will be expanded in the future to use the MacroTransformer
+        # Return a properly formatted macro reference
         return f"(macro {self.behavior.name})"
 
     @classmethod

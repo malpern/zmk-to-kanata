@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 from typing import List, Optional
 
-from .main import convert_keymap
+from .main import main as convert_main
 
 __version__ = "0.1.0"
 
@@ -51,21 +51,9 @@ def main(argv: Optional[List[str]] = None) -> int:
     parser = create_parser()
     args = parser.parse_args(argv)
 
-    try:
-        convert_keymap(args.input_file, args.output_file)
-        return 0
-    except FileNotFoundError as e:
-        print(f"Error: {e}", file=sys.stderr)
-        return 1
-    except ValueError as e:
-        print(f"Error: {e}", file=sys.stderr)
-        return 2
-    except OSError as e:
-        print(f"Error: {e}", file=sys.stderr)
-        return 1
-    except Exception as e:
-        print(f"Unexpected error: {e}", file=sys.stderr)
-        return 3
+    # Convert the args to a list for the main function
+    main_args = [str(args.input_file), str(args.output_file)]
+    return convert_main(main_args)
 
 
 if __name__ == "__main__":

@@ -111,9 +111,6 @@ class TapHoldParser:
         """
         return name in self.behavior_registry
 
-
-
-
     def parse_behavior(self, zmk_config: str) -> HoldTapBehavior:
         """Parse a ZMK hold-tap behavior configuration.
 
@@ -229,9 +226,12 @@ class TapHoldParser:
         Returns:
             Dictionary with parsed behavior properties
         """
+        pass  # Implementation to be added
+
 
 # Alias for backward compatibility
 HoldTapParser = TapHoldParser
+
 
 def is_hold_tap_binding(binding_str: str) -> bool:
     """Check if a binding string is a hold-tap binding.

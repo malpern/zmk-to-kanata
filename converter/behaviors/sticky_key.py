@@ -37,8 +37,13 @@ class StickyKeyBinding(Binding):
             'LGUI': 'lmet',
             'RGUI': 'rmet',
         }
-        key = key_mapping.get(self.key, self.key.lower())
-        return f"sticky-{key}"
+        # For function keys, preserve the case
+        if self.key.startswith('F') and self.key[1:].isdigit():
+            return f"sticky-{self.key}"  # Keep function keys as is (F1, F2)
+        else:
+            # For other keys, convert to lowercase
+            key = key_mapping.get(self.key, self.key.lower())
+            return f"sticky-{key}"
 
     @classmethod
     def from_zmk(

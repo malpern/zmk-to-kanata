@@ -3,16 +3,51 @@
 This module is responsible for parsing ZMK keymap files into our intermediate
 representation.
 """
-import re
+from enum import Enum, auto
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 from converter.model.keymap_model import (
     GlobalSettings,
     KeyMapping,
     Layer,
-    KeymapConfig
+    KeymapConfig,
 )
+from converter.behaviors.sticky_key import StickyKeyBinding
+
+
+class ParserState(Enum):
+    """States for the ZMK parser state machine."""
+    INITIAL = auto()
+    IN_ROOT = auto()
+    IN_KEYMAP = auto()
+    IN_LAYER = auto()
+    IN_BINDINGS = auto()
+
+
+class LayerParser:
+    """Parser for ZMK layer definitions."""
+    
+    def parse_binding(self, binding: str) -> KeyMapping:
+        """Parse a single key binding."""
+        binding = binding.strip()
+        if binding == 'trans':
+            return KeyMapping(key='trans')
+        elif binding.startswith('sk '):
+            key = binding[3:].strip()  # Remove 'sk ' prefix
+            return StickyKeyBinding(key=key)
+        elif binding.startswith('kp '):
+            key = binding[3:].strip()  # Remove 'kp ' prefix
+            return KeyMapping(key=key)
+        else:
+            return KeyMapping(key=binding.strip())
+
+    def parse_bindings_line(self, line: str) -> List[KeyMapping]:
+        """Parse a line of bindings into a list of KeyMappings."""
+        # Remove any trailing characters and split by &
+        line = line.rstrip(';').rstrip('>').strip()
+        bindings = [b.strip() for b in line.split('&') if b.strip()]
+        return [self.parse_binding(b) for b in bindings]
 
 
 class ZMKParser:
@@ -20,74 +55,89 @@ class ZMKParser:
 
     def __init__(self):
         """Initialize the parser."""
-        # Regular expressions for parsing
-        self.global_pattern = re.compile(
-            r'/\s*{\s*'  # Root node
-            r'global\s*{\s*'  # Global section
-            r'tap-time\s*=\s*<(\d+)>;\s*'  # Tap time
-            r'hold-time\s*=\s*<(\d+)>;\s*'  # Hold time
-            r'}'  # Close global
-        )
-        self.bindings_pattern = re.compile(
-            r'keymap\s*{\s*'  # Keymap section
-            r'compatible\s*=\s*"zmk,keymap";\s*'  # Compatible property
-            r'default_layer\s*{\s*'  # Default layer
-            r'bindings\s*=\s*<([^>]+)>'  # Bindings
-        )
+        self.layer_parser = LayerParser()
+        self.state = ParserState.INITIAL
+        self.current_layer: Optional[str] = None
+        self.current_bindings: List[List[KeyMapping]] = []
+        self.layers: List[Layer] = []
 
     def parse(self, file_path: Path) -> KeymapConfig:
         """Parse a ZMK keymap file into a KeymapConfig object."""
         with open(file_path, 'r') as f:
             content = f.read()
 
-        # Skip include statements
-        content = re.sub(r'#include\s*<[^>]+>\s*', '', content)
+        # Use default global settings for now
+        global_settings = GlobalSettings(tap_time=200, hold_time=250)
+        
+        # Process file line by line
+        for line in content.split('\n'):
+            self._process_line(line.strip())
 
-        # Parse global settings
-        global_match = self.global_pattern.search(content)
-        if not global_match:
-            raise ValueError("Could not find global settings in ZMK file")
-
-        global_settings = GlobalSettings(
-            tap_time=int(global_match.group(1)),
-            hold_time=int(global_match.group(2))
-        )
-
-        # Parse default layer
-        bindings_match = self.bindings_pattern.search(content)
-        if not bindings_match:
-            raise ValueError("Could not find key bindings in ZMK file")
-
-        # Process key bindings
-        bindings_text = bindings_match.group(1)
-        keys = self._parse_bindings(bindings_text)
-
-        default_layer = Layer(name="default", keys=keys)
+        if not self.layers:
+            raise ValueError("Could not find any layers in ZMK file")
 
         return KeymapConfig(
             global_settings=global_settings,
-            layers=[default_layer]
+            layers=self.layers
         )
 
-    def _parse_bindings(self, bindings_text: str) -> List[List[KeyMapping]]:
-        """Parse the bindings text into a 2D array of KeyMappings."""
-        # Split into rows (assuming they're separated by newlines)
-        rows = [
-            row.strip() for row in bindings_text.split('\n')
-            if row.strip()
-        ]
+    def _process_line(self, line: str) -> None:
+        """Process a single line based on current state."""
+        if not line:
+            return
 
-        result = []
-        for row in rows:
-            # Split the row into individual key bindings
-            key_bindings = [
-                kb.strip() for kb in row.split('&kp')
-                if kb.strip()
-            ]
-            # Convert each binding to a KeyMapping
-            row_mappings = [
-                KeyMapping(key=key.strip()) for key in key_bindings
-            ]
-            result.append(row_mappings)
+        if self.state == ParserState.INITIAL:
+            if '/ {' in line:
+                self.state = ParserState.IN_ROOT
+        
+        elif self.state == ParserState.IN_ROOT:
+            if 'keymap {' in line:
+                self.state = ParserState.IN_KEYMAP
+        
+        elif self.state == ParserState.IN_KEYMAP:
+            if '_layer {' in line:
+                self._start_new_layer(line)
+            elif '}' in line and self.current_layer:
+                self._finish_current_layer()
+        
+        elif self.state == ParserState.IN_LAYER:
+            if 'bindings = <' in line:
+                self.state = ParserState.IN_BINDINGS
+            elif '};' in line:
+                self._finish_current_layer()
+        
+        elif self.state == ParserState.IN_BINDINGS:
+            if ('&' in line or 'trans' in line) and not line.endswith('>'):
+                self._add_bindings_line(line)
+            elif '>' in line:
+                self._add_bindings_line(line)
+                self.state = ParserState.IN_LAYER
 
-        return result
+    def _start_new_layer(self, line: str) -> None:
+        """Start parsing a new layer."""
+        if self.current_layer:
+            self._finish_current_layer()
+        
+        self.current_layer = line.split('_layer')[0].strip()
+        self.current_bindings = []
+        self.state = ParserState.IN_LAYER
+
+    def _finish_current_layer(self) -> None:
+        """Finish parsing the current layer."""
+        if self.current_layer and self.current_bindings:
+            self.layers.append(Layer(
+                name=self.current_layer,
+                keys=self.current_bindings
+            ))
+        self.current_layer = None
+        self.current_bindings = []
+        self.state = ParserState.IN_KEYMAP
+
+    def _add_bindings_line(self, line: str) -> None:
+        """Add a line of bindings to the current layer."""
+        if self.current_layer is None:
+            return
+        
+        bindings = self.layer_parser.parse_bindings_line(line)
+        if bindings:
+            self.current_bindings.append(bindings)

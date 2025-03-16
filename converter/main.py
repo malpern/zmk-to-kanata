@@ -1,19 +1,20 @@
 """Main module for the ZMK to Kanata converter."""
 
 import argparse
+import os
 import sys
 from pathlib import Path
 from typing import List
 
-from .layer_parser import LayerParser
-from .layer_transformer import LayerTransformer, KanataLayer
+from .layer_transformer import KanataLayer
+from .parser.zmk_parser import ZMKParser
 
 
 def generate_kanata_keymap(layers: List[KanataLayer]) -> str:
     """Generate a Kanata keymap configuration from a list of layers.
 
     Args:
-        layers: List of KanataLayer objects
+        layers: List of KanataLayer objects or strings
 
     Returns:
         String containing the complete Kanata keymap configuration
@@ -33,12 +34,17 @@ def generate_kanata_keymap(layers: List[KanataLayer]) -> str:
 
     # Add layers
     for i, layer in enumerate(layers):
-        # Add layer definition
-        kanata_config.append(f"(deflayer {layer.name}")
-        # Add key rows with proper spacing
-        for row in layer.keys:
-            kanata_config.append("  " + " ".join(row))
-        kanata_config.append(")")
+        # Handle both KanataLayer objects and strings
+        if isinstance(layer, str):
+            kanata_config.append(layer)
+        else:
+            # Add layer definition
+            kanata_config.append(f"(deflayer {layer.name}")
+            # Add key rows with proper spacing
+            for row in layer.keys:
+                kanata_config.append("  " + " ".join(row))
+            kanata_config.append(")")
+            
         # Add empty line between layers, but not after the last one
         if i < len(layers) - 1:
             kanata_config.append("")
@@ -49,48 +55,7 @@ def generate_kanata_keymap(layers: List[KanataLayer]) -> str:
     return "\n".join(kanata_config)
 
 
-def convert_keymap(input_file: Path, output_file: Path) -> None:
-    """Convert a ZMK keymap file to Kanata format.
-
-    Args:
-        input_file: Path to the input ZMK keymap file
-        output_file: Path where the Kanata config will be written
-
-    Raises:
-        FileNotFoundError: If input_file doesn't exist
-        ValueError: If input file format is invalid
-        OSError: If output file cannot be written
-        Exception: For other unexpected errors
-    """
-    try:
-        content = input_file.read_text()
-    except FileNotFoundError:
-        raise FileNotFoundError(f"Input file not found: {input_file}")
-    except Exception as e:
-        raise Exception(f"Error reading input file: {e}")
-
-    layer_parser = LayerParser()
-    try:
-        layers = layer_parser.parse_zmk_file(content)
-    except ValueError as e:
-        raise ValueError(f"Invalid input file format: {e}")
-
-    transformer = LayerTransformer()
-    kanata_layers = [
-        transformer.transform_layer(layer)
-        for layer in layers
-    ]
-
-    output = generate_kanata_keymap(kanata_layers)
-    try:
-        output_file.write_text(output)
-    except OSError as e:
-        raise OSError(f"Error writing output file: {e}")
-    except Exception as e:
-        raise Exception(f"Error writing output file: {e}")
-
-
-def main():
+def main(args=None):
     """Main entry point for the converter."""
     parser = argparse.ArgumentParser(
         description='Convert ZMK keymap to Kanata keymap'
@@ -103,41 +68,51 @@ def main():
         'output_file',
         help='Path to output Kanata keymap file'
     )
-    args = parser.parse_args()
+    
+    if args is None:
+        args = parser.parse_args()
+    else:
+        args = parser.parse_args(args)
 
     try:
-        with open(args.input_file, 'r') as f:
-            content = f.read()
-
-        layer_parser = LayerParser()
+        # Parse ZMK file
+        zmk_parser = ZMKParser()
         try:
-            layers = layer_parser.parse_zmk_file(content)
+            config = zmk_parser.parse(Path(args.input_file))
+        except FileNotFoundError:
+            print(f"Input file not found: {args.input_file}", file=sys.stderr)
+            return 1
         except ValueError as e:
-            print(f"Error parsing input file: {e}", file=sys.stderr)
+            print(f"Error parsing ZMK file: {e}", file=sys.stderr)
             return 2
+        except Exception as e:
+            print(f"Error during parsing: {e}", file=sys.stderr)
+            return 3
 
-        # Create a keymap config with the parsed layers
-        from .model.keymap_model import GlobalSettings, KeymapConfig
-        config = KeymapConfig(
-            global_settings=GlobalSettings(tap_time=200, hold_time=250),
-            layers=layers
-        )
-
-        # Use the KanataTransformer to transform the config
+        # Transform to Kanata format
         from .transformer.kanata_transformer import KanataTransformer
         transformer = KanataTransformer()
-        output = transformer.transform(config)
+        try:
+            output = transformer.transform(config)
+        except ValueError as e:
+            print(f"Error transforming keymap: {e}", file=sys.stderr)
+            return 2
+        except Exception as e:
+            print(f"Error during transformation: {e}", file=sys.stderr)
+            return 3
         
-        with open(args.output_file, 'w') as f:
-            f.write(output)
+        # Write output file
+        try:
+            with open(args.output_file, 'w') as f:
+                f.write(output)
+        except Exception as e:
+            print(f"Error writing output file: {e}", file=sys.stderr)
+            return 3
 
         return 0
 
-    except FileNotFoundError:
-        print(f"Input file not found: {args.input_file}", file=sys.stderr)
-        return 1
     except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
+        print(f"Unexpected error: {e}", file=sys.stderr)
         return 3
 
 

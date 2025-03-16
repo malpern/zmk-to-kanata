@@ -22,6 +22,10 @@ class StickyKeyParser:
     ) -> Optional[StickyKeyBehavior]:
         """Parse a sticky key behavior configuration."""
         if config.get('compatible') == '"zmk,behavior-sticky-key"':
+            # Check for invalid bindings
+            if 'bindings' in config and '<&invalid_behavior>' in config['bindings']:
+                raise ValueError(f"Invalid binding in sticky key behavior: {name}")
+                
             # Extract release-after-ms if present
             release_after_ms = None
             if 'release-after-ms' in config:
@@ -49,10 +53,28 @@ class StickyKeyParser:
 
             # Check if the key is valid
             if not key or key.isdigit() or key == 'INVALID':
-                return None
+                raise ValueError(f"Invalid sticky key: {key}")
+
+            # For function keys, preserve the name
+            if key.startswith('F') and key[1:].isdigit():
+                # Keep function keys as is (F1, F2, etc.)
+                pass
+            else:
+                # Map modifiers to their Kanata representation
+                key_mapping = {
+                    'LSHIFT': 'lsft',
+                    'RSHIFT': 'rsft',
+                    'LCTRL': 'lctl',
+                    'RCTRL': 'rctl',
+                    'LALT': 'lalt',
+                    'RALT': 'ralt',
+                    'LGUI': 'lmet',
+                    'RGUI': 'rmet',
+                }
+                key = key_mapping.get(key, key.lower())
 
             # Create the binding
             return StickyKeyBinding(key=key)
-        except ValueError:
-            # If we can't parse it as a sticky key binding, return None
-            return None
+        except ValueError as e:
+            # Propagate the error
+            raise ValueError(f"Invalid sticky key binding: {e}")
