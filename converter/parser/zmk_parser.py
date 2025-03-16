@@ -3,6 +3,7 @@
 This module is responsible for parsing ZMK keymap files into our intermediate
 representation.
 """
+import logging
 from enum import Enum, auto
 from pathlib import Path
 from typing import Dict, List, Optional, Set
@@ -14,6 +15,9 @@ from converter.model.keymap_model import (
     KeymapConfig,
 )
 from converter.parser.sticky_key_parser import StickyKeyParser
+
+
+logger = logging.getLogger(__name__)
 
 
 class ParserState(Enum):
@@ -230,7 +234,7 @@ class ZMKParser:
         """
         if new_state not in self.VALID_TRANSITIONS[self.state]:
             raise InvalidStateTransitionError(self.state, new_state)
-        print(f"State transition: {self.state} -> {new_state}")  # Debug
+        logger.debug("State transition: %s -> %s", self.state, new_state)
         self.state = new_state
 
     def _parse_global_settings(self, line: str) -> None:
@@ -316,7 +320,7 @@ class ZMKParser:
         if not line:
             return
 
-        print(f"State {self.state}: {line}")  # Debug
+        logger.debug("State %s: %s", self.state, line)
         try:
             if self.state == ParserState.INITIAL:
                 if '/ {' in line:
@@ -330,32 +334,32 @@ class ZMKParser:
             
             elif self.state == ParserState.IN_KEYMAP:
                 if '_layer {' in line:
-                    print(f"Found layer: {line}")  # Debug
+                    logger.debug("Found layer: %s", line)
                     self._start_new_layer(line)
                 elif '}' in line and self.layer_parser.current_layer:
                     layer_name = self.layer_parser.current_layer
-                    print(f"Finishing layer: {layer_name}")  # Debug
+                    logger.debug("Finishing layer: %s", layer_name)
                     self._finish_current_layer()
             
             elif self.state == ParserState.IN_LAYER:
                 if 'bindings = <' in line:
-                    print(f"Found bindings: {line}")  # Debug
+                    logger.debug("Found bindings: %s", line)
                     self._add_bindings_line(line)
                     self._transition_to(ParserState.IN_BINDINGS)
                 elif '};' in line:
-                    print(f"Layer end: {line}")  # Debug
+                    logger.debug("Layer end: %s", line)
                     self._finish_current_layer()
             
             elif self.state == ParserState.IN_BINDINGS:
                 if '};' in line:
-                    print(f"Layer end in bindings: {line}")  # Debug
+                    logger.debug("Layer end in bindings: %s", line)
                     self._finish_current_layer()
                 elif '>' in line:
-                    print(f"Bindings end: {line}")  # Debug
+                    logger.debug("Bindings end: %s", line)
                     self._add_bindings_line(line)
                     self._transition_to(ParserState.IN_LAYER)
                 elif ('&' in line or 'trans' in line):
-                    print(f"Found binding: {line}")  # Debug
+                    logger.debug("Found binding: %s", line)
                     self._add_bindings_line(line)
 
         except ParserError as e:
@@ -377,7 +381,7 @@ class ZMKParser:
         try:
             self.layer_parser.start_layer(line)
             layer_name = self.layer_parser.current_layer
-            print(f"Started layer: {layer_name}")  # Debug
+            logger.debug("Started layer: %s", layer_name)
             self._transition_to(ParserState.IN_LAYER)
         except ValueError as e:
             raise ParserError(f"Invalid layer definition: {line}") from e
@@ -391,10 +395,10 @@ class ZMKParser:
         try:
             layer = self.layer_parser.finish_layer()
             bindings_count = len(layer.bindings)
-            print(f"Layer {layer.name}: {bindings_count} bindings")  # Debug
-            print(f"Adding layer to list: {layer.name}")  # Debug
+            logger.debug("Layer %s: %d bindings", layer.name, bindings_count)
+            logger.debug("Adding layer to list: %s", layer.name)
             self.layers.append(layer)
-            print(f"Total layers: {len(self.layers)}")  # Debug
+            logger.debug("Total layers: %d", len(self.layers))
             self._transition_to(ParserState.IN_KEYMAP)
         except ValueError as e:
             raise ParserError("No layer currently being parsed") from e
@@ -410,6 +414,6 @@ class ZMKParser:
         """
         try:
             self.layer_parser.add_bindings_line(line)
-            print(f"Added bindings: {line}")  # Debug
+            logger.debug("Added bindings: %s", line)
         except ValueError as e:
             raise ParserError(f"Invalid bindings: {line}") from e
