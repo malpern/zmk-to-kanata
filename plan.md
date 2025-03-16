@@ -94,10 +94,10 @@ converter/
       - [x] Invalid input file format
       - [x] Invalid output file path
       - [x] Permission errors
-    - [ ] Test output validation
-      - [ ] Verify file permissions
-      - [ ] Verify file encoding
-      - [ ] Verify file format
+    - [x] Test output validation
+      - [x] Verify file permissions
+      - [x] Verify file encoding
+      - [x] Verify file format
     - [ ] Test with different input formats
       - [ ] Single layer keymap
       - [ ] Multiple layer keymap
