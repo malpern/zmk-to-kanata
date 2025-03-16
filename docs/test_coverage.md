@@ -12,18 +12,17 @@ The ZMK to Kanata Converter has an overall test coverage of 86%, with 82 tests c
 | `converter/behaviors/__init__.py` | 100% | Fully covered |
 | `converter/behaviors/key_sequence.py` | 100% | Fully covered |
 | `converter/behaviors/sticky_key.py` | 77% | Missing coverage for error handling paths |
-| `converter/cli.py` | 88% | Missing coverage for some error conditions |
-| `converter/keymap_model.py` | 0% | Deprecated module, to be removed in future |
-| `converter/layer_parser.py` | 83% | Missing coverage for some error handling paths |
-| `converter/layer_transformer.py` | 75% | Missing coverage for some edge cases |
-| `converter/main.py` | 84% | Missing coverage for some error handling paths |
+| `converter/cli.py` | 100% | Complete coverage |
+| `converter/layer_parser.py` | 95% | Good coverage |
+| `converter/layer_transformer.py` | 92% | Good coverage |
+| `converter/main.py` | 100% | Complete coverage |
 | `converter/model/keymap_model.py` | 38% | Low coverage, needs improvement |
 | `converter/output/file_writer.py` | 100% | Fully covered |
 | `converter/parser/sticky_key_parser.py` | 38% | Low coverage, needs improvement |
-| `converter/parser/zmk_parser.py` | 100% | Fully covered |
+| `converter/parser/zmk_parser.py` | 87% | Good coverage |
 | `converter/taphold_parser.py` | 99% | Excellent coverage |
 | `converter/transformer/holdtap_transformer.py` | 100% | Fully covered |
-| `converter/transformer/kanata_transformer.py` | 93% | Good coverage |
+| `converter/transformer/kanata_transformer.py` | 91% | Good coverage |
 
 ### Test Categories
 

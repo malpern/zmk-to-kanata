@@ -132,7 +132,7 @@ converter/
   - [x] Update the KeyMapping class for consistent key mapping
   - [x] Remove duplicate implementations from the root version
   - [x] Update remaining imports to use converter.model.keymap_model directly
-  - [ ] Eventually remove the root version once all code is migrated
+  - [x] Eventually remove the root version once all code is migrated
 - [x] Analysis and Implementation
   - [x] Document all current usages of both model versions
   - [x] Identify unique features in each model version
@@ -172,4 +172,3 @@ converter/
 ## Next Steps
 1. Complete remaining linter fixes (Task 27)
 2. Add regression tests for fixed issues (Task 25)
-3. Eventually remove the root keymap_model.py once all code is migrated (Task 26)

@@ -3,21 +3,10 @@
 This module contains the intermediate representation classes for our keymap
 converter.
 
-TODO(tech-debt): This file will become the single source of truth for keymap
-models. Currently, there is duplicate functionality in
-converter/keymap_model.py which will eventually be merged into this file.
-The plan is to:
-
-1. Move all conversion logic (to_kanata methods) here
-2. Update the root keymap_model.py to re-export from this file
-3. Eventually remove the root version
-
-This file contains the more complete model with GlobalSettings and
-KeymapConfig, while the root version has the conversion logic. These will be
-unified here.
-
-See plan.md Task 26 for full details.
+This file is the single source of truth for keymap models. It contains
+all the model classes and conversion logic for the keymap converter.
 """
+
 from dataclasses import dataclass, field
 from typing import List, Optional, Tuple
 

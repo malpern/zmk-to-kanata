@@ -30,19 +30,14 @@ converter/
 │   ├── key_sequence.py     # Key sequence behavior
 │   └── sticky_key.py       # Sticky key behavior
 ├── model/                  # Data models
-│   ├── __init__.py
 │   └── keymap_model.py     # Keymap data structures
 ├── output/                 # Output generation
 │   ├── __init__.py
 │   └── file_writer.py      # File writing utilities
 ├── parser/                 # Input parsing
-│   ├── __init__.py
-│   ├── sticky_key_parser.py # Sticky key parsing
-│   └── zmk_parser.py       # ZMK file parsing
+│   └── zmk_parser.py       # ZMK file parser
 └── transformer/            # Output transformation
-    ├── __init__.py
-    ├── holdtap_transformer.py # Hold-tap transformation
-    └── kanata_transformer.py  # Kanata output generation
+    └── kanata_transformer.py  # Kanata output generator
 ```
 
 ## Core Classes
@@ -200,15 +195,13 @@ kanata_config = generate_kanata_config(keymap)
 
 ### `model/keymap_model.py`
 
-#### Keymap Model
-
-The keymap model is the central data structure used throughout the converter. It represents the keyboard layout and its layers.
+This module contains the data models for representing keyboard mappings.
 
 ```python
 from converter.model.keymap_model import KeymapConfig, Layer, KeyMapping, HoldTap
 ```
 
-> **Note**: There is a deprecated module at `converter.keymap_model` that re-exports from `converter.model.keymap_model`. Always use the model directory version directly.
+The module provides classes for representing keyboard mappings, layers, and key bindings.
 
 #### KeymapConfig
 
