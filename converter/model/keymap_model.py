@@ -43,29 +43,14 @@ class HoldTap:
 
     def to_kanata(self) -> str:
         """Convert to Kanata format."""
-        # Convert hold key to short form
+        # Convert keys to lowercase
         hold_key = self.hold_key.lower()
-        if hold_key == 'lshift':
-            hold_key = 'lsft'
-        elif hold_key == 'rshift':
-            hold_key = 'rsft'
-        elif hold_key == 'lcontrol':
-            hold_key = 'lctl'
-        elif hold_key == 'rcontrol':
-            hold_key = 'rctl'
-        elif hold_key == 'lctrl':
-            hold_key = 'lctl'
-        elif hold_key == 'rctrl':
-            hold_key = 'rctl'
-        elif hold_key == 'lgui':
-            hold_key = 'lmet'
-        elif hold_key == 'rgui':
-            hold_key = 'rmet'
-
-        # Convert tap key
         tap_key = self.tap_key.lower()
-        if tap_key.startswith('n') and tap_key[1:].isdigit():
-            tap_key = tap_key[1:]  # Remove 'n' prefix for number keys
+        
+        # Handle number keys
+        if (tap_key.startswith('n') and tap_key[1:].isdigit()):
+            # Remove 'n' prefix for number keys
+            tap_key = tap_key[1:]
 
         return f"tap-hold {hold_key} {tap_key}"
 

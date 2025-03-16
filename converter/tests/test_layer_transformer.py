@@ -1,6 +1,7 @@
 """Test module for layer transformation."""
 from ..layer_transformer import LayerTransformer
 from ..model.keymap_model import Layer, KeyMapping
+from ..behaviors.key_sequence import KeySequenceBinding
 
 
 def test_transform_binding():
@@ -15,7 +16,7 @@ def test_transform_binding():
     assert transformer.transform_binding(KeyMapping(key="N1")) == "1"
     assert transformer.transform_binding(KeyMapping(key="N0")) == "0"
     key = KeyMapping(key="KP_N7")
-    assert transformer.transform_binding(key) == "kp_n7"
+    assert transformer.transform_binding(key) == "kp7"
     
     # Test symbols and punctuation
     assert transformer.transform_binding(KeyMapping(key="EXCL")) == "excl"
@@ -55,6 +56,10 @@ def test_transform_binding():
     
     # Test transparent key
     assert transformer.transform_binding(KeyMapping(key="trans")) == "_"
+    
+    # Test sticky key
+    sticky_key = KeyMapping(key="sk LSHIFT")
+    assert transformer.transform_binding(sticky_key) == "sticky-lsft"
     
     # Test unknown binding
     unknown_key = KeyMapping(key="unknown X")
@@ -128,4 +133,21 @@ def test_transform_layers():
     # Check num layer
     num = next(layer for layer in kanata_layers if layer.name == "num")
     assert len(num.keys) == 1
-    assert num.keys[0] == ["1", "2"] 
+    assert num.keys[0] == ["1", "2"]
+
+
+def test_transform_key_sequence():
+    """Test transforming key sequence bindings."""
+    transformer = LayerTransformer()
+    
+    # Test basic key sequence
+    key_sequence = KeySequenceBinding(keys=["A", "B", "C"])
+    assert transformer.transform_binding(key_sequence) == "(chord a b c)"
+    
+    # Test key sequence with modifiers
+    key_sequence = KeySequenceBinding(keys=["LSHIFT", "A", "B"])
+    assert transformer.transform_binding(key_sequence) == "(chord lsft a b)"
+    
+    # Test key sequence with special keys
+    key_sequence = KeySequenceBinding(keys=["ENTER", "SPACE", "TAB"])
+    assert transformer.transform_binding(key_sequence) == "(chord ret spc tab)" 

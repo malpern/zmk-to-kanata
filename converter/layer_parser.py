@@ -5,6 +5,7 @@ from typing import List, Optional
 
 from converter.model.keymap_model import KeyMapping, Layer, HoldTap
 from .parser.sticky_key_parser import StickyKeyParser
+from .behaviors.key_sequence import KeySequenceBinding, is_key_sequence_binding
 
 
 class LayerParser:
@@ -74,13 +75,18 @@ class LayerParser:
 
         # Handle sticky key binding
         if binding_str.startswith('&sk'):
-            if binding_str == '&sk' or not binding_str.replace('&sk', '').strip():
+            if (binding_str == '&sk' or 
+                    not binding_str.replace('&sk', '').strip()):
                 raise ValueError("Invalid sticky key binding: missing key")
             key = binding_str.replace('&sk', '').strip()
             if key.isdigit() or key == 'INVALID':
                 msg = f"Invalid sticky key binding: invalid key '{key}'"
                 raise ValueError(msg)
             return KeyMapping(key=f"sk {key}")
+
+        # Handle key sequence binding
+        if is_key_sequence_binding(binding_str):
+            return KeySequenceBinding.from_zmk(binding_str)
 
         # Handle hold-tap bindings
         hold_tap_prefixes = [
@@ -129,7 +135,7 @@ class LayerParser:
     def parse_bindings_matrix(
         self, bindings_text: str
     ) -> List[List[KeyMapping]]:
-        """Parse a matrix of bindings into a list of lists of KeyMapping objects.
+        """Parse bindings text into a matrix of KeyMapping objects.
 
         Args:
             bindings_text: String containing the bindings matrix
@@ -171,7 +177,8 @@ class LayerParser:
         """
         layers = []
         layer_pattern = (
-            r'(\w+?)(?:_layer)?\s*{\s*'  # Layer name with optional _layer suffix
+            # Layer name with optional _layer suffix
+            r'(\w+?)(?:_layer)?\s*{\s*'
             r'bindings\s*=\s*<\s*'  # Bindings start
             r'([^;]*)'  # Bindings content (non-greedy)
             r'>\s*;\s*'  # Bindings end
