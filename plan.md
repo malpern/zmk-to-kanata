@@ -143,8 +143,11 @@ converter/
 - [x] Fix whitespace issues (trailing whitespace, blank lines with whitespace)
 - [x] Add missing newlines at the end of files
 - [x] Fix unused imports in key files
-- [ ] Fix spacing between class definitions (E302)
-- [ ] Fix remaining import issues in non-test files
+- [x] Fix spacing between class definitions (E302)
+- [x] Fix remaining import issues in non-test files
 
 ## Next Steps
-1. Complete remaining items in Task 27 for non-test files
+1. Implement support for Macros (Task 23)
+2. Implement support for Unicode input (Task 23)
+3. Add regression tests for fixed issues (Task 25)
+4. Eventually remove the root keymap_model.py once all code is migrated (Task 26)
