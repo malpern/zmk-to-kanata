@@ -92,9 +92,15 @@ class LayerParser:
         if not self.current_layer or not self.current_bindings:
             raise ValueError("No layer currently being parsed")
         
+        # Flatten the bindings list into a single list
+        bindings = [
+            binding for row in self.current_bindings 
+            for binding in row
+        ]
+        
         layer = Layer(
             name=self.current_layer,
-            keys=self.current_bindings
+            bindings=bindings
         )
         self.current_layer = None
         self.current_bindings = []
@@ -151,16 +157,25 @@ class LayerParser:
         Raises:
             ValueError: If the line contains invalid bindings.
         """
-        line = line.rstrip(';').rstrip('>').strip()
+        print(f"Raw binding line: {line}")  # Debug
+        # Extract content between < and >
+        if '<' in line and '>' in line:
+            line = line.split('<')[1].split('>')[0].strip()
+            print(f"Extracted binding content: {line}")  # Debug
+        
+        line = line.rstrip(';').strip()
         if not line:
             return []
 
         bindings = [b.strip() for b in line.split('&') if b.strip()]
+        print(f"Parsed bindings: {bindings}")  # Debug
         if not bindings:
             return []
 
         try:
-            return [self.parse_binding(b) for b in bindings]
+            result = [self.parse_binding(b) for b in bindings]
+            print(f"Created bindings: {result}")  # Debug
+            return result
         except ValueError as e:
             raise ValueError(
                 f"Invalid binding in line: {line}"
@@ -193,7 +208,7 @@ class ZMKParser:
         ParserState.IN_ROOT: {ParserState.IN_KEYMAP},
         ParserState.IN_KEYMAP: {ParserState.IN_LAYER},
         ParserState.IN_LAYER: {ParserState.IN_BINDINGS, ParserState.IN_KEYMAP},
-        ParserState.IN_BINDINGS: {ParserState.IN_LAYER},
+        ParserState.IN_BINDINGS: {ParserState.IN_LAYER, ParserState.IN_KEYMAP},
     }
 
     def __init__(self):
@@ -201,6 +216,8 @@ class ZMKParser:
         self.layer_parser = LayerParser()
         self.state = ParserState.INITIAL
         self.layers: List[Layer] = []
+        self.tap_time: int = 200  # Default tap time
+        self.hold_time: int = 250  # Default hold time
 
     def _transition_to(self, new_state: ParserState) -> None:
         """Transition to a new state.
@@ -213,7 +230,40 @@ class ZMKParser:
         """
         if new_state not in self.VALID_TRANSITIONS[self.state]:
             raise InvalidStateTransitionError(self.state, new_state)
+        print(f"State transition: {self.state} -> {new_state}")  # Debug
         self.state = new_state
+
+    def _parse_global_settings(self, line: str) -> None:
+        """Parse global settings from a line.
+        
+        Args:
+            line: The line to parse.
+            
+        Raises:
+            ParserError: If the setting is invalid or malformed.
+        """
+        line = line.strip()
+        try:
+            if 'tap-time' in line:
+                # Extract number from line like "tap-time = <200>;"
+                if '<' not in line or '>' not in line:
+                    raise ParserError(f"Invalid tap-time setting: {line}")
+                value = line.split('<')[1].split('>')[0].strip()
+                try:
+                    self.tap_time = int(value)
+                except ValueError:
+                    raise ParserError(f"Invalid tap-time setting: {line}")
+            elif 'hold-time' in line:
+                # Extract number from line like "hold-time = <250>;"
+                if '<' not in line or '>' not in line:
+                    raise ParserError(f"Invalid hold-time setting: {line}")
+                value = line.split('<')[1].split('>')[0].strip()
+                try:
+                    self.hold_time = int(value)
+                except ValueError:
+                    raise ParserError(f"Invalid hold-time setting: {line}")
+        except IndexError:
+            raise ParserError(f"Invalid setting format: {line}")
 
     def parse(self, file_path: Path) -> KeymapConfig:
         """Parse a ZMK keymap file into a KeymapConfig object.
@@ -234,10 +284,6 @@ class ZMKParser:
         except Exception as e:
             raise ValueError(f"Failed to read file {file_path}") from e
 
-        # Use default global settings for now
-        # TODO: Parse global settings from file
-        global_settings = GlobalSettings(tap_time=200, hold_time=250)
-        
         try:
             # Process file line by line
             for line in content.split('\n'):
@@ -247,7 +293,10 @@ class ZMKParser:
                 raise ValueError("No layers found in ZMK file")
 
             return KeymapConfig(
-                global_settings=global_settings,
+                global_settings=GlobalSettings(
+                    tap_time=self.tap_time,
+                    hold_time=self.hold_time
+                ),
                 layers=self.layers
             )
         except ParserError as e:
@@ -267,6 +316,7 @@ class ZMKParser:
         if not line:
             return
 
+        print(f"State {self.state}: {line}")  # Debug
         try:
             if self.state == ParserState.INITIAL:
                 if '/ {' in line:
@@ -275,26 +325,41 @@ class ZMKParser:
             elif self.state == ParserState.IN_ROOT:
                 if 'keymap {' in line:
                     self._transition_to(ParserState.IN_KEYMAP)
+                elif 'tap-time' in line or 'hold-time' in line:
+                    self._parse_global_settings(line)
             
             elif self.state == ParserState.IN_KEYMAP:
                 if '_layer {' in line:
+                    print(f"Found layer: {line}")  # Debug
                     self._start_new_layer(line)
                 elif '}' in line and self.layer_parser.current_layer:
+                    layer_name = self.layer_parser.current_layer
+                    print(f"Finishing layer: {layer_name}")  # Debug
                     self._finish_current_layer()
             
             elif self.state == ParserState.IN_LAYER:
                 if 'bindings = <' in line:
+                    print(f"Found bindings: {line}")  # Debug
+                    self._add_bindings_line(line)
                     self._transition_to(ParserState.IN_BINDINGS)
                 elif '};' in line:
+                    print(f"Layer end: {line}")  # Debug
                     self._finish_current_layer()
             
             elif self.state == ParserState.IN_BINDINGS:
-                if ('&' in line or 'trans' in line) and not line.endswith('>'):
-                    self._add_bindings_line(line)
+                if '};' in line:
+                    print(f"Layer end in bindings: {line}")  # Debug
+                    self._finish_current_layer()
                 elif '>' in line:
+                    print(f"Bindings end: {line}")  # Debug
                     self._add_bindings_line(line)
                     self._transition_to(ParserState.IN_LAYER)
+                elif ('&' in line or 'trans' in line):
+                    print(f"Found binding: {line}")  # Debug
+                    self._add_bindings_line(line)
 
+        except ParserError as e:
+            raise e
         except Exception as e:
             raise ParserError(
                 f"Error processing line in state {self.state}: {line}"
@@ -307,29 +372,32 @@ class ZMKParser:
             line: The line containing the layer definition.
             
         Raises:
-            ParserError: If there are any parsing errors.
+            ParserError: If the layer name cannot be extracted.
         """
         try:
-            if self.layer_parser.current_layer:
-                self._finish_current_layer()
-            
             self.layer_parser.start_layer(line)
+            layer_name = self.layer_parser.current_layer
+            print(f"Started layer: {layer_name}")  # Debug
             self._transition_to(ParserState.IN_LAYER)
-        except Exception as e:
-            raise ParserError(f"Failed to start new layer: {e}") from e
+        except ValueError as e:
+            raise ParserError(f"Invalid layer definition: {line}") from e
 
     def _finish_current_layer(self) -> None:
-        """Finish parsing the current layer.
+        """Finish parsing the current layer and add it to the list.
         
         Raises:
-            ParserError: If there are any parsing errors.
+            ParserError: If no layer is currently being parsed.
         """
         try:
             layer = self.layer_parser.finish_layer()
+            bindings_count = len(layer.bindings)
+            print(f"Layer {layer.name}: {bindings_count} bindings")  # Debug
+            print(f"Adding layer to list: {layer.name}")  # Debug
             self.layers.append(layer)
+            print(f"Total layers: {len(self.layers)}")  # Debug
             self._transition_to(ParserState.IN_KEYMAP)
-        except Exception as e:
-            raise ParserError(f"Failed to finish current layer: {e}") from e
+        except ValueError as e:
+            raise ParserError("No layer currently being parsed") from e
 
     def _add_bindings_line(self, line: str) -> None:
         """Add a line of bindings to the current layer.
@@ -338,9 +406,10 @@ class ZMKParser:
             line: The line containing bindings.
             
         Raises:
-            ParserError: If there are any parsing errors.
+            ParserError: If the bindings are invalid.
         """
         try:
             self.layer_parser.add_bindings_line(line)
-        except Exception as e:
-            raise ParserError(f"Failed to add bindings line: {e}") from e
+            print(f"Added bindings: {line}")  # Debug
+        except ValueError as e:
+            raise ParserError(f"Invalid bindings: {line}") from e
