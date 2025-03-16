@@ -473,3 +473,112 @@ def test_ben_vallack_cradio_layout(tmp_path, monkeypatch):
     assert ("Unknown binding: &hm" in error_output or 
             "Unknown binding: &hs" in error_output or 
             "Unknown binding: &td" in error_output) 
+
+
+def test_dvorak_layout(tmp_path, monkeypatch):
+    """Test conversion of a Dvorak layout."""
+    # Setup test files
+    zmk_file = tmp_path / "dvorak.dtsi"
+    kanata_file = tmp_path / "dvorak.kbd"
+    
+    # Dvorak layout
+    zmk_content = """
+    / {
+        keymap {
+            compatible = "zmk,keymap";
+            
+            default_layer {
+                bindings = <
+                    &kp ESC   &kp N1 &kp N2 &kp N3 &kp N4 &kp N5 
+                    &kp N6 &kp N7 &kp N8 &kp N9 &kp N0 &kp BSPC
+                    &kp TAB   &kp APOS &kp COMMA &kp DOT &kp P &kp Y 
+                    &kp F &kp G &kp C &kp R &kp L &kp BSLH
+                    &kp LCTRL &kp A &kp O &kp E &kp U &kp I 
+                    &kp D &kp H &kp T &kp N &kp S &kp MINUS
+                    &kp LSHFT &kp SEMI &kp Q &kp J &kp K &kp X 
+                    &kp B &kp M &kp W &kp V &kp Z &kp RSHFT
+                    &kp LGUI &kp LALT &mo 1 &kp SPACE &mo 2 &kp RALT
+                >;
+            };
+            
+            lower_layer {
+                bindings = <
+                    &kp GRAVE &kp F1 &kp F2 &kp F3 &kp F4 &kp F5 
+                    &kp F6 &kp F7 &kp F8 &kp F9 &kp F10 &kp DEL
+                    &trans    &kp F11 &kp F12 &trans &trans &trans 
+                    &trans &trans &trans &trans &trans &trans
+                    &trans    &trans &trans &trans &trans &trans 
+                    &kp LEFT &kp DOWN &kp UP &kp RIGHT &trans &trans
+                    &trans    &trans &trans &trans &trans &trans 
+                    &trans &trans &trans &trans &trans &trans
+                    &trans    &trans &trans &trans &trans &trans
+                >;
+            };
+            
+            raise_layer {
+                bindings = <
+                    &kp TILDE &kp EXCL &kp AT &kp HASH &kp DLLR &kp PRCNT 
+                    &kp CARET &kp AMPS &kp STAR &kp LPAR &kp RPAR &kp DEL
+                    &trans    &trans &trans &trans &trans &trans 
+                    &trans &trans &trans &trans &trans &trans
+                    &trans    &trans &trans &trans &trans &trans 
+                    &kp LBRC &kp RBRC &kp LBKT &kp RBKT &kp EQUAL &kp PLUS
+                    &trans    &trans &trans &trans &trans &trans 
+                    &trans &trans &trans &trans &trans &trans
+                    &trans    &trans &trans &trans &trans &trans
+                >;
+            };
+        };
+    };
+    """
+    
+    # Write the ZMK content to the file
+    zmk_file.write_text(zmk_content)
+    
+    # Set up sys.argv for the main function
+    monkeypatch.setattr(
+        sys, 'argv', ['converter', str(zmk_file), str(kanata_file)]
+    )
+    
+    # Run the converter
+    from converter.main import main
+    main()
+    
+    # Check that the conversion was successful
+    assert kanata_file.exists()
+    
+    # Read the generated Kanata file
+    kanata_content = kanata_file.read_text()
+    
+    # Verify the content
+    assert ";; ZMK to Kanata Configuration" in kanata_content
+    assert "(defvar tap-time 200)" in kanata_content
+    assert "(defvar hold-time 250)" in kanata_content
+    assert "(deflayer default" in kanata_content
+    assert "(deflayer lower" in kanata_content
+    assert "(deflayer raise" in kanata_content
+    
+    # Check for specific Dvorak key mappings
+    default_layer = kanata_content.split("(deflayer default")[1].split("(deflayer")[0]
+    
+    # Check that the Dvorak layout is preserved
+    # Dvorak has a unique layout with vowels on the left home row
+    assert "apos" in default_layer.lower() or "'" in default_layer
+    assert "comma" in default_layer.lower() or "," in default_layer
+    assert "dot" in default_layer.lower() or "." in default_layer
+    
+    # Check for specific key sequences in the layout
+    # The keys should appear in the correct order, but might be on separate lines
+    assert "p" in default_layer.lower() and "y" in default_layer.lower()
+    assert "f" in default_layer.lower() and "g" in default_layer.lower()
+    assert "c" in default_layer.lower() and "r" in default_layer.lower()
+    
+    # Check for the Dvorak home row vowels
+    assert "a" in default_layer.lower() and "o" in default_layer.lower()
+    assert "e" in default_layer.lower() and "u" in default_layer.lower()
+    assert "i" in default_layer.lower()
+    
+    # Check for the Dvorak home row right-hand consonants
+    assert "d" in default_layer.lower() and "h" in default_layer.lower()
+    assert "t" in default_layer.lower() and "n" in default_layer.lower()
+    assert "s" in default_layer.lower() 

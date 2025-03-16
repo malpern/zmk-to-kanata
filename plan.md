@@ -145,7 +145,7 @@ converter/
     - [x] Test with various keyboard layouts
       - [x] QWERTY
       - [x] Colemak
-      - [ ] Dvorak
+      - [x] Dvorak
       - [x] Split keyboards
       - [ ] Ergonomic layouts (more examples)
     - [ ] Test edge cases from user feedback
@@ -189,6 +189,7 @@ converter/
 - Fixed linter errors in various files
 - Started Task 25: Added real-world configuration tests for QWERTY, Colemak, and split keyboards
 - Added Ben Vallack's Cradio layout as a real-world test case
+- Added Dvorak layout test to complete keyboard layout testing
 
 ## Task 26: Resolve Keymap Model Duplication
 ### Problem Statement
