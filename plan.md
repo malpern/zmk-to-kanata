@@ -113,8 +113,6 @@ converter/
       - [x] Dvorak
       - [x] Split keyboards
       - [x] Ergonomic layouts (Kyria)
-    - [ ] Test edge cases from user feedback
-      - [ ] Add regression tests for fixed issues
 
 ## Limitations
 - No support for advanced ZMK features like combos
@@ -171,4 +169,3 @@ converter/
 
 ## Next Steps
 1. Complete remaining linter fixes (Task 27)
-2. Add regression tests for fixed issues (Task 25)
