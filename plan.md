@@ -147,36 +147,16 @@ converter/
 - [x] Fix remaining import issues in non-test files
 
 ## Task 28: Implement Macro Support
-- [ ] Macro Behavior Model
-  - [ ] Create MacroBehavior class to represent ZMK macro behavior
-  - [ ] Create MacroBinding class to represent macro bindings
-  - [ ] Implement to_kanata() method for converting to Kanata format
-  - [ ] Support for wait-ms and tap-ms properties
-  - [ ] Support for different activation modes (tap, press, release)
-- [ ] Macro Parser
-  - [ ] Create MacroParser class for parsing ZMK macro definitions
-  - [ ] Implement parsing of macro bindings list
-  - [ ] Support for macro control behaviors (macro_press, macro_tap, macro_release)
-  - [ ] Handle wait-ms and tap-ms parameters
-- [ ] Macro Transformer
-  - [ ] Update LayerTransformer to handle macro bindings
-  - [ ] Implement conversion of ZMK macros to Kanata macros
-  - [ ] Support for keycode sequences
-  - [ ] Support for modifier combinations
-- [ ] Integration
-  - [ ] Update LayerParser to detect and parse macro behaviors
-  - [ ] Register MacroParser with LayerParser
-  - [ ] Update main.py to handle macro behaviors
-- [ ] Testing
-  - [ ] Create unit tests for MacroBehavior and MacroBinding
-  - [ ] Create unit tests for MacroParser
-  - [ ] Add integration tests for macro conversion
-  - [ ] Add end-to-end tests with real-world macro examples
-  - [ ] Test different macro types:
-    - [ ] Simple keycode sequences
-    - [ ] Macros with modifiers
-    - [ ] Macros with wait times
-    - [ ] Macros with different activation modes
+- [x] Create MacroBehavior class to represent ZMK macro behaviors
+- [x] Create MacroBinding class to represent macro bindings
+- [x] Create MacroParser to parse ZMK macro definitions
+- [x] Update LayerParser to detect and parse macro behaviors
+- [x] Add unit tests for macro behavior and parser
+- [x] Add end-to-end tests for macro support
+- [ ] Implement conversion of macro bindings to Kanata format
+- [ ] Support different activation modes (tap, press, release)
+- [ ] Support wait times and tap times
+- [ ] Test with various macro types (basic, parameterized, complex)
 
 ## Next Steps
 1. Implement support for Macros (Task 28)
