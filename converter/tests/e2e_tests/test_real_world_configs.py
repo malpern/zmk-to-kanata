@@ -347,3 +347,129 @@ def test_ergonomic_layout_with_homerow_mods(tmp_path, monkeypatch):
     # Check that the error message contains information about the unknown binding
     error_output = stderr_capture.getvalue()
     assert "Unknown binding: &hm" in error_output 
+
+
+def test_ben_vallack_cradio_layout(tmp_path, monkeypatch):
+    """Test conversion of Ben Vallack's Cradio (Ferris Sweep) layout.
+    
+    This test uses a real-world ZMK configuration from Ben Vallack's GitHub repository.
+    The layout features a 34-key split keyboard with custom behaviors, combos, and
+    multiple layers.
+    
+    Source: https://github.com/benvallack/zmk-config
+    """
+    # Setup test files
+    zmk_file = tmp_path / "ben_vallack_cradio.dtsi"
+    kanata_file = tmp_path / "ben_vallack_cradio.kbd"
+    
+    # Ben Vallack's Cradio layout (simplified for testing)
+    zmk_content = """
+    / {
+        behaviors {
+            hm: homerow_mods {
+                compatible = "zmk,behavior-hold-tap";
+                label = "HOMEROW_MODS";
+                #binding-cells = <2>;
+                tapping-term-ms = <200>;
+                quick_tap_ms = <0>;
+                flavor = "tap-preferred";
+                bindings = <&kp>, <&kp>;
+            };
+            hs: homerow_shifts {
+                compatible = "zmk,behavior-hold-tap";
+                label = "HOMEROW_SHIFTS";
+                #binding-cells = <2>;
+                tapping-term-ms = <150>;
+                quick_tap_ms = <0>;
+                flavor = "balanced";
+                bindings = <&kp>, <&kp>;
+            };
+            td: tapdance {
+                compatible = "zmk,behavior-hold-tap";
+                label = "TAPDANCE";
+                #binding-cells = <2>;
+                tapping-term-ms = <150>;
+                quick_tap_ms = <0>;
+                flavor = "tap-preferred";
+                bindings = <&kp>, <&kp>;
+            };
+        };
+
+        keymap {
+            compatible = "zmk,keymap";
+            
+            default_layer {
+                bindings = <
+                    &kp TAB &kp C &kp L &kp M &trans             
+                    &trans &kp F  &kp U    &kp Z  &kp BKSP
+                    &kp I &hm LCTL S &hm LALT R &hm LGUI T &trans        
+                    &trans  &hm RGUI N &hm RALT K &hm RCTL A &kp O
+                    &hs LSHIFT Q &kp V &kp W &kp D &mt LC(LS(LALT)) SPC 
+                    &kp E &kp H  &kp Y &td EXCL DOT &hs RSHIFT X
+                                    &mt LC(LS(LALT)) SPC &trans 
+                                    &trans &kp E
+                >;
+            };
+
+            left_layer {
+                bindings = <
+                    &trans  &kp ATSN   &td LC(LG(LS(N4))) LS(N3) &kp DLLR &trans        
+                    &trans &kp LS(COMMA) &kp LS(DOT) &kp CARET &trans
+                    &kp TAB &hm LCTL EQUAL &hm LALT LA(RBKT) &hm LGUI LA(LS(RBKT)) &trans
+                    &trans &hm RGUI LBRC &hm RALT RBRC &hm RCTL PIPE &kp AMPS
+                    &hs LSHIFT TILDE &kp GRAVE &kp LA(LBKT) &kp LA(LS(LBKT)) &to 0
+                    &to 2 &kp LPRN &kp RPRN &kp RBKT &kp RSHIFT
+                                    &to 0 &trans
+                                    &trans &to 2 
+                >;
+            };
+
+            right_layer {
+                bindings = <
+                    &trans &kp C_PP &kp C_PREV &kp C_NEXT &trans
+                    &trans &kp N7 &kp N8 &kp N9 &trans
+                    &kp TAB &trans &hm LALT C_VOL_DN &hm LGUI C_VOL_UP &trans
+                    &trans &hm RGUI N4 &kp N5 &kp N6 &kp EQUAL
+                    &hs LSHIFT PRCNT &kp PRCNT &kp SLASH &kp STAR &to 0 
+                    &trans &kp N1 &kp N2 &td DOT N3 &kp MINUS
+                                    &to 0 &trans
+                                    &trans &trans
+                >;
+            };
+        };
+    };
+    """
+    
+    # Write the ZMK content to the file
+    zmk_file.write_text(zmk_content)
+    
+    # Set up sys.argv for the main function
+    monkeypatch.setattr(
+        sys, 'argv', ['converter', str(zmk_file), str(kanata_file)]
+    )
+    
+    # Run the converter
+    from converter.main import main
+    
+    # Capture stderr to check for error message
+    stderr_capture = io.StringIO()
+    old_stderr = sys.stderr
+    sys.stderr = stderr_capture
+    
+    try:
+        main()
+    except SystemExit:
+        # The main function might exit due to the error
+        pass
+    finally:
+        # Restore stderr
+        sys.stderr = old_stderr
+    
+    # Check that the error message contains information about the unknown binding
+    error_output = stderr_capture.getvalue()
+    
+    # This test is expected to fail with the current implementation
+    # because the converter doesn't support the custom behaviors directly
+    assert ("Unknown binding: &hm" in error_output or 
+            "Unknown binding: &hs" in error_output or 
+            "Unknown binding: &td" in error_output) 
