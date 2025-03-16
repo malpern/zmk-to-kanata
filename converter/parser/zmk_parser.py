@@ -364,7 +364,7 @@ class ZMKParser:
                     logger.debug("Finishing layer: %s", layer_name)
                     self._finish_current_layer()
             
-            elif self.state == ParserState.IN_LAYER or self.state == ParserState.IN_BINDINGS:
+            elif self.state in (ParserState.IN_LAYER, ParserState.IN_BINDINGS):
                 if '_layer {' in line:
                     raise ParserError("Nested layers are not supported")
                 elif 'bindings = <' in line:
