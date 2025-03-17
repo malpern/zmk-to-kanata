@@ -10,26 +10,34 @@ The parser now successfully handles:
 - Global settings parsing with validation
 - Clean code organization with separate modules
 - Comprehensive test coverage for core features
+- Basic and parameterized macro support
+- Multi-line settings with proper quote handling
+- Macro placeholder bindings
 
 ## Remaining Tasks
 
 ### 1. Macro Support
-- [ ] Design MacroParser class
-- [ ] Implement basic macro parsing
-- [ ] Add macro validation
-- [ ] Add tests for macro parsing
+- [x] Design MacroParser class
+- [x] Implement basic macro parsing
+- [x] Add macro validation
+- [x] Add tests for macro parsing
+- [x] Add support for parameterized macros
+- [ ] Add support for macro wait times
+- [ ] Add support for macro tap times
 
 ### 2. Testing Improvements
 - [ ] Add tests for complex binding formats
 - [ ] Add tests for error recovery scenarios
 - [ ] Add tests for state transition edge cases
 - [ ] Document test scenarios
+- [ ] Add tests for macro timing configurations
 
 ### 3. Documentation
 - [ ] Document state machine behavior
 - [ ] Add binding format guide
 - [ ] Create troubleshooting guide
 - [ ] Update architecture diagrams
+- [ ] Document macro configuration options
 
 ## Development Guidelines
 
@@ -55,16 +63,16 @@ ZMKParser
 ├── ParserError - Base error class
 ├── LayerParser - Handles layer parsing
 ├── GlobalSettingsParser - Handles settings
-├── MacroParser (planned) - Will handle macros
+├── MacroParser - Handles macros
 └── StickyKeyParser - Handles sticky keys
 ```
 
 ### Next Steps
 
 1. **Macro Support**
-   - Design macro syntax and validation rules
-   - Create MacroParser following existing patterns
-   - Add comprehensive tests
+   - Implement macro timing configurations
+   - Add support for complex macro sequences
+   - Add validation for timing values
    - Update documentation
 
 2. **Testing Enhancements**
@@ -75,6 +83,6 @@ ZMKParser
 
 3. **Documentation Updates**
    - Document parser state machine
-   - Create user guide for settings
+   - Create user guide for macros
    - Add troubleshooting section
    - Update architecture docs
