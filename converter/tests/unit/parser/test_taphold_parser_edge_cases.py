@@ -99,4 +99,4 @@ def test_invalid_field_values(taphold_parser, field, value, error_msg):
     ''')
 
     with pytest.raises(ValueError, match=error_msg):
-        taphold_parser.parse_behavior(zmk_holdtap) 
+        taphold_parser.parse_behavior(zmk_holdtap)

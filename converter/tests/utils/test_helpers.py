@@ -22,4 +22,4 @@ def assert_keymap_valid(keymap: str) -> None:
 
 def normalize_whitespace(text: str) -> str:
     """Normalize whitespace in text for comparison."""
-    return " ".join(text.split()) 
+    return " ".join(text.split())

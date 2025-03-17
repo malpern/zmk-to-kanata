@@ -67,4 +67,4 @@ def test_invalid_layer_syntax(basic_layer_parser):
         // Missing closing angle bracket and semicolon
     """
     with pytest.raises(ValueError, match="Invalid layer syntax"):
-        basic_layer_parser.extract_layers(invalid_content) 
+        basic_layer_parser.extract_layers(invalid_content)

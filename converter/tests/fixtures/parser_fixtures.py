@@ -2,6 +2,7 @@
 import pytest
 from converter.layer_parser import LayerParser
 from converter.taphold_parser import TapHoldParser
+from converter.parser.macro_parser_v2 import MacroParser
 from ..utils.test_helpers import load_test_file
 
 
@@ -18,6 +19,12 @@ def taphold_parser():
 
 
 @pytest.fixture
+def macro_parser():
+    """Create a clean MacroParser instance."""
+    return MacroParser()
+
+
+@pytest.fixture
 def basic_keymap():
     """Load the basic keymap test file."""
     return load_test_file('basic_keymap.kbd')
@@ -26,4 +33,4 @@ def basic_keymap():
 @pytest.fixture
 def complex_keymap():
     """Load the complex keymap test file."""
-    return load_test_file('complex_keymap.kbd') 
+    return load_test_file('complex_keymap.kbd')

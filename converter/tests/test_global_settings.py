@@ -23,10 +23,10 @@ def test_default_global_settings():
 };
         """)
         f.flush()
-        
+
         parser = ZMKParser()
         config = parser.parse(Path(f.name))
-        
+
         assert config.global_settings.tap_time == 200
         assert config.global_settings.hold_time == 250
 
@@ -46,10 +46,10 @@ def test_custom_global_settings():
 };
         """)
         f.flush()
-        
+
         parser = ZMKParser()
         config = parser.parse(Path(f.name))
-        
+
         assert config.global_settings.tap_time == 300
         assert config.global_settings.hold_time == 400
 
@@ -68,10 +68,10 @@ def test_partial_global_settings():
 };
         """)
         f.flush()
-        
+
         parser = ZMKParser()
         config = parser.parse(Path(f.name))
-        
+
         assert config.global_settings.tap_time == 300
         assert config.global_settings.hold_time == 250  # Default value
 
@@ -90,11 +90,11 @@ def test_invalid_global_settings():
 };
         """)
         f.flush()
-        
+
         parser = ZMKParser()
         with pytest.raises(ParserError) as exc_info:
             parser.parse(Path(f.name))
-        
+
         assert "Invalid tap-time setting" in str(exc_info.value)
 
 
@@ -112,9 +112,9 @@ def test_malformed_global_settings():
 };
         """)
         f.flush()
-        
+
         parser = ZMKParser()
         with pytest.raises(ParserError) as exc_info:
             parser.parse(Path(f.name))
-        
-        assert "Invalid tap-time setting" in str(exc_info.value) 
+
+        assert "Invalid tap-time setting" in str(exc_info.value)

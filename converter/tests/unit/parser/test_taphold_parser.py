@@ -129,4 +129,4 @@ def test_real_world_example(taphold_parser):
     assert result.flavor == "balanced"
     assert result.hold_trigger_key_positions == [6, 7, 8, 9, 10, 11]
     assert result.hold_trigger_on_release is True
-    assert result.retro_tap is False 
+    assert result.retro_tap is False

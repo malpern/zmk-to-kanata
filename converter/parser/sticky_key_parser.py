@@ -23,9 +23,12 @@ class StickyKeyParser:
         """Parse a sticky key behavior configuration."""
         if config.get('compatible') == '"zmk,behavior-sticky-key"':
             # Check for invalid bindings
-            if 'bindings' in config and '<&invalid_behavior>' in config['bindings']:
-                raise ValueError(f"Invalid binding in sticky key behavior: {name}")
-                
+            if ('bindings' in config and 
+                    '<&invalid_behavior>' in config['bindings']):
+                raise ValueError(
+                    f"Invalid binding in sticky key behavior: {name}"
+                )
+
             # Extract release-after-ms if present
             release_after_ms = None
             if 'release-after-ms' in config:

@@ -135,4 +135,4 @@ def test_nested_layers():
 
         parser = ZMKParser()
         with pytest.raises(ParserError):
-            parser.parse(Path(f.name)) 
+            parser.parse(Path(f.name))

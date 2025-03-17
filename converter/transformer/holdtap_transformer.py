@@ -1,97 +1,146 @@
-"""Module for transforming ZMK hold-tap behaviors into Kanata format."""
+"""Module for transforming ZMK hold-tap behaviors to Kanata format."""
 
-from typing import Dict, Optional
-
-from ..model.keymap_model import HoldTapBinding
+from typing import Union
+from converter.behaviors.holdtap import HoldTapBehavior
+from converter.behaviors.key import KeyMapping
+from converter.behaviors.layer import LayerBehavior
+from converter.behaviors.macro import MacroBehavior
+from converter.behaviors.sticky_key import StickyKeyBehavior
+from converter.behaviors.key_sequence import KeySequenceBehavior
 
 
 class HoldTapTransformer:
-    """Transforms ZMK hold-tap behaviors into Kanata format."""
+    """Transformer for ZMK hold-tap behaviors."""
 
     def __init__(self):
-        """Initialize the transformer with behavior mappings."""
-        # Map ZMK hold-tap flavors to Kanata tap-hold variants
-        self.flavor_map: Dict[str, str] = {
-            # Default ZMK behavior
-            "hold-preferred": "tap-hold",
-            # Balanced behavior maps to default
-            "balanced": "tap-hold",
-            # Release variant for tap preference
-            "tap-preferred": "tap-hold-release",
-            # Press variant for interruption
-            "tap-unless-interrupted": "tap-hold-press",
-            # Press with timeout for tap-then-hold
-            "tap-then-hold": "tap-hold-press-timeout",
-        }
+        """Initialize the transformer."""
+        self.layer_transformer = None
+        self.macro_transformer = None
+        self.sticky_key_transformer = None
+        self.key_sequence_transformer = None
 
-        # Map ZMK modifiers to Kanata format
-        self.modifier_map: Dict[str, str] = {
-            "LSHIFT": "lsft",
-            "RSHIFT": "rsft",
-            "LCTRL": "lctl",
-            "RCTRL": "rctl",
-            "LALT": "lalt",
-            "RALT": "ralt",
-            "LGUI": "lmet",
-            "RGUI": "rmet",
-        }
+    def set_layer_transformer(self, transformer) -> None:
+        """Set the layer transformer."""
+        self.layer_transformer = transformer
 
-    def transform_binding(
+    def set_macro_transformer(self, transformer) -> None:
+        """Set the macro transformer."""
+        self.macro_transformer = transformer
+
+    def set_sticky_key_transformer(self, transformer) -> None:
+        """Set the sticky key transformer."""
+        self.sticky_key_transformer = transformer
+
+    def set_key_sequence_transformer(self, transformer) -> None:
+        """Set the key sequence transformer."""
+        self.key_sequence_transformer = transformer
+
+    def _validate_nested_behavior(
         self,
-        binding: HoldTapBinding,
-        tap_time: int,
-        hold_time: int
-    ) -> Optional[str]:
-        """Transform a ZMK hold-tap binding into Kanata format.
+        behavior: Union[
+            KeyMapping,
+            LayerBehavior,
+            MacroBehavior,
+            StickyKeyBehavior,
+            KeySequenceBehavior,
+            HoldTapBehavior
+        ]
+    ) -> bool:
+        """Validate a nested behavior.
 
         Args:
-            binding: The hold-tap binding to transform
-            tap_time: Global tap timeout in milliseconds
-            hold_time: Global hold timeout in milliseconds
+            behavior: The behavior to validate
 
         Returns:
-            Kanata tap-hold configuration string or None if invalid
+            bool: True if the behavior is valid for nesting
         """
-        # Get the appropriate tap-hold variant
-        tap_hold_type = "tap-hold"  # Default to basic tap-hold
+        # HoldTap behaviors cannot be nested
+        if isinstance(behavior, HoldTapBehavior):
+            return False
 
-        # Handle advanced features
-        if binding.hold_trigger_key_positions:
-            # Use tap-hold-release-keys for hold-trigger-key-positions
-            tap_hold_type = "tap-hold-release-keys"
-        elif binding.hold_trigger_on_release:
-            # Use tap-hold-release for hold-trigger-on-release
-            tap_hold_type = "tap-hold-release"
-        elif binding.retro_tap:
-            # Use tap-hold-press-timeout for retro-tap
-            tap_hold_type = "tap-hold-press-timeout"
+        # Layer behaviors are allowed in hold position only
+        if isinstance(behavior, LayerBehavior):
+            return True
 
-        # Map the hold key (usually a modifier)
-        hold_key = self.modifier_map.get(
-            binding.hold_key,
-            binding.hold_key.lower()
-        )
+        # Macro behaviors are not allowed to be nested
+        if isinstance(behavior, MacroBehavior):
+            return False
 
-        # Map the tap key
-        tap_key = binding.tap_key.lower()
+        # Sticky key behaviors are not allowed to be nested
+        if isinstance(behavior, StickyKeyBehavior):
+            return False
 
-        # Basic tap-hold configuration
-        config = (
-            f"({tap_hold_type} {tap_time} {hold_time} {tap_key} {hold_key}"
-        )
+        # Key sequence behaviors are not allowed to be nested
+        if isinstance(behavior, KeySequenceBehavior):
+            return False
 
-        # Add extra parameters for advanced features
-        if tap_hold_type == "tap-hold-release-keys":
-            # Convert key positions to a list
-            positions = " ".join(
-                str(pos) for pos in binding.hold_trigger_key_positions
-            )
-            config += f" ({positions})"
-        elif tap_hold_type == "tap-hold-press-timeout" and binding.retro_tap:
-            # Add tap key as timeout action for retro-tap
-            config += f" {tap_key}"
+        # KeyMapping is always allowed
+        if isinstance(behavior, KeyMapping):
+            return True
 
-        # Close the configuration
-        config += ")"
+        return False
 
-        return config
+    def _transform_nested_behavior(
+        self,
+        behavior: Union[
+            KeyMapping,
+            LayerBehavior,
+            MacroBehavior,
+            StickyKeyBehavior,
+            KeySequenceBehavior,
+            HoldTapBehavior
+        ]
+    ) -> str:
+        """Transform a nested behavior.
+
+        Args:
+            behavior: The behavior to transform
+
+        Returns:
+            str: The transformed behavior in Kanata format
+        """
+        if isinstance(behavior, KeyMapping):
+            return behavior.to_kanata()
+
+        if isinstance(behavior, LayerBehavior) and self.layer_transformer:
+            return self.layer_transformer.transform_binding(behavior)
+
+        # For unsupported nested behaviors, return "unknown"
+        return "unknown"
+
+    def transform_binding(self, behavior: HoldTapBehavior) -> str:
+        """Transform a hold-tap binding to Kanata format.
+
+        Args:
+            behavior: The hold-tap behavior to transform
+
+        Returns:
+            str: The transformed binding in Kanata format
+        """
+        # Validate hold behavior
+        if not self._validate_nested_behavior(behavior.hold):
+            return "(tap-hold _ unknown)"
+
+        # Validate tap behavior
+        if not self._validate_nested_behavior(behavior.tap):
+            return "(tap-hold unknown _)"
+
+        # Transform hold and tap behaviors
+        hold_str = self._transform_nested_behavior(behavior.hold)
+        tap_str = self._transform_nested_behavior(behavior.tap)
+
+        # Construct the tap-hold binding
+        return f"(tap-hold {tap_str} {hold_str})"
+
+    def transform_behavior(self, behavior: HoldTapBehavior) -> str:
+        """Transform a hold-tap behavior to Kanata format.
+
+        Args:
+            behavior: The hold-tap behavior to transform
+
+        Returns:
+            str: The transformed behavior in Kanata format
+        """
+        # For now, just transform the binding
+        # In the future, we can add behavior-specific transformations
+        return self.transform_binding(behavior)

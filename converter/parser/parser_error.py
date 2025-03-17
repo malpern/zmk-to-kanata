@@ -3,4 +3,4 @@
 
 class ParserError(Exception):
     """Base class for parser errors."""
-    pass 
+    pass

@@ -78,12 +78,12 @@ class TapHoldParser:
 
     def register_behavior(self, behavior: HoldTapBehavior) -> None:
         """Register a behavior in the registry.
-        
+
         Args:
             behavior: The behavior to register
         """
         self.behavior_registry[behavior.name] = behavior
-        
+
         # Also register any known aliases for this behavior
         for alias, full_name in self.CUSTOM_BEHAVIORS.items():
             if behavior.name == full_name:
@@ -91,10 +91,10 @@ class TapHoldParser:
 
     def get_behavior(self, name: str) -> Optional[HoldTapBehavior]:
         """Get a behavior from the registry by name.
-        
+
         Args:
             name: The name of the behavior to get
-            
+
         Returns:
             The behavior if found, None otherwise
         """
@@ -102,10 +102,10 @@ class TapHoldParser:
 
     def is_registered_behavior(self, name: str) -> bool:
         """Check if a behavior is registered.
-        
+
         Args:
             name: The name of the behavior to check
-            
+
         Returns:
             True if the behavior is registered, False otherwise
         """
@@ -186,10 +186,10 @@ class TapHoldParser:
             hold_trigger_on_release=hold_trigger_on_release,
             retro_tap=retro_tap
         )
-        
+
         # Register the behavior in the registry
         self.register_behavior(behavior)
-        
+
         return behavior
 
     def _parse_int_param(
@@ -235,22 +235,22 @@ HoldTapParser = TapHoldParser
 
 def is_hold_tap_binding(binding_str: str) -> bool:
     """Check if a binding string is a hold-tap binding.
-    
+
     Args:
         binding_str: The binding string to check
-        
+
     Returns:
         True if the binding string is a hold-tap binding, False otherwise
     """
     # Standard hold-tap prefixes
     standard_prefixes = ["&ht", "&lt", "&mt"]
-    
+
     # Custom hold-tap prefixes from Ben Vallack's keymap
     custom_prefixes = ["&hm", "&hs", "&td"]
-    
+
     # Check if the binding starts with any of the prefixes
     for prefix in standard_prefixes + custom_prefixes:
         if binding_str.startswith(prefix):
             return True
-            
+
     return False

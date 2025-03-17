@@ -20,10 +20,10 @@ class GlobalSettingsParser:
 
     def parse_setting(self, line: str) -> None:
         """Parse a global setting line.
-        
+
         Args:
             line: The line containing the setting.
-            
+
         Raises:
             ValueError: If the setting is invalid or malformed.
         """
@@ -32,7 +32,7 @@ class GlobalSettingsParser:
             r'^(\w+(?:-\w+)*)\s*=\s*<(\d+)>;$',
             line
         )
-        
+
         if not setting_match:
             if 'tap-time' in line:
                 raise ValueError("Invalid tap-time setting")
@@ -40,7 +40,7 @@ class GlobalSettingsParser:
                 raise ValueError("Invalid hold-time setting")
             else:
                 raise ValueError(f"Invalid setting format: {line}")
-        
+
         setting_name = setting_match.group(1)
         try:
             value = int(setting_match.group(2))
@@ -48,7 +48,7 @@ class GlobalSettingsParser:
                 raise ValueError(
                     f"Invalid {setting_name} setting: value must be positive"
                 )
-            
+
             if setting_name == 'tap-time':
                 self.tap_time = value
             elif setting_name == 'hold-time':
@@ -65,7 +65,7 @@ class GlobalSettingsParser:
 
     def finish(self) -> GlobalSettings:
         """Create a GlobalSettings object with the parsed values.
-        
+
         Returns:
             A GlobalSettings object with the parsed values, using defaults
             for any unset values.
@@ -73,4 +73,4 @@ class GlobalSettingsParser:
         return GlobalSettings(
             tap_time=self.tap_time if self.tap_time is not None else 200,
             hold_time=self.hold_time if self.hold_time is not None else 250
-        ) 
+        )

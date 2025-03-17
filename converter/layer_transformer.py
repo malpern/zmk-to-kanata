@@ -145,12 +145,15 @@ class LayerTransformer:
         # Default case
         return str(binding)
 
-    def transform_bindings_matrix(self, matrix: List[List[Binding]]) -> List[List[str]]:
+    def transform_bindings_matrix(
+        self, 
+        matrix: List[List[Binding]]
+    ) -> List[List[str]]:
         """Transform a matrix of bindings to Kanata format.
-        
+
         Args:
             matrix: A 2D list of bindings
-            
+
         Returns:
             A 2D list of strings in Kanata format
         """
@@ -182,13 +185,13 @@ class LayerTransformer:
 
         # Create a KanataLayer for backward compatibility
         kanata_layer = KanataLayer(layer.name, keys)
-        
+
         # Format as a string
         result = f"(deflayer {layer.name}\n"
         for row in kanata_layer.keys:
             result += "  " + " ".join(row) + "\n"
         result += ")"
-        
+
         return result
 
     def transform_layers(self, zmk_layers: List[Layer]) -> str:
@@ -209,9 +212,12 @@ class LayerTransformer:
             kanata_layers.append(self.transform_layer(layer))
 
         # Combine everything
-        kanata_content = f"(defsrc\n  {source_keys}\n)\n\n"
+        kanata_content = (
+            f"(defsrc\n  {source_keys}\n)\n\n"
+        )
 
-        # Add each layer definition - kanata_layers now contains strings, not KanataLayer objects
+        # Add each layer definition
+        # kanata_layers now contains strings, not KanataLayer objects
         for layer_str in kanata_layers:
             kanata_content += layer_str + "\n\n"
 

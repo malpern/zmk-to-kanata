@@ -119,7 +119,7 @@ class LayerParser:
         if is_hold_tap_binding(binding_str):
             # Extract the behavior name from the binding string
             behavior_name = binding_str.split()[0][1:]  # Remove & prefix
-            
+
             # Check if this is a registered custom behavior
             if self.taphold_parser.is_registered_behavior(behavior_name):
                 # Default to a regular key binding that will be processed
@@ -147,17 +147,17 @@ class LayerParser:
 
             # Parse bindings
             bindings = []
-            
+
             # Split the bindings string by & to get individual bindings
             # First, remove extra whitespace
             bindings_str = re.sub(r'\s+', ' ', bindings_str.strip())
-            
+
             # Then split by & but keep the & with each binding
             binding_parts = []
             for part in bindings_str.split('&'):
                 if part.strip():  # Skip empty parts
                     binding_parts.append('&' + part.strip())
-            
+
             # Process each binding
             for binding_str in binding_parts:
                 try:
@@ -201,17 +201,17 @@ class LayerParser:
 
             # Parse bindings
             bindings = []
-            
+
             # Split the bindings string by & to get individual bindings
             # First, remove extra whitespace
             bindings_str = re.sub(r'\s+', ' ', bindings_str.strip())
-            
+
             # Then split by & but keep the & with each binding
             binding_parts = []
             for part in bindings_str.split('&'):
                 if part.strip():  # Skip empty parts
                     binding_parts.append('&' + part.strip())
-            
+
             # Process each binding
             for binding_str in binding_parts:
                 try:

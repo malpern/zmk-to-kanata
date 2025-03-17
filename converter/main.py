@@ -1,7 +1,6 @@
 """Main module for the ZMK to Kanata converter."""
 
 import argparse
-import os
 import sys
 from pathlib import Path
 from typing import List
@@ -44,7 +43,7 @@ def generate_kanata_keymap(layers: List[KanataLayer]) -> str:
             for row in layer.keys:
                 kanata_config.append("  " + " ".join(row))
             kanata_config.append(")")
-            
+
         # Add empty line between layers, but not after the last one
         if i < len(layers) - 1:
             kanata_config.append("")
@@ -68,7 +67,7 @@ def main(args=None):
         'output_file',
         help='Path to output Kanata keymap file'
     )
-    
+
     if args is None:
         args = parser.parse_args()
     else:
@@ -100,7 +99,7 @@ def main(args=None):
         except Exception as e:
             print(f"Error during transformation: {e}", file=sys.stderr)
             return 3
-        
+
         # Write output file
         try:
             with open(args.output_file, 'w') as f:
