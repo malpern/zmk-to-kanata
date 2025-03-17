@@ -22,8 +22,8 @@ The parser now successfully handles:
 - [x] Add macro validation
 - [x] Add tests for macro parsing
 - [x] Add support for parameterized macros
-- [ ] Add support for macro wait times
-- [ ] Add support for macro tap times
+- [x] Add support for macro wait times
+- [x] Add support for macro tap times
 
 ### 2. Testing Improvements
 - [ ] Add tests for complex binding formats
