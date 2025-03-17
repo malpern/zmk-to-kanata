@@ -1,9 +1,19 @@
 """Module for transforming ZMK layers to Kanata format."""
 
-from typing import Dict, List
+from typing import Dict, List, Optional, Union
 
 from converter.behaviors.key_sequence import KeySequenceBinding
+from converter.behaviors.holdtap import HoldTapBinding
+from converter.behaviors.layer import LayerBehavior
+from converter.behaviors.macro import MacroBehavior
+from converter.behaviors.sticky_key import StickyKeyBehavior
+from converter.behaviors.homerow_mods import HomeRowModBehavior
 from converter.model.keymap_model import Binding, KeyMapping, Layer
+from converter.transformer.holdtap_transformer import HoldTapTransformer
+from converter.transformer.macro_transformer import MacroTransformer
+from converter.transformer.sticky_key_transformer import StickyKeyTransformer
+from converter.transformer.key_sequence_transformer import KeySequenceTransformer
+from converter.transformer.homerow_mod_transformer import HomeRowModTransformer
 
 
 class KanataLayer:
@@ -27,8 +37,24 @@ class KanataLayer:
 class LayerTransformer:
     """Transformer for ZMK layers to Kanata format."""
 
-    def __init__(self):
-        """Initialize the transformer."""
+    def __init__(self, is_mac: bool = False):
+        """Initialize the transformer.
+        
+        Args:
+            is_mac: Whether to use Mac-specific modifiers
+        """
+        self.hold_tap_transformer = HoldTapTransformer()
+        self.macro_transformer = MacroTransformer()
+        self.sticky_key_transformer = StickyKeyTransformer()
+        self.key_sequence_transformer = KeySequenceTransformer()
+        self.homerow_mod_transformer = HomeRowModTransformer(is_mac=is_mac)
+        
+        # Set up circular references
+        self.hold_tap_transformer.set_layer_transformer(self)
+        self.hold_tap_transformer.set_macro_transformer(self.macro_transformer)
+        self.hold_tap_transformer.set_sticky_key_transformer(self.sticky_key_transformer)
+        self.hold_tap_transformer.set_key_sequence_transformer(self.key_sequence_transformer)
+        
         # Mapping of ZMK key names to Kanata key names
         self.key_map: Dict[str, str] = {
             # Letters
@@ -96,13 +122,45 @@ class LayerTransformer:
 
     def transform_binding(self, binding: Binding) -> str:
         """Transform a binding to Kanata format.
-
+        
         Args:
             binding: The binding to transform
-
+            
         Returns:
-            The binding in Kanata format
+            The Kanata representation of the binding
         """
+        if isinstance(binding, KeyMapping):
+            # Handle homerow mods
+            if binding.homerow_mod:
+                return self.homerow_mod_transformer.transform_binding(binding.homerow_mod)
+                
+            # Handle hold-tap bindings
+            if binding.hold_tap:
+                return self.hold_tap_transformer.transform_binding(binding.hold_tap)
+                
+            # Handle sticky keys
+            if binding.sticky:
+                return f"(sticky-key {binding.key.lower()})"
+                
+            # Handle layer behaviors
+            if binding.layer:
+                return self._transform_layer_binding(binding.layer)
+                
+            # Handle macro behaviors
+            if binding.macro:
+                return self.macro_transformer.transform_binding(binding.macro)
+                
+            # Handle sticky key behaviors
+            if binding.sticky_key:
+                return self.sticky_key_transformer.transform_binding(binding.sticky_key)
+                
+            # Handle key sequence behaviors
+            if binding.key_sequence:
+                return self.key_sequence_transformer.transform_binding(binding.key_sequence)
+                
+            # Handle basic key bindings
+            return binding.key.lower()
+
         # Handle transparent key
         if isinstance(binding, str) and binding == "trans":
             return "_"

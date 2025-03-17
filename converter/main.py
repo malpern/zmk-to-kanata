@@ -7,6 +7,8 @@ from typing import List
 
 from .layer_transformer import KanataLayer
 from .parser.zmk_parser import ZMKParser
+from converter.error_handling import ErrorManager, ErrorSeverity
+from converter.zmk_to_kanata import convert_zmk_to_kanata
 
 
 def generate_kanata_keymap(layers: List[KanataLayer]) -> str:
@@ -54,65 +56,78 @@ def generate_kanata_keymap(layers: List[KanataLayer]) -> str:
     return "\n".join(kanata_config)
 
 
-def main(args=None):
-    """Main entry point for the converter."""
+def main():
+    """Main entry point for the CLI."""
     parser = argparse.ArgumentParser(
-        description='Convert ZMK keymap to Kanata keymap'
+        description="Convert ZMK keymap to Kanata format"
     )
     parser.add_argument(
-        'input_file',
-        help='Path to input ZMK keymap file'
+        "input_file",
+        help="Path to the input ZMK keymap file"
     )
     parser.add_argument(
-        'output_file',
-        help='Path to output Kanata keymap file'
+        "-o", "--output",
+        help="Path to the output Kanata file (default: stdout)",
+        default=None
     )
-
-    if args is None:
-        args = parser.parse_args()
-    else:
-        args = parser.parse_args(args)
-
+    parser.add_argument(
+        "-v", "--verbose",
+        help="Enable verbose output",
+        action="store_true"
+    )
+    parser.add_argument(
+        "--mac",
+        help="Use Mac-specific modifiers (GUI becomes CMD)",
+        action="store_true"
+    )
+    parser.add_argument(
+        "--version",
+        help="Show version information",
+        action="store_true"
+    )
+    
+    args = parser.parse_args()
+    
+    if args.version:
+        print("ZMK to Kanata Converter v1.0.0")
+        sys.exit(0)
+    
+    # Set up error manager
+    error_manager = ErrorManager(verbose=args.verbose)
+    
     try:
-        # Parse ZMK file
-        zmk_parser = ZMKParser()
-        try:
-            config = zmk_parser.parse(Path(args.input_file))
-        except FileNotFoundError:
-            print(f"Input file not found: {args.input_file}", file=sys.stderr)
-            return 1
-        except ValueError as e:
-            print(f"Error parsing ZMK file: {e}", file=sys.stderr)
-            return 2
-        except Exception as e:
-            print(f"Error during parsing: {e}", file=sys.stderr)
-            return 3
-
-        # Transform to Kanata format
-        from .transformer.kanata_transformer import KanataTransformer
-        transformer = KanataTransformer()
-        try:
-            output = transformer.transform(config)
-        except ValueError as e:
-            print(f"Error transforming keymap: {e}", file=sys.stderr)
-            return 2
-        except Exception as e:
-            print(f"Error during transformation: {e}", file=sys.stderr)
-            return 3
-
-        # Write output file
-        try:
-            with open(args.output_file, 'w') as f:
-                f.write(output)
-        except Exception as e:
-            print(f"Error writing output file: {e}", file=sys.stderr)
-            return 3
-
-        return 0
-
+        # Read input file
+        with open(args.input_file, 'r') as f:
+            zmk_content = f.read()
+        
+        # Convert ZMK to Kanata
+        kanata_config, metadata = convert_zmk_to_kanata(
+            zmk_content=zmk_content,
+            output_path=args.output,
+            error_manager=error_manager,
+            is_mac=args.mac
+        )
+        
+        # If no output file is specified, print to stdout
+        if not args.output:
+            print(kanata_config)
+        
+        # Print any errors or warnings
+        if error_manager.has_errors(ErrorSeverity.WARNING):
+            for error in error_manager.get_errors(ErrorSeverity.WARNING):
+                print(f"WARNING: {error}", file=sys.stderr)
+        
+        if error_manager.has_errors(ErrorSeverity.ERROR):
+            for error in error_manager.get_errors(ErrorSeverity.ERROR):
+                print(f"ERROR: {error}", file=sys.stderr)
+            sys.exit(1)
+        
     except Exception as e:
-        print(f"Unexpected error: {e}", file=sys.stderr)
-        return 3
+        print(f"ERROR: {str(e)}", file=sys.stderr)
+        if args.verbose:
+            import traceback
+            traceback.print_exc()
+        sys.exit(1)
 
 
 if __name__ == '__main__':

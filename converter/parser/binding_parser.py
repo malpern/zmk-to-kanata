@@ -11,6 +11,12 @@ from converter.error_handling import (
 )
 from converter.model.keymap_model import KeyMapping
 from converter.validation.key_validator import validate_key
+from converter.behaviors.holdtap import HoldTapBehavior
+from converter.behaviors.layer import LayerBehavior
+from converter.behaviors.macro import MacroBehavior
+from converter.behaviors.sticky_key import StickyKeyBehavior
+from converter.behaviors.key_sequence import KeySequenceBehavior
+from converter.behaviors.homerow_mods import HomeRowModBehavior, is_homerow_mod_binding
 
 
 @dataclass
@@ -64,48 +70,23 @@ class BindingParser:
             line_number: Optional line number for error reporting
 
         Returns:
-            KeyMapping object representing the binding
+            A KeyMapping object representing the parsed binding
 
         Raises:
-            BindingParseError: If the binding format is invalid
+            BindingParseError: If the binding cannot be parsed
         """
-        if not binding:
-            self._report_error(
-                message="Empty binding",
-                binding=binding,
-                line_number=line_number,
-                raise_immediately=True
-            )
-
-        # Remove ampersand
-        if binding.startswith('&'):
-            binding = binding[1:].strip()
-
-        # Check if this is a nested binding
-        if '(' in binding:
-            try:
-                return self._parse_nested_binding(binding, line_number)
-            except BindingParseError as e:
-                self._report_error(
-                    message=str(e),
-                    binding=binding,
-                    line_number=line_number,
-                    raise_immediately=True
-                )
-
-        # Simple binding
-        try:
-            return self._parse_simple_binding(binding, line_number)
-        except BindingParseError as e:
-            self._report_error(
-                message=str(e),
-                binding=binding,
-                line_number=line_number,
-                raise_immediately=True
-            )
-
-        # This should never be reached due to raise_immediately=True above
-        return KeyMapping(key="unknown")
+        self.nested_depth = 0
+        
+        # Handle homerow mods
+        if is_homerow_mod_binding(binding):
+            return self._parse_homerow_mod(binding, line_number)
+            
+        # Handle nested bindings
+        if binding.startswith("&"):
+            return self._parse_nested_binding(binding, line_number)
+            
+        # Handle simple bindings
+        return self._parse_simple_binding(binding, line_number)
 
     def _parse_nested_binding(
         self,
@@ -358,3 +339,33 @@ class BindingParser:
 
         if raise_immediately:
             raise BindingParseError(message, binding)
+
+    def _parse_homerow_mod(self, binding: str, line_number: Optional[int] = None) -> KeyMapping:
+        """Parse a homerow mod binding.
+        
+        Args:
+            binding: The binding string to parse
+            line_number: Optional line number for error reporting
+            
+        Returns:
+            A KeyMapping object representing the parsed binding
+            
+        Raises:
+            BindingParseError: If the binding cannot be parsed
+        """
+        parts = binding.split(maxsplit=2)
+        if len(parts) != 3:
+            self._report_error(
+                message=f"Invalid homerow mod format: {binding}",
+                binding=binding,
+                line_number=line_number,
+                raise_immediately=True
+            )
+            
+        _, mod, key = parts
+        
+        # Create a homerow mod behavior
+        behavior = HomeRowModBehavior(mod=mod, key=key)
+        
+        # Create a key mapping with the homerow mod behavior
+        return KeyMapping(key=key, homerow_mod=behavior)

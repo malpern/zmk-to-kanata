@@ -12,15 +12,7 @@ This document outlines the known limitations and intentional constraints of the 
 
 **Workaround**: Define all layers at the top level of your ZMK keymap.
 
-### 2. Homerow Mods
-
-**Limitation**: The ZMK `&hm` (homerow mods) behavior is not directly supported by the converter.
-
-**Reason**: The conversion from ZMK homerow mods to Kanata requires special handling of timing parameters that vary significantly between the two systems.
-
-**Workaround**: After conversion, manually adjust the Kanata configuration to define appropriate homerow mod bindings using Kanata's `tap-hold` or `tap-hold-release` functions.
-
-### 3. Unsupported Nested Behaviors
+### 2. Unsupported Nested Behaviors
 
 **Limitation**: Some nested behavior combinations in hold-tap behaviors might not convert correctly.
 
@@ -55,10 +47,9 @@ This document outlines the known limitations and intentional constraints of the 
 
 The following limitations are planned to be addressed in future versions:
 
-1. Better support for ZMK homerow mods
-2. Enhanced handling of conditional layers
-3. Support for more complex nested behaviors
-4. Optimization of generated Kanata configurations
+1. Enhanced handling of conditional layers
+2. Support for more complex nested behaviors
+3. Optimization of generated Kanata configurations
 
 ## Reporting Issues
 

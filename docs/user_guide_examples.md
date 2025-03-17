@@ -273,7 +273,6 @@ When errors occur, inspect the console output for detailed information.
 The ZMK to Kanata converter has some known limitations and constraints that users should be aware of:
 
 - Nested layers within ZMK keymap files are not supported
-- ZMK homerow mods (`&hm`) require manual adjustments after conversion
 - Some complex nested behaviors may not convert correctly
 - Conditional layers require special handling
 
@@ -281,52 +280,35 @@ For a complete list of limitations and workarounds, please refer to the [Limitat
 
 ## Advanced Usage
 
-### Managing Complex Layouts
+### Homerow Mods
 
-For complex keyboard layouts with many keys, organize your ZMK keymap rows consistently:
+The converter fully supports ZMK homerow mods (`&hm`) and converts them to Kanata's `tap-hold` functionality. Homerow mods are a popular ergonomic feature that allows keys to act as modifiers when held and normal keys when tapped.
 
-**ZMK:**
-```
-default_layer {
-    // Row 1: Main row
-    // Row 2: Bottom row
-    // Row 3: Thumb keys
-    bindings = <
-        &kp Q &kp W &kp E &kp R &kp T   &kp Y &kp U &kp I &kp O &kp P
-        &kp A &kp S &kp D &kp F &kp G   &kp H &kp J &kp K &kp L &kp SEMI
-        &lt 1 TAB &kp SPACE &kp ENTER   &mo 2 &kp BSPC &kp ESC
-    >;
-};
+#### Mac-Specific Modifiers
+
+For Mac users, the converter provides a `--mac` flag that ensures the GUI modifier is correctly mapped to the Command (CMD) key in Kanata:
+
+```bash
+zmk-to-kanata input.dtsi -o output.kbd --mac
 ```
 
-### Global Settings
+#### Example ZMK Homerow Mods
 
-The converter preserves global settings where possible:
+Here's an example of homerow mods in ZMK:
 
-**ZMK:**
 ```
-/ {
-    chosen {
-        zmk,matrix_transform = &default_transform;
-    };
-    
-    behaviors {
-        td0: tap_dance_0 {
-            compatible = "zmk,behavior-tap-dance";
-            #binding-cells = <0>;
-            tapping-term-ms = <200>;
-            bindings = <&kp N1>, <&kp N2>;
-        };
-    };
-}
+&kp ESC   &hm LGUI A &hm LALT S &hm LCTRL D &hm LSHFT F &kp G
+&kp H &hm RSHFT J  &hm RCTRL K &hm RALT L &hm RGUI SEMI &kp SQT
 ```
 
-**Kanata:**
+This will be converted to Kanata's tap-hold format:
+
 ```
-;; Global settings
-(defvar tap-time 200)
-(defvar hold-time 250)
+esc (tap-hold 200 200 a lmet) (tap-hold 200 200 s lalt) (tap-hold 200 200 d lctl) (tap-hold 200 200 f lsft) g
+h (tap-hold 200 200 j rsft) (tap-hold 200 200 k rctl) (tap-hold 200 200 l ralt) (tap-hold 200 200 ; rmet) '
 ```
+
+When using the `--mac` flag, the GUI modifiers will be mapped to the Command key.
 
 ## Troubleshooting
 

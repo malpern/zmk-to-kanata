@@ -8,10 +8,18 @@ all the model classes and conversion logic for the keymap converter.
 """
 
 from dataclasses import dataclass, field
-from typing import List, Optional, Union
+from typing import List, Optional, TYPE_CHECKING
 
 from converter.behaviors.hold_tap import HoldTap, HoldTapBinding
 from converter.validation.key_validator import validate_key, KeyValidationError
+
+# Use TYPE_CHECKING to avoid circular imports
+if TYPE_CHECKING:
+    from converter.behaviors.layer import LayerBehavior
+    from converter.behaviors.macro import MacroBehavior
+    from converter.behaviors.sticky_key import StickyKeyBehavior
+    from converter.behaviors.key_sequence import KeySequenceBehavior
+    from converter.behaviors.homerow_mods import HomeRowModBehavior
 
 
 class Binding:
@@ -32,9 +40,13 @@ class GlobalSettings:
 class KeyMapping(Binding):
     """Represents a key mapping in the keymap."""
     key: str
-    hold_tap: Optional[Union[HoldTap, HoldTapBinding]] = None
     sticky: bool = False
-    layer: Optional[int] = None
+    hold_tap: Optional[HoldTapBinding] = None
+    layer: Optional['LayerBehavior'] = None  # Forward reference
+    macro: Optional['MacroBehavior'] = None  # Forward reference
+    sticky_key: Optional['StickyKeyBehavior'] = None  # Forward reference
+    key_sequence: Optional['KeySequenceBehavior'] = None  # Forward reference
+    homerow_mod: Optional['HomeRowModBehavior'] = None  # Forward reference
 
     def __post_init__(self):
         """Validate the key after initialization."""
