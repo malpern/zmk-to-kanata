@@ -6,7 +6,7 @@ complex, multi-line macro definitions and nested structures.
 """
 
 import logging
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union, Set, Tuple
 from dataclasses import dataclass, field
 from enum import Enum, auto
 
@@ -16,6 +16,19 @@ from converter.error_handling.error_manager import get_error_manager, ErrorSever
 
 
 logger = logging.getLogger(__name__)
+
+
+# Define known macro commands and their expected parameter counts
+# This helps with validation during parsing
+MACRO_COMMANDS = {
+    # Command name: (min_params, max_params)
+    "kp": (1, 1),                   # &kp KEY
+    "macro_tap": (0, 0),            # &macro_tap (begins tap section)
+    "macro_press": (0, 0),          # &macro_press (begins press section)
+    "macro_release": (0, 0),        # &macro_release (begins release section)
+    "macro_wait_time": (1, 1),      # &macro_wait_time MS
+    "macro_tap_time": (1, 1),       # &macro_tap_time MS
+}
 
 
 class MacroParserState(Enum):
@@ -49,6 +62,32 @@ class MacroDefinition:
             ast_macro.steps.append(ast_step)
         
         return ast_macro
+    
+    def validate(self) -> Tuple[bool, List[str]]:
+        """
+        Validate that the macro definition is complete and consistent.
+        
+        Returns:
+            Tuple of (is_valid, error_messages)
+        """
+        errors = []
+        
+        # Check for empty name
+        if not self.name:
+            errors.append("Macro name cannot be empty")
+        
+        # Check for empty steps list
+        if not self.steps:
+            errors.append(f"Macro '{self.name}' has no steps")
+        
+        # Validate each step
+        for i, step in enumerate(self.steps):
+            step_valid, step_errors = step.validate()
+            if not step_valid:
+                for error in step_errors:
+                    errors.append(f"Step {i+1}: {error}")
+        
+        return len(errors) == 0, errors
 
 
 @dataclass
@@ -62,6 +101,32 @@ class MacroStep:
         """Initialize default values."""
         if self.params is None:
             self.params = []
+    
+    def validate(self) -> Tuple[bool, List[str]]:
+        """
+        Validate that the macro step has a valid command and correct number of parameters.
+        
+        Returns:
+            Tuple of (is_valid, error_messages)
+        """
+        errors = []
+        
+        # Check if the command is known
+        if self.command not in MACRO_COMMANDS:
+            errors.append(f"Unknown macro command: '{self.command}'")
+            return False, errors
+        
+        # Check parameter count
+        min_params, max_params = MACRO_COMMANDS[self.command]
+        param_count = len(self.params) if self.params else 0
+        
+        if param_count < min_params:
+            errors.append(f"Command '{self.command}' requires at least {min_params} parameter(s), got {param_count}")
+        
+        if max_params != -1 and param_count > max_params:
+            errors.append(f"Command '{self.command}' accepts at most {max_params} parameter(s), got {param_count}")
+        
+        return len(errors) == 0, errors
 
 
 @dataclass
@@ -75,6 +140,26 @@ class MacroUsage:
         """Initialize default values."""
         if self.params is None:
             self.params = []
+    
+    def validate(self, known_macros: Set[str]) -> Tuple[bool, List[str]]:
+        """
+        Validate that the macro usage references a known macro and has valid parameters.
+        
+        Args:
+            known_macros: Set of known macro names
+        
+        Returns:
+            Tuple of (is_valid, error_messages)
+        """
+        errors = []
+        
+        # Check if the macro exists
+        if self.name not in known_macros:
+            errors.append(f"Referenced macro '{self.name}' is not defined")
+        
+        # TODO: Add parameter validation when we have macro parameter definitions
+        
+        return len(errors) == 0, errors
 
 
 class ZMKMacroParser:
@@ -94,6 +179,13 @@ class ZMKMacroParser:
         self.tokens: List[Token] = []
         self.position = 0
         self.error_manager = get_error_manager()
+        
+        # Set up for recovery after errors
+        self.recovery_tokens = {
+            TokenType.SEMICOLON,
+            TokenType.CLOSE_BRACE,
+            TokenType.CLOSE_ANGLE
+        }
     
     def parse_macro_block(self, tokens: List[Token]) -> Dict[str, MacroDefinition]:
         """
@@ -173,6 +265,47 @@ class ZMKMacroParser:
         
         return None
     
+    def validate_all_macros(self) -> bool:
+        """
+        Validate all parsed macro definitions.
+        
+        Returns:
+            True if all macros are valid, False otherwise
+        """
+        all_valid = True
+        
+        for name, macro in self.macros.items():
+            valid, errors = macro.validate()
+            if not valid:
+                all_valid = False
+                for error in errors:
+                    self._add_error(
+                        f"Macro '{name}' validation error: {error}",
+                        ErrorSeverity.ERROR,
+                        macro.location
+                    )
+        
+        return all_valid
+    
+    def _recover_from_error(self):
+        """
+        Recover from a parsing error by advancing to a recovery point.
+        
+        Recovery points are tokens like semicolons, closing braces, etc.
+        """
+        logger.debug("Attempting to recover from parsing error")
+        
+        # Skip tokens until we find a recovery token or reach the end
+        while (self.position < len(self.tokens) and 
+               self._peek().type not in self.recovery_tokens):
+            token = self._consume()
+            logger.debug(f"Skipping token during recovery: {token.type.name} '{token.value}'")
+        
+        # Consume the recovery token if we found one
+        if self.position < len(self.tokens) and self._peek().type in self.recovery_tokens:
+            token = self._consume()
+            logger.debug(f"Recovered at token: {token.type.name} '{token.value}'")
+    
     def _peek(self, offset: int = 0) -> Token:
         """Peek at a token ahead in the stream."""
         if self.position + offset >= len(self.tokens):
@@ -203,6 +336,26 @@ class ZMKMacroParser:
             return None
         return self._consume()
     
+    def _try_match(self, token_type: TokenType) -> Optional[Token]:
+        """Try to match the current token against the expected type."""
+        token = self._peek()
+        if token.type != token_type:
+            return None
+        return self._consume()
+    
+    def _match_any(self, token_types: List[TokenType]) -> Optional[Token]:
+        """Match the current token against any of the expected types."""
+        token = self._peek()
+        if token.type not in token_types:
+            expected = ", ".join(t.name for t in token_types)
+            self._add_error(
+                f"Expected one of {expected}, got {token.type.name}",
+                ErrorSeverity.ERROR,
+                token.location
+            )
+            return None
+        return self._consume()
+    
     def _add_error(self, message: str, severity: ErrorSeverity, location: Optional[SourceLocation] = None):
         """Add an error to the error manager."""
         self.error_manager.add_error(
@@ -221,4 +374,10 @@ class ZMKMacroParser:
         """Transition to a new parser state."""
         old_state = self.state
         self.state = new_state
-        logger.debug(f"State transition: {old_state.name} -> {new_state.name}") 
+        logger.debug(f"State transition: {old_state.name} -> {new_state.name}")
+    
+    def log_parse_summary(self):
+        """Log a summary of the parsing results."""
+        logger.info(f"Parsing complete. Found {len(self.macros)} macro definitions.")
+        for name, macro in self.macros.items():
+            logger.info(f"  - Macro '{name}': {len(macro.steps)} steps") 
