@@ -1,52 +1,8 @@
-# ZMK to Kanata Converter
+`# Ben Vallack ZMK to Kanata Converter
 
-A tool to convert ZMK keymap files into Kanata configuration files, enabling users to migrate their keyboard configurations between these firmware options.
-
-## Overview
-
-This project provides a robust conversion tool that maintains feature parity where possible, provides clear error messages for unsupported features, and generates clean, readable Kanata output.
-
-## Features
-
-- Convert ZMK keymap files to Kanata format
-- Support for common keyboard features:
-  - Basic key mappings
-  - Layer definitions
-  - Modifiers and modifier combinations
-  - Media and special keys
-  - Unicode input
-  - Macros
-- Advanced features support:
-  - Hold-tap behaviors (including homerow mods)
-  - Sticky keys
-  - Custom behaviors
-  - Complex modifier combinations
-- Comprehensive error reporting
-- Clean, readable output
-
-## Installation
-
-1. Install uv (if not already installed):
-```bash
-pip install uv
-```
-
-2. Create and activate virtual environment:
-```bash
-uv venv zmk-kanata-env
-source zmk-kanata-env/bin/activate  # On macOS/Linux
-```
-
-3. Install dependencies:
-```bash
-uv pip install pytest
-```
+This script converts Ben Vallack's ZMK configuration to Kanata format.
 
 ## Usage
-
-### Basic Usage
-
-Convert a ZMK keymap file to Kanata format:
 
 ```bash
 python -m converter.cli input.dtsi output.kbd

@@ -1,0 +1,149 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.10.16, pytest-8.3.4, pluggy-1.5.0 -- /Users/malpern/.pyenv/versions/3.10.16/bin/python3.10
+cachedir: .pytest_cache
+rootdir: /Volumes/Flash Gordon Storage/Dropbox/code/nicktokatana
+configfile: pyproject.toml
+testpaths: converter/tests
+plugins: anyio-4.7.0
+collecting ... collected 325 items / 13 errors
+
+==================================== ERRORS ====================================
+______ ERROR collecting converter/tests/e2e_tests/test_file_operations.py ______
+ImportError while importing test module '/Volumes/Flash Gordon Storage/Dropbox/code/nicktokatana/converter/tests/e2e_tests/test_file_operations.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+converter/tests/e2e_tests/test_file_operations.py:3: in <module>
+    from converter.main import convert_keymap
+E   ImportError: cannot import name 'convert_keymap' from 'converter.main' (/Volumes/Flash Gordon Storage/Dropbox/code/nicktokatana/converter/main.py)
+_ ERROR collecting converter/tests/integration/test_binding_parser_integration.py _
+ImportError while importing test module '/Volumes/Flash Gordon Storage/Dropbox/code/nicktokatana/converter/tests/integration/test_binding_parser_integration.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+converter/tests/integration/test_binding_parser_integration.py:6: in <module>
+    from converter.parser.error_recovery_wrapper import ParserErrorRecoveryWrapper
+converter/parser/error_recovery_wrapper.py:8: in <module>
+    from converter.parser.parser_base import ParserError
+E   ImportError: cannot import name 'ParserError' from 'converter.parser.parser_base' (/Volumes/Flash Gordon Storage/Dropbox/code/nicktokatana/converter/parser/parser_base.py)
+_ ERROR collecting converter/tests/integration/test_error_recovery_integration.py _
+ImportError while importing test module '/Volumes/Flash Gordon Storage/Dropbox/code/nicktokatana/converter/tests/integration/test_error_recovery_integration.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+converter/tests/integration/test_error_recovery_integration.py:6: in <module>
+    from converter.parser.error_recovery_wrapper import ParserErrorRecoveryWrapper
+converter/parser/error_recovery_wrapper.py:8: in <module>
+    from converter.parser.parser_base import ParserError
+E   ImportError: cannot import name 'ParserError' from 'converter.parser.parser_base' (/Volumes/Flash Gordon Storage/Dropbox/code/nicktokatana/converter/parser/parser_base.py)
+_ ERROR collecting converter/tests/integration/test_zmk_to_kanata_conversion.py _
+ImportError while importing test module '/Volumes/Flash Gordon Storage/Dropbox/code/nicktokatana/converter/tests/integration/test_zmk_to_kanata_conversion.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+converter/tests/integration/test_zmk_to_kanata_conversion.py:3: in <module>
+    from converter.zmk_parser import ZMKParser
+E   ModuleNotFoundError: No module named 'converter.zmk_parser'
+_ ERROR collecting converter/tests/integration/test_zmk_to_kanata_conversion_edge_cases.py _
+ImportError while importing test module '/Volumes/Flash Gordon Storage/Dropbox/code/nicktokatana/converter/tests/integration/test_zmk_to_kanata_conversion_edge_cases.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+converter/tests/integration/test_zmk_to_kanata_conversion_edge_cases.py:3: in <module>
+    from converter.zmk_parser import ZMKParser
+E   ModuleNotFoundError: No module named 'converter.zmk_parser'
+_ ERROR collecting converter/tests/integration/test_zmk_to_kanata_error_handling.py _
+ImportError while importing test module '/Volumes/Flash Gordon Storage/Dropbox/code/nicktokatana/converter/tests/integration/test_zmk_to_kanata_error_handling.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+converter/tests/integration/test_zmk_to_kanata_error_handling.py:3: in <module>
+    from converter.zmk_parser import ZMKParser, ParserError
+E   ModuleNotFoundError: No module named 'converter.zmk_parser'
+_ ERROR collecting converter/tests/performance/test_zmk_to_kanata_performance.py _
+ImportError while importing test module '/Volumes/Flash Gordon Storage/Dropbox/code/nicktokatana/converter/tests/performance/test_zmk_to_kanata_performance.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+converter/tests/performance/test_zmk_to_kanata_performance.py:4: in <module>
+    from converter.zmk_parser import ZMKParser
+E   ModuleNotFoundError: No module named 'converter.zmk_parser'
+_ ERROR collecting converter/tests/unit/parser/test_error_recovery_wrapper.py __
+ImportError while importing test module '/Volumes/Flash Gordon Storage/Dropbox/code/nicktokatana/converter/tests/unit/parser/test_error_recovery_wrapper.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+converter/tests/unit/parser/test_error_recovery_wrapper.py:5: in <module>
+    from converter.parser.error_recovery_wrapper import ParserErrorRecoveryWrapper
+converter/parser/error_recovery_wrapper.py:8: in <module>
+    from converter.parser.parser_base import ParserError
+E   ImportError: cannot import name 'ParserError' from 'converter.parser.parser_base' (/Volumes/Flash Gordon Storage/Dropbox/code/nicktokatana/converter/parser/parser_base.py)
+_ ERROR collecting converter/tests/unit/transformer/test_holdtap_transformer.py _
+ImportError while importing test module '/Volumes/Flash Gordon Storage/Dropbox/code/nicktokatana/converter/tests/unit/transformer/test_holdtap_transformer.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+converter/tests/unit/transformer/test_holdtap_transformer.py:3: in <module>
+    from converter.holdtap_transformer import HoldTapTransformer
+E   ModuleNotFoundError: No module named 'converter.holdtap_transformer'
+_ ERROR collecting converter/tests/unit/transformer/test_holdtap_transformer_edge_cases.py _
+ImportError while importing test module '/Volumes/Flash Gordon Storage/Dropbox/code/nicktokatana/converter/tests/unit/transformer/test_holdtap_transformer_edge_cases.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+converter/tests/unit/transformer/test_holdtap_transformer_edge_cases.py:3: in <module>
+    from converter.holdtap_transformer import HoldTapTransformer
+E   ModuleNotFoundError: No module named 'converter.holdtap_transformer'
+_ ERROR collecting converter/tests/unit/transformer/test_macro_transformer_edge_cases.py _
+ImportError while importing test module '/Volumes/Flash Gordon Storage/Dropbox/code/nicktokatana/converter/tests/unit/transformer/test_macro_transformer_edge_cases.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+converter/tests/unit/transformer/test_macro_transformer_edge_cases.py:3: in <module>
+    from converter.macro_transformer import MacroTransformer
+E   ModuleNotFoundError: No module named 'converter.macro_transformer'
+_ ERROR collecting converter/tests/unit/transformer/test_sticky_key_transformer.py _
+ImportError while importing test module '/Volumes/Flash Gordon Storage/Dropbox/code/nicktokatana/converter/tests/unit/transformer/test_sticky_key_transformer.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+converter/tests/unit/transformer/test_sticky_key_transformer.py:3: in <module>
+    from converter.sticky_key_transformer import StickyKeyTransformer
+E   ModuleNotFoundError: No module named 'converter.sticky_key_transformer'
+_ ERROR collecting converter/tests/unit/transformer/test_sticky_key_transformer_edge_cases.py _
+ImportError while importing test module '/Volumes/Flash Gordon Storage/Dropbox/code/nicktokatana/converter/tests/unit/transformer/test_sticky_key_transformer_edge_cases.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+converter/tests/unit/transformer/test_sticky_key_transformer_edge_cases.py:3: in <module>
+    from converter.sticky_key_transformer import StickyKeyTransformer
+E   ModuleNotFoundError: No module named 'converter.sticky_key_transformer'
+=========================== short test summary info ============================
+ERROR converter/tests/e2e_tests/test_file_operations.py
+ERROR converter/tests/integration/test_binding_parser_integration.py
+ERROR converter/tests/integration/test_error_recovery_integration.py
+ERROR converter/tests/integration/test_zmk_to_kanata_conversion.py
+ERROR converter/tests/integration/test_zmk_to_kanata_conversion_edge_cases.py
+ERROR converter/tests/integration/test_zmk_to_kanata_error_handling.py
+ERROR converter/tests/performance/test_zmk_to_kanata_performance.py
+ERROR converter/tests/unit/parser/test_error_recovery_wrapper.py
+ERROR converter/tests/unit/transformer/test_holdtap_transformer.py
+ERROR converter/tests/unit/transformer/test_holdtap_transformer_edge_cases.py
+ERROR converter/tests/unit/transformer/test_macro_transformer_edge_cases.py
+ERROR converter/tests/unit/transformer/test_sticky_key_transformer.py
+ERROR converter/tests/unit/transformer/test_sticky_key_transformer_edge_cases.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 13 errors during collection !!!!!!!!!!!!!!!!!!!
+============================== 13 errors in 0.20s ==============================

@@ -1,0 +1,45 @@
+;; ZMK to Kanata Configuration
+;; Generated automatically - DO NOT EDIT
+
+;; Global settings
+(defvar tap-time 200)
+(defvar hold-time 250)
+
+(deflayer default
+  tab  c  l
+  m  trans  trans
+  f  u  z
+  bspc  i  s
+  r  t  trans
+  trans  n  k
+  a  o  q
+  v  w  d
+  space  e  h
+  y  dot  x
+)
+
+(deflayer left
+  trans  at  hash
+  dllr  trans  trans
+  none  none  caret
+  trans  tab  equal
+  lbkt  rbkt  trans
+  trans  none  none
+  pipe  amps  tilde
+  grave  lpar  rpar
+  trans  trans  lpar
+  rpar  rbkt  rshift
+)
+
+(deflayer right
+  trans  c_pp  c_prev
+  c_next  trans  trans
+  n7  n8  n9
+  trans  tab  trans
+  c_vol_dn  c_vol_up  trans
+  trans  n4  n5
+  n6  equal  prcnt
+  prcnt  fslh  star
+  trans  trans  n1
+  n2  n3  minus
+)
