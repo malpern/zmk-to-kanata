@@ -143,3 +143,51 @@ def test_output_file_format(temp_test_dir):
     key_line = lines[layer_start + 1].strip()
     assert all(key in key_line for key in ["a", "b"]), "Keys should be lowercase"
     assert " " in key_line, "Keys should be space-separated"
+
+
+def test_kanata_s_expression_conformity(temp_test_dir):
+    """Test that Kanata output conforms to S-expression specs (structure, macros, layers, parentheses)."""
+    from converter.validation.pipeline_validator import PipelineValidator
+
+    # Create a sample ZMK keymap file with macros and layers
+    zmk_content = '''
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/keys.h>
+
+/ {
+    macros {
+        test_macro: test_macro {
+            compatible = "zmk,behavior-macro";
+            bindings = <&kp A &kp B>;
+            wait-ms = <100>;
+        };
+    };
+    keymap {
+        compatible = "zmk,keymap";
+        default_layer {
+            bindings = <&kp A &macro test_macro>;
+        };
+    };
+};
+'''
+    zmk_file = temp_test_dir / 'test_keymap.dtsi'
+    zmk_file.write_text(zmk_content)
+
+    # Create output path for Kanata config
+    kanata_file = temp_test_dir / 'test_config.kbd'
+
+    # Run the conversion
+    exit_code = main([str(zmk_file), str(kanata_file)])
+    assert exit_code == 0
+
+    # Read the output
+    content = kanata_file.read_text()
+
+    # Use PipelineValidator to check conformity
+    valid, errors = PipelineValidator().validate_output(content)
+    assert valid, f"Output does not conform to Kanata S-expression specs: {errors}"
+
+    # Additional manual checks for S-expression structure
+    assert content.count('(') == content.count(')'), "Unbalanced parentheses in output"
+    assert "(deflayer default" in content, "Missing default layer definition"
+    assert "(defmacro" in content or "macro" in content, "Missing macro definition or usage"
