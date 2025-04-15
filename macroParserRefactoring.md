@@ -70,16 +70,23 @@ MacroTransformer
 - [x] Set up logging and validation infrastructure
 
 ### 4.2 MacroDefinitionParser Implementation
-- [ ] Implement parse_macro_definition() to handle the overall structure
-- [ ] Add process_macro_steps() to parse individual macro steps
-- [ ] Implement state management for macro definition parsing
-- [ ] Add validation logic for macro definitions
+- [x] Implement parse_macro_definition() to handle the overall structure
+- [x] Add process_macro_steps() to parse individual macro steps
+- [x] Implement state management for macro definition parsing
+- [x] Add validation logic for macro definitions
+
+> **Note:**
+> Macro definition parsing, step parsing, state management, and validation logic are all implemented and active. Validation and error handling use the centralized ErrorManager, and all macro definitions and steps are validated after parsing. No validation work has been lost during refactoring.
 
 ### 4.3 MacroUsageParser Implementation
-- [ ] Implement parse_macro_usage() for macro usage in bindings
-- [ ] Add extract_parameters() to handle complex parameters
-- [ ] Implement state management for macro usage parsing
-- [ ] Add validation logic for macro usages
+- [x] Define MacroUsage data contract (dataclass)
+- [x] Add extract_parameters() to handle complex parameters
+- [x] Implement parse_macro_usage() for macro usage in bindings
+- [x] Implement state management for macro usage parsing
+- [x] Add validation logic for macro usages
+
+> **Note:**
+> Macro usage parsing, parameter extraction, state management, and validation are all implemented and integrated. The parser now robustly handles macro usages with error recovery and centralized error reporting.
 
 ### 4.4 MacroTransformer Updates
 - [ ] Update transform_behavior() to handle MacroDefinition objects
@@ -195,8 +202,8 @@ MacroTransformer
 
 ### Overall Progress
 - [x] Foundation & Infrastructure (4/4)
-- [ ] MacroDefinitionParser Implementation (0/4)
-- [ ] MacroUsageParser Implementation (0/4)
+- [x] MacroDefinitionParser Implementation (4/4)
+- [x] MacroUsageParser Implementation (5/5)
 - [ ] MacroTransformer Updates (0/4)
 - [ ] Integration & Testing (0/4)
 - [ ] Unit Tests (0/4)
