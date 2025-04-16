@@ -2,7 +2,7 @@
 
 from converter.layer_parser import LayerParser
 from converter.layer_transformer import LayerTransformer
-from converter.model.keymap_model import KeymapConfig, GlobalSettings
+from converter.model.keymap_model import GlobalSettings, KeymapConfig
 from converter.parser.macro_parser import MacroParser
 from converter.parser.unicode_parser import UnicodeParser
 from converter.transformer.kanata_transformer import KanataTransformer
@@ -23,7 +23,7 @@ def convert_zmk_to_kanata(input_file: str) -> str:
         Exception: For other unexpected errors
     """
     try:
-        with open(input_file, 'r') as f:
+        with open(input_file, "r") as f:
             content = f.read()
     except FileNotFoundError:
         raise FileNotFoundError(f"Input file not found: {input_file}")
@@ -49,10 +49,7 @@ def convert_zmk_to_kanata(input_file: str) -> str:
 
     # Transform layers
     transformer = LayerTransformer()
-    kanata_layers = [
-        transformer.transform_layer(layer)
-        for layer in layers
-    ]
+    kanata_layers = [transformer.transform_layer(layer) for layer in layers]
 
     # Create the Kanata transformer
     kanata_transformer = KanataTransformer()
@@ -64,7 +61,7 @@ def convert_zmk_to_kanata(input_file: str) -> str:
     # Create a KeymapConfig object with default global settings
     config = KeymapConfig(
         global_settings=GlobalSettings(tap_time=200, hold_time=250),
-        layers=kanata_layers
+        layers=kanata_layers,
     )
 
     # Generate the Kanata configuration

@@ -30,7 +30,7 @@ def test_version_command(capsys):
 def test_basic_file_conversion(temp_test_dir):
     """Test basic file conversion through the CLI."""
     # Create a sample ZMK keymap file
-    zmk_content = '''
+    zmk_content = """
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 
@@ -45,12 +45,12 @@ def test_basic_file_conversion(temp_test_dir):
         };
     };
 };
-'''
-    zmk_file = temp_test_dir / 'test_keymap.dtsi'
+"""
+    zmk_file = temp_test_dir / "test_keymap.dtsi"
     zmk_file.write_text(zmk_content)
 
     # Create output path for Kanata config
-    kanata_file = temp_test_dir / 'test_config.kbd'
+    kanata_file = temp_test_dir / "test_config.kbd"
 
     # Run the conversion
     exit_code = main([str(zmk_file), str(kanata_file)])
@@ -61,9 +61,9 @@ def test_basic_file_conversion(temp_test_dir):
 
     # Verify content
     kanata_content = kanata_file.read_text()
-    assert '(deflayer default' in kanata_content
-    assert 'a b' in kanata_content.lower()
-    assert 'c d' in kanata_content.lower()
+    assert "(deflayer default" in kanata_content
+    assert "a b" in kanata_content.lower()
+    assert "c d" in kanata_content.lower()
 
 
 def test_missing_input_file(temp_test_dir, capsys):
@@ -98,7 +98,7 @@ def test_invalid_input_format(temp_test_dir, capsys):
 def test_invalid_output_path(temp_test_dir, capsys):
     """Test error handling for invalid output path."""
     # Create a valid input file
-    zmk_content = '''
+    zmk_content = """
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 
@@ -113,7 +113,7 @@ def test_invalid_output_path(temp_test_dir, capsys):
         };
     };
 };
-'''
+"""
     input_file = temp_test_dir / "test_keymap.dtsi"
     input_file.write_text(zmk_content)
 

@@ -3,6 +3,7 @@
 This module is responsible for parsing ZMK keymap files into our intermediate
 representation.
 """
+
 import logging
 from enum import Enum, auto
 from pathlib import Path
@@ -10,21 +11,22 @@ from typing import Dict, List, Optional, Set
 
 from converter.model.keymap_model import (
     GlobalSettings,
+    KeymapConfig,
     KeyMapping,
     Layer,
-    KeymapConfig,
 )
 from converter.parser.sticky_key_parser import StickyKeyParser
-from .parser_error import ParserError
-from .layer_parser import LayerParser
-from .global_settings_parser import GlobalSettingsParser
 
+from .global_settings_parser import GlobalSettingsParser
+from .layer_parser import LayerParser
+from .parser_error import ParserError
 
 logger = logging.getLogger(__name__)
 
 
 class ParserState(Enum):
     """States for the ZMK parser state machine."""
+
     INITIAL = auto()
     IN_ROOT = auto()
     IN_KEYMAP = auto()
@@ -37,11 +39,8 @@ class ParserState(Enum):
 
 class InvalidStateTransitionError(ParserError):
     """Error raised when an invalid state transition is attempted."""
-    def __init__(
-        self,
-        from_state: ParserState,
-        to_state: ParserState
-    ) -> None:
+
+    def __init__(self, from_state: ParserState, to_state: ParserState) -> None:
         self.from_state = from_state
         self.to_state = to_state
         super().__init__(
@@ -70,10 +69,10 @@ class ZMKParser:
 
     def _transition_to(self, new_state: ParserState) -> None:
         """Transition to a new state.
-        
+
         Args:
             new_state: The state to transition to.
-            
+
         Raises:
             InvalidStateTransitionError: If the transition is not valid.
         """
@@ -84,10 +83,10 @@ class ZMKParser:
 
     def _parse_global_settings(self, line: str) -> None:
         """Parse global settings.
-        
+
         Args:
             line: The line containing global settings.
-            
+
         Raises:
             ParserError: If the setting is invalid or malformed.
         """
@@ -98,22 +97,22 @@ class ZMKParser:
 
     def parse(self, file_path: Path) -> KeymapConfig:
         """Parse a ZMK keymap file.
-        
+
         Args:
             file_path: Path to the keymap file.
-            
+
         Returns:
             A KeymapConfig object containing the parsed keymap.
-            
+
         Raises:
             ParserError: If there are any parsing errors.
         """
         try:
             # Read and process file
             content = file_path.read_text()
-            
+
             # Process file line by line
-            for line in content.split('\n'):
+            for line in content.split("\n"):
                 self._process_line(line.strip())
 
             if not self.layers:
@@ -121,7 +120,7 @@ class ZMKParser:
 
             return KeymapConfig(
                 global_settings=self.global_settings_parser.finish(),
-                layers=self.layers
+                layers=self.layers,
             )
         except ParserError as e:
             raise e
@@ -130,10 +129,10 @@ class ZMKParser:
 
     def _process_line(self, line: str) -> None:
         """Process a single line based on current state.
-        
+
         Args:
             line: The line to process.
-            
+
         Raises:
             ParserError: If there are any parsing errors.
         """
@@ -143,44 +142,44 @@ class ZMKParser:
         logger.debug("State %s: %s", self.state, line)
         try:
             if self.state == ParserState.INITIAL:
-                if '/ {' in line:
+                if "/ {" in line:
                     self._transition_to(ParserState.IN_ROOT)
-            
+
             elif self.state == ParserState.IN_ROOT:
-                if 'keymap {' in line:
+                if "keymap {" in line:
                     self._transition_to(ParserState.IN_KEYMAP)
-                elif 'tap-time' in line or 'hold-time' in line:
+                elif "tap-time" in line or "hold-time" in line:
                     self._parse_global_settings(line)
-            
+
             elif self.state == ParserState.IN_KEYMAP:
-                if '_layer {' in line:
+                if "_layer {" in line:
                     logger.debug("Found layer: %s", line)
                     self._start_new_layer(line)
-                elif '}' in line and self.layer_parser.current_layer:
+                elif "}" in line and self.layer_parser.current_layer:
                     layer_name = self.layer_parser.current_layer
                     logger.debug("Finishing layer: %s", layer_name)
                     self._finish_current_layer()
-            
+
             elif self.state in (ParserState.IN_LAYER, ParserState.IN_BINDINGS):
-                if '_layer {' in line:
+                if "_layer {" in line:
                     raise ParserError("Nested layers are not supported")
-                elif 'bindings = <' in line:
+                elif "bindings = <" in line:
                     logger.debug("Found bindings: %s", line)
                     # Handle single-line bindings
-                    if '>;' in line:
+                    if ">;" in line:
                         self._add_bindings_line(line)
                     else:
                         self._add_bindings_line(line)
                         self._transition_to(ParserState.IN_BINDINGS)
-                elif '};' in line:
+                elif "};" in line:
                     logger.debug("Layer end: %s", line)
                     self._finish_current_layer()
                 elif self.state == ParserState.IN_BINDINGS:
-                    if '>' in line:
+                    if ">" in line:
                         logger.debug("Bindings end: %s", line)
                         self._add_bindings_line(line)
                         self._transition_to(ParserState.IN_LAYER)
-                    elif ('&' in line or 'trans' in line):
+                    elif "&" in line or "trans" in line:
                         logger.debug("Found binding: %s", line)
                         self._add_bindings_line(line)
 
@@ -193,10 +192,10 @@ class ZMKParser:
 
     def _start_new_layer(self, line: str) -> None:
         """Start parsing a new layer.
-        
+
         Args:
             line: The line containing the layer definition.
-            
+
         Raises:
             ParserError: If the layer name cannot be extracted.
         """
@@ -210,7 +209,7 @@ class ZMKParser:
 
     def _finish_current_layer(self) -> None:
         """Finish parsing the current layer and add it to the list.
-        
+
         Raises:
             ParserError: If no layer is currently being parsed.
         """
@@ -227,10 +226,10 @@ class ZMKParser:
 
     def _add_bindings_line(self, line: str) -> None:
         """Add a line of bindings to the current layer.
-        
+
         Args:
             line: The line containing bindings.
-            
+
         Raises:
             ParserError: If the bindings are invalid.
         """

@@ -1,19 +1,19 @@
 """Tests for key sequence behavior model."""
+
 import pytest
+
 from converter.behaviors.key_sequence import (
     KeySequenceBehavior,
     KeySequenceBinding,
     is_key_sequence_binding,
-    parse_key_sequence_behavior
+    parse_key_sequence_behavior,
 )
 
 
 def test_key_sequence_creation():
     """Test creating a valid key sequence behavior."""
     sequence = KeySequenceBehavior(
-        wait_ms=40,
-        tap_ms=40,
-        bindings=["A", "B", "C"]
+        wait_ms=40, tap_ms=40, bindings=["A", "B", "C"]
     )
     assert sequence.wait_ms == 40
     assert sequence.tap_ms == 40
@@ -38,14 +38,9 @@ def test_key_sequence_validation():
 def test_key_sequence_binding_creation():
     """Test creating a key sequence binding."""
     behavior = KeySequenceBehavior(
-        wait_ms=40,
-        tap_ms=40,
-        bindings=["A", "B", "C"]
+        wait_ms=40, tap_ms=40, bindings=["A", "B", "C"]
     )
-    binding = KeySequenceBinding(
-        keys=["A", "B", "C"],
-        behavior=behavior
-    )
+    binding = KeySequenceBinding(keys=["A", "B", "C"], behavior=behavior)
     assert binding.keys == ["A", "B", "C"]
     assert binding.behavior.wait_ms == 40
     assert binding.behavior.tap_ms == 40
@@ -75,9 +70,9 @@ def test_is_key_sequence_binding():
 def test_parse_key_sequence_behavior():
     """Test parsing key sequence behavior configuration."""
     config = {
-        'wait-ms': '50',
-        'tap-ms': '30',
-        'bindings': '<&kp A, &kp B, &kp C>'
+        "wait-ms": "50",
+        "tap-ms": "30",
+        "bindings": "<&kp A, &kp B, &kp C>",
     }
     behavior = parse_key_sequence_behavior(config)
     assert behavior.wait_ms == 50
@@ -87,10 +82,8 @@ def test_parse_key_sequence_behavior():
 
 def test_parse_key_sequence_behavior_defaults():
     """Test parsing key sequence behavior with default values."""
-    config = {
-        'bindings': '<&kp A>'
-    }
+    config = {"bindings": "<&kp A>"}
     behavior = parse_key_sequence_behavior(config)
     assert behavior.wait_ms == 30  # Default value
-    assert behavior.tap_ms == 30   # Default value
+    assert behavior.tap_ms == 30  # Default value
     assert behavior.bindings == ["kp A"]

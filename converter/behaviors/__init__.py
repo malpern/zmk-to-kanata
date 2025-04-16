@@ -8,8 +8,8 @@ from .sticky_key import (
 )
 
 __all__ = [
-    'StickyKeyBehavior',
-    'StickyKeyBinding',
-    'is_sticky_key_binding',
-    'parse_sticky_key_behavior',
+    "StickyKeyBehavior",
+    "StickyKeyBinding",
+    "is_sticky_key_binding",
+    "parse_sticky_key_behavior",
 ]

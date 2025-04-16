@@ -6,10 +6,7 @@ Kanata format.
 
 from typing import Dict
 
-from converter.behaviors.macro import (
-    MacroBehavior,
-    MacroActivationMode
-)
+from converter.behaviors.macro import MacroActivationMode, MacroBehavior
 
 
 class MacroTransformer:
@@ -20,42 +17,96 @@ class MacroTransformer:
         # Mapping of ZMK key names to Kanata key names
         self.key_map: Dict[str, str] = {
             # Letters
-            'A': 'a', 'B': 'b', 'C': 'c', 'D': 'd', 'E': 'e',
-            'F': 'f', 'G': 'g', 'H': 'h', 'I': 'i', 'J': 'j',
-            'K': 'k', 'L': 'l', 'M': 'm', 'N': 'n', 'O': 'o',
-            'P': 'p', 'Q': 'q', 'R': 'r', 'S': 's', 'T': 't',
-            'U': 'u', 'V': 'v', 'W': 'w', 'X': 'x', 'Y': 'y',
-            'Z': 'z',
-
+            "A": "a",
+            "B": "b",
+            "C": "c",
+            "D": "d",
+            "E": "e",
+            "F": "f",
+            "G": "g",
+            "H": "h",
+            "I": "i",
+            "J": "j",
+            "K": "k",
+            "L": "l",
+            "M": "m",
+            "N": "n",
+            "O": "o",
+            "P": "p",
+            "Q": "q",
+            "R": "r",
+            "S": "s",
+            "T": "t",
+            "U": "u",
+            "V": "v",
+            "W": "w",
+            "X": "x",
+            "Y": "y",
+            "Z": "z",
             # Numbers
-            'N0': '0', 'N1': '1', 'N2': '2', 'N3': '3', 'N4': '4',
-            'N5': '5', 'N6': '6', 'N7': '7', 'N8': '8', 'N9': '9',
-
+            "N0": "0",
+            "N1": "1",
+            "N2": "2",
+            "N3": "3",
+            "N4": "4",
+            "N5": "5",
+            "N6": "6",
+            "N7": "7",
+            "N8": "8",
+            "N9": "9",
             # Function keys
-            'F1': 'f1', 'F2': 'f2', 'F3': 'f3', 'F4': 'f4',
-            'F5': 'f5', 'F6': 'f6', 'F7': 'f7', 'F8': 'f8',
-            'F9': 'f9', 'F10': 'f10', 'F11': 'f11', 'F12': 'f12',
-
+            "F1": "f1",
+            "F2": "f2",
+            "F3": "f3",
+            "F4": "f4",
+            "F5": "f5",
+            "F6": "f6",
+            "F7": "f7",
+            "F8": "f8",
+            "F9": "f9",
+            "F10": "f10",
+            "F11": "f11",
+            "F12": "f12",
             # Navigation
-            'LEFT': 'left', 'RIGHT': 'right', 'UP': 'up', 'DOWN': 'down',
-            'HOME': 'home', 'END': 'end', 'PG_UP': 'pg_up', 'PG_DN': 'pg_dn',
-
+            "LEFT": "left",
+            "RIGHT": "right",
+            "UP": "up",
+            "DOWN": "down",
+            "HOME": "home",
+            "END": "end",
+            "PG_UP": "pg_up",
+            "PG_DN": "pg_dn",
             # Editing
-            'ENTER': 'ret', 'RET': 'ret', 'ESC': 'esc', 'BSPC': 'bspc',
-            'DEL': 'del', 'TAB': 'tab', 'SPACE': 'spc', 'SPC': 'spc',
-            'CAPS': 'caps',
-
+            "ENTER": "ret",
+            "RET": "ret",
+            "ESC": "esc",
+            "BSPC": "bspc",
+            "DEL": "del",
+            "TAB": "tab",
+            "SPACE": "spc",
+            "SPC": "spc",
+            "CAPS": "caps",
             # Modifiers
-            'LSHIFT': 'lsft', 'RSHIFT': 'rsft',
-            'LCTRL': 'lctl', 'RCTRL': 'rctl',
-            'LALT': 'lalt', 'RALT': 'ralt',
-            'LGUI': 'lmet', 'RGUI': 'rmet',
-
+            "LSHIFT": "lsft",
+            "RSHIFT": "rsft",
+            "LCTRL": "lctl",
+            "RCTRL": "rctl",
+            "LALT": "lalt",
+            "RALT": "ralt",
+            "LGUI": "lmet",
+            "RGUI": "rmet",
             # Punctuation
-            'GRAVE': 'grv', 'MINUS': 'minus', 'EQUAL': 'equal',
-            'LBKT': 'lbrc', 'RBKT': 'rbrc', 'BSLH': 'bslh',
-            'SEMI': 'semi', 'APOS': 'apos', 'COMMA': 'comma',
-            'DOT': 'dot', 'FSLH': 'fslh',
+            "GRAVE": "grv",
+            "MINUS": "minus",
+            "EQUAL": "equal",
+            "LBKT": "lbrc",
+            "RBKT": "rbrc",
+            "BSLH": "bslh",
+            "SEMI": "semi",
+            "APOS": "apos",
+            "COMMA": "comma",
+            "DOT": "dot",
+            "FSLH": "fslh",
         }
 
     def transform_behavior(self, behavior: MacroBehavior) -> str:
@@ -132,8 +183,14 @@ class MacroTransformer:
                 # Special case for the first key after &macro_press
                 # In ZMK, this is the modifier key that should be pressed
                 if current_mode == MacroActivationMode.PRESS and key in [
-                    "LSHIFT", "RSHIFT", "LCTRL", "RCTRL",
-                    "LALT", "RALT", "LGUI", "RGUI"
+                    "LSHIFT",
+                    "RSHIFT",
+                    "LCTRL",
+                    "RCTRL",
+                    "LALT",
+                    "RALT",
+                    "LGUI",
+                    "RGUI",
                 ]:
                     pressed_keys.add(kanata_key)
                     macro_def += f"  press {kanata_key}\n"

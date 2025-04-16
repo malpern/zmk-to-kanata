@@ -597,13 +597,13 @@ converter/tests/e2e_tests/test_real_world_configs.py:344: in test_ergonomic_layo
     assert exit_code == 0
 E   assert None == 0
 ----------------------------- Captured stdout call -----------------------------
-Error output: 
+Error output:
 ________________________ test_ben_vallack_cradio_layout ________________________
 converter/tests/e2e_tests/test_real_world_configs.py:469: in test_ben_vallack_cradio_layout
     assert exit_code == 0
 E   assert None == 0
 ----------------------------- Captured stdout call -----------------------------
-Error output: 
+Error output:
 ______________________________ test_dvorak_layout ______________________________
 converter/tests/e2e_tests/test_real_world_configs.py:589: in test_dvorak_layout
     assert "apos" in default_layer.lower() or "'" in default_layer
@@ -935,7 +935,7 @@ _________________________ test_transform_default_layer _________________________
 converter/tests/test_basic_remap.py:118: in test_transform_default_layer
     assert kanata_config.splitlines() == expected_lines
 E   AssertionError: assert [';; ZMK to K...me 250)', ...] == [';; ZMK to K...me 250)', ...]
-E     
+E
 E     At index 8 diff: '  a  b  c' != '  a  b'
 E     Use -v to get more diff
 __________________________ test_parse_malformed_file ___________________________
@@ -989,14 +989,14 @@ _______________________ test_full_keymap_transformation ________________________
 converter/tests/test_holdtap_transformer.py:155: in test_full_keymap_transformation
     assert result.splitlines() == expected_lines
 E   AssertionError: assert [';; ZMK to K...me 250)', ...] == [';; ZMK to K...me 250)', ...]
-E     
+E
 E     At index 10 diff: '  lh_hm_LGUI_A (tap-hold-release 200 250 a lmet)' != '  lh_hm_LCTRL_S (tap-hold-release-keys 200 250 s lctl (1 2))'
 E     Use -v to get more diff
 ____________________________ test_basic_conversion _____________________________
 converter/tests/test_integration.py:57: in test_basic_conversion
     assert written_content.splitlines() == expected_lines
 E   AssertionError: assert [';; ZMK to K...me 250)', ...] == [';; ZMK to K...me 300)', ...]
-E     
+E
 E     At index 5 diff: '(defvar hold-time 250)' != '(defvar hold-time 300)'
 E     Right contains 2 more items, first extra item: '  i  j  k  l'
 E     Use -v to get more diff
@@ -1020,7 +1020,7 @@ ____________________________ test_transform_binding ____________________________
 converter/tests/test_layer_transformer.py:16: in test_transform_binding
     assert transformer.transform_binding(KeyMapping(key="N1")) == "1"
 E   AssertionError: assert 'n1' == '1'
-E     
+E
 E     - 1
 E     + n1
 __________________________ test_parse_binding_matrix ___________________________
@@ -1137,7 +1137,7 @@ Sample text:
             };
         };
     };
-    
+
 ______________________________ test_row_splitting ______________________________
 converter/tests/test_parser_debug.py:80: in test_row_splitting
     keys = parser._parse_bindings(binding_text)
@@ -1254,7 +1254,7 @@ _______________________________ test_transparent _______________________________
 converter/tests/unit/parser/test_binding_parser.py:75: in test_transparent
     assert result.key == "trans"
 E   AssertionError: assert 'TRANS' == 'trans'
-E     
+E
 E     - trans
 E     + TRANS
 _____________________________ test_nested_bindings _____________________________
@@ -1387,7 +1387,7 @@ ______________________________ test_error_summary ______________________________
 converter/tests/unit/parser/test_error_recovery_wrapper.py:124: in test_error_summary
     assert result == {"errors": []}
 E   AssertionError: assert {'error_types...al_errors': 0} == {'errors': []}
-E     
+E
 E     Omitting 1 identical items, use -vv to show
 E     Left contains 2 more items:
 E     {'error_types': {}, 'total_errors': 0}
@@ -1402,7 +1402,7 @@ _______________________ test_nested_hold_tap_with_layer ________________________
 converter/tests/unit/test_complex_bindings.py:21: in test_nested_hold_tap_with_layer
     assert binding.to_kanata() == '@ht_mo_1_A'
 E   AssertionError: assert '@ht_mo 1_A' == '@ht_mo_1_A'
-E     
+E
 E     - @ht_mo_1_A
 E     ?       ^
 E     + @ht_mo 1_A
@@ -1411,14 +1411,14 @@ __________________________ test_hold_tap_with_sticky ___________________________
 converter/tests/unit/test_complex_bindings.py:36: in test_hold_tap_with_sticky
     assert binding.to_kanata() == '@ht_sticky-lsft_b'
 E   AssertionError: assert '@ht_LSHIFT_B' == '@ht_sticky-lsft_b'
-E     
+E
 E     - @ht_sticky-lsft_b
 E     + @ht_LSHIFT_B
 __________________________ test_multi_layer_sequence ___________________________
 converter/tests/unit/test_complex_bindings.py:51: in test_multi_layer_sequence
     assert layer.to_kanata() == expected
 E   AssertionError: assert '(deflayer te...le-held 3)\n)' == '(deflayer te...le-held 3)\n)'
-E     
+E
 E     Skipping 34 identical leading characters in diff, use -v to show
 E     - e-held 1) (layer-switch 2) (layer-while-held 3)
 E     ?           ---------- ^^  -
@@ -1429,7 +1429,7 @@ _________________________ test_complex_modifier_chain __________________________
 converter/tests/unit/test_complex_bindings.py:67: in test_complex_modifier_chain
     assert layer.to_kanata() == expected
 E   AssertionError: assert '(deflayer te...ft lctrl a\n)' == '(deflayer te...sft lctl a\n)'
-E     
+E
 E       (deflayer test_layer
 E     -   sticky-lsft lctl a
 E     +   sticky-lsft lctrl a
@@ -1454,7 +1454,7 @@ ________________________ test_special_key_combinations _________________________
 converter/tests/unit/test_complex_bindings.py:99: in test_special_key_combinations
     assert layer.to_kanata() == expected
 E   AssertionError: assert '(deflayer te...ne trans a\n)' == '(deflayer te...  none _ a\n)'
-E     
+E
 E       (deflayer test_layer
 E     -   none _ a
 E     ?        ^
@@ -1469,7 +1469,7 @@ _________________________ test_layer_with_empty_slots __________________________
 converter/tests/unit/test_complex_bindings.py:133: in test_layer_with_empty_slots
     assert layer.to_kanata() == expected
 E   AssertionError: assert '(deflayer te... b trans c\n)' == '(deflayer te...none b _ c\n)'
-E     
+E
 E       (deflayer test_layer
 E     -   a none b _ c
 E     ?            ^
@@ -1694,14 +1694,14 @@ ________________________ test_basic_key_transformations ________________________
 converter/tests/unit/transformer/test_layer_transformer.py:21: in test_basic_key_transformations
     assert transformer.transform_binding(KeyMapping(key="N1")) == "1"
 E   AssertionError: assert 'n1' == '1'
-E     
+E
 E     - 1
 E     + n1
 ______________________ test_layer_control_transformations ______________________
 converter/tests/unit/transformer/test_layer_transformer.py:69: in test_layer_control_transformations
     assert transformer.transform_binding(KeyMapping(key="mo 1")) == "@layer1"
 E   AssertionError: assert 'mo 1' == '@layer1'
-E     
+E
 E     - @layer1
 E     + mo 1
 _____________________ test_binding_matrix_transformations ______________________
@@ -1734,7 +1734,7 @@ __________________________ test_complex_key_sequences __________________________
 converter/tests/unit/transformer/test_layer_transformer_edge_cases.py:37: in test_complex_key_sequences
     assert transformer.transform_binding(empty_seq) == "(chord)"
 E   AssertionError: assert '(chord )' == '(chord)'
-E     
+E
 E     - (chord)
 E     + (chord )
 E     ?       +
@@ -1801,21 +1801,21 @@ ____________________ test_basic_sticky_key_transformations _____________________
 converter/tests/unit/transformer/test_sticky_key_transformer.py:16: in test_basic_sticky_key_transformations
     assert transformer.transform_binding(SimpleBinding("LSHIFT")) == "(sticky-key lshift)"
 E   AssertionError: assert 'sticky-lsft' == '(sticky-key lshift)'
-E     
+E
 E     - (sticky-key lshift)
 E     + sticky-lsft
 __________________________ test_modifier_combinations __________________________
 converter/tests/unit/transformer/test_sticky_key_transformer.py:22: in test_modifier_combinations
     assert transformer.transform_binding(SimpleBinding("LSHIFT")) == "(sticky-key lshift)"
 E   AssertionError: assert 'sticky-lsft' == '(sticky-key lshift)'
-E     
+E
 E     - (sticky-key lshift)
 E     + sticky-lsft
 ___________________ test_special_key_sticky_transformations ____________________
 converter/tests/unit/transformer/test_sticky_key_transformer.py:33: in test_special_key_sticky_transformations
     assert transformer.transform_binding(SimpleBinding("F1")) == "(sticky-key f1)"
 E   AssertionError: assert 'sticky-f1' == '(sticky-key f1)'
-E     
+E
 E     - (sticky-key f1)
 E     ? -       ----  -
 E     + sticky-f1
@@ -1823,21 +1823,21 @@ ______________________ test_layer_sticky_transformations _______________________
 converter/tests/unit/transformer/test_sticky_key_transformer.py:39: in test_layer_sticky_transformations
     assert transformer.transform_binding(SimpleBinding("mo 1")) == "(sticky-key mo 1)"
 E   AssertionError: assert 'sticky-@layer1' == '(sticky-key mo 1)'
-E     
+E
 E     - (sticky-key mo 1)
 E     + sticky-@layer1
 ____________________ test_timing_parameter_transformations _____________________
 converter/tests/unit/transformer/test_sticky_key_transformer.py:44: in test_timing_parameter_transformations
     assert transformer.transform_binding(SimpleBinding("LSHIFT")) == "(sticky-key lshift)"
 E   AssertionError: assert 'sticky-lsft' == '(sticky-key lshift)'
-E     
+E
 E     - (sticky-key lshift)
 E     + sticky-lsft
 ____________________ test_basic_key_sticky_transformations _____________________
 converter/tests/unit/transformer/test_sticky_key_transformer.py:49: in test_basic_key_sticky_transformations
     assert transformer.transform_binding(SimpleBinding("A")) == "(sticky-key a)"
 E   AssertionError: assert 'sticky-a' == '(sticky-key a)'
-E     
+E
 E     - (sticky-key a)
 E     + sticky-a
 ____________________ test_empty_sticky_key_transformations _____________________

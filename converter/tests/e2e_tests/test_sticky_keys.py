@@ -1,12 +1,13 @@
 """End-to-end tests for ZMK sticky key behavior conversion."""
 
 from pathlib import Path
+
 from converter.cli import main
 
 
 def test_sticky_key_basic(temp_test_dir):
     """Test basic sticky key conversion with modifiers."""
-    zmk_content = '''#include <behaviors.dtsi>
+    zmk_content = """#include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 
 / {
@@ -28,12 +29,12 @@ def test_sticky_key_basic(temp_test_dir):
             >;
         };
     };
-};'''
+};"""
 
-    zmk_file = temp_test_dir / 'sticky_basic.dtsi'
+    zmk_file = temp_test_dir / "sticky_basic.dtsi"
     zmk_file.write_text(zmk_content)
 
-    kanata_file = temp_test_dir / 'sticky_basic.kbd'
+    kanata_file = temp_test_dir / "sticky_basic.kbd"
 
     exit_code = main([str(zmk_file), str(kanata_file)])
     assert exit_code == 0
@@ -54,9 +55,9 @@ def test_sticky_key_basic(temp_test_dir):
 def test_sticky_key_advanced(temp_test_dir):
     """Test advanced sticky key features."""
     # Load the test fixture
-    fixture_dir = Path(__file__).parent.parent / 'fixtures' / 'zmk'
-    fixture_path = fixture_dir / 'test_sticky_keys.dtsi'
-    kanata_file = temp_test_dir / 'sticky_advanced.kbd'
+    fixture_dir = Path(__file__).parent.parent / "fixtures" / "zmk"
+    fixture_path = fixture_dir / "test_sticky_keys.dtsi"
+    kanata_file = temp_test_dir / "sticky_advanced.kbd"
 
     exit_code = main([str(fixture_path), str(kanata_file)])
     assert exit_code == 0
@@ -84,7 +85,7 @@ def test_sticky_key_advanced(temp_test_dir):
 
 def test_sticky_key_errors(temp_test_dir):
     """Test error handling for invalid sticky key configurations."""
-    zmk_content = '''#include <behaviors.dtsi>
+    zmk_content = """#include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 
 / {
@@ -105,12 +106,12 @@ def test_sticky_key_errors(temp_test_dir):
             >;
         };
     };
-};'''
+};"""
 
-    zmk_file = temp_test_dir / 'sticky_errors.dtsi'
+    zmk_file = temp_test_dir / "sticky_errors.dtsi"
     zmk_file.write_text(zmk_content)
 
-    kanata_file = temp_test_dir / 'sticky_errors.kbd'
+    kanata_file = temp_test_dir / "sticky_errors.kbd"
 
     # Should return non-zero exit code for invalid configuration
     exit_code = main([str(zmk_file), str(kanata_file)])

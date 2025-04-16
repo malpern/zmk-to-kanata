@@ -2,15 +2,14 @@
 
 This module converts our intermediate representation into Kanata DSL format.
 """
+
 from typing import Dict, List
 
 from converter.behaviors.macro import MacroBehavior, MacroBinding
 from converter.behaviors.sticky_key import StickyKeyBinding
 from converter.behaviors.unicode import UnicodeBinding
-from converter.model.keymap_model import (
-    KeymapConfig,
-    KeyMapping,
-)
+from converter.model.keymap_model import KeymapConfig, KeyMapping
+
 from .holdtap_transformer import HoldTapTransformer
 from .macro_transformer import MacroTransformer
 
@@ -72,7 +71,7 @@ class KanataTransformer:
             ";; ZMK to Kanata Configuration",
             ";; Generated automatically - DO NOT EDIT",
             "",
-            ";; Global settings"
+            ";; Global settings",
         ]
 
     def _transform_global_settings(self, config: KeymapConfig) -> List[str]:
@@ -86,7 +85,7 @@ class KanataTransformer:
         """
         return [
             f"(defvar tap-time {config.global_settings.tap_time})",
-            f"(defvar hold-time {config.global_settings.hold_time})"
+            f"(defvar hold-time {config.global_settings.hold_time})",
         ]
 
     def _transform_layers(self, config: KeymapConfig) -> List[str]:
@@ -105,9 +104,9 @@ class KanataTransformer:
                 lines.append(layer)
                 lines.append("")
                 continue
-                
+
             # Remove _layer suffix from layer name if present
-            layer_name = layer.name.replace('_layer', '')
+            layer_name = layer.name.replace("_layer", "")
             lines.append(f"(deflayer {layer_name}")
             # Transform each row of bindings
             for row in layer.keys:
@@ -139,13 +138,17 @@ class KanataTransformer:
             key = key_mapping.key
             # Map modifiers to their shorter form
             mod_map = {
-                "LSHIFT": "lsft", "RSHIFT": "rsft",
-                "LCTRL": "lctl", "RCTRL": "rctl",
-                "LALT": "lalt", "RALT": "ralt",
-                "LGUI": "lmet", "RGUI": "rmet"
+                "LSHIFT": "lsft",
+                "RSHIFT": "rsft",
+                "LCTRL": "lctl",
+                "RCTRL": "rctl",
+                "LALT": "lalt",
+                "RALT": "ralt",
+                "LGUI": "lmet",
+                "RGUI": "rmet",
             }
             # For function keys, keep the case
-            if key.startswith('F') and key[1:].isdigit():
+            if key.startswith("F") and key[1:].isdigit():
                 return f"sticky-{key}"
             # For modifiers, use the mapping
             return f"sticky-{mod_map.get(key, key.lower())}"
@@ -161,11 +164,11 @@ class KanataTransformer:
             return f"@layer{layer_num}"
 
         # Handle hold-tap bindings
-        if hasattr(key_mapping, 'hold_tap') and key_mapping.hold_tap:
+        if hasattr(key_mapping, "hold_tap") and key_mapping.hold_tap:
             alias_name = self._generate_hold_tap_alias_name(
                 key_mapping.hold_tap.behavior_name,
                 key_mapping.hold_tap.hold_key,
-                key_mapping.hold_tap.tap_key
+                key_mapping.hold_tap.tap_key,
             )
             return f"@{alias_name}"
 
@@ -180,7 +183,7 @@ class KanataTransformer:
         # Handle regular key bindings
         key = key_mapping.key
         # For function keys, keep the case
-        if key.startswith('F') and key[1:].isdigit():
+        if key.startswith("F") and key[1:].isdigit():
             return key
         return key.lower()
 
@@ -211,54 +214,58 @@ class KanataTransformer:
         aliases = []
         # Collect unique hold-tap bindings
         seen_bindings = set()
-        
+
         # Scan all layers and keys for hold-tap bindings
         for layer in config.layers:
             # Skip if layer is a string (already transformed)
             if isinstance(layer, str):
                 continue
-                
+
             for row in layer.keys:
                 for key in row:
                     # Skip sticky key bindings
                     if isinstance(key, StickyKeyBinding):
                         continue
-                        
+
                     if key.hold_tap:
                         ht = key.hold_tap
                         alias_name = self._generate_hold_tap_alias_name(
                             ht.behavior_name, ht.hold_key, ht.tap_key
                         )
-                        
+
                         # Only process each unique binding once
                         binding_key = (
-                            ht.behavior_name, 
-                            ht.hold_key, 
+                            ht.behavior_name,
+                            ht.hold_key,
                             ht.tap_key,
                             str(ht.hold_trigger_key_positions),
                             ht.hold_trigger_on_release,
-                            ht.retro_tap
+                            ht.retro_tap,
                         )
-                        
+
                         if binding_key in seen_bindings:
                             continue
-                            
+
                         seen_bindings.add(binding_key)
-                        
+
                         # Format the hold-tap alias based on its properties
                         hold_key = ht.hold_key.lower()
                         tap_key = ht.tap_key.lower()
-                        
+
                         # Map modifiers to their kanata representation
                         mod_map = {
-                            "lshift": "lsft", "rshift": "rsft",
-                            "lctrl": "lctl", "rctrl": "rctl",
-                            "lalt": "lalt", "ralt": "ralt",
-                            "lgui": "lmet", "rgui": "rmet"
+                            "lshift": "lsft",
+                            "rshift": "rsft",
+                            "lctrl": "lctl",
+                            "rctrl": "rctl",
+                            "lalt": "lalt",
+                            "ralt": "ralt",
+                            "lgui": "lmet",
+                            "rgui": "rmet",
                         }
-                        
+
                         hold_key = mod_map.get(hold_key, hold_key)
-                        
+
                         # Basic tap-hold format
                         tap_time = config.global_settings.tap_time
                         hold_time = config.global_settings.hold_time
@@ -267,7 +274,7 @@ class KanataTransformer:
                             f"{alias_name} (tap-hold {tap_time} {hold_time} "
                             f"{tap_key} {hold_key})"
                         )
-                        
+
                         # Add key positions if specified
                         if ht.hold_trigger_key_positions:
                             pos_str = " ".join(
@@ -284,9 +291,9 @@ class KanataTransformer:
                                 f"{alias_name} (tap-hold-release "
                                 f"{tap_time} {hold_time} {tap_key} {hold_key})"
                             )
-                            
+
                         aliases.append(alias_def)
-        
+
         return aliases
 
     def _generate_macros(self, config: KeymapConfig) -> List[List[str]]:

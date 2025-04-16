@@ -1,16 +1,18 @@
 """Tests for layer parsing in the ZMK parser."""
+
 import tempfile
 from pathlib import Path
 
 import pytest
 
-from converter.parser.zmk_parser import ZMKParser, ParserError
+from converter.parser.zmk_parser import ParserError, ZMKParser
 
 
 def test_empty_layer():
     """Test that empty layers are handled correctly."""
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.keymap') as f:
-        f.write("""
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".keymap") as f:
+        f.write(
+            """
 / {
     keymap {
         empty_layer {
@@ -18,7 +20,8 @@ def test_empty_layer():
         };
     };
 };
-        """)
+        """
+        )
         f.flush()
 
         parser = ZMKParser()
@@ -30,8 +33,9 @@ def test_empty_layer():
 
 def test_multiple_layers():
     """Test parsing multiple layers."""
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.keymap') as f:
-        f.write("""
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".keymap") as f:
+        f.write(
+            """
 / {
     keymap {
         first_layer {
@@ -42,7 +46,8 @@ def test_multiple_layers():
         };
     };
 };
-        """)
+        """
+        )
         f.flush()
 
         parser = ZMKParser()
@@ -56,8 +61,9 @@ def test_multiple_layers():
 
 def test_multiline_bindings():
     """Test parsing bindings that span multiple lines."""
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.keymap') as f:
-        f.write("""
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".keymap") as f:
+        f.write(
+            """
 / {
     keymap {
         test_layer {
@@ -69,7 +75,8 @@ def test_multiline_bindings():
         };
     };
 };
-        """)
+        """
+        )
         f.flush()
 
         parser = ZMKParser()
@@ -81,8 +88,9 @@ def test_multiline_bindings():
 
 def test_invalid_layer_name():
     """Test that invalid layer names are rejected."""
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.keymap') as f:
-        f.write("""
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".keymap") as f:
+        f.write(
+            """
 / {
     keymap {
         _layer {
@@ -90,7 +98,8 @@ def test_invalid_layer_name():
         };
     };
 };
-        """)
+        """
+        )
         f.flush()
 
         parser = ZMKParser()
@@ -100,15 +109,17 @@ def test_invalid_layer_name():
 
 def test_missing_bindings():
     """Test that layers without bindings are rejected."""
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.keymap') as f:
-        f.write("""
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".keymap") as f:
+        f.write(
+            """
 / {
     keymap {
         test_layer {
         };
     };
 };
-        """)
+        """
+        )
         f.flush()
 
         parser = ZMKParser()
@@ -118,8 +129,9 @@ def test_missing_bindings():
 
 def test_nested_layers():
     """Test that nested layers are rejected."""
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.keymap') as f:
-        f.write("""
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".keymap") as f:
+        f.write(
+            """
 / {
     keymap {
         outer_layer {
@@ -130,9 +142,10 @@ def test_nested_layers():
         };
     };
 };
-        """)
+        """
+        )
         f.flush()
 
         parser = ZMKParser()
         with pytest.raises(ParserError):
-            parser.parse(Path(f.name)) 
+            parser.parse(Path(f.name))

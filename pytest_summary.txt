@@ -222,13 +222,13 @@ converter/tests/e2e_tests/test_real_world_configs.py:344: in test_ergonomic_layo
     assert exit_code == 0
 E   assert None == 0
 ----------------------------- Captured stdout call -----------------------------
-Error output: 
+Error output:
 ________________________ test_ben_vallack_cradio_layout ________________________
 converter/tests/e2e_tests/test_real_world_configs.py:469: in test_ben_vallack_cradio_layout
     assert exit_code == 0
 E   assert None == 0
 ----------------------------- Captured stdout call -----------------------------
-Error output: 
+Error output:
 ______________________________ test_dvorak_layout ______________________________
 converter/tests/e2e_tests/test_real_world_configs.py:589: in test_dvorak_layout
     assert "apos" in default_layer.lower() or "'" in default_layer
@@ -560,7 +560,7 @@ _________________________ test_transform_default_layer _________________________
 converter/tests/test_basic_remap.py:118: in test_transform_default_layer
     assert kanata_config.splitlines() == expected_lines
 E   AssertionError: assert [';; ZMK to K...me 250)', ...] == [';; ZMK to K...me 250)', ...]
-E     
+E
 E     At index 8 diff: '  a  b  c' != '  a  b'
 E     Use -v to get more diff
 __________________________ test_parse_malformed_file ___________________________
@@ -614,14 +614,14 @@ _______________________ test_full_keymap_transformation ________________________
 converter/tests/test_holdtap_transformer.py:155: in test_full_keymap_transformation
     assert result.splitlines() == expected_lines
 E   AssertionError: assert [';; ZMK to K...me 250)', ...] == [';; ZMK to K...me 250)', ...]
-E     
+E
 E     At index 10 diff: '  lh_hm_LGUI_A (tap-hold-release 200 250 a lmet)' != '  lh_hm_LCTRL_S (tap-hold-release-keys 200 250 s lctl (1 2))'
 E     Use -v to get more diff
 ____________________________ test_basic_conversion _____________________________
 converter/tests/test_integration.py:57: in test_basic_conversion
     assert written_content.splitlines() == expected_lines
 E   AssertionError: assert [';; ZMK to K...me 250)', ...] == [';; ZMK to K...me 300)', ...]
-E     
+E
 E     At index 5 diff: '(defvar hold-time 250)' != '(defvar hold-time 300)'
 E     Right contains 2 more items, first extra item: '  i  j  k  l'
 E     Use -v to get more diff
@@ -645,7 +645,7 @@ ____________________________ test_transform_binding ____________________________
 converter/tests/test_layer_transformer.py:16: in test_transform_binding
     assert transformer.transform_binding(KeyMapping(key="N1")) == "1"
 E   AssertionError: assert 'n1' == '1'
-E     
+E
 E     - 1
 E     + n1
 __________________________ test_parse_binding_matrix ___________________________

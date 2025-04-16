@@ -2,13 +2,13 @@
 
 from converter.model.keymap_model import (
     GlobalSettings,
-    Layer,
-    KeyMapping,
+    HoldTapBinding,
     KeymapConfig,
-    HoldTapBinding
+    KeyMapping,
+    Layer,
 )
-from converter.transformer.kanata_transformer import KanataTransformer
 from converter.transformer.holdtap_transformer import HoldTapTransformer
+from converter.transformer.kanata_transformer import KanataTransformer
 
 
 def test_basic_holdtap_transformation():
@@ -20,7 +20,7 @@ def test_basic_holdtap_transformation():
         tap_key="A",
         hold_trigger_key_positions=None,
         hold_trigger_on_release=False,
-        retro_tap=False
+        retro_tap=False,
     )
 
     result = transformer.transform_binding(binding, 200, 250)
@@ -36,7 +36,7 @@ def test_holdtap_with_release():
         tap_key="J",
         hold_trigger_key_positions=None,
         hold_trigger_on_release=True,
-        retro_tap=False
+        retro_tap=False,
     )
 
     result = transformer.transform_binding(binding, 200, 250)
@@ -52,7 +52,7 @@ def test_holdtap_with_key_positions():
         tap_key="D",
         hold_trigger_key_positions=(1, 2, 3),
         hold_trigger_on_release=False,
-        retro_tap=False
+        retro_tap=False,
     )
 
     result = transformer.transform_binding(binding, 200, 250)
@@ -68,7 +68,7 @@ def test_holdtap_with_retro_tap():
         tap_key="L",
         hold_trigger_key_positions=None,
         hold_trigger_on_release=False,
-        retro_tap=True
+        retro_tap=True,
     )
 
     result = transformer.transform_binding(binding, 200, 250)
@@ -94,9 +94,9 @@ def test_full_keymap_transformation():
                                 tap_key="E",
                                 hold_trigger_key_positions=None,
                                 hold_trigger_on_release=False,
-                                retro_tap=False
-                            )
-                        )
+                                retro_tap=False,
+                            ),
+                        ),
                     ],
                     [
                         KeyMapping(
@@ -107,8 +107,8 @@ def test_full_keymap_transformation():
                                 tap_key="A",
                                 hold_trigger_key_positions=None,
                                 hold_trigger_on_release=True,
-                                retro_tap=False
-                            )
+                                retro_tap=False,
+                            ),
                         ),
                         KeyMapping(
                             key="S",
@@ -118,14 +118,14 @@ def test_full_keymap_transformation():
                                 tap_key="S",
                                 hold_trigger_key_positions=(1, 2),
                                 hold_trigger_on_release=False,
-                                retro_tap=False
-                            )
+                                retro_tap=False,
+                            ),
                         ),
-                        KeyMapping(key="D")
-                    ]
-                ]
+                        KeyMapping(key="D"),
+                    ],
+                ],
             )
-        ]
+        ],
     )
 
     transformer = KanataTransformer()
@@ -149,7 +149,7 @@ def test_full_keymap_transformation():
         "(deflayer default",
         "  q  w  @lh_hm_LALT_E",
         "  @lh_hm_LGUI_A  @lh_hm_LCTRL_S  d",
-        ")"
+        ")",
     ]
 
     assert result.splitlines() == expected_lines

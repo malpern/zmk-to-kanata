@@ -29,9 +29,9 @@ class TestMacroTransformer(unittest.TestCase):
                 "&kp LSHIFT",
                 "&kp C",
                 "&macro_release",
-                "&kp LSHIFT"
+                "&kp LSHIFT",
             ],
-            binding_cells=[]
+            binding_cells=[],
         )
 
         # Transform the macro
@@ -50,6 +50,7 @@ class TestMacroTransformer(unittest.TestCase):
 
     def test_transform_behavior(self):
         """Test transforming a macro behavior using transform_behavior."""
+
         # Create a macro behavior with bindings that have to_kanata method
         class MockBinding:
             def __init__(self, kanata_str):
@@ -62,12 +63,8 @@ class TestMacroTransformer(unittest.TestCase):
             name="test_macro",
             wait_ms=50,
             tap_ms=50,
-            bindings=[
-                MockBinding("a"),
-                MockBinding("b"),
-                MockBinding("c")
-            ],
-            binding_cells=[]
+            bindings=[MockBinding("a"), MockBinding("b"), MockBinding("c")],
+            binding_cells=[],
         )
 
         # Transform the behavior

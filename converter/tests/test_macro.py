@@ -5,7 +5,7 @@ import unittest
 from converter.behaviors.macro import (
     MacroBehavior,
     MacroBinding,
-    is_macro_binding
+    is_macro_binding,
 )
 from converter.parser.macro_parser import MacroParser
 
@@ -25,10 +25,7 @@ class TestMacroBehavior(unittest.TestCase):
     def test_macro_behavior_custom_values(self):
         """Test that MacroBehavior accepts custom values."""
         behavior = MacroBehavior(
-            name="custom_macro",
-            wait_ms=20,
-            tap_ms=40,
-            binding_cells=1
+            name="custom_macro", wait_ms=20, tap_ms=40, binding_cells=1
         )
         self.assertEqual(behavior.name, "custom_macro")
         self.assertEqual(behavior.wait_ms, 20)
@@ -105,7 +102,7 @@ class TestMacroParser(unittest.TestCase):
         config = {
             "compatible": "zmk,behavior-macro",
             "wait-ms": "20",
-            "tap-ms": "40"
+            "tap-ms": "40",
         }
         behavior = self.parser.parse_behavior("test_macro", config)
         self.assertEqual(behavior.name, "test_macro")
@@ -118,7 +115,7 @@ class TestMacroParser(unittest.TestCase):
         config = {
             "compatible": "zmk,behavior-macro-one-param",
             "wait-ms": "20",
-            "tap-ms": "40"
+            "tap-ms": "40",
         }
         behavior = self.parser.parse_behavior("param_macro", config)
         self.assertEqual(behavior.binding_cells, 1)
@@ -128,16 +125,14 @@ class TestMacroParser(unittest.TestCase):
         config = {
             "compatible": "zmk,behavior-macro-two-param",
             "wait-ms": "20",
-            "tap-ms": "40"
+            "tap-ms": "40",
         }
         behavior = self.parser.parse_behavior("two_param_macro", config)
         self.assertEqual(behavior.binding_cells, 2)
 
     def test_parse_behavior_not_macro(self):
         """Test parsing a non-macro behavior."""
-        config = {
-            "compatible": "zmk,behavior-other"
-        }
+        config = {"compatible": "zmk,behavior-other"}
         behavior = self.parser.parse_behavior("not_macro", config)
         self.assertIsNone(behavior)
 

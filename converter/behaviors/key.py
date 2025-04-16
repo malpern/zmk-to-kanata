@@ -9,9 +9,11 @@ from typing import Optional
 # TODO: Import the centralized error manager when available
 # from converter.error_handling import get_error_manager
 
+
 @dataclass
 class KeyMapping:
     """Represents a key mapping in the keymap."""
+
     key: str
     sticky: bool = False
     label: Optional[str] = None
@@ -34,5 +36,6 @@ class KeyMapping:
             return f"sticky-{self.key.lower()}"
         return self.key.lower()
 
+
 # TODO: Integrate with centralized error manager for logging and validation
-# TODO: Add any additional methods or integration points as required by the new architecture 
+# TODO: Add any additional methods or integration points as required by the new architecture

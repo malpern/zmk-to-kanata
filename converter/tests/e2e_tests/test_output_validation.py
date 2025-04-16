@@ -2,6 +2,7 @@
 
 import os
 import stat
+
 import pytest
 
 from converter.cli import main
@@ -10,7 +11,7 @@ from converter.cli import main
 def test_output_file_permissions(temp_test_dir):
     """Test that output files have correct read/write permissions."""
     # Create a sample ZMK keymap file
-    zmk_content = '''
+    zmk_content = """
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 
@@ -25,12 +26,12 @@ def test_output_file_permissions(temp_test_dir):
         };
     };
 };
-'''
-    zmk_file = temp_test_dir / 'test_keymap.dtsi'
+"""
+    zmk_file = temp_test_dir / "test_keymap.dtsi"
     zmk_file.write_text(zmk_content)
 
     # Create output path for Kanata config
-    kanata_file = temp_test_dir / 'test_config.kbd'
+    kanata_file = temp_test_dir / "test_config.kbd"
 
     # Run the conversion
     exit_code = main([str(zmk_file), str(kanata_file)])
@@ -54,7 +55,7 @@ def test_output_file_permissions(temp_test_dir):
 def test_output_file_encoding(temp_test_dir):
     """Test that output files use UTF-8 encoding."""
     # Create a sample ZMK keymap file with non-ASCII characters
-    zmk_content = '''
+    zmk_content = """
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 
@@ -69,12 +70,12 @@ def test_output_file_encoding(temp_test_dir):
         };
     };
 };
-'''
-    zmk_file = temp_test_dir / 'test_keymap.dtsi'
-    zmk_file.write_text(zmk_content, encoding='utf-8')
+"""
+    zmk_file = temp_test_dir / "test_keymap.dtsi"
+    zmk_file.write_text(zmk_content, encoding="utf-8")
 
     # Create output path for Kanata config
-    kanata_file = temp_test_dir / 'test_config.kbd'
+    kanata_file = temp_test_dir / "test_config.kbd"
 
     # Run the conversion
     exit_code = main([str(zmk_file), str(kanata_file)])
@@ -82,7 +83,7 @@ def test_output_file_encoding(temp_test_dir):
 
     # Try reading the file with UTF-8 encoding
     try:
-        content = kanata_file.read_text(encoding='utf-8')
+        content = kanata_file.read_text(encoding="utf-8")
         assert isinstance(content, str)
     except UnicodeError:
         pytest.fail("Output file is not valid UTF-8")
@@ -91,7 +92,7 @@ def test_output_file_encoding(temp_test_dir):
 def test_output_file_format(temp_test_dir):
     """Test that output files follow the Kanata format specification."""
     # Create a sample ZMK keymap file
-    zmk_content = '''
+    zmk_content = """
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 
@@ -106,12 +107,12 @@ def test_output_file_format(temp_test_dir):
         };
     };
 };
-'''
-    zmk_file = temp_test_dir / 'test_keymap.dtsi'
+"""
+    zmk_file = temp_test_dir / "test_keymap.dtsi"
     zmk_file.write_text(zmk_content)
 
     # Create output path for Kanata config
-    kanata_file = temp_test_dir / 'test_config.kbd'
+    kanata_file = temp_test_dir / "test_config.kbd"
 
     # Run the conversion
     exit_code = main([str(zmk_file), str(kanata_file)])
@@ -127,8 +128,7 @@ def test_output_file_format(temp_test_dir):
     # Check layer definition format
     lines = content.splitlines()
     layer_start = next(
-        i for i, line in enumerate(lines)
-        if line.startswith("(deflayer")
+        i for i, line in enumerate(lines) if line.startswith("(deflayer")
     )
 
     # Verify layer definition syntax
@@ -136,10 +136,12 @@ def test_output_file_format(temp_test_dir):
     assert ")" in lines[layer_start + 3]
 
     # Verify indentation
-    for line in lines[layer_start + 1:layer_start + 3]:
+    for line in lines[layer_start + 1 : layer_start + 3]:
         assert line.startswith("  "), "Must be indented with 2 spaces"
 
     # Verify key definitions
     key_line = lines[layer_start + 1].strip()
-    assert all(key in key_line for key in ["a", "b"]), "Keys should be lowercase"
+    assert all(
+        key in key_line for key in ["a", "b"]
+    ), "Keys should be lowercase"
     assert " " in key_line, "Keys should be space-separated"

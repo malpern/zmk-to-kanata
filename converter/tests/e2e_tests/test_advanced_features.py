@@ -5,7 +5,7 @@ from converter.cli import main
 
 def test_multi_layer_with_hold_tap(temp_test_dir):
     """Test conversion of a multi-layer keymap with hold-tap behaviors."""
-    zmk_content = '''#include <behaviors.dtsi>
+    zmk_content = """#include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 
 / {
@@ -46,12 +46,12 @@ def test_multi_layer_with_hold_tap(temp_test_dir):
             >;
         };
     };
-}; '''
+}; """
 
-    zmk_file = temp_test_dir / 'multi_layer_advanced.dtsi'
+    zmk_file = temp_test_dir / "multi_layer_advanced.dtsi"
     zmk_file.write_text(zmk_content)
 
-    kanata_file = temp_test_dir / 'multi_layer_advanced.kbd'
+    kanata_file = temp_test_dir / "multi_layer_advanced.kbd"
 
     exit_code = main([str(zmk_file), str(kanata_file)])
     assert exit_code == 0
@@ -96,7 +96,7 @@ def test_multi_layer_with_hold_tap(temp_test_dir):
 
 def test_multi_layer_with_custom_behaviors(temp_test_dir):
     """Test conversion of a multi-layer keymap with custom behaviors."""
-    zmk_content = '''#include <behaviors.dtsi>
+    zmk_content = """#include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 
 / {
@@ -142,12 +142,12 @@ def test_multi_layer_with_custom_behaviors(temp_test_dir):
             >;
         };
     };
-}; '''
+}; """
 
-    zmk_file = temp_test_dir / 'multi_layer_behaviors.dtsi'
+    zmk_file = temp_test_dir / "multi_layer_behaviors.dtsi"
     zmk_file.write_text(zmk_content)
 
-    kanata_file = temp_test_dir / 'multi_layer_behaviors.kbd'
+    kanata_file = temp_test_dir / "multi_layer_behaviors.kbd"
 
     exit_code = main([str(zmk_file), str(kanata_file)])
     assert exit_code == 0

@@ -68,14 +68,14 @@ The converter expects a standard ZMK configuration file with the following struc
 / {
     keymap {
         compatible = "zmk,keymap";
-        
+
         default_layer {
             bindings = <
                 &kp A &kp B &kp C
                 &kp D &kp E &kp F
             >;
         };
-        
+
         layer_1 {
             bindings = <
                 &kp N1 &kp N2 &kp N3
@@ -189,7 +189,7 @@ If you encounter issues not covered in this guide, please:
 / {
     keymap {
         compatible = "zmk,keymap";
-        
+
         default_layer {
             bindings = <
                 &kp Q &kp W &kp E &kp R &kp T
@@ -231,7 +231,7 @@ zmk-to-kanata input.dtsi output.kbd
 / {
     keymap {
         compatible = "zmk,keymap";
-        
+
         default_layer {
             bindings = <
                 &kp Q        &kp W        &kp E        &kp R        &kp T
@@ -240,7 +240,7 @@ zmk-to-kanata input.dtsi output.kbd
                              &mo 1        &kp SPACE    &mo 2
             >;
         };
-        
+
         lower_layer {
             bindings = <
                 &kp N1       &kp N2       &kp N3       &kp N4       &kp N5
@@ -249,7 +249,7 @@ zmk-to-kanata input.dtsi output.kbd
                              &trans       &kp ENTER    &trans
             >;
         };
-        
+
         raise_layer {
             bindings = <
                 &kp F1       &kp F2       &kp F3       &kp F4       &kp F5
@@ -322,7 +322,7 @@ zmk-to-kanata input.dtsi output.kbd
 
     keymap {
         compatible = "zmk,keymap";
-        
+
         default_layer {
             bindings = <
                 &kp Q &kp W &kp E &email_macro &kp T
@@ -371,7 +371,7 @@ zmk-to-kanata input.dtsi output.kbd
 
     keymap {
         compatible = "zmk,keymap";
-        
+
         default_layer {
             bindings = <
                 &kp Q &kp W &kp E &kp R &kp T
@@ -399,4 +399,4 @@ zmk-to-kanata input.dtsi output.kbd
 )
 ```
 
-For more examples, see the [examples](../examples) directory. 
+For more examples, see the [examples](../examples) directory.

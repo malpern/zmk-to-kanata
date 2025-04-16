@@ -2,12 +2,13 @@
 
 End-to-end tests for the ZMK to Kanata converter.
 """
-from pathlib import Path
-import tempfile
 
+import tempfile
+from pathlib import Path
+
+from converter.output.file_writer import KanataFileWriter
 from converter.parser.zmk_parser import ZMKParser
 from converter.transformer.kanata_transformer import KanataTransformer
-from converter.output.file_writer import KanataFileWriter
 
 
 def test_basic_conversion():
@@ -26,7 +27,7 @@ def test_basic_conversion():
 
     # Write to a temporary file
     with tempfile.NamedTemporaryFile(
-        mode='w', suffix='.kbd', delete=False
+        mode="w", suffix=".kbd", delete=False
     ) as temp_file:
         temp_path = Path(temp_file.name)
 
@@ -36,7 +37,7 @@ def test_basic_conversion():
         writer.write(kanata_config, temp_path)
 
         # Read back and verify the content
-        with open(temp_path, 'r') as f:
+        with open(temp_path, "r") as f:
             written_content = f.read()
 
         # Verify the expected content
@@ -52,7 +53,7 @@ def test_basic_conversion():
             "  a  b  c  d",
             "  e  f  g  h",
             "  i  j  k  l",
-            ")"
+            ")",
         ]
         assert written_content.splitlines() == expected_lines
 

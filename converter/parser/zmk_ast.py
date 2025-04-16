@@ -4,14 +4,16 @@ ZMK AST data structures for macro parsing and transformation.
 Implements ZMKMacroDefinition, ZMKMacroStep, ZMKDocument, ZMKBinding, ZMKMacrosBlock as per the new architecture.
 """
 from dataclasses import dataclass, field
-from typing import List, Optional, Any
+from typing import Any, List, Optional
 
 # TODO: Import the centralized error manager when available
 # from converter.error_handling import get_error_manager
 
+
 @dataclass
 class ZMKMacroStep:
     """Represents a single step in a ZMK macro."""
+
     action: str
     params: List[Any] = field(default_factory=list)
 
@@ -23,9 +25,11 @@ class ZMKMacroStep:
             # TODO: Log error via error manager
             raise TypeError("params must be a list")
 
+
 @dataclass
 class ZMKMacroDefinition:
     """Represents a macro definition in ZMK."""
+
     name: str
     steps: List[ZMKMacroStep] = field(default_factory=list)
 
@@ -41,9 +45,11 @@ class ZMKMacroDefinition:
                 # TODO: Log error via error manager
                 raise TypeError("Each step must be a ZMKMacroStep")
 
+
 @dataclass
 class ZMKBinding:
     """Represents a binding in a ZMK macro or keymap."""
+
     binding_type: str
     value: Any
 
@@ -52,9 +58,11 @@ class ZMKBinding:
             # TODO: Log error via error manager
             raise TypeError("binding_type must be a string")
 
+
 @dataclass
 class ZMKMacrosBlock:
     """Represents a block of macro definitions in ZMK."""
+
     macros: List[ZMKMacroDefinition] = field(default_factory=list)
 
     def __post_init__(self):
@@ -66,16 +74,21 @@ class ZMKMacrosBlock:
                 # TODO: Log error via error manager
                 raise TypeError("Each macro must be a ZMKMacroDefinition")
 
+
 @dataclass
 class ZMKDocument:
     """Represents a full ZMK document (keymap, macros, etc.)."""
+
     macros_block: Optional[ZMKMacrosBlock] = None
     # Add other top-level fields as needed
 
     def __post_init__(self):
-        if self.macros_block is not None and not isinstance(self.macros_block, ZMKMacrosBlock):
+        if self.macros_block is not None and not isinstance(
+            self.macros_block, ZMKMacrosBlock
+        ):
             # TODO: Log error via error manager
             raise TypeError("macros_block must be a ZMKMacrosBlock or None")
 
+
 # TODO: Integrate with centralized error manager for logging and validation
-# TODO: Add any additional methods or integration points as required by the new architecture 
+# TODO: Add any additional methods or integration points as required by the new architecture

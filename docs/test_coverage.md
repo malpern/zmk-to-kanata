@@ -90,4 +90,4 @@ Based on the test coverage and known limitations, the following areas could be i
 
 The ZMK to Kanata Converter has good test coverage overall, but there are specific areas that need improvement. The converter supports most common ZMK features, but users should be aware of the limitations when converting complex configurations.
 
-For the best results, users should review the generated Kanata files and make manual adjustments as needed, especially for advanced features like custom behaviors and complex macros. 
+For the best results, users should review the generated Kanata files and make manual adjustments as needed, especially for advanced features like custom behaviors and complex macros.

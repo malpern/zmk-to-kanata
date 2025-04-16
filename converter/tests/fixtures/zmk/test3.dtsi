@@ -21,21 +21,21 @@
                 &ht LALT C   &ht LGUI D   &mo 2
             >;
         };
-        
+
         nav_layer {
             bindings = <
                 &kp LEFT  &kp RIGHT  &trans
                 &kp UP    &kp DOWN   &mo 3
             >;
         };
-        
+
         num_layer {
             bindings = <
                 &kp N1    &kp N2     &trans
                 &kp N3    &kp N4     &trans
             >;
         };
-        
+
         fn_layer {
             bindings = <
                 &kp F1    &kp F2     &trans
@@ -43,4 +43,4 @@
             >;
         };
     };
-}; 
+};

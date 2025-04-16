@@ -1,13 +1,16 @@
 import logging
 from abc import ABC, abstractmethod
+
 from converter.error_recovery import ErrorRecoveryManager
 from converter.parser.parser_error import ParserError
+
 
 class ParserBase(ABC):
     """
     Abstract base class for all ZMK to Kanata parsers.
     Provides standard interface, error handling, and logging.
     """
+
     def __init__(self):
         self.logger = logging.getLogger(__name__)
         self.error_manager = ErrorRecoveryManager()
@@ -24,13 +27,17 @@ class ParserBase(ABC):
         """
         Optionally parse a single binding. Subclasses may override.
         """
-        raise NotImplementedError("parse_binding() not implemented for this parser.")
+        raise NotImplementedError(
+            "parse_binding() not implemented for this parser."
+        )
 
     def parse_layer(self, *args, **kwargs):
         """
         Optionally parse a single layer. Subclasses may override.
         """
-        raise NotImplementedError("parse_layer() not implemented for this parser.")
+        raise NotImplementedError(
+            "parse_layer() not implemented for this parser."
+        )
 
     def get_error_summary(self):
         """
@@ -44,5 +51,6 @@ class ParserBase(ABC):
         """
         return self.error_manager.has_errors()
 
+
 # Re-export ParserError for legacy imports
-__all__ = ["ParserBase", "ParserError"] 
+__all__ = ["ParserBase", "ParserError"]

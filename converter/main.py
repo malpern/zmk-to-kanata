@@ -4,7 +4,7 @@ import argparse
 import os
 import sys
 from pathlib import Path
-from typing import List
+from typing import List, Union
 
 from .layer_transformer import KanataLayer
 from .parser.zmk_parser import ZMKParser
@@ -22,15 +22,17 @@ def generate_kanata_keymap(layers: List[KanataLayer]) -> str:
     kanata_config = []
 
     # Add header comments
-    kanata_config.extend([
-        ";; ZMK to Kanata Configuration",
-        ";; Generated automatically - DO NOT EDIT",
-        "",
-        ";; Global settings",
-        "(defvar tap-time 200)",
-        "(defvar hold-time 250)",
-        ""
-    ])
+    kanata_config.extend(
+        [
+            ";; ZMK to Kanata Configuration",
+            ";; Generated automatically - DO NOT EDIT",
+            "",
+            ";; Global settings",
+            "(defvar tap-time 200)",
+            "(defvar hold-time 250)",
+            "",
+        ]
+    )
 
     # Add layers
     for i, layer in enumerate(layers):
@@ -44,7 +46,7 @@ def generate_kanata_keymap(layers: List[KanataLayer]) -> str:
             for row in layer.keys:
                 kanata_config.append("  " + " ".join(row))
             kanata_config.append(")")
-            
+
         # Add empty line between layers, but not after the last one
         if i < len(layers) - 1:
             kanata_config.append("")
@@ -55,20 +57,45 @@ def generate_kanata_keymap(layers: List[KanataLayer]) -> str:
     return "\n".join(kanata_config)
 
 
+def convert_keymap(
+    input_file: Union[str, Path], output_file: Union[str, Path]
+) -> None:
+    """Convert a ZMK keymap file to Kanata format.
+
+    Args:
+        input_file: Path to input ZMK keymap file
+        output_file: Path to output Kanata keymap file
+
+    Raises:
+        FileNotFoundError: If input file doesn't exist
+        ValueError: If there's an error parsing the ZMK file
+        Exception: For other errors during conversion
+    """
+    # Parse ZMK file
+    zmk_parser = ZMKParser()
+    config = zmk_parser.parse(Path(input_file))
+
+    # Transform to Kanata format
+    from .transformer.kanata_transformer import KanataTransformer
+
+    transformer = KanataTransformer()
+    output = transformer.transform(config)
+
+    # Write output file
+    with open(output_file, "w") as f:
+        f.write(output)
+
+
 def main(args=None):
     """Main entry point for the converter."""
     parser = argparse.ArgumentParser(
-        description='Convert ZMK keymap to Kanata keymap'
+        description="Convert ZMK keymap to Kanata keymap"
     )
+    parser.add_argument("input_file", help="Path to input ZMK keymap file")
     parser.add_argument(
-        'input_file',
-        help='Path to input ZMK keymap file'
+        "output_file", help="Path to output Kanata keymap file"
     )
-    parser.add_argument(
-        'output_file',
-        help='Path to output Kanata keymap file'
-    )
-    
+
     if args is None:
         args = parser.parse_args()
     else:
@@ -91,6 +118,7 @@ def main(args=None):
 
         # Transform to Kanata format
         from .transformer.kanata_transformer import KanataTransformer
+
         transformer = KanataTransformer()
         try:
             output = transformer.transform(config)
@@ -100,10 +128,10 @@ def main(args=None):
         except Exception as e:
             print(f"Error during transformation: {e}", file=sys.stderr)
             return 3
-        
+
         # Write output file
         try:
-            with open(args.output_file, 'w') as f:
+            with open(args.output_file, "w") as f:
                 f.write(output)
         except Exception as e:
             print(f"Error writing output file: {e}", file=sys.stderr)
@@ -116,7 +144,7 @@ def main(args=None):
         return 3
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main())
 
 # Implementation will be added in subsequent tasks

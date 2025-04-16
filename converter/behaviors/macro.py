@@ -9,6 +9,7 @@ from ..model.keymap_model import Binding
 
 class MacroActivationMode(Enum):
     """Activation mode for macro bindings."""
+
     TAP = "tap"
     PRESS = "press"
     RELEASE = "release"
@@ -17,9 +18,10 @@ class MacroActivationMode(Enum):
 @dataclass
 class MacroBehavior:
     """Represents a ZMK macro behavior configuration."""
+
     name: str
     wait_ms: int = 15  # Default from ZMK CONFIG_ZMK_MACRO_DEFAULT_WAIT_MS
-    tap_ms: int = 30   # Default from ZMK CONFIG_ZMK_MACRO_DEFAULT_TAP_MS
+    tap_ms: int = 30  # Default from ZMK CONFIG_ZMK_MACRO_DEFAULT_TAP_MS
     bindings: List[Binding] = field(default_factory=list)
     binding_cells: int = 0  # For non-parameterized macros
 
@@ -27,6 +29,7 @@ class MacroBehavior:
 @dataclass
 class MacroBinding(Binding):
     """Represents a macro binding in the keymap."""
+
     behavior: MacroBehavior
     param: Optional[int] = None  # For parameterized macros
 
@@ -41,13 +44,11 @@ class MacroBinding(Binding):
 
     @classmethod
     def from_zmk(
-        cls,
-        zmk_binding: str,
-        behaviors: Dict[str, MacroBehavior]
-    ) -> 'MacroBinding':
+        cls, zmk_binding: str, behaviors: Dict[str, MacroBehavior]
+    ) -> "MacroBinding":
         """Create a MacroBinding from a ZMK binding string."""
         # Extract behavior name and optional parameter
-        parts = zmk_binding.replace('&', '').strip().split()
+        parts = zmk_binding.replace("&", "").strip().split()
         behavior_name = parts[0]
 
         # Look up the behavior
@@ -68,9 +69,7 @@ def is_macro_binding(binding_str: str) -> bool:
     """Check if a binding string is a macro binding."""
     # Macro bindings start with & followed by a behavior name
     # We'll need to check against known macro behaviors
-    excluded_prefixes = [
-        '&kp', '&mo', '&lt', '&to', '&sk', '&key_sequence'
-    ]
-    return binding_str.startswith('&') and not any(
+    excluded_prefixes = ["&kp", "&mo", "&lt", "&to", "&sk", "&key_sequence"]
+    return binding_str.startswith("&") and not any(
         binding_str.startswith(prefix) for prefix in excluded_prefixes
     )

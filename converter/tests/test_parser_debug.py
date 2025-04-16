@@ -9,7 +9,7 @@ from converter.parser.zmk_parser import ZMKParser
 def test_layer_pattern_matching():
     """Test that layer patterns are correctly matched."""
     parser = ZMKParser()
-    sample_text = '''
+    sample_text = """
     / {
         keymap {
             compatible = "zmk,keymap";
@@ -21,7 +21,7 @@ def test_layer_pattern_matching():
             };
         };
     };
-    '''
+    """
     print("\nSample text:")
     print(sample_text)
     print("\nBindings pattern:", parser.bindings_pattern.pattern)
@@ -40,16 +40,16 @@ def test_layer_pattern_matching():
 
 def test_binding_text_preprocessing():
     """Test that binding text preprocessing maintains structure."""
-    binding_text = '''
+    binding_text = """
         &kp A &kp B
         &kp C &kp D
-    '''
+    """
     # Test angle bracket removal
-    cleaned = re.sub(r'<\s*(.*?)\s*>', r'\1', binding_text)
+    cleaned = re.sub(r"<\s*(.*?)\s*>", r"\1", binding_text)
     assert "&kp A" in cleaned, "Should preserve binding text"
 
     # Test row splitting
-    rows = [row.strip() for row in cleaned.split('\n') if row.strip()]
+    rows = [row.strip() for row in cleaned.split("\n") if row.strip()]
     assert len(rows) == 2, "Should find two rows"
     assert "&kp A &kp B" in rows[0], "Should preserve row structure"
 
@@ -62,21 +62,21 @@ def test_binding_pattern_recognition():
         ("&trans", True),
         ("&kp EXCL", True),
         ("&kp N1", True),
-        ("invalid", False)
+        ("invalid", False),
     ]
     for binding, should_match in test_cases:
         # We now accept all bindings that start with &
-        is_valid = binding.startswith('&') if should_match else False
+        is_valid = binding.startswith("&") if should_match else False
         assert is_valid == should_match, f"Failed for {binding}"
 
 
 def test_row_splitting():
     """Test that row splitting preserves binding structure."""
     parser = ZMKParser()
-    binding_text = '''
+    binding_text = """
         &kp A &kp B
         &kp C &mo 1
-    '''
+    """
     keys = parser._parse_bindings(binding_text)
     assert len(keys) == 2, "Should find two rows"
     assert len(keys[0]) == 2, "Each row should have two bindings"
@@ -85,11 +85,7 @@ def test_row_splitting():
 
 def test_key_mapping_creation():
     """Test that KeyMapping objects are created correctly."""
-    test_cases = [
-        ("&kp A", "A"),
-        ("&mo 1", "mo 1"),
-        ("&trans", "trans")
-    ]
+    test_cases = [("&kp A", "A"), ("&mo 1", "mo 1"), ("&trans", "trans")]
     for binding, expected_key in test_cases:
         # Handle both kp and non-kp bindings
         if binding.startswith("&kp "):
@@ -104,14 +100,14 @@ def test_key_mapping_creation():
 def test_global_pattern_matching():
     """Test that global settings are correctly matched."""
     parser = ZMKParser()
-    sample_text = '''
+    sample_text = """
     / {
         global {
             tap-time = <200>;
             hold-time = <300>;
         };
     };
-    '''
+    """
     match = parser.global_pattern.search(sample_text)
     assert match is not None, "Should find global settings"
     assert match.group(1) == "200", "Should capture tap time"

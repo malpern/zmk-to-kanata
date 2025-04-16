@@ -1,7 +1,8 @@
 """Test module for layer transformation."""
-from converter.layer_transformer import LayerTransformer
-from converter.model.keymap_model import Layer, KeyMapping
+
 from converter.behaviors.key_sequence import KeySequenceBinding
+from converter.layer_transformer import LayerTransformer
+from converter.model.keymap_model import KeyMapping, Layer
 
 
 def test_transform_binding():
@@ -75,7 +76,7 @@ def test_parse_binding_matrix():
     matrix = [
         [KeyMapping(key="A"), KeyMapping(key="B")],
         [KeyMapping(key="N1"), KeyMapping(key="mo 1")],
-        [KeyMapping(key="trans"), KeyMapping(key="C")]
+        [KeyMapping(key="trans"), KeyMapping(key="C")],
     ]
 
     result = transformer.transform_bindings_matrix(matrix)
@@ -93,7 +94,7 @@ def test_transform_layer():
             KeyMapping(key="A"),
             KeyMapping(key="B"),
             KeyMapping(key="C"),
-        ]
+        ],
     )
 
     transformer = LayerTransformer()
@@ -111,14 +112,14 @@ def test_transform_layers():
             bindings=[
                 KeyMapping(key="A"),
                 KeyMapping(key="B"),
-            ]
+            ],
         ),
         Layer(
             name="num",
             bindings=[
                 KeyMapping(key="1"),
                 KeyMapping(key="2"),
-            ]
+            ],
         ),
     ]
 

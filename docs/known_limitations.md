@@ -56,7 +56,7 @@ This document outlines the known limitations of the ZMK to Kanata Converter. Und
 
 ```
 (defalias
-  mymacro (macro 
+  mymacro (macro
     a b c
     (release a b c)
     d e f
@@ -187,4 +187,4 @@ This document outlines the known limitations of the ZMK to Kanata Converter. Und
 
 While the ZMK to Kanata Converter handles most common ZMK features, there are limitations that require manual intervention. By understanding these limitations, you can more effectively use the converter and make the necessary adjustments to your Kanata configuration.
 
-If you encounter issues not listed here, please report them on GitHub to help improve the converter. 
+If you encounter issues not listed here, please report them on GitHub to help improve the converter.

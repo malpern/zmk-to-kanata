@@ -30,7 +30,7 @@ class UnicodeBinding(Binding):
         return f"(unicode {self.character})"
 
     @classmethod
-    def from_zmk(cls, zmk_binding: str) -> Optional['UnicodeBinding']:
+    def from_zmk(cls, zmk_binding: str) -> Optional["UnicodeBinding"]:
         """Create a UnicodeBinding from a ZMK binding string.
 
         Args:
@@ -70,6 +70,8 @@ def is_unicode_binding(binding_str: str) -> bool:
     Returns:
         True if the binding string is a Unicode binding, False otherwise
     """
-    return (binding_str.startswith("&unicode_") or
-            binding_str.startswith("&pi") or
-            binding_str.startswith("&n_tilde"))
+    return (
+        binding_str.startswith("&unicode_")
+        or binding_str.startswith("&pi")
+        or binding_str.startswith("&n_tilde")
+    )

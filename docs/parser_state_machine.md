@@ -79,4 +79,4 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 ```
 
-This will show state transitions, layer parsing, and binding parsing details. 
+This will show state transitions, layer parsing, and binding parsing details.

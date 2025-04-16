@@ -12,7 +12,7 @@ def test_temp_dir_fixture(temp_test_dir):
 def test_basic_file_conversion(temp_test_dir):
     """Test basic file conversion from ZMK to Kanata format."""
     # Create a sample ZMK keymap file
-    zmk_content = '''
+    zmk_content = """
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 
@@ -27,12 +27,12 @@ def test_basic_file_conversion(temp_test_dir):
         };
     };
 };
-'''
-    zmk_file = temp_test_dir / 'test_keymap.dtsi'
+"""
+    zmk_file = temp_test_dir / "test_keymap.dtsi"
     zmk_file.write_text(zmk_content)
 
     # Create output path for Kanata config
-    kanata_file = temp_test_dir / 'test_config.kbd'
+    kanata_file = temp_test_dir / "test_config.kbd"
 
     # Convert the file
     convert_keymap(zmk_file, kanata_file)
@@ -42,16 +42,16 @@ def test_basic_file_conversion(temp_test_dir):
 
     # Read and verify the content
     kanata_content = kanata_file.read_text()
-    assert 'a' in kanata_content.lower()
-    assert 'b' in kanata_content.lower()
-    assert 'c' in kanata_content.lower()
-    assert 'd' in kanata_content.lower()
+    assert "a" in kanata_content.lower()
+    assert "b" in kanata_content.lower()
+    assert "c" in kanata_content.lower()
+    assert "d" in kanata_content.lower()
 
 
 def test_output_file_format(temp_test_dir):
     """Test that the output file follows the Kanata format."""
     # Create a sample ZMK keymap file with multiple layers
-    zmk_content = '''
+    zmk_content = """
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 
@@ -73,12 +73,12 @@ def test_output_file_format(temp_test_dir):
         };
     };
 };
-'''
-    zmk_file = temp_test_dir / 'test_keymap.dtsi'
+"""
+    zmk_file = temp_test_dir / "test_keymap.dtsi"
     zmk_file.write_text(zmk_content)
 
     # Create output path for Kanata config
-    kanata_file = temp_test_dir / 'test_config.kbd'
+    kanata_file = temp_test_dir / "test_config.kbd"
 
     # Convert the file
     convert_keymap(zmk_file, kanata_file)
@@ -87,24 +87,22 @@ def test_output_file_format(temp_test_dir):
     kanata_content = kanata_file.read_text()
 
     # Verify layer definitions
-    assert '(deflayer default' in kanata_content
-    assert '(deflayer symbol' in kanata_content
+    assert "(deflayer default" in kanata_content
+    assert "(deflayer symbol" in kanata_content
 
     # Verify key mappings
     lines = kanata_content.splitlines()
 
     # Find the default layer
     default_layer_start = next(
-        i for i, line in enumerate(lines)
-        if '(deflayer default' in line
+        i for i, line in enumerate(lines) if "(deflayer default" in line
     )
-    assert 'a b' in lines[default_layer_start + 1].strip()
-    assert 'c d' in lines[default_layer_start + 2].strip()
+    assert "a b" in lines[default_layer_start + 1].strip()
+    assert "c d" in lines[default_layer_start + 2].strip()
 
     # Find the symbol layer
     symbol_layer_start = next(
-        i for i, line in enumerate(lines)
-        if '(deflayer symbol' in line
+        i for i, line in enumerate(lines) if "(deflayer symbol" in line
     )
-    assert '1 2' in lines[symbol_layer_start + 1].strip()
-    assert '3 4' in lines[symbol_layer_start + 2].strip()
+    assert "1 2" in lines[symbol_layer_start + 1].strip()
+    assert "3 4" in lines[symbol_layer_start + 2].strip()

@@ -1,8 +1,8 @@
 """End-to-end tests for macro support."""
 
-import unittest
 import os
 import tempfile
+import unittest
 
 from converter.zmk_to_kanata import convert_zmk_to_kanata
 
@@ -42,7 +42,7 @@ class TestMacroIntegration(unittest.TestCase):
     };
 };
 """
-        with tempfile.NamedTemporaryFile(mode='w', delete=False) as temp_file:
+        with tempfile.NamedTemporaryFile(mode="w", delete=False) as temp_file:
             temp_file.write(zmk_content)
             temp_file_path = temp_file.name
 

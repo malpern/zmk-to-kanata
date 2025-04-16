@@ -25,7 +25,7 @@
 
     keymap {
         compatible = "zmk,keymap";
-        
+
         // Base layer - Colemak-DH
         default_layer {
             bindings = <
@@ -35,7 +35,7 @@
                 &kp LCTRL &kp LGUI &kp LALT &mo 1 &mo 2 &mo 3 &mo 4 &kp RALT &kp RGUI &kp RCTRL
             >;
         };
-        
+
         // Layer 1 - Numbers and symbols
         num_sym_layer {
             bindings = <
@@ -45,7 +45,7 @@
                 &trans    &trans &trans &trans &kp SPACE &kp RET &trans &trans &trans &trans
             >;
         };
-        
+
         // Layer 2 - Navigation
         nav_layer {
             bindings = <
@@ -55,7 +55,7 @@
                 &trans    &trans &trans &trans &kp SPACE &kp RET &trans &trans &trans &trans
             >;
         };
-        
+
         // Layer 3 - Function keys
         function_layer {
             bindings = <
@@ -65,7 +65,7 @@
                 &trans    &trans &trans &trans &kp SPACE &kp RET &trans &trans &trans &trans
             >;
         };
-        
+
         // Layer 4 - Gaming/Numpad
         gaming_layer {
             bindings = <
@@ -76,4 +76,4 @@
             >;
         };
     };
-}; 
+};

@@ -77,10 +77,10 @@ def test_transform_binding():
     # Arrange
     binding = KeyMapping(key="A")
     transformer = LayerTransformer()
-    
+
     # Act
     result = transformer.transform_binding(binding)
-    
+
     # Assert
     assert result == "a"
 ```
@@ -104,17 +104,17 @@ def test_basic_file_conversion(tmp_path, monkeypatch):
     # Setup test files
     zmk_file = tmp_path / "test.dtsi"
     kanata_file = tmp_path / "test.kbd"
-    
+
     # Write test content
     zmk_file.write_text("/ { keymap { compatible = \"zmk,keymap\"; ... } };")
-    
+
     # Set up CLI arguments
     monkeypatch.setattr(sys, 'argv', ['converter', str(zmk_file), str(kanata_file)])
-    
+
     # Run the converter
     from converter.main import main
     main()
-    
+
     # Verify the output
     assert kanata_file.exists()
     content = kanata_file.read_text()
@@ -164,13 +164,13 @@ def test_real_world_example(tmp_path, monkeypatch):
     # Setup test files
     zmk_file = tmp_path / "real_world.dtsi"
     kanata_file = tmp_path / "real_world.kbd"
-    
+
     # Real-world ZMK configuration (simplified)
     zmk_content = """
     / {
         keymap {
             compatible = "zmk,keymap";
-            
+
             default_layer {
                 bindings = <
                     &kp A &kp B &kp C
@@ -180,15 +180,15 @@ def test_real_world_example(tmp_path, monkeypatch):
         };
     };
     """
-    
+
     # Write the ZMK content to the file
     zmk_file.write_text(zmk_content)
-    
+
     # Run the converter
     monkeypatch.setattr(sys, 'argv', ['converter', str(zmk_file), str(kanata_file)])
     from converter.main import main
     main()
-    
+
     # Verify the output
     assert kanata_file.exists()
     kanata_content = kanata_file.read_text()
@@ -224,4 +224,4 @@ If tests are failing, consider these steps:
 
 Testing is a critical part of maintaining the ZMK to Kanata Converter. By following these guidelines, contributors can help ensure that the converter remains reliable and maintainable.
 
-If you have questions about testing or need help writing tests, please open an issue on GitHub. 
+If you have questions about testing or need help writing tests, please open an issue on GitHub.

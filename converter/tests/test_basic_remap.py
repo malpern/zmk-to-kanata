@@ -2,18 +2,20 @@
 
 Tests for basic key-to-key remapping functionality.
 """
-from pathlib import Path
+
 import tempfile
+from pathlib import Path
+
 import pytest
 
 from converter.model.keymap_model import (
-    KeyMapping,
     GlobalSettings,
+    KeymapConfig,
+    KeyMapping,
     Layer,
-    KeymapConfig
 )
-from converter.transformer.kanata_transformer import KanataTransformer
 from converter.output.file_writer import KanataFileWriter
+from converter.transformer.kanata_transformer import KanataTransformer
 
 
 def test_key_mapping_equality():
@@ -30,8 +32,7 @@ def test_key_mapping_equality():
 def test_parse_global_settings():
     """Test parsing global settings from a sample ZMK file."""
     config = KeymapConfig(
-        global_settings=GlobalSettings(tap_time=200, hold_time=250),
-        layers=[]
+        global_settings=GlobalSettings(tap_time=200, hold_time=250), layers=[]
     )
     assert config.global_settings.tap_time == 200
     assert config.global_settings.hold_time == 250
@@ -46,10 +47,10 @@ def test_parse_default_layer():
                 name="default",
                 keys=[
                     [KeyMapping(key="A"), KeyMapping(key="B")],
-                    [KeyMapping(key="C"), KeyMapping(key="D")]
-                ]
+                    [KeyMapping(key="C"), KeyMapping(key="D")],
+                ],
             )
-        ]
+        ],
     )
     assert len(config.layers) == 1
     assert config.layers[0].name == "default"
@@ -64,8 +65,7 @@ def test_parse_default_layer():
 def test_transform_global_settings():
     """Test transforming global settings to Kanata format."""
     config = KeymapConfig(
-        global_settings=GlobalSettings(tap_time=200, hold_time=250),
-        layers=[]
+        global_settings=GlobalSettings(tap_time=200, hold_time=250), layers=[]
     )
 
     transformer = KanataTransformer()
@@ -77,7 +77,7 @@ def test_transform_global_settings():
         "",
         ";; Global settings",
         "(defvar tap-time 200)",
-        "(defvar hold-time 250)"
+        "(defvar hold-time 250)",
     ]
 
     assert kanata_config.splitlines() == expected_lines
@@ -92,10 +92,10 @@ def test_transform_default_layer():
                 name="default",
                 keys=[
                     [KeyMapping(key="A"), KeyMapping(key="B")],
-                    [KeyMapping(key="C"), KeyMapping(key="D")]
-                ]
+                    [KeyMapping(key="C"), KeyMapping(key="D")],
+                ],
             )
-        ]
+        ],
     )
 
     transformer = KanataTransformer()
@@ -112,7 +112,7 @@ def test_transform_default_layer():
         "(deflayer default",
         "  a  b",
         "  c  d",
-        ")"
+        ")",
     ]
 
     assert kanata_config.splitlines() == expected_lines
@@ -127,10 +127,10 @@ def test_write_kanata_config():
                 name="default",
                 keys=[
                     [KeyMapping(key="A"), KeyMapping(key="B")],
-                    [KeyMapping(key="C"), KeyMapping(key="D")]
-                ]
+                    [KeyMapping(key="C"), KeyMapping(key="D")],
+                ],
             )
-        ]
+        ],
     )
 
     transformer = KanataTransformer()
@@ -138,7 +138,7 @@ def test_write_kanata_config():
 
     # Create a temporary file for testing
     with tempfile.NamedTemporaryFile(
-        mode='w', suffix='.kbd', delete=False
+        mode="w", suffix=".kbd", delete=False
     ) as temp_file:
         temp_path = Path(temp_file.name)
 
@@ -148,7 +148,7 @@ def test_write_kanata_config():
         writer.write(kanata_config, temp_path)
 
         # Read back and verify
-        with open(temp_path, 'r') as f:
+        with open(temp_path, "r") as f:
             written_content = f.read()
 
         assert written_content == kanata_config
@@ -161,7 +161,7 @@ def test_write_kanata_config():
 def test_write_invalid_content():
     """Test writing invalid content raises TypeError."""
     writer = KanataFileWriter()
-    with tempfile.NamedTemporaryFile(suffix='.kbd', delete=False) as temp_file:
+    with tempfile.NamedTemporaryFile(suffix=".kbd", delete=False) as temp_file:
         temp_path = Path(temp_file.name)
 
     try:
@@ -190,7 +190,8 @@ def test_parse_malformed_file(tmp_path):
         parser.parse(malformed_file)
 
     # Test missing bindings
-    malformed_file.write_text("""
+    malformed_file.write_text(
+        """
     / {
         global {
             tap-time = <200>;
@@ -201,6 +202,7 @@ def test_parse_malformed_file(tmp_path):
             default_layer { };
         };
     };
-    """)
+    """
+    )
     with pytest.raises(ValueError, match="Could not find key bindings"):
         parser.parse(malformed_file)

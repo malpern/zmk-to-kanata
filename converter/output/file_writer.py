@@ -2,8 +2,9 @@
 
 This module is responsible for writing the Kanata configuration to a file.
 """
-from pathlib import Path
+
 import os
+from pathlib import Path
 
 
 class KanataFileWriter:
@@ -32,5 +33,5 @@ class KanataFileWriter:
         # Ensure the parent directory exists
         os.makedirs(output_path.parent, exist_ok=True)
 
-        with open(output_path, 'w') as f:
+        with open(output_path, "w") as f:
             f.write(content)

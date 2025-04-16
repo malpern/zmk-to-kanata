@@ -32,66 +32,141 @@ class LayerTransformer:
         # Mapping of ZMK key names to Kanata key names
         self.key_map: Dict[str, str] = {
             # Letters
-            'A': 'a', 'B': 'b', 'C': 'c', 'D': 'd', 'E': 'e',
-            'F': 'f', 'G': 'g', 'H': 'h', 'I': 'i', 'J': 'j',
-            'K': 'k', 'L': 'l', 'M': 'm', 'N': 'n', 'O': 'o',
-            'P': 'p', 'Q': 'q', 'R': 'r', 'S': 's', 'T': 't',
-            'U': 'u', 'V': 'v', 'W': 'w', 'X': 'x', 'Y': 'y',
-            'Z': 'z',
-
+            "A": "a",
+            "B": "b",
+            "C": "c",
+            "D": "d",
+            "E": "e",
+            "F": "f",
+            "G": "g",
+            "H": "h",
+            "I": "i",
+            "J": "j",
+            "K": "k",
+            "L": "l",
+            "M": "m",
+            "N": "n",
+            "O": "o",
+            "P": "p",
+            "Q": "q",
+            "R": "r",
+            "S": "s",
+            "T": "t",
+            "U": "u",
+            "V": "v",
+            "W": "w",
+            "X": "x",
+            "Y": "y",
+            "Z": "z",
             # Numbers
-            'N0': '0', 'N1': '1', 'N2': '2', 'N3': '3', 'N4': '4',
-            'N5': '5', 'N6': '6', 'N7': '7', 'N8': '8', 'N9': '9',
-
+            "N0": "0",
+            "N1": "1",
+            "N2": "2",
+            "N3": "3",
+            "N4": "4",
+            "N5": "5",
+            "N6": "6",
+            "N7": "7",
+            "N8": "8",
+            "N9": "9",
             # Function keys
-            'F1': 'f1', 'F2': 'f2', 'F3': 'f3', 'F4': 'f4',
-            'F5': 'f5', 'F6': 'f6', 'F7': 'f7', 'F8': 'f8',
-            'F9': 'f9', 'F10': 'f10', 'F11': 'f11', 'F12': 'f12',
-
+            "F1": "f1",
+            "F2": "f2",
+            "F3": "f3",
+            "F4": "f4",
+            "F5": "f5",
+            "F6": "f6",
+            "F7": "f7",
+            "F8": "f8",
+            "F9": "f9",
+            "F10": "f10",
+            "F11": "f11",
+            "F12": "f12",
             # Navigation
-            'LEFT': 'left', 'RIGHT': 'right', 'UP': 'up', 'DOWN': 'down',
-            'HOME': 'home', 'END': 'end', 'PG_UP': 'pg_up', 'PG_DN': 'pg_dn',
-
+            "LEFT": "left",
+            "RIGHT": "right",
+            "UP": "up",
+            "DOWN": "down",
+            "HOME": "home",
+            "END": "end",
+            "PG_UP": "pg_up",
+            "PG_DN": "pg_dn",
             # Editing
-            'ENTER': 'ret', 'RET': 'ret', 'ESC': 'esc', 'BSPC': 'bspc',
-            'DEL': 'del', 'TAB': 'tab', 'SPACE': 'spc', 'SPC': 'spc',
-            'CAPS': 'caps',
-
+            "ENTER": "ret",
+            "RET": "ret",
+            "ESC": "esc",
+            "BSPC": "bspc",
+            "DEL": "del",
+            "TAB": "tab",
+            "SPACE": "spc",
+            "SPC": "spc",
+            "CAPS": "caps",
             # Modifiers
-            'LSHIFT': 'lsft', 'RSHIFT': 'rsft',
-            'LCTRL': 'lctl', 'RCTRL': 'rctl',
-            'LALT': 'lalt', 'RALT': 'ralt',
-            'LGUI': 'lmet', 'RGUI': 'rmet',
-
+            "LSHIFT": "lsft",
+            "RSHIFT": "rsft",
+            "LCTRL": "lctl",
+            "RCTRL": "rctl",
+            "LALT": "lalt",
+            "RALT": "ralt",
+            "LGUI": "lmet",
+            "RGUI": "rmet",
             # Punctuation
-            'GRAVE': 'grv', 'MINUS': 'minus', 'EQUAL': 'equal',
-            'LBKT': 'lbrc', 'RBKT': 'rbrc', 'BSLH': 'bslh',
-            'SEMI': 'semi', 'APOS': 'apos', 'COMMA': 'comma',
-            'DOT': 'dot', 'FSLH': 'fslh',
-
+            "GRAVE": "grv",
+            "MINUS": "minus",
+            "EQUAL": "equal",
+            "LBKT": "lbrc",
+            "RBKT": "rbrc",
+            "BSLH": "bslh",
+            "SEMI": "semi",
+            "APOS": "apos",
+            "COMMA": "comma",
+            "DOT": "dot",
+            "FSLH": "fslh",
             # Symbols
-            'EXCL': 'excl', 'AT': 'at', 'HASH': 'hash',
-            'DLLR': 'dollar', 'PRCNT': 'percent', 'CARET': 'caret',
-            'AMPS': 'amp', 'STAR': 'astrk', 'LPAR': 'lpar',
-            'RPAR': 'rpar', 'UNDER': 'under', 'PLUS': 'plus',
-            'PIPE': 'pipe', 'TILDE': 'tilde',
-
+            "EXCL": "excl",
+            "AT": "at",
+            "HASH": "hash",
+            "DLLR": "dollar",
+            "PRCNT": "percent",
+            "CARET": "caret",
+            "AMPS": "amp",
+            "STAR": "astrk",
+            "LPAR": "lpar",
+            "RPAR": "rpar",
+            "UNDER": "under",
+            "PLUS": "plus",
+            "PIPE": "pipe",
+            "TILDE": "tilde",
             # Numpad
-            'KP_N0': 'kp0', 'KP_N1': 'kp1', 'KP_N2': 'kp2',
-            'KP_N3': 'kp3', 'KP_N4': 'kp4', 'KP_N5': 'kp5',
-            'KP_N6': 'kp6', 'KP_N7': 'kp7', 'KP_N8': 'kp8',
-            'KP_N9': 'kp9', 'KP_DOT': 'kp_dot', 'KP_PLUS': 'kp_plus',
-            'KP_MINUS': 'kp_minus', 'KP_MULTIPLY': 'kp_multiply',
-            'KP_DIVIDE': 'kp_divide', 'KP_ENTER': 'kp_enter',
-
+            "KP_N0": "kp0",
+            "KP_N1": "kp1",
+            "KP_N2": "kp2",
+            "KP_N3": "kp3",
+            "KP_N4": "kp4",
+            "KP_N5": "kp5",
+            "KP_N6": "kp6",
+            "KP_N7": "kp7",
+            "KP_N8": "kp8",
+            "KP_N9": "kp9",
+            "KP_DOT": "kp_dot",
+            "KP_PLUS": "kp_plus",
+            "KP_MINUS": "kp_minus",
+            "KP_MULTIPLY": "kp_multiply",
+            "KP_DIVIDE": "kp_divide",
+            "KP_ENTER": "kp_enter",
             # Media
-            'C_MUTE': 'c_mute', 'C_VOL_UP': 'c_vol_up',
-            'C_VOL_DN': 'c_vol_dn', 'C_PP': 'c_pp',
-            'C_NEXT': 'c_next', 'C_PREV': 'c_prev',
-
+            "C_MUTE": "c_mute",
+            "C_VOL_UP": "c_vol_up",
+            "C_VOL_DN": "c_vol_dn",
+            "C_PP": "c_pp",
+            "C_NEXT": "c_next",
+            "C_PREV": "c_prev",
             # Special
-            'PSCRN': 'prnt', 'SLCK': 'slck', 'PAUSE': 'pause',
-            'INS': 'ins', 'MENU': 'menu',
+            "PSCRN": "prnt",
+            "SLCK": "slck",
+            "PAUSE": "pause",
+            "INS": "ins",
+            "MENU": "menu",
         }
 
     def transform_binding(self, binding: Binding) -> str:
@@ -121,15 +196,20 @@ class LayerTransformer:
 
         # Handle sticky key bindings
         from converter.behaviors.sticky_key import StickyKeyBinding
+
         if isinstance(binding, StickyKeyBinding):
             # Get the modifier key from the binding
             mod_key = binding.key.upper()
             # Map to shorter form if needed
             mod_map = {
-                'LSHIFT': 'lsft', 'RSHIFT': 'rsft',
-                'LCTRL': 'lctl', 'RCTRL': 'rctl',
-                'LALT': 'lalt', 'RALT': 'ralt',
-                'LGUI': 'lmet', 'RGUI': 'rmet'
+                "LSHIFT": "lsft",
+                "RSHIFT": "rsft",
+                "LCTRL": "lctl",
+                "RCTRL": "rctl",
+                "LALT": "lalt",
+                "RALT": "ralt",
+                "LGUI": "lmet",
+                "RGUI": "rmet",
             }
             mod_short = mod_map.get(mod_key, mod_key.lower())
             return f"sticky-{mod_short}"
@@ -145,12 +225,14 @@ class LayerTransformer:
         # Default case
         return str(binding)
 
-    def transform_bindings_matrix(self, matrix: List[List[Binding]]) -> List[List[str]]:
+    def transform_bindings_matrix(
+        self, matrix: List[List[Binding]]
+    ) -> List[List[str]]:
         """Transform a matrix of bindings to Kanata format.
-        
+
         Args:
             matrix: A 2D list of bindings
-            
+
         Returns:
             A 2D list of strings in Kanata format
         """
@@ -182,13 +264,13 @@ class LayerTransformer:
 
         # Create a KanataLayer for backward compatibility
         kanata_layer = KanataLayer(layer.name, keys)
-        
+
         # Format as a string
         result = f"(deflayer {layer.name}\n"
         for row in kanata_layer.keys:
             result += "  " + " ".join(row) + "\n"
         result += ")"
-        
+
         return result
 
     def transform_layers(self, zmk_layers: List[Layer]) -> str:

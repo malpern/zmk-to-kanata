@@ -37,10 +37,7 @@ class HoldTapTransformer:
         }
 
     def transform_binding(
-        self,
-        binding: HoldTapBinding,
-        tap_time: int,
-        hold_time: int
+        self, binding: HoldTapBinding, tap_time: int, hold_time: int
     ) -> Optional[str]:
         """Transform a ZMK hold-tap binding into Kanata format.
 
@@ -68,8 +65,7 @@ class HoldTapTransformer:
 
         # Map the hold key (usually a modifier)
         hold_key = self.modifier_map.get(
-            binding.hold_key,
-            binding.hold_key.lower()
+            binding.hold_key, binding.hold_key.lower()
         )
 
         # Map the tap key

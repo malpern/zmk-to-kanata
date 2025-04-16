@@ -237,7 +237,7 @@ class Layer(Binding):
     """Represents a layer with its name and key bindings."""
     name: str
     keys: List[List[KeyMapping]]
-    
+
     def to_kanata(self) -> str:
         """Convert the layer to Kanata format."""
         # Implementation details...
@@ -253,7 +253,7 @@ class KeyMapping(Binding):
     """Represents a single key mapping."""
     key: str  # For basic key press (e.g., "A", "B")
     hold_tap: Optional[HoldTap] = None  # For hold-tap behavior
-    
+
     def to_kanata(self) -> str:
         """Convert to Kanata format."""
         # Implementation details...
@@ -270,7 +270,7 @@ class HoldTap:
     behavior_name: str
     hold_key: str
     tap_key: str
-    
+
     def to_kanata(self) -> str:
         """Convert to Kanata format."""
         # Implementation details...
@@ -293,7 +293,7 @@ class HoldTapBinding:
     hold_trigger_on_release: bool = False
     # Whether to allow tap on release after hold timeout
     retro_tap: bool = False
-    
+
     def to_kanata(self) -> str:
         """Convert to Kanata format."""
         # Implementation details...
@@ -439,4 +439,4 @@ kanata_config = generate_kanata_config(keymap)
 write_kanata_file(kanata_config, 'output.kbd')
 ```
 
-For more examples, see the [examples](../examples) directory. 
+For more examples, see the [examples](../examples) directory.

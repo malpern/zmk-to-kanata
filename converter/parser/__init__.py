@@ -5,7 +5,7 @@ from .macro_parser import MacroParser
 from .sticky_key_parser import StickyKeyParser
 
 __all__ = [
-    'KeySequenceParser',
-    'MacroParser',
-    'StickyKeyParser',
+    "KeySequenceParser",
+    "MacroParser",
+    "StickyKeyParser",
 ]

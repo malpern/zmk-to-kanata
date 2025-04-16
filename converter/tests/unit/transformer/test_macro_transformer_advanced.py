@@ -1,8 +1,17 @@
 """Advanced tests for the macro transformer module."""
+
 import pytest
+
+from converter.error_handling.error_manager import (
+    ErrorSeverity,
+    get_error_manager,
+)
+from converter.parser.macro_parser import (
+    MacroDefinition,
+    MacroStep,
+    MacroUsage,
+)
 from converter.transformer.macro_transformer import MacroTransformer
-from converter.parser.macro_parser import MacroDefinition, MacroStep, MacroUsage
-from converter.error_handling.error_manager import get_error_manager, ErrorSeverity
 
 
 @pytest.fixture
@@ -20,7 +29,7 @@ def test_parameterized_macro_definition(transformer):
             MacroStep(command="kp", params=["key1"]),
             MacroStep(command="macro_wait_time", params=["100"]),
             MacroStep(command="kp", params=["key2"]),
-        ]
+        ],
     )
     result = transformer.transform_definition(macro_def)
     assert result.startswith("(defmacro param_macro (key1 key2)")
@@ -45,7 +54,7 @@ def test_nested_macro_definition(transformer):
             MacroStep(command="macro_wait_time", params=["100"]),
             MacroStep(command="macro_usage", params=["inner_macro"]),
             MacroStep(command="kp", params=["B"]),
-        ]
+        ],
     )
     result = transformer.transform_definition(macro_def)
     assert result.startswith("(defmacro nested_macro")
@@ -72,7 +81,7 @@ def test_parameterized_nested_macro(transformer):
             MacroStep(command="macro_wait_time", params=["100"]),
             MacroStep(command="macro_usage", params=["inner_macro", "key2"]),
             MacroStep(command="kp", params=["key1"]),
-        ]
+        ],
     )
     result = transformer.transform_definition(macro_def)
     assert result.startswith("(defmacro complex_macro (key1 key2)")
@@ -90,12 +99,14 @@ def test_invalid_parameterized_macro(transformer):
         name="bad_param_macro",
         params=["key1"],
         steps=[
-            MacroStep(command="kp", params=["key2"]),  # Using undefined parameter
-        ]
+            MacroStep(
+                command="kp", params=["key2"]
+            ),  # Using undefined parameter
+        ],
     )
     result = transformer.transform_definition(macro_def)
     errors = get_error_manager().get_errors()
-    
+
     assert any("Undefined parameter" in e.message for e in errors)
     assert "<unknown:kp>" in result or "key2" not in result
 
@@ -109,10 +120,12 @@ def test_invalid_nested_macro(transformer):
         name="bad_nested_macro",
         steps=[
             MacroStep(command="macro_usage", params=["non_existent_macro"]),
-        ]
+        ],
     )
     result = transformer.transform_definition(macro_def)
     errors = get_error_manager().get_errors()
-    
+
     assert any("Unknown macro" in e.message for e in errors)
-    assert "<unknown:macro_usage>" in result or "non_existent_macro" not in result 
+    assert (
+        "<unknown:macro_usage>" in result or "non_existent_macro" not in result
+    )

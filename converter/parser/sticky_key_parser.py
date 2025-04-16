@@ -16,25 +16,27 @@ class StickyKeyParser:
         self.behaviors: Dict[str, StickyKeyBehavior] = {}
 
     def parse_behavior(
-        self,
-        name: str,
-        config: dict
+        self, name: str, config: dict
     ) -> Optional[StickyKeyBehavior]:
         """Parse a sticky key behavior configuration."""
-        if config.get('compatible') == '"zmk,behavior-sticky-key"':
+        if config.get("compatible") == '"zmk,behavior-sticky-key"':
             # Check for invalid bindings
-            if 'bindings' in config and '<&invalid_behavior>' in config['bindings']:
-                raise ValueError(f"Invalid binding in sticky key behavior: {name}")
-                
+            if (
+                "bindings" in config
+                and "<&invalid_behavior>" in config["bindings"]
+            ):
+                raise ValueError(
+                    f"Invalid binding in sticky key behavior: {name}"
+                )
+
             # Extract release-after-ms if present
             release_after_ms = None
-            if 'release-after-ms' in config:
-                release_after_ms = int(config['release-after-ms'])
+            if "release-after-ms" in config:
+                release_after_ms = int(config["release-after-ms"])
 
             # Create the behavior
             behavior = StickyKeyBehavior(
-                name=name,
-                release_after_ms=release_after_ms
+                name=name, release_after_ms=release_after_ms
             )
 
             self.behaviors[name] = behavior
@@ -49,27 +51,27 @@ class StickyKeyParser:
 
         try:
             # Extract the key from the binding string
-            key = binding_str.replace('&sk', '').strip()
+            key = binding_str.replace("&sk", "").strip()
 
             # Check if the key is valid
-            if not key or key.isdigit() or key == 'INVALID':
+            if not key or key.isdigit() or key == "INVALID":
                 raise ValueError(f"Invalid sticky key: {key}")
 
             # For function keys, preserve the name
-            if key.startswith('F') and key[1:].isdigit():
+            if key.startswith("F") and key[1:].isdigit():
                 # Keep function keys as is (F1, F2, etc.)
                 pass
             else:
                 # Map modifiers to their Kanata representation
                 key_mapping = {
-                    'LSHIFT': 'lsft',
-                    'RSHIFT': 'rsft',
-                    'LCTRL': 'lctl',
-                    'RCTRL': 'rctl',
-                    'LALT': 'lalt',
-                    'RALT': 'ralt',
-                    'LGUI': 'lmet',
-                    'RGUI': 'rmet',
+                    "LSHIFT": "lsft",
+                    "RSHIFT": "rsft",
+                    "LCTRL": "lctl",
+                    "RCTRL": "rctl",
+                    "LALT": "lalt",
+                    "RALT": "ralt",
+                    "LGUI": "lmet",
+                    "RGUI": "rmet",
                 }
                 key = key_mapping.get(key, key.lower())
 

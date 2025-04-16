@@ -9,9 +9,11 @@ from typing import Optional
 # TODO: Import the centralized error manager when available
 # from converter.error_handling import get_error_manager
 
+
 @dataclass
 class LayerBehavior:
     """Represents a layer-switching behavior (e.g., momentary, toggle, to-layer)."""
+
     name: str
     layer_num: int
     behavior_type: str  # e.g., 'mo', 'to', 'tog'
@@ -34,15 +36,16 @@ class LayerBehavior:
     def to_kanata(self) -> str:
         """Convert to Kanata S-expression format for layer switching."""
         # TODO: Implement actual conversion logic based on behavior_type
-        if self.behavior_type == 'mo':
+        if self.behavior_type == "mo":
             return f"(layer-while-held {self.layer_num})"
-        elif self.behavior_type == 'to':
+        elif self.behavior_type == "to":
             return f"(layer-switch {self.layer_num})"
-        elif self.behavior_type == 'tog':
+        elif self.behavior_type == "tog":
             return f"(layer-toggle {self.layer_num})"
         else:
             # TODO: Log error via error manager
             return f"(unknown-layer-behavior {self.behavior_type} {self.layer_num})"
 
+
 # TODO: Integrate with centralized error manager for logging and validation
-# TODO: Add any additional methods or integration points as required by the new architecture 
+# TODO: Add any additional methods or integration points as required by the new architecture

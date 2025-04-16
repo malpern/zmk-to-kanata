@@ -1,8 +1,10 @@
 """Test fixtures for end-to-end testing."""
 
-import pytest
 import tempfile
 from pathlib import Path
+
+import pytest
+
 
 @pytest.fixture
 def temp_test_dir():
@@ -14,10 +16,11 @@ def temp_test_dir():
     with tempfile.TemporaryDirectory() as tmpdirname:
         yield Path(tmpdirname)
 
+
 @pytest.fixture
 def sample_zmk_file(temp_test_dir):
     """Create a simple ZMK keymap file for testing."""
-    content = '''/*
+    content = """/*
  * Copyright (c) 2023 The ZMK Contributors
  * SPDX-License-Identifier: MIT
  */
@@ -56,16 +59,17 @@ def sample_zmk_file(temp_test_dir):
         };
     };
 };
-'''
+"""
     file_path = temp_test_dir / "test_keymap.dtsi"
     with open(file_path, "w") as f:
         f.write(content)
     return file_path
 
+
 @pytest.fixture
 def expected_kanata_output():
     """Return expected Kanata configuration for the sample ZMK file."""
-    return '''
+    return """
 (defsrc
   a b c
   x y z)
@@ -77,15 +81,19 @@ def expected_kanata_output():
 (deflayer nav
   _ up _
   left down right)
-'''
+"""
+
 
 @pytest.fixture
 def cli_runner():
     """Fixture for running CLI commands."""
+
     def run(args):
         from converter.main import main
+
         try:
             return main(args)
         except SystemExit as e:
             return e.code
+
     return run

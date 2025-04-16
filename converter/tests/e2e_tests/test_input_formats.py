@@ -5,7 +5,7 @@ from converter.cli import main
 
 def test_single_layer_keymap(temp_test_dir):
     """Test conversion of a simple single-layer keymap."""
-    zmk_content = '''
+    zmk_content = """
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 
@@ -20,11 +20,11 @@ def test_single_layer_keymap(temp_test_dir):
         };
     };
 };
-'''
-    zmk_file = temp_test_dir / 'single_layer.dtsi'
+"""
+    zmk_file = temp_test_dir / "single_layer.dtsi"
     zmk_file.write_text(zmk_content)
 
-    kanata_file = temp_test_dir / 'single_layer.kbd'
+    kanata_file = temp_test_dir / "single_layer.kbd"
 
     exit_code = main([str(zmk_file), str(kanata_file)])
     assert exit_code == 0
@@ -43,8 +43,7 @@ def test_single_layer_keymap(temp_test_dir):
     lines = content.splitlines()
     # Skip header comment and empty lines
     layer_lines = [
-        line for line in lines
-        if line and not line.startswith(";;")
+        line for line in lines if line and not line.startswith(";;")
     ]
     print("\nGenerated content:")
     print(content)
@@ -57,7 +56,7 @@ def test_single_layer_keymap(temp_test_dir):
 
 def test_multiple_layer_keymap(temp_test_dir):
     """Test conversion of a keymap with multiple layers."""
-    zmk_content = '''
+    zmk_content = """
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 
@@ -79,11 +78,11 @@ def test_multiple_layer_keymap(temp_test_dir):
         };
     };
 };
-'''
-    zmk_file = temp_test_dir / 'multi_layer.dtsi'
+"""
+    zmk_file = temp_test_dir / "multi_layer.dtsi"
     zmk_file.write_text(zmk_content)
 
-    kanata_file = temp_test_dir / 'multi_layer.kbd'
+    kanata_file = temp_test_dir / "multi_layer.kbd"
 
     exit_code = main([str(zmk_file), str(kanata_file)])
     assert exit_code == 0
@@ -99,7 +98,7 @@ def test_multiple_layer_keymap(temp_test_dir):
 
 def test_empty_layer_keymap(temp_test_dir):
     """Test handling of empty layers in keymap."""
-    zmk_content = '''
+    zmk_content = """
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 
@@ -121,11 +120,11 @@ def test_empty_layer_keymap(temp_test_dir):
         };
     };
 };
-'''
-    zmk_file = temp_test_dir / 'empty_layer.dtsi'
+"""
+    zmk_file = temp_test_dir / "empty_layer.dtsi"
     zmk_file.write_text(zmk_content)
 
-    kanata_file = temp_test_dir / 'empty_layer.kbd'
+    kanata_file = temp_test_dir / "empty_layer.kbd"
 
     exit_code = main([str(zmk_file), str(kanata_file)])
     assert exit_code == 0
@@ -143,7 +142,7 @@ def test_empty_layer_keymap(temp_test_dir):
 
 def test_comments_and_whitespace(temp_test_dir):
     """Test handling of comments and whitespace in ZMK files."""
-    zmk_content = '''
+    zmk_content = """
 // This is a comment
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
@@ -165,11 +164,11 @@ def test_comments_and_whitespace(temp_test_dir):
         };
     };
 };
-'''
-    zmk_file = temp_test_dir / 'commented.dtsi'
+"""
+    zmk_file = temp_test_dir / "commented.dtsi"
     zmk_file.write_text(zmk_content)
 
-    kanata_file = temp_test_dir / 'commented.kbd'
+    kanata_file = temp_test_dir / "commented.kbd"
 
     exit_code = main([str(zmk_file), str(kanata_file)])
     assert exit_code == 0
@@ -186,8 +185,7 @@ def test_comments_and_whitespace(temp_test_dir):
     lines = content.splitlines()
     # Skip header comment and empty lines
     layer_lines = [
-        line for line in lines
-        if line and not line.startswith(";;")
+        line for line in lines if line and not line.startswith(";;")
     ]
     print("\nLayer lines:")
     print(layer_lines)

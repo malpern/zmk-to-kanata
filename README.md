@@ -65,7 +65,7 @@ Input ZMK file (`input.dtsi`):
                 &mo 1 &kp D &kp E
             >;
         };
-        
+
         function_layer {
             bindings = <
                 &kp F1 &kp F2 &kp F3

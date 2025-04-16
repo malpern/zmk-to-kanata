@@ -15,7 +15,7 @@
 
     keymap {
         compatible = "zmk,keymap";
-        
+
         default_layer {
             bindings = <
                 &sk LSHIFT  &sk LCTRL   &sk LALT
@@ -30,4 +30,4 @@
             >;
         };
     };
-}; 
+};

@@ -86,4 +86,4 @@ You can use these examples as a starting point for creating your own ZMK configu
 
 For more information on ZMK configuration, see the [ZMK Documentation](https://zmk.dev/docs/).
 
-For more information on Kanata configuration, see the [Kanata Documentation](https://github.com/jtroo/kanata). 
+For more information on Kanata configuration, see the [Kanata Documentation](https://github.com/jtroo/kanata).

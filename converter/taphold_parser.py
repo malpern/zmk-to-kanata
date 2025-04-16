@@ -8,6 +8,7 @@ from typing import Dict, List, Optional
 @dataclass
 class HoldTapBehavior:
     """Represents a ZMK hold-tap behavior configuration."""
+
     name: str
     label: str
     binding_cells: int
@@ -27,63 +28,57 @@ class TapHoldParser:
     """Parser for ZMK tap-hold behavior configurations."""
 
     VALID_FLAVORS = {
-        'tap-preferred',
-        'hold-preferred',
-        'balanced',
-        'tap-unless-interrupted'
+        "tap-preferred",
+        "hold-preferred",
+        "balanced",
+        "tap-unless-interrupted",
     }
 
     # Known custom hold-tap behaviors
     CUSTOM_BEHAVIORS = {
-        'hm': 'homerow_mods',  # Ben Vallack's homerow mods
-        'hs': 'homerow_shifts',  # Ben Vallack's homerow shifts
-        'td': 'tapdance',  # Ben Vallack's tapdance
+        "hm": "homerow_mods",  # Ben Vallack's homerow mods
+        "hs": "homerow_shifts",  # Ben Vallack's homerow shifts
+        "td": "tapdance",  # Ben Vallack's tapdance
     }
 
     def __init__(self):
         # Basic property patterns
-        self.name_pattern = re.compile(r'(\w+):\s*\w+\s*{')
+        self.name_pattern = re.compile(r"(\w+):\s*\w+\s*{")
         self.label_pattern = re.compile(r'label\s*=\s*"([^"]+)"')
-        self.cells_pattern = re.compile(r'#binding-cells\s*=\s*<(\d+)>')
-        self.binding_pattern = re.compile(r'<&(\w+)>')
+        self.cells_pattern = re.compile(r"#binding-cells\s*=\s*<(\d+)>")
+        self.binding_pattern = re.compile(r"<&(\w+)>")
         self.compatible_pattern = re.compile(
             r'compatible\s*=\s*"zmk,behavior-hold-tap"'
         )
 
         # Configuration patterns
         self.tapping_term_pattern = re.compile(
-            r'tapping-term-ms\s*=\s*<(\d+)>'
+            r"tapping-term-ms\s*=\s*<(\d+)>"
         )
-        self.quick_tap_pattern = re.compile(
-            r'quick-tap-ms\s*=\s*<(\d+)>'
-        )
+        self.quick_tap_pattern = re.compile(r"quick-tap-ms\s*=\s*<(\d+)>")
         self.require_prior_idle_pattern = re.compile(
-            r'require-prior-idle-ms\s*=\s*<(\d+)>'
+            r"require-prior-idle-ms\s*=\s*<(\d+)>"
         )
-        self.flavor_pattern = re.compile(
-            r'flavor\s*=\s*"([^"]+)"'
-        )
+        self.flavor_pattern = re.compile(r'flavor\s*=\s*"([^"]+)"')
         self.hold_trigger_positions_pattern = re.compile(
-            r'hold-trigger-key-positions\s*=\s*<([^>]+)>'
+            r"hold-trigger-key-positions\s*=\s*<([^>]+)>"
         )
         self.hold_trigger_on_release_pattern = re.compile(
-            r'hold-trigger-on-release'
+            r"hold-trigger-on-release"
         )
-        self.retro_tap_pattern = re.compile(
-            r'retro-tap'
-        )
+        self.retro_tap_pattern = re.compile(r"retro-tap")
 
         # Registry for custom behaviors
         self.behavior_registry: Dict[str, HoldTapBehavior] = {}
 
     def register_behavior(self, behavior: HoldTapBehavior) -> None:
         """Register a behavior in the registry.
-        
+
         Args:
             behavior: The behavior to register
         """
         self.behavior_registry[behavior.name] = behavior
-        
+
         # Also register any known aliases for this behavior
         for alias, full_name in self.CUSTOM_BEHAVIORS.items():
             if behavior.name == full_name:
@@ -91,10 +86,10 @@ class TapHoldParser:
 
     def get_behavior(self, name: str) -> Optional[HoldTapBehavior]:
         """Get a behavior from the registry by name.
-        
+
         Args:
             name: The name of the behavior to get
-            
+
         Returns:
             The behavior if found, None otherwise
         """
@@ -102,10 +97,10 @@ class TapHoldParser:
 
     def is_registered_behavior(self, name: str) -> bool:
         """Check if a behavior is registered.
-        
+
         Args:
             name: The name of the behavior to check
-            
+
         Returns:
             True if the behavior is registered, False otherwise
         """
@@ -152,9 +147,7 @@ class TapHoldParser:
         tapping_term = self._parse_int_param(
             self.tapping_term_pattern, zmk_config
         )
-        quick_tap = self._parse_int_param(
-            self.quick_tap_pattern, zmk_config
-        )
+        quick_tap = self._parse_int_param(self.quick_tap_pattern, zmk_config)
         prior_idle = self._parse_int_param(
             self.require_prior_idle_pattern, zmk_config
         )
@@ -184,12 +177,12 @@ class TapHoldParser:
             flavor=flavor,
             hold_trigger_key_positions=key_positions,
             hold_trigger_on_release=hold_trigger_on_release,
-            retro_tap=retro_tap
+            retro_tap=retro_tap,
         )
-        
+
         # Register the behavior in the registry
         self.register_behavior(behavior)
-        
+
         return behavior
 
     def _parse_int_param(
@@ -209,7 +202,7 @@ class TapHoldParser:
             # Split on whitespace and filter out empty strings
             positions = [pos for pos in match.group(1).split() if pos]
             # Convert to integers, removing any trailing commas
-            return [int(pos.rstrip(',')) for pos in positions]
+            return [int(pos.rstrip(",")) for pos in positions]
         except ValueError as e:
             raise ValueError(
                 f"Invalid key position value in "
@@ -235,22 +228,22 @@ HoldTapParser = TapHoldParser
 
 def is_hold_tap_binding(binding_str: str) -> bool:
     """Check if a binding string is a hold-tap binding.
-    
+
     Args:
         binding_str: The binding string to check
-        
+
     Returns:
         True if the binding string is a hold-tap binding, False otherwise
     """
     # Standard hold-tap prefixes
     standard_prefixes = ["&ht", "&lt", "&mt"]
-    
+
     # Custom hold-tap prefixes from Ben Vallack's keymap
     custom_prefixes = ["&hm", "&hs", "&td"]
-    
+
     # Check if the binding starts with any of the prefixes
     for prefix in standard_prefixes + custom_prefixes:
         if binding_str.startswith(prefix):
             return True
-            
+
     return False

@@ -27,19 +27,13 @@ class LayerParser:
 
     def parse_behaviors(self, content: str) -> None:
         """Parse behavior configurations from ZMK content."""
-        behaviors_pattern = r'behaviors\s*{\s*([^}]*?)}\s*;'
+        behaviors_pattern = r"behaviors\s*{\s*([^}]*?)}\s*;"
         behaviors_match = re.search(behaviors_pattern, content)
 
         if behaviors_match:
             behaviors_content = behaviors_match.group(1)
-            behavior_pattern = (
-                r'(\w+):\s*\w+\s*{\s*'
-                r'([^}]*?)}\s*;'
-            )
-            behavior_blocks = re.finditer(
-                behavior_pattern,
-                behaviors_content
-            )
+            behavior_pattern = r"(\w+):\s*\w+\s*{\s*" r"([^}]*?)}\s*;"
+            behavior_blocks = re.finditer(behavior_pattern, behaviors_content)
 
             for block in behavior_blocks:
                 name = block.group(1)
@@ -47,16 +41,16 @@ class LayerParser:
 
                 # Parse config into dict
                 config = {}
-                for line in config_str.split('\n'):
+                for line in config_str.split("\n"):
                     line = line.strip()
-                    if '=' in line:
-                        key, val = line.split('=', 1)
-                        config[key.strip()] = val.strip().rstrip(';')
-                    elif line and not line.startswith('//'):
+                    if "=" in line:
+                        key, val = line.split("=", 1)
+                        config[key.strip()] = val.strip().rstrip(";")
+                    elif line and not line.startswith("//"):
                         config[line] = True
 
                 # Check for hold-tap behaviors
-                if config.get('compatible') == '"zmk,behavior-hold-tap"':
+                if config.get("compatible") == '"zmk,behavior-hold-tap"':
                     # Parse the hold-tap behavior
                     behavior_text = block.group(0)
                     try:
@@ -67,22 +61,21 @@ class LayerParser:
                     continue
 
                 # Check for sticky key behaviors
-                if config.get('compatible') == '"zmk,behavior-sticky-key"':
+                if config.get("compatible") == '"zmk,behavior-sticky-key"':
                     self.sticky_key_parser.parse_behavior(name, config)
                     continue
 
                 # Check for key sequence behaviors
-                if config.get('compatible') == '"zmk,behavior-key-sequence"':
+                if config.get("compatible") == '"zmk,behavior-key-sequence"':
                     self.key_sequence_parser.parse_behavior(name, config)
                     continue
 
                 # Check for macro behaviors
-                if config.get('compatible') == '"zmk,behavior-macro"':
-                    if 'bindings' in config:
+                if config.get("compatible") == '"zmk,behavior-macro"':
+                    if "bindings" in config:
                         behavior = name
                         self.macro_parser.parse_bindings(
-                            behavior,
-                            config['bindings']
+                            behavior, config["bindings"]
                         )
                     continue
 
@@ -119,16 +112,18 @@ class LayerParser:
         if is_hold_tap_binding(binding_str):
             # Extract the behavior name from the binding string
             behavior_name = binding_str.split()[0][1:]  # Remove & prefix
-            
+
             # Check if this is a registered custom behavior
             if self.taphold_parser.is_registered_behavior(behavior_name):
                 # Default to a regular key binding that will be processed
                 # by the KeyMapping.from_zmk method
                 from .model.keymap_model import KeyMapping
+
                 return KeyMapping.from_zmk(binding_str)
 
         # Default to a regular key binding
         from .model.keymap_model import KeyMapping
+
         return KeyMapping.from_zmk(binding_str)
 
     def extract_layers(self, keymap_content: str) -> List[Layer]:
@@ -136,9 +131,7 @@ class LayerParser:
         layers = []
         # Updated pattern to be more flexible with whitespace
         layer_pattern = (
-            r'(\w+)_layer\s*{\s*'
-            r'bindings\s*=\s*<([^>]*)>'
-            r'[^}]*}\s*;'
+            r"(\w+)_layer\s*{\s*" r"bindings\s*=\s*<([^>]*)>" r"[^}]*}\s*;"
         )
 
         for match in re.finditer(layer_pattern, keymap_content):
@@ -147,17 +140,17 @@ class LayerParser:
 
             # Parse bindings
             bindings = []
-            
+
             # Split the bindings string by & to get individual bindings
             # First, remove extra whitespace
-            bindings_str = re.sub(r'\s+', ' ', bindings_str.strip())
-            
+            bindings_str = re.sub(r"\s+", " ", bindings_str.strip())
+
             # Then split by & but keep the & with each binding
             binding_parts = []
-            for part in bindings_str.split('&'):
+            for part in bindings_str.split("&"):
                 if part.strip():  # Skip empty parts
-                    binding_parts.append('&' + part.strip())
-            
+                    binding_parts.append("&" + part.strip())
+
             # Process each binding
             for binding_str in binding_parts:
                 try:
@@ -181,7 +174,7 @@ class LayerParser:
         # Extract keymap section - simplified pattern
         keymap_pattern = (
             r'keymap\s*{\s*compatible\s*=\s*"zmk,keymap";\s*'
-            r'([\s\S]*?)}\s*;'
+            r"([\s\S]*?)}\s*;"
         )
         match = re.search(keymap_pattern, content)
         if not match:
@@ -190,9 +183,7 @@ class LayerParser:
         # Extract layers directly from the content
         layers = []
         layer_pattern = (
-            r'(\w+)_layer\s*{\s*'
-            r'bindings\s*=\s*<([^>]*)>'
-            r'[^}]*}\s*;'
+            r"(\w+)_layer\s*{\s*" r"bindings\s*=\s*<([^>]*)>" r"[^}]*}\s*;"
         )
 
         for match in re.finditer(layer_pattern, content):
@@ -201,17 +192,17 @@ class LayerParser:
 
             # Parse bindings
             bindings = []
-            
+
             # Split the bindings string by & to get individual bindings
             # First, remove extra whitespace
-            bindings_str = re.sub(r'\s+', ' ', bindings_str.strip())
-            
+            bindings_str = re.sub(r"\s+", " ", bindings_str.strip())
+
             # Then split by & but keep the & with each binding
             binding_parts = []
-            for part in bindings_str.split('&'):
+            for part in bindings_str.split("&"):
                 if part.strip():  # Skip empty parts
-                    binding_parts.append('&' + part.strip())
-            
+                    binding_parts.append("&" + part.strip())
+
             # Process each binding
             for binding_str in binding_parts:
                 try:

@@ -37,4 +37,4 @@ This checklist outlines the step-by-step plan for restoring a working, testable 
 
 - [ ] **Retrospective and Next Steps**
     - [ ] Add a section to `IMPLEMENTATION.md` or a new `CONTRIBUTING.md` with lessons learned and best practices
-    - [ ] Consider adding pre-commit hooks or CI checks for import errors and missing files 
+    - [ ] Consider adding pre-commit hooks or CI checks for import errors and missing files

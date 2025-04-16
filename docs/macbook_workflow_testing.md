@@ -74,4 +74,4 @@ The current implementation supports:
 - Limited to standard keyboard layouts
 - Some hardware-specific ZMK features have no Kanata equivalent
 
-This comprehensive testing approach will validate the entire workflow and ensure that ZMK configurators can effectively serve as MacBook keyboard configurators when paired with the converter and Kanata. 
+This comprehensive testing approach will validate the entire workflow and ensure that ZMK configurators can effectively serve as MacBook keyboard configurators when paired with the converter and Kanata.

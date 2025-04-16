@@ -1,7 +1,9 @@
 import logging
 from typing import Any
+
 from converter.behaviors.key_sequence import KeySequenceBinding
-from converter.error_handling import get_error_manager, ErrorSeverity
+from converter.error_handling import ErrorSeverity, get_error_manager
+
 
 class KeySequenceTransformer:
     """Transformer for ZMK key sequence behaviors to Kanata format."""
@@ -19,11 +21,13 @@ class KeySequenceTransformer:
             str: Kanata S-expression for the key sequence
         """
         # Accept KeySequenceBinding or compatible object
-        if not hasattr(binding, 'keys') or not isinstance(binding, KeySequenceBinding):
+        if not hasattr(binding, "keys") or not isinstance(
+            binding, KeySequenceBinding
+        ):
             self.error_manager.add_error(
                 message=f"Invalid binding type for key sequence: {type(binding)}",
                 source="key_sequence_transformer",
-                severity=ErrorSeverity.ERROR
+                severity=ErrorSeverity.ERROR,
             )
             self.logger.error(f"Invalid binding type: {type(binding)}")
             return "(chord)"
@@ -33,9 +37,11 @@ class KeySequenceTransformer:
             self.error_manager.add_error(
                 message="Key sequence binding has no keys or keys is not a list.",
                 source="key_sequence_transformer",
-                severity=ErrorSeverity.WARNING
+                severity=ErrorSeverity.WARNING,
             )
-            self.logger.warning("Key sequence binding has no keys or keys is not a list.")
+            self.logger.warning(
+                "Key sequence binding has no keys or keys is not a list."
+            )
             return "(chord)"
 
         # Validate each key
@@ -44,7 +50,7 @@ class KeySequenceTransformer:
                 self.error_manager.add_error(
                     message=f"Invalid key in key sequence: {k}",
                     source="key_sequence_transformer",
-                    severity=ErrorSeverity.WARNING
+                    severity=ErrorSeverity.WARNING,
                 )
                 self.logger.warning(f"Invalid key in key sequence: {k}")
 
@@ -56,9 +62,9 @@ class KeySequenceTransformer:
                 message=f"Error converting key sequence to Kanata: {e}",
                 source="key_sequence_transformer",
                 severity=ErrorSeverity.ERROR,
-                exception=e
+                exception=e,
             )
             self.logger.error(f"Error converting key sequence to Kanata: {e}")
             expr = "(chord)"
 
-        return expr 
+        return expr
