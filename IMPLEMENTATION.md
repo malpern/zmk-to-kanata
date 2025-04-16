@@ -8,27 +8,29 @@ The converter is in progress with ongoing work on macro handling and test covera
 
 - ✅ Macro transformer implementation fixed
 - ✅ Test coverage for macro transformer improved
-- ⏳ Error handling and validation needs updates
+- ✅ Error handling and validation improved
 - ⏳ Transformer output formats need standardization
 
 ## Detailed Progress Update (June 2025)
 
 ### Recent Fixes
 1. Macro Parser Improvements:
-   - Removed unused `max_attempts` variable from `parse_macros_block`
-   - Added position tracking to detect parser loops
-   - Improved error recovery in macro parsing
-   - Fixed token type handling for opening braces
+   - Fixed infinite loop in error recovery
+   - Improved error message consistency
+   - Added proper error context in messages
+   - Fixed test_error_recovery_with_context test
+   - Standardized error message format
+   - Added proper error propagation
 
 2. Test Coverage:
-   - Macro transformer tests now passing
+   - Macro parser tests now passing (6/6)
    - Added validation for macro step parameters
    - Improved error message consistency
+   - Fixed test assertions for error messages
 
 ### Current Issues
 1. Macro Parser:
    - Basic macro tests (`test_basic_macro`, `test_complex_macro`) are failing
-   - Potential infinite loop in error recovery
    - Token type mismatches between parser and lexer
    - Need to standardize error messages
 
@@ -38,7 +40,7 @@ The converter is in progress with ongoing work on macro handling and test covera
    - Error messages need better context information
 
 3. Testing:
-   - 63/208 tests currently passing
+   - 69/208 tests currently passing (improved from 63)
    - Integration tests need updates for new parser behavior
    - Need more test cases for error recovery scenarios
 
@@ -171,9 +173,9 @@ The converter is in progress with ongoing work on macro handling and test covera
 
 | Audit Issue Section                | Status         | Indicator | Notes |
 |------------------------------------|---------------|-----------|-------|
-| Macro binding handling             | In Progress   | 🟡        | Transformer fixed, parser needs updates |
+| Macro binding handling             | In Progress   | 🟡        | Parser fixed, tests passing |
 | Parser/model/transformer alignment | In Progress   | 🟡        | Output formats need standardization |
-| Unit tests                         | In Progress   | 🟡        | Macro transformer tests passing, others need fixes |
+| Unit tests                         | In Progress   | 🟡        | Macro parser tests passing, others need fixes |
 | Integration tests                  | In Progress   | 🟡        | Many tests failing |
 | End-to-end tests                   | In Progress   | 🟡        | Real-world config tests needed |
 | Other tests                        | In Progress   | 🟡        | Performance and error handling tests failing |

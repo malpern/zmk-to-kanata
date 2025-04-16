@@ -4,14 +4,11 @@ from converter.parser.macro_parser import (
     MacroParser,
     MacroDefinition,
     MacroStep,
-    MacroStepType,
     MacroParserState,
-    MacroUsageParserState,
     Token,
     TokenType,
 )
 from converter.parser.parser_error import ParserError
-from converter.error_handling.error_manager import ErrorSeverity
 from converter.parser.zmk_lexer import SourceLocation
 
 
@@ -91,7 +88,11 @@ def test_error_recovery_with_context(macro_parser):
         Token(TokenType.EQUALS, "=", SourceLocation(4, 15, 36)),
         Token(TokenType.OPEN_ANGLE, "<", SourceLocation(4, 17, 38)),
         Token(TokenType.AMPERSAND, "&", SourceLocation(4, 18, 39)),
-        Token(TokenType.IDENTIFIER, "invalid_command", SourceLocation(4, 19, 40)),
+        Token(
+            TokenType.IDENTIFIER, 
+            "invalid_command", 
+            SourceLocation(4, 19, 40)
+        ),
         Token(TokenType.CLOSE_ANGLE, ">", SourceLocation(4, 33, 54)),
         Token(TokenType.SEMICOLON, ";", SourceLocation(4, 34, 55)),
         Token(TokenType.CLOSE_BRACE, "}", SourceLocation(5, 9, 64)),
@@ -113,7 +114,7 @@ def test_error_recovery_with_context(macro_parser):
     
     error_message = str(exc_info.value)
     assert "invalid_command" in error_message
-    assert "line" in error_message  # Check for line number in error message
+    assert "Line " in error_message  # Check for line number format "Line X:"
 
 
 def test_state_transition_validation(macro_parser):
