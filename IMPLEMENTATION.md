@@ -10,6 +10,7 @@ The converter is in progress with ongoing work on macro handling and test covera
 - ✅ Test coverage for macro transformer improved
 - ✅ Error handling and validation improved
 - ✅ Macro parser error recovery fixed
+- ✅ Basic macro tests passing (8/8)
 - ⏳ Transformer output formats need standardization
 
 ## Detailed Progress Update (June 2025)
@@ -24,19 +25,21 @@ The converter is in progress with ongoing work on macro handling and test covera
    - Added proper error propagation
    - Fixed bindings parsing in macro settings
    - Added support for invalid command detection
+   - Fixed basic and complex macro tests
+   - Improved error recovery state handling
 
 2. Test Coverage:
-   - Macro parser tests now passing (6/6)
+   - Macro parser tests now passing (8/8)
    - Added validation for macro step parameters
    - Improved error message consistency
    - Fixed test assertions for error messages
    - Added proper error context in test cases
+   - Added tests for basic and complex macros
 
 ### Current Issues
 1. Macro Parser:
-   - Basic macro tests (`test_basic_macro`, `test_complex_macro`) are failing
-   - Token type mismatches between parser and lexer
-   - Need to standardize error messages
+   - Some linter errors remain (line length and indentation)
+   - Need to standardize error messages further
 
 2. Error Handling:
    - Error recovery needs more robust position tracking
@@ -49,10 +52,9 @@ The converter is in progress with ongoing work on macro handling and test covera
    - Need more test cases for error recovery scenarios
 
 ### Next Steps
-1. Fix remaining macro parser issues:
-   - Debug basic macro test failures
-   - Implement proper token type handling
-   - Add more robust error recovery
+1. Fix remaining linter errors:
+   - Address line length issues
+   - Fix indentation in continuation lines
    - Standardize error messages
 
 2. Improve test coverage:
