@@ -128,8 +128,12 @@ def test_state_transition_validation(macro_parser):
     assert macro_parser.state == MacroParserState.IN_MACROS_BLOCK
 
     # Test invalid transition
-    macro_parser._transition_state(MacroParserState.IN_PARAMS)  # Invalid from IN_MACROS_BLOCK
-    assert macro_parser.state == MacroParserState.IN_PARAMS  # State still changes
+    # Invalid from IN_MACROS_BLOCK
+    macro_parser._transition_state(
+        MacroParserState.IN_PARAMS
+    )
+    # State still changes
+    assert macro_parser.state == MacroParserState.IN_PARAMS
     # Error should be logged but not prevent the transition
 
 
@@ -160,8 +164,18 @@ def test_synchronization_points(macro_parser):
     """Test synchronization points for error recovery."""
     macro_parser.tokens = [
         Token(TokenType.IDENTIFIER, "invalid", SourceLocation(1, 1, 0)),
-        Token(TokenType.AMPERSAND, "&", SourceLocation(1, 2, 1)),  # Should be a sync point
-        Token(TokenType.SEMICOLON, ";", SourceLocation(1, 3, 2))   # Should be a sync point
+        # Should be a sync point
+        Token(
+            TokenType.AMPERSAND, 
+            "&", 
+            SourceLocation(1, 2, 1)
+        ),
+        # Should be a sync point
+        Token(
+            TokenType.SEMICOLON, 
+            ";", 
+            SourceLocation(1, 3, 2)
+        )
     ]
     macro_parser.position = 0
     macro_parser._synchronize_to_next_step()
@@ -170,7 +184,13 @@ def test_synchronization_points(macro_parser):
     macro_parser.position = 0
     macro_parser.tokens = [
         Token(TokenType.IDENTIFIER, "invalid", SourceLocation(1, 1, 0)),
-        Token(TokenType.SEMICOLON, ";", SourceLocation(1, 2, 1))   # Should be a sync point
+        # Should be a sync point
+        Token(
+            TokenType.SEMICOLON, 
+            ";", 
+            SourceLocation(1, 2, 1)
+        )
     ]
     macro_parser._synchronize_to_next_step()
-    assert macro_parser.position == 2  # Should consume the semicolon 
+    # Should consume the semicolon
+    assert macro_parser.position == 2 
