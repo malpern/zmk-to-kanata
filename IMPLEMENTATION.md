@@ -12,7 +12,7 @@ The converter is in progress with ongoing work on macro handling and test covera
 - ✅ Macro parser error recovery fixed
 - ✅ Basic macro tests passing (8/8)
 - ✅ Code formatting standardized with Black
-- ⏳ Transformer output formats need standardization
+- ✅ Transformer output formats standardized
 
 ## Detailed Progress Update (June 2025)
 
@@ -36,12 +36,14 @@ The converter is in progress with ongoing work on macro handling and test covera
    - Fixed test assertions for error messages
    - Added proper error context in test cases
    - Added tests for basic and complex macros
+   - Added advanced macro transformer tests
 
 3. Code Quality:
    - Set up Black formatter with 79-character line length
    - Added pre-commit hooks for automatic formatting
    - Fixed line length issues across codebase
    - Standardized code formatting
+   - Standardized transformer output formats
 
 ### Current Issues
 1. Macro Parser:
@@ -58,6 +60,7 @@ The converter is in progress with ongoing work on macro handling and test covera
    - 69/208 tests currently passing (improved from 63)
    - Integration tests need updates for new parser behavior
    - Need more test cases for error recovery scenarios
+   - Advanced macro transformer tests added and passing
 
 ### Next Steps
 1. Improve test coverage:
@@ -72,18 +75,11 @@ The converter is in progress with ongoing work on macro handling and test covera
    - Document token type requirements
    - Add examples for common macro usage patterns
 
-3. Transformer Standardization:
-   - Review and standardize output formats across transformers
-   - Ensure consistent structure for all transformers
-   - Implement proper handling of nested bindings
-   - Fix ZMK to Kanata type mapping
-   - Add validation for transformer outputs
-
-4. Error Handling Improvements:
-   ✅ Implemented robust position tracking in error recovery
-   ✅ Improved synchronization between parser states
-   ✅ Added better context information to error messages
-   ✅ Standardized error message format across codebase
+3. Error Handling Improvements:
+   - Add more comprehensive error recovery tests
+   - Improve error context in integration tests
+   - Add validation for complex macro scenarios
+   - Document error handling patterns
 
 ## Project Goals
 
