@@ -1,0 +1,796 @@
+FF..FFFF..FFFFFFFFFFFFFFFFFFFFFFF.FFFFFFFFFFFFFFFFFFFFF.....F.FFFFFFFFFF [ 19%]
+FFFFFFFFFFFFFFF.FFFF..F.F...F.FFFFFFFFFF............FF.F.FF............. [ 39%]
+....F..F
+=================================== FAILURES ===================================
+________________________ test_multi_layer_with_hold_tap ________________________
+converter/tests/e2e_tests/test_advanced_features.py:57: in test_multi_layer_with_hold_tap
+    assert exit_code == 0
+E   assert None == 0
+____________________ test_multi_layer_with_custom_behaviors ____________________
+converter/tests/e2e_tests/test_advanced_features.py:153: in test_multi_layer_with_custom_behaviors
+    assert exit_code == 0
+E   assert None == 0
+__________________________ test_basic_file_conversion __________________________
+converter/tests/e2e_tests/test_cli.py:59: in test_basic_file_conversion
+    assert exit_code == 0
+E   assert None == 0
+___________________________ test_missing_input_file ____________________________
+converter/main.py:97: in main
+    with open(args.input_file, 'r') as f:
+E   FileNotFoundError: [Errno 2] No such file or directory: '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp_zbpe711/nonexistent.dtsi'
+
+During handling of the above exception, another exception occurred:
+converter/tests/e2e_tests/test_cli.py:74: in test_missing_input_file
+    exit_code = main([str(input_file), str(output_file)])
+converter/cli.py:56: in main
+    return convert_main(main_args)
+converter/main.py:127: in main
+    sys.exit(1)
+E   SystemExit: 1
+----------------------------- Captured stderr call -----------------------------
+ERROR: [Errno 2] No such file or directory: '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp_zbpe711/nonexistent.dtsi'
+__________________________ test_invalid_input_format ___________________________
+converter/parser/zmk_parser.py:137: in parse
+    raise ValueError("No layers found in ZMK file")
+E   ValueError: No layers found in ZMK file
+
+The above exception was the direct cause of the following exception:
+converter/zmk_to_kanata.py:65: in convert_zmk_to_kanata
+    keymap_config = parser.parse(Path(tmp_path))
+converter/parser/zmk_parser.py:146: in parse
+    raise ParserError(f"Failed to parse ZMK file: {e}") from e
+E   converter.parser.parser_error.ParserError: Failed to parse ZMK file: No layers found in ZMK file
+
+During handling of the above exception, another exception occurred:
+converter/main.py:101: in main
+    kanata_config, metadata = convert_zmk_to_kanata(
+converter/zmk_to_kanata.py:101: in convert_zmk_to_kanata
+    error_mgr.add_error(
+converter/error_handling/error_manager.py:128: in add_error
+    raise Exception(str(error))
+E   Exception: ERROR: [converter] - Error during conversion: Failed to parse ZMK file: No layers found in ZMK file
+
+During handling of the above exception, another exception occurred:
+converter/tests/e2e_tests/test_cli.py:90: in test_invalid_input_format
+    exit_code = main([str(input_file), str(output_file)])
+converter/cli.py:56: in main
+    return convert_main(main_args)
+converter/main.py:127: in main
+    sys.exit(1)
+E   SystemExit: 1
+----------------------------- Captured stderr call -----------------------------
+ERROR: ERROR: [converter] - Error during conversion: Failed to parse ZMK file: No layers found in ZMK file
+------------------------------ Captured log call -------------------------------
+ERROR    converter.error_handling.error_manager:error_manager.py:145 ERROR: [converter] - Error during conversion: Failed to parse ZMK file: No layers found in ZMK file
+___________________________ test_invalid_output_path ___________________________
+converter/tests/e2e_tests/test_cli.py:125: in test_invalid_output_path
+    assert exit_code == 1
+E   assert None == 1
+___________________________ test_output_file_format ____________________________
+converter/tests/e2e_tests/test_file_operations.py:101: in test_output_file_format
+    assert 'a b' in lines[default_layer_start + 1].strip()
+E   AssertionError: assert 'a b' in ''
+E    +  where '' = <built-in method strip of str object at 0x104049f80>()
+E    +    where <built-in method strip of str object at 0x104049f80> = '  '.strip
+_________________________ test_homerow_mods_conversion _________________________
+converter/tests/e2e_tests/test_homerow_mods.py:37: in test_homerow_mods_conversion
+    assert "(tap-hold 200 200 a lmet)" in kanata_config
+E   AssertionError: assert '(tap-hold 200 200 a lmet)' in ';; ZMK to Kanata Configuration\n;; Generated automatically - DO NOT EDIT\n\n;; Global settings\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default\n  \n)'
+_______________________ test_homerow_mods_mac_conversion _______________________
+converter/tests/e2e_tests/test_homerow_mods.py:74: in test_homerow_mods_mac_conversion
+    assert "(tap-hold 200 200 a lmet)" in kanata_config
+E   AssertionError: assert '(tap-hold 200 200 a lmet)' in ';; ZMK to Kanata Configuration\n;; Generated automatically - DO NOT EDIT\n\n;; Global settings\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default\n  \n)'
+___________________________ test_single_layer_keymap ___________________________
+converter/tests/e2e_tests/test_input_formats.py:30: in test_single_layer_keymap
+    assert exit_code == 0
+E   assert None == 0
+__________________________ test_multiple_layer_keymap __________________________
+converter/tests/e2e_tests/test_input_formats.py:89: in test_multiple_layer_keymap
+    assert exit_code == 0
+E   assert None == 0
+___________________________ test_empty_layer_keymap ____________________________
+converter/tests/e2e_tests/test_input_formats.py:131: in test_empty_layer_keymap
+    assert exit_code == 0
+E   assert None == 0
+_________________________ test_comments_and_whitespace _________________________
+converter/tests/e2e_tests/test_input_formats.py:175: in test_comments_and_whitespace
+    assert exit_code == 0
+E   assert None == 0
+_________________________ test_basic_macro_conversion __________________________
+converter/tests/e2e_tests/test_macro.py:42: in test_basic_macro_conversion
+    assert exit_code == 0
+E   assert None == 0
+________________________ test_complex_macro_conversion _________________________
+converter/tests/e2e_tests/test_macro.py:102: in test_complex_macro_conversion
+    assert exit_code == 0
+E   assert None == 0
+_____________________ test_parameterized_macro_conversion ______________________
+converter/tests/e2e_tests/test_macro.py:157: in test_parameterized_macro_conversion
+    assert exit_code == 0
+E   assert None == 0
+_________________________ test_output_file_permissions _________________________
+converter/tests/e2e_tests/test_output_validation.py:37: in test_output_file_permissions
+    assert exit_code == 0
+E   assert None == 0
+__________________________ test_output_file_encoding ___________________________
+converter/tests/e2e_tests/test_output_validation.py:81: in test_output_file_encoding
+    assert exit_code == 0
+E   assert None == 0
+___________________________ test_output_file_format ____________________________
+converter/tests/e2e_tests/test_output_validation.py:118: in test_output_file_format
+    assert exit_code == 0
+E   assert None == 0
+_____________________ test_kanata_s_expression_conformity ______________________
+converter/model/keymap_model.py:54: in __post_init__
+    validate_key(self.key)
+converter/validation/key_validator.py:243: in validate_key
+    raise KeyValidationError(
+E   converter.validation.key_validator.KeyValidationError: Invalid key: macro test_macro
+
+During handling of the above exception, another exception occurred:
+converter/parser/layer_parser.py:164: in parse_bindings_line
+    result = [self.parse_binding(b) for b in bindings]
+converter/parser/layer_parser.py:122: in parse_binding
+    return KeyMapping(key=binding)
+converter/model/keymap_model.py:57: in __post_init__
+    raise ValueError(msg)
+E   ValueError: Invalid key mapping: Invalid key: macro test_macro
+
+The above exception was the direct cause of the following exception:
+converter/parser/zmk_parser.py:250: in _parse_binding_line
+    self.layer_parser.add_bindings_line(line)
+converter/parser/layer_parser.py:188: in add_bindings_line
+    bindings = self.parse_bindings_line(line)
+converter/parser/layer_parser.py:168: in parse_bindings_line
+    raise ValueError(
+E   ValueError: Invalid binding in line: &kp A &macro test_macro
+
+During handling of the above exception, another exception occurred:
+converter/model/keymap_model.py:54: in __post_init__
+    validate_key(self.key)
+converter/validation/key_validator.py:243: in validate_key
+    raise KeyValidationError(
+E   converter.validation.key_validator.KeyValidationError: Invalid key: unknown
+
+During handling of the above exception, another exception occurred:
+converter/parser/zmk_parser.py:173: in _parse_line
+    self._parse_bindings_start(line)
+converter/parser/zmk_parser.py:234: in _parse_bindings_start
+    self._parse_binding_line(bindings)
+converter/parser/zmk_parser.py:257: in _parse_binding_line
+    self.error_manager.handle_invalid_binding(
+converter/error_recovery.py:161: in handle_invalid_binding
+    return KeyMapping(key="unknown")
+converter/model/keymap_model.py:57: in __post_init__
+    raise ValueError(msg)
+E   ValueError: Invalid key mapping: Invalid key: unknown
+
+During handling of the above exception, another exception occurred:
+converter/zmk_to_kanata.py:65: in convert_zmk_to_kanata
+    keymap_config = parser.parse(Path(tmp_path))
+converter/parser/zmk_parser.py:144: in parse
+    raise e
+converter/parser/zmk_parser.py:134: in parse
+    self._parse_line(line)
+converter/parser/zmk_parser.py:185: in _parse_line
+    raise ParserError(f"Line {self.current_line}: {str(e)}")
+E   converter.parser.parser_error.ParserError: Line 16: Invalid key mapping: Invalid key: unknown
+
+During handling of the above exception, another exception occurred:
+converter/main.py:101: in main
+    kanata_config, metadata = convert_zmk_to_kanata(
+converter/zmk_to_kanata.py:101: in convert_zmk_to_kanata
+    error_mgr.add_error(
+converter/error_handling/error_manager.py:128: in add_error
+    raise Exception(str(error))
+E   Exception: ERROR: [converter] - Error during conversion: Line 16: Invalid key mapping: Invalid key: unknown
+
+During handling of the above exception, another exception occurred:
+converter/tests/e2e_tests/test_output_validation.py:180: in test_kanata_s_expression_conformity
+    exit_code = main([str(zmk_file), str(kanata_file)])
+converter/cli.py:56: in main
+    return convert_main(main_args)
+converter/main.py:127: in main
+    sys.exit(1)
+E   SystemExit: 1
+----------------------------- Captured stderr call -----------------------------
+ERROR: ERROR: [converter] - Error during conversion: Line 16: Invalid key mapping: Invalid key: unknown
+------------------------------ Captured log call -------------------------------
+WARNING  converter.error_recovery:error_recovery.py:159 Line 16: Invalid binding '&kp A &macro test_macro' converted to unknown
+ERROR    converter.parser.zmk_parser:zmk_parser.py:182 Error parsing line 16: bindings = <&kp A &macro test_macro>;
+ERROR    converter.error_handling.error_manager:error_manager.py:145 ERROR: [converter] - Error during conversion: Line 16: Invalid key mapping: Invalid key: unknown
+_________________________ test_qwerty_standard_layout __________________________
+converter/tests/e2e_tests/test_real_world_configs.py:79: in test_qwerty_standard_layout
+    assert "esc" in kanata_content.lower()
+E   AssertionError: assert 'esc' in ';; zmk to kanata configuration\n;; generated automatically - do not edit\n\n;; global settings\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default\n  \n)\n\n(deflayer function\n  \n)'
+E    +  where ';; zmk to kanata configuration\n;; generated automatically - do not edit\n\n;; global settings\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default\n  \n)\n\n(deflayer function\n  \n)' = <built-in method lower of str object at 0x103efe2e0>()
+E    +    where <built-in method lower of str object at 0x103efe2e0> = ';; ZMK to Kanata Configuration\n;; Generated automatically - DO NOT EDIT\n\n;; Global settings\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default\n  \n)\n\n(deflayer function\n  \n)'.lower
+_____________________________ test_colemak_layout ______________________________
+converter/tests/e2e_tests/test_real_world_configs.py:157: in test_colemak_layout
+    assert "q w f p g" in default_layer.lower()
+E   AssertionError: assert 'q w f p g' in '\n  \n)\n\n'
+E    +  where '\n  \n)\n\n' = <built-in method lower of str object at 0x10404aeb0>()
+E    +    where <built-in method lower of str object at 0x10404aeb0> = '\n  \n)\n\n'.lower
+__________________________ test_split_keyboard_layout __________________________
+converter/tests/e2e_tests/test_real_world_configs.py:237: in test_split_keyboard_layout
+    assert "lgui" in kanata_content.lower()
+E   AssertionError: assert 'lgui' in ';; zmk to kanata configuration\n;; generated automatically - do not edit\n\n;; global settings\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default\n  \n)\n\n(deflayer lower\n  \n)\n\n(deflayer raise\n  \n)'
+E    +  where ';; zmk to kanata configuration\n;; generated automatically - do not edit\n\n;; global settings\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default\n  \n)\n\n(deflayer lower\n  \n)\n\n(deflayer raise\n  \n)' = <built-in method lower of str object at 0x103f0b230>()
+E    +    where <built-in method lower of str object at 0x103f0b230> = ';; ZMK to Kanata Configuration\n;; Generated automatically - DO NOT EDIT\n\n;; Global settings\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default\n  \n)\n\n(deflayer lower\n  \n)\n\n(deflayer raise\n  \n)'.lower
+___________________ test_ergonomic_layout_with_homerow_mods ____________________
+converter/tests/e2e_tests/test_real_world_configs.py:344: in test_ergonomic_layout_with_homerow_mods
+    assert exit_code == 0
+E   assert None == 0
+----------------------------- Captured stdout call -----------------------------
+Error output: 
+________________________ test_ben_vallack_cradio_layout ________________________
+converter/tests/e2e_tests/test_real_world_configs.py:469: in test_ben_vallack_cradio_layout
+    assert exit_code == 0
+E   assert None == 0
+----------------------------- Captured stdout call -----------------------------
+Error output: 
+______________________________ test_dvorak_layout ______________________________
+converter/tests/e2e_tests/test_real_world_configs.py:589: in test_dvorak_layout
+    assert "apos" in default_layer.lower() or "'" in default_layer
+E   assert ('apos' in '\n  \n)\n\n' or "'" in '\n  \n)\n\n')
+E    +  where '\n  \n)\n\n' = <built-in method lower of str object at 0x104007480>()
+E    +    where <built-in method lower of str object at 0x104007480> = '\n  \n)\n\n'.lower
+_________________________ test_ergonomic_kyria_layout __________________________
+converter/tests/e2e_tests/test_real_world_configs.py:688: in test_ergonomic_kyria_layout
+    assert "space" in default_layer.lower()
+E   AssertionError: assert 'space' in '\n  \n)\n\n'
+E    +  where '\n  \n)\n\n' = <built-in method lower of str object at 0x1040062e0>()
+E    +    where <built-in method lower of str object at 0x1040062e0> = '\n  \n)\n\n'.lower
+____________________________ test_sticky_key_basic _____________________________
+converter/tests/e2e_tests/test_sticky_keys.py:39: in test_sticky_key_basic
+    assert exit_code == 0
+E   assert None == 0
+___________________________ test_sticky_key_advanced ___________________________
+converter/tests/e2e_tests/test_sticky_keys.py:62: in test_sticky_key_advanced
+    assert exit_code == 0
+E   assert None == 0
+________________________ test_basic_conversion_pipeline ________________________
+converter/tests/integration/end_to_end/test_end_to_end.py:44: in test_basic_conversion_pipeline
+    assert exit_code == 0
+E   assert None == 0
+_______________________ test_complex_binding_conversion ________________________
+converter/tests/integration/end_to_end/test_end_to_end.py:94: in test_complex_binding_conversion
+    assert result is True
+E   AssertionError: assert (';; ZMK to Kanata Configuration\n;; Generated automatically - DO NOT EDIT\n\n;; Global settings\n(defvar tap-time 200...'INFO': 1, ...}, 'total_errors': 1}, 'global_settings': GlobalSettings(tap_time=200, hold_time=250), 'layer_count': 1}) is True
+____________________________ test_macro_conversion _____________________________
+converter/tests/integration/end_to_end/test_end_to_end.py:155: in test_macro_conversion
+    assert result is True
+E   AssertionError: assert (';; ZMK to Kanata Configuration\n;; Generated automatically - DO NOT EDIT\n\n;; Global settings\n(defvar tap-time 200...'INFO': 1, ...}, 'total_errors': 1}, 'global_settings': GlobalSettings(tap_time=200, hold_time=250), 'layer_count': 1}) is True
+_____________________________ test_error_recovery ______________________________
+converter/tests/integration/end_to_end/test_end_to_end.py:196: in test_error_recovery
+    result = convert_zmk_to_kanata(
+E   TypeError: convert_zmk_to_kanata() got an unexpected keyword argument 'recover_errors'
+________________________ test_multiple_layer_conversion ________________________
+converter/tests/integration/end_to_end/test_end_to_end.py:259: in test_multiple_layer_conversion
+    assert result is True
+E   AssertionError: assert (';; ZMK to Kanata Configuration\n;; Generated automatically - DO NOT EDIT\n\n;; Global settings\n(defvar tap-time 200...'INFO': 1, ...}, 'total_errors': 1}, 'global_settings': GlobalSettings(tap_time=200, hold_time=250), 'layer_count': 3}) is True
+_____________________________ test_global_settings _____________________________
+converter/tests/integration/end_to_end/test_end_to_end.py:308: in test_global_settings
+    assert result is True
+E   AssertionError: assert (';; ZMK to Kanata Configuration\n;; Generated automatically - DO NOT EDIT\n\n;; Global settings\n(defvar tap-time 200...'INFO': 1, ...}, 'total_errors': 1}, 'global_settings': GlobalSettings(tap_time=200, hold_time=250), 'layer_count': 1}) is True
+_________________________ test_corne_keymap_conversion _________________________
+converter/tests/integration/end_to_end/test_real_world_examples.py:91: in test_corne_keymap_conversion
+    assert result is True
+E   AssertionError: assert (';; ZMK to Kanata Configuration\n;; Generated automatically - DO NOT EDIT\n\n;; Global settings\n(defvar tap-time 200...'INFO': 1, ...}, 'total_errors': 1}, 'global_settings': GlobalSettings(tap_time=200, hold_time=250), 'layer_count': 3}) is True
+___________________________ test_ferris_sweep_keymap ___________________________
+converter/tests/integration/end_to_end/test_real_world_examples.py:225: in test_ferris_sweep_keymap
+    assert result is True
+E   AssertionError: assert (';; ZMK to Kanata Configuration\n;; Generated automatically - DO NOT EDIT\n\n;; Global settings\n(defvar tap-time 200...'INFO': 1, ...}, 'total_errors': 1}, 'global_settings': GlobalSettings(tap_time=200, hold_time=250), 'layer_count': 4}) is True
+________________________ test_basic_binding_integration ________________________
+converter/parser/zmk_parser.py:124: in parse
+    content = file_path.read_text()
+E   AttributeError: 'str' object has no attribute 'read_text'
+
+The above exception was the direct cause of the following exception:
+converter/tests/integration/test_binding_parser_integration.py:27: in test_basic_binding_integration
+    result = parser.parse(content)
+converter/parser/zmk_parser.py:146: in parse
+    raise ParserError(f"Failed to parse ZMK file: {e}") from e
+E   converter.parser.parser_error.ParserError: Failed to parse ZMK file: 'str' object has no attribute 'read_text'
+_______________________ test_complex_binding_integration _______________________
+converter/parser/zmk_parser.py:124: in parse
+    content = file_path.read_text()
+E   AttributeError: 'str' object has no attribute 'read_text'
+
+The above exception was the direct cause of the following exception:
+converter/tests/integration/test_binding_parser_integration.py:55: in test_complex_binding_integration
+    result = parser.parse(content)
+converter/parser/zmk_parser.py:146: in parse
+    raise ParserError(f"Failed to parse ZMK file: {e}") from e
+E   converter.parser.parser_error.ParserError: Failed to parse ZMK file: 'str' object has no attribute 'read_text'
+_______________________ test_nested_binding_integration ________________________
+converter/parser/zmk_parser.py:124: in parse
+    content = file_path.read_text()
+E   AttributeError: 'str' object has no attribute 'read_text'
+
+The above exception was the direct cause of the following exception:
+converter/tests/integration/test_binding_parser_integration.py:84: in test_nested_binding_integration
+    result = parser.parse(content)
+converter/parser/zmk_parser.py:146: in parse
+    raise ParserError(f"Failed to parse ZMK file: {e}") from e
+E   converter.parser.parser_error.ParserError: Failed to parse ZMK file: 'str' object has no attribute 'read_text'
+_______________________ test_error_recovery_integration ________________________
+converter/tests/integration/test_binding_parser_integration.py:116: in test_error_recovery_integration
+    assert len(result["layers"]) == 1
+E   assert 0 == 1
+E    +  where 0 = len([])
+------------------------------ Captured log call -------------------------------
+ERROR    converter.parser.error_recovery_wrapper:error_recovery_wrapper.py:36 Parser error: Failed to parse ZMK file: 'str' object has no attribute 'read_text'
+______________________ test_multiline_binding_integration ______________________
+converter/parser/zmk_parser.py:124: in parse
+    content = file_path.read_text()
+E   AttributeError: 'str' object has no attribute 'read_text'
+
+The above exception was the direct cause of the following exception:
+converter/tests/integration/test_binding_parser_integration.py:160: in test_multiline_binding_integration
+    result = parser.parse(content)
+converter/parser/zmk_parser.py:146: in parse
+    raise ParserError(f"Failed to parse ZMK file: {e}") from e
+E   converter.parser.parser_error.ParserError: Failed to parse ZMK file: 'str' object has no attribute 'read_text'
+_______________________ test_inline_binding_integration ________________________
+converter/parser/zmk_parser.py:124: in parse
+    content = file_path.read_text()
+E   AttributeError: 'str' object has no attribute 'read_text'
+
+The above exception was the direct cause of the following exception:
+converter/tests/integration/test_binding_parser_integration.py:188: in test_inline_binding_integration
+    result = parser.parse(content)
+converter/parser/zmk_parser.py:146: in parse
+    raise ParserError(f"Failed to parse ZMK file: {e}") from e
+E   converter.parser.parser_error.ParserError: Failed to parse ZMK file: 'str' object has no attribute 'read_text'
+_______________________ test_multiple_layers_integration _______________________
+converter/parser/zmk_parser.py:124: in parse
+    content = file_path.read_text()
+E   AttributeError: 'str' object has no attribute 'read_text'
+
+The above exception was the direct cause of the following exception:
+converter/tests/integration/test_binding_parser_integration.py:229: in test_multiple_layers_integration
+    result = parser.parse(content)
+converter/parser/zmk_parser.py:146: in parse
+    raise ParserError(f"Failed to parse ZMK file: {e}") from e
+E   converter.parser.parser_error.ParserError: Failed to parse ZMK file: 'str' object has no attribute 'read_text'
+________________________ test_invalid_binding_recovery _________________________
+converter/tests/integration/test_error_recovery_integration.py:29: in test_invalid_binding_recovery
+    assert len(result["layers"]) == 1
+E   assert 0 == 1
+E    +  where 0 = len([])
+------------------------------ Captured log call -------------------------------
+ERROR    converter.parser.error_recovery_wrapper:error_recovery_wrapper.py:36 Parser error: Failed to parse ZMK file: 'str' object has no attribute 'read_text'
+_________________________ test_invalid_layer_recovery __________________________
+converter/tests/integration/test_error_recovery_integration.py:72: in test_invalid_layer_recovery
+    assert len(result["layers"]) == 3
+E   assert 0 == 3
+E    +  where 0 = len([])
+------------------------------ Captured log call -------------------------------
+ERROR    converter.parser.error_recovery_wrapper:error_recovery_wrapper.py:36 Parser error: Failed to parse ZMK file: 'str' object has no attribute 'read_text'
+_________________________ test_multiple_error_recovery _________________________
+converter/tests/integration/test_error_recovery_integration.py:114: in test_multiple_error_recovery
+    assert len(result["layers"]) == 3
+E   assert 0 == 3
+E    +  where 0 = len([])
+------------------------------ Captured log call -------------------------------
+ERROR    converter.parser.error_recovery_wrapper:error_recovery_wrapper.py:36 Parser error: Failed to parse ZMK file: 'str' object has no attribute 'read_text'
+________________________ test_nested_behavior_recovery _________________________
+converter/tests/integration/test_error_recovery_integration.py:148: in test_nested_behavior_recovery
+    assert len(result["layers"]) == 1
+E   assert 0 == 1
+E    +  where 0 = len([])
+------------------------------ Captured log call -------------------------------
+ERROR    converter.parser.error_recovery_wrapper:error_recovery_wrapper.py:36 Parser error: Failed to parse ZMK file: 'str' object has no attribute 'read_text'
+______________________ test_error_recovery_with_comments _______________________
+converter/tests/integration/test_error_recovery_integration.py:185: in test_error_recovery_with_comments
+    assert len(result["layers"]) == 1
+E   assert 0 == 1
+E    +  where 0 = len([])
+------------------------------ Captured log call -------------------------------
+ERROR    converter.parser.error_recovery_wrapper:error_recovery_wrapper.py:36 Parser error: Failed to parse ZMK file: 'str' object has no attribute 'read_text'
+_________________ test_error_recovery_preserves_valid_content __________________
+converter/tests/integration/test_error_recovery_integration.py:227: in test_error_recovery_preserves_valid_content
+    assert len(result["layers"]) == 3
+E   assert 0 == 3
+E    +  where 0 = len([])
+------------------------------ Captured log call -------------------------------
+ERROR    converter.parser.error_recovery_wrapper:error_recovery_wrapper.py:36 Parser error: Failed to parse ZMK file: 'str' object has no attribute 'read_text'
+______________________ test_key_validation_with_hold_tap _______________________
+converter/tests/integration/test_key_validation.py:91: in test_key_validation_with_hold_tap
+    with pytest.raises(ValueError) as exc:
+E   Failed: DID NOT RAISE <class 'ValueError'>
+_________________________ test_basic_layer_conversion __________________________
+converter/tests/integration/test_zmk_to_kanata_conversion.py:63: in test_basic_layer_conversion
+    layers = parser.parse_layers(zmk_input)
+E   AttributeError: 'ZMKParser' object has no attribute 'parse_layers'. Did you mean: 'parse_layer'?
+___________________________ test_holdtap_conversion ____________________________
+converter/tests/integration/test_zmk_to_kanata_conversion.py:97: in test_holdtap_conversion
+    layers = parser.parse_layers(zmk_input)
+E   AttributeError: 'ZMKParser' object has no attribute 'parse_layers'. Did you mean: 'parse_layer'?
+____________________________ test_macro_conversion _____________________________
+converter/tests/integration/test_zmk_to_kanata_conversion.py:131: in test_macro_conversion
+    layers = parser.parse_layers(zmk_input)
+E   AttributeError: 'ZMKParser' object has no attribute 'parse_layers'. Did you mean: 'parse_layer'?
+__________________________ test_sticky_key_conversion __________________________
+converter/tests/integration/test_zmk_to_kanata_conversion.py:159: in test_sticky_key_conversion
+    layers = parser.parse_layers(zmk_input)
+E   AttributeError: 'ZMKParser' object has no attribute 'parse_layers'. Did you mean: 'parse_layer'?
+________________________ test_complex_layer_conversion _________________________
+converter/tests/integration/test_zmk_to_kanata_conversion.py:198: in test_complex_layer_conversion
+    layers = parser.parse_layers(zmk_input)
+E   AttributeError: 'ZMKParser' object has no attribute 'parse_layers'. Did you mean: 'parse_layer'?
+________________________ test_mixed_behavior_conversion ________________________
+converter/tests/integration/test_zmk_to_kanata_conversion.py:244: in test_mixed_behavior_conversion
+    layers = parser.parse_layers(zmk_input)
+E   AttributeError: 'ZMKParser' object has no attribute 'parse_layers'. Did you mean: 'parse_layer'?
+_________________________ test_empty_layer_conversion __________________________
+converter/tests/integration/test_zmk_to_kanata_conversion_edge_cases.py:56: in test_empty_layer_conversion
+    layers = parser.parse_layers(zmk_input)
+E   AttributeError: 'ZMKParser' object has no attribute 'parse_layers'. Did you mean: 'parse_layer'?
+________________________ test_invalid_macro_conversion _________________________
+converter/tests/integration/test_zmk_to_kanata_conversion_edge_cases.py:90: in test_invalid_macro_conversion
+    layers = parser.parse_layers(zmk_input)
+E   AttributeError: 'ZMKParser' object has no attribute 'parse_layers'. Did you mean: 'parse_layer'?
+_______________________ test_nested_behavior_conversion ________________________
+converter/tests/integration/test_zmk_to_kanata_conversion_edge_cases.py:146: in test_nested_behavior_conversion
+    layers = parser.parse_layers(zmk_input)
+E   AttributeError: 'ZMKParser' object has no attribute 'parse_layers'. Did you mean: 'parse_layer'?
+________________________ test_invalid_layer_references _________________________
+converter/tests/integration/test_zmk_to_kanata_conversion_edge_cases.py:196: in test_invalid_layer_references
+    layers = parser.parse_layers(zmk_input)
+E   AttributeError: 'ZMKParser' object has no attribute 'parse_layers'. Did you mean: 'parse_layer'?
+______________________ test_special_character_conversion _______________________
+converter/tests/integration/test_zmk_to_kanata_conversion_edge_cases.py:229: in test_special_character_conversion
+    layers = parser.parse_layers(zmk_input)
+E   AttributeError: 'ZMKParser' object has no attribute 'parse_layers'. Did you mean: 'parse_layer'?
+_________________________ test_mixed_timing_parameters _________________________
+converter/tests/integration/test_zmk_to_kanata_conversion_edge_cases.py:275: in test_mixed_timing_parameters
+    layers = parser.parse_layers(zmk_input)
+E   AttributeError: 'ZMKParser' object has no attribute 'parse_layers'. Did you mean: 'parse_layer'?
+________________________ test_malformed_input_recovery _________________________
+converter/tests/integration/test_zmk_to_kanata_conversion_edge_cases.py:316: in test_malformed_input_recovery
+    layers = parser.parse_layers(zmk_input)
+E   AttributeError: 'ZMKParser' object has no attribute 'parse_layers'. Did you mean: 'parse_layer'?
+__________________________ test_syntax_error_recovery __________________________
+converter/tests/integration/test_zmk_to_kanata_error_handling.py:56: in test_syntax_error_recovery
+    parser.parse_layers(zmk_input)
+E   AttributeError: 'ZMKParser' object has no attribute 'parse_layers'. Did you mean: 'parse_layer'?
+_________________________ test_missing_required_fields _________________________
+converter/tests/integration/test_zmk_to_kanata_error_handling.py:95: in test_missing_required_fields
+    parser.parse_layers(zmk_input)
+E   AttributeError: 'ZMKParser' object has no attribute 'parse_layers'. Did you mean: 'parse_layer'?
+____________________ test_invalid_macro_definition_recovery ____________________
+converter/tests/integration/test_zmk_to_kanata_error_handling.py:139: in test_invalid_macro_definition_recovery
+    parser.parse_layers(zmk_input)
+E   AttributeError: 'ZMKParser' object has no attribute 'parse_layers'. Did you mean: 'parse_layer'?
+_________________________ test_layer_validation_errors _________________________
+converter/tests/integration/test_zmk_to_kanata_error_handling.py:184: in test_layer_validation_errors
+    parser.parse_layers(zmk_input)
+E   AttributeError: 'ZMKParser' object has no attribute 'parse_layers'. Did you mean: 'parse_layer'?
+________________________ test_binding_validation_errors ________________________
+converter/tests/integration/test_zmk_to_kanata_error_handling.py:223: in test_binding_validation_errors
+    parser.parse_layers(zmk_input)
+E   AttributeError: 'ZMKParser' object has no attribute 'parse_layers'. Did you mean: 'parse_layer'?
+________________________ test_error_context_information ________________________
+converter/tests/integration/test_zmk_to_kanata_error_handling.py:261: in test_error_context_information
+    parser.parse_layers(zmk_input)
+E   AttributeError: 'ZMKParser' object has no attribute 'parse_layers'. Did you mean: 'parse_layer'?
+____________________________ test_partial_recovery _____________________________
+converter/tests/integration/test_zmk_to_kanata_error_handling.py:297: in test_partial_recovery
+    parser.parse_layers(zmk_input)
+E   AttributeError: 'ZMKParser' object has no attribute 'parse_layers'. Did you mean: 'parse_layer'?
+________________________ test_error_recovery_strategies ________________________
+converter/tests/integration/test_zmk_to_kanata_error_handling.py:325: in test_error_recovery_strategies
+    layers = parser.parse_layers(zmk_input)
+E   AttributeError: 'ZMKParser' object has no attribute 'parse_layers'. Did you mean: 'parse_layer'?
+________________________ test_parser_performance_small _________________________
+converter/parser/zmk_parser.py:124: in parse
+    content = file_path.read_text()
+E   AttributeError: 'str' object has no attribute 'read_text'
+
+The above exception was the direct cause of the following exception:
+converter/tests/performance/test_performance.py:95: in test_parser_performance_small
+    result = parser.parse(content)
+converter/parser/zmk_parser.py:146: in parse
+    raise ParserError(f"Failed to parse ZMK file: {e}") from e
+E   converter.parser.parser_error.ParserError: Failed to parse ZMK file: 'str' object has no attribute 'read_text'
+________________________ test_parser_performance_large _________________________
+converter/parser/zmk_parser.py:124: in parse
+    content = file_path.read_text()
+E   AttributeError: 'str' object has no attribute 'read_text'
+
+The above exception was the direct cause of the following exception:
+converter/tests/performance/test_performance.py:114: in test_parser_performance_large
+    result = parser.parse(content)
+converter/parser/zmk_parser.py:146: in parse
+    raise ParserError(f"Failed to parse ZMK file: {e}") from e
+E   converter.parser.parser_error.ParserError: Failed to parse ZMK file: 'str' object has no attribute 'read_text'
+_________________________ test_transformer_performance _________________________
+converter/parser/zmk_parser.py:124: in parse
+    content = file_path.read_text()
+E   AttributeError: 'str' object has no attribute 'read_text'
+
+The above exception was the direct cause of the following exception:
+converter/tests/performance/test_performance.py:135: in test_transformer_performance
+    parse_result = parser.parse(content)
+converter/parser/zmk_parser.py:146: in parse
+    raise ParserError(f"Failed to parse ZMK file: {e}") from e
+E   converter.parser.parser_error.ParserError: Failed to parse ZMK file: 'str' object has no attribute 'read_text'
+_________________________ test_end_to_end_performance __________________________
+converter/tests/performance/test_performance.py:174: in test_end_to_end_performance
+    assert result is True
+E   AssertionError: assert (';; ZMK to Kanata Configuration\n;; Generated automatically - DO NOT EDIT\n\n;; Global settings\n(defvar tap-time 200...'INFO': 1, ...}, 'total_errors': 1}, 'global_settings': GlobalSettings(tap_time=200, hold_time=250), 'layer_count': 1}) is True
+----------------------------- Captured stdout call -----------------------------
+End-to-end conversion time: 0.000382 seconds
+_________________________ test_large_layer_performance _________________________
+converter/tests/performance/test_zmk_to_kanata_performance.py:95: in test_large_layer_performance
+    _, parse_time = measure_execution_time(
+converter/tests/performance/test_zmk_to_kanata_performance.py:81: in measure_execution_time
+    result = func()
+converter/tests/performance/test_zmk_to_kanata_performance.py:96: in <lambda>
+    lambda: parser.parse_layers(zmk_input)
+E   AttributeError: 'ZMKParser' object has no attribute 'parse_layers'. Did you mean: 'parse_layer'?
+________________________ test_complex_macro_performance ________________________
+converter/tests/performance/test_zmk_to_kanata_performance.py:131: in test_complex_macro_performance
+    _, parse_time = measure_execution_time(
+converter/tests/performance/test_zmk_to_kanata_performance.py:81: in measure_execution_time
+    result = func()
+converter/tests/performance/test_zmk_to_kanata_performance.py:132: in <lambda>
+    lambda: parser.parse_layers(zmk_input)
+E   AttributeError: 'ZMKParser' object has no attribute 'parse_layers'. Did you mean: 'parse_layer'?
+_______________________ test_mixed_behavior_performance ________________________
+converter/tests/performance/test_zmk_to_kanata_performance.py:201: in test_mixed_behavior_performance
+    _, total_time = measure_execution_time(process_pipeline)
+converter/tests/performance/test_zmk_to_kanata_performance.py:81: in measure_execution_time
+    result = func()
+converter/tests/performance/test_zmk_to_kanata_performance.py:194: in process_pipeline
+    layers = parser.parse_layers(zmk_input)
+E   AttributeError: 'ZMKParser' object has no attribute 'parse_layers'. Did you mean: 'parse_layer'?
+______________________________ test_memory_usage _______________________________
+converter/tests/performance/test_zmk_to_kanata_performance.py:211: in test_memory_usage
+    import psutil
+E   ModuleNotFoundError: No module named 'psutil'
+___________________________ test_parse_default_layer ___________________________
+converter/tests/test_basic_remap.py:57: in test_parse_default_layer
+    assert len(config.layers[0].keys[0]) == 2
+E   AssertionError: assert 3 == 2
+E    +  where 3 = len([KeyMapping(key='A', sticky=False, hold_tap=None, layer=None, macro=None, sticky_key=None, key_sequence=None, homerow_...ng(key='C', sticky=False, hold_tap=None, layer=None, macro=None, sticky_key=None, key_sequence=None, homerow_mod=None)])
+_________________________ test_transform_default_layer _________________________
+converter/tests/test_basic_remap.py:118: in test_transform_default_layer
+    assert kanata_config.splitlines() == expected_lines
+E   AssertionError: assert [';; ZMK to K...me 250)', ...] == [';; ZMK to K...me 250)', ...]
+E     
+E     At index 8 diff: '  a  b  c' != '  a  b'
+E     Use -v to get more diff
+__________________________ test_parse_malformed_file ___________________________
+converter/parser/zmk_parser.py:137: in parse
+    raise ValueError("No layers found in ZMK file")
+E   ValueError: No layers found in ZMK file
+
+The above exception was the direct cause of the following exception:
+converter/tests/test_basic_remap.py:190: in test_parse_malformed_file
+    parser.parse(malformed_file)
+converter/parser/zmk_parser.py:146: in parse
+    raise ParserError(f"Failed to parse ZMK file: {e}") from e
+E   converter.parser.parser_error.ParserError: Failed to parse ZMK file: No layers found in ZMK file
+_________________________ test_custom_global_settings __________________________
+converter/tests/test_global_settings.py:53: in test_custom_global_settings
+    assert config.global_settings.tap_time == 300
+E   AssertionError: assert 200 == 300
+E    +  where 200 = GlobalSettings(tap_time=200, hold_time=250).tap_time
+E    +    where GlobalSettings(tap_time=200, hold_time=250) = KeymapConfig(global_settings=GlobalSettings(tap_time=200, hold_time=250), layers=[Layer(name='default', bindings=[])]).global_settings
+_________________________ test_partial_global_settings _________________________
+converter/tests/test_global_settings.py:75: in test_partial_global_settings
+    assert config.global_settings.tap_time == 300
+E   AssertionError: assert 200 == 300
+E    +  where 200 = GlobalSettings(tap_time=200, hold_time=250).tap_time
+E    +    where GlobalSettings(tap_time=200, hold_time=250) = KeymapConfig(global_settings=GlobalSettings(tap_time=200, hold_time=250), layers=[Layer(name='default', bindings=[])]).global_settings
+_________________________ test_invalid_global_settings _________________________
+converter/tests/test_global_settings.py:95: in test_invalid_global_settings
+    with pytest.raises(ParserError) as exc_info:
+E   Failed: DID NOT RAISE <class 'converter.parser.parser_error.ParserError'>
+________________________ test_malformed_global_settings ________________________
+converter/tests/test_global_settings.py:117: in test_malformed_global_settings
+    with pytest.raises(ParserError) as exc_info:
+E   Failed: DID NOT RAISE <class 'converter.parser.parser_error.ParserError'>
+______________________ test_basic_holdtap_transformation _______________________
+converter/tests/test_holdtap_transformer.py:26: in test_basic_holdtap_transformation
+    result = transformer.transform_binding(binding, 200, 250)
+E   TypeError: HoldTapTransformer.transform_binding() takes 2 positional arguments but 4 were given
+__________________________ test_holdtap_with_release ___________________________
+converter/tests/test_holdtap_transformer.py:42: in test_holdtap_with_release
+    result = transformer.transform_binding(binding, 200, 250)
+E   TypeError: HoldTapTransformer.transform_binding() takes 2 positional arguments but 4 were given
+_______________________ test_holdtap_with_key_positions ________________________
+converter/tests/test_holdtap_transformer.py:58: in test_holdtap_with_key_positions
+    result = transformer.transform_binding(binding, 200, 250)
+E   TypeError: HoldTapTransformer.transform_binding() takes 2 positional arguments but 4 were given
+_________________________ test_holdtap_with_retro_tap __________________________
+converter/tests/test_holdtap_transformer.py:74: in test_holdtap_with_retro_tap
+    result = transformer.transform_binding(binding, 200, 250)
+E   TypeError: HoldTapTransformer.transform_binding() takes 2 positional arguments but 4 were given
+_______________________ test_full_keymap_transformation ________________________
+converter/tests/test_holdtap_transformer.py:155: in test_full_keymap_transformation
+    assert result.splitlines() == expected_lines
+E   AssertionError: assert [';; ZMK to K...me 250)', ...] == [';; ZMK to K...me 250)', ...]
+E     
+E     At index 10 diff: '  lh_hm_LGUI_A (tap-hold-release 200 250 a lmet)' != '  lh_hm_LCTRL_S (tap-hold-release-keys 200 250 s lctl (1 2))'
+E     Use -v to get more diff
+____________________________ test_basic_conversion _____________________________
+converter/tests/test_integration.py:57: in test_basic_conversion
+    assert written_content.splitlines() == expected_lines
+E   AssertionError: assert [';; ZMK to K...me 250)', ...] == [';; ZMK to K...me 300)', ...]
+E     
+E     At index 5 diff: '(defvar hold-time 250)' != '(defvar hold-time 300)'
+E     Right contains 2 more items, first extra item: '  i  j  k  l'
+E     Use -v to get more diff
+_____________________________ test_multiple_layers _____________________________
+converter/tests/test_layer_parsing.py:53: in test_multiple_layers
+    assert len(config.layers[0].bindings) == 1
+E   AssertionError: assert 0 == 1
+E    +  where 0 = len([])
+E    +    where [] = Layer(name='first', bindings=[]).bindings
+___________________________ test_multiline_bindings ____________________________
+converter/tests/test_layer_parsing.py:78: in test_multiline_bindings
+    assert len(config.layers[0].bindings) == 3
+E   AssertionError: assert 0 == 3
+E    +  where 0 = len([])
+E    +    where [] = Layer(name='test', bindings=[]).bindings
+____________________________ test_missing_bindings _____________________________
+converter/tests/test_layer_parsing.py:115: in test_missing_bindings
+    with pytest.raises(ParserError):
+E   Failed: DID NOT RAISE <class 'converter.parser.parser_error.ParserError'>
+____________________________ test_transform_binding ____________________________
+converter/tests/test_layer_transformer.py:16: in test_transform_binding
+    assert transformer.transform_binding(KeyMapping(key="N1")) == "1"
+E   AssertionError: assert 'n1' == '1'
+E     
+E     - 1
+E     + n1
+__________________________ test_parse_binding_matrix ___________________________
+converter/model/keymap_model.py:54: in __post_init__
+    validate_key(self.key)
+converter/validation/key_validator.py:243: in validate_key
+    raise KeyValidationError(
+E   converter.validation.key_validator.KeyValidationError: Invalid key: trans
+
+During handling of the above exception, another exception occurred:
+converter/tests/test_layer_transformer.py:78: in test_parse_binding_matrix
+    [KeyMapping(key="trans"), KeyMapping(key="C")]
+<string>:11: in __init__
+    ???
+converter/model/keymap_model.py:57: in __post_init__
+    raise ValueError(msg)
+E   ValueError: Invalid key mapping: Invalid key: trans
+______________________ TestMacroParser.test_parse_binding ______________________
+converter/tests/test_macro.py:170: in test_parse_binding
+    binding = self.parser.parse_binding("&test_macro")
+converter/parser/macro_parser.py:178: in parse_binding
+    return MacroBindingElement.from_zmk(binding_str, self.behaviors)
+E   AttributeError: type object 'MacroBindingElement' has no attribute 'from_zmk'
+__________________ TestMacroIntegration.test_macro_conversion __________________
+converter/parser/zmk_parser.py:137: in parse
+    raise ValueError("No layers found in ZMK file")
+E   ValueError: No layers found in ZMK file
+
+The above exception was the direct cause of the following exception:
+converter/zmk_to_kanata.py:65: in convert_zmk_to_kanata
+    keymap_config = parser.parse(Path(tmp_path))
+converter/parser/zmk_parser.py:146: in parse
+    raise ParserError(f"Failed to parse ZMK file: {e}") from e
+E   converter.parser.parser_error.ParserError: Failed to parse ZMK file: No layers found in ZMK file
+
+During handling of the above exception, another exception occurred:
+converter/tests/test_macro_integration.py:51: in test_macro_conversion
+    kanata_content = convert_zmk_to_kanata(temp_file_path)
+converter/zmk_to_kanata.py:101: in convert_zmk_to_kanata
+    error_mgr.add_error(
+converter/error_handling/error_manager.py:128: in add_error
+    raise Exception(str(error))
+E   Exception: ERROR: [converter] - Error during conversion: Failed to parse ZMK file: No layers found in ZMK file
+------------------------------ Captured log call -------------------------------
+ERROR    converter.error_handling.error_manager:error_manager.py:145 ERROR: [converter] - Error during conversion: Failed to parse ZMK file: No layers found in ZMK file
+=========================== short test summary info ============================
+FAILED converter/tests/e2e_tests/test_advanced_features.py::test_multi_layer_with_hold_tap
+FAILED converter/tests/e2e_tests/test_advanced_features.py::test_multi_layer_with_custom_behaviors
+FAILED converter/tests/e2e_tests/test_cli.py::test_basic_file_conversion - as...
+FAILED converter/tests/e2e_tests/test_cli.py::test_missing_input_file - Syste...
+FAILED converter/tests/e2e_tests/test_cli.py::test_invalid_input_format - Sys...
+FAILED converter/tests/e2e_tests/test_cli.py::test_invalid_output_path - asse...
+FAILED converter/tests/e2e_tests/test_file_operations.py::test_output_file_format
+FAILED converter/tests/e2e_tests/test_homerow_mods.py::test_homerow_mods_conversion
+FAILED converter/tests/e2e_tests/test_homerow_mods.py::test_homerow_mods_mac_conversion
+FAILED converter/tests/e2e_tests/test_input_formats.py::test_single_layer_keymap
+FAILED converter/tests/e2e_tests/test_input_formats.py::test_multiple_layer_keymap
+FAILED converter/tests/e2e_tests/test_input_formats.py::test_empty_layer_keymap
+FAILED converter/tests/e2e_tests/test_input_formats.py::test_comments_and_whitespace
+FAILED converter/tests/e2e_tests/test_macro.py::test_basic_macro_conversion
+FAILED converter/tests/e2e_tests/test_macro.py::test_complex_macro_conversion
+FAILED converter/tests/e2e_tests/test_macro.py::test_parameterized_macro_conversion
+FAILED converter/tests/e2e_tests/test_output_validation.py::test_output_file_permissions
+FAILED converter/tests/e2e_tests/test_output_validation.py::test_output_file_encoding
+FAILED converter/tests/e2e_tests/test_output_validation.py::test_output_file_format
+FAILED converter/tests/e2e_tests/test_output_validation.py::test_kanata_s_expression_conformity
+FAILED converter/tests/e2e_tests/test_real_world_configs.py::test_qwerty_standard_layout
+FAILED converter/tests/e2e_tests/test_real_world_configs.py::test_colemak_layout
+FAILED converter/tests/e2e_tests/test_real_world_configs.py::test_split_keyboard_layout
+FAILED converter/tests/e2e_tests/test_real_world_configs.py::test_ergonomic_layout_with_homerow_mods
+FAILED converter/tests/e2e_tests/test_real_world_configs.py::test_ben_vallack_cradio_layout
+FAILED converter/tests/e2e_tests/test_real_world_configs.py::test_dvorak_layout
+FAILED converter/tests/e2e_tests/test_real_world_configs.py::test_ergonomic_kyria_layout
+FAILED converter/tests/e2e_tests/test_sticky_keys.py::test_sticky_key_basic
+FAILED converter/tests/e2e_tests/test_sticky_keys.py::test_sticky_key_advanced
+FAILED converter/tests/integration/end_to_end/test_end_to_end.py::test_basic_conversion_pipeline
+FAILED converter/tests/integration/end_to_end/test_end_to_end.py::test_complex_binding_conversion
+FAILED converter/tests/integration/end_to_end/test_end_to_end.py::test_macro_conversion
+FAILED converter/tests/integration/end_to_end/test_end_to_end.py::test_error_recovery
+FAILED converter/tests/integration/end_to_end/test_end_to_end.py::test_multiple_layer_conversion
+FAILED converter/tests/integration/end_to_end/test_end_to_end.py::test_global_settings
+FAILED converter/tests/integration/end_to_end/test_real_world_examples.py::test_corne_keymap_conversion
+FAILED converter/tests/integration/end_to_end/test_real_world_examples.py::test_ferris_sweep_keymap
+FAILED converter/tests/integration/test_binding_parser_integration.py::test_basic_binding_integration
+FAILED converter/tests/integration/test_binding_parser_integration.py::test_complex_binding_integration
+FAILED converter/tests/integration/test_binding_parser_integration.py::test_nested_binding_integration
+FAILED converter/tests/integration/test_binding_parser_integration.py::test_error_recovery_integration
+FAILED converter/tests/integration/test_binding_parser_integration.py::test_multiline_binding_integration
+FAILED converter/tests/integration/test_binding_parser_integration.py::test_inline_binding_integration
+FAILED converter/tests/integration/test_binding_parser_integration.py::test_multiple_layers_integration
+FAILED converter/tests/integration/test_error_recovery_integration.py::test_invalid_binding_recovery
+FAILED converter/tests/integration/test_error_recovery_integration.py::test_invalid_layer_recovery
+FAILED converter/tests/integration/test_error_recovery_integration.py::test_multiple_error_recovery
+FAILED converter/tests/integration/test_error_recovery_integration.py::test_nested_behavior_recovery
+FAILED converter/tests/integration/test_error_recovery_integration.py::test_error_recovery_with_comments
+FAILED converter/tests/integration/test_error_recovery_integration.py::test_error_recovery_preserves_valid_content
+FAILED converter/tests/integration/test_key_validation.py::test_key_validation_with_hold_tap
+FAILED converter/tests/integration/test_zmk_to_kanata_conversion.py::test_basic_layer_conversion
+FAILED converter/tests/integration/test_zmk_to_kanata_conversion.py::test_holdtap_conversion
+FAILED converter/tests/integration/test_zmk_to_kanata_conversion.py::test_macro_conversion
+FAILED converter/tests/integration/test_zmk_to_kanata_conversion.py::test_sticky_key_conversion
+FAILED converter/tests/integration/test_zmk_to_kanata_conversion.py::test_complex_layer_conversion
+FAILED converter/tests/integration/test_zmk_to_kanata_conversion.py::test_mixed_behavior_conversion
+FAILED converter/tests/integration/test_zmk_to_kanata_conversion_edge_cases.py::test_empty_layer_conversion
+FAILED converter/tests/integration/test_zmk_to_kanata_conversion_edge_cases.py::test_invalid_macro_conversion
+FAILED converter/tests/integration/test_zmk_to_kanata_conversion_edge_cases.py::test_nested_behavior_conversion
+FAILED converter/tests/integration/test_zmk_to_kanata_conversion_edge_cases.py::test_invalid_layer_references
+FAILED converter/tests/integration/test_zmk_to_kanata_conversion_edge_cases.py::test_special_character_conversion
+FAILED converter/tests/integration/test_zmk_to_kanata_conversion_edge_cases.py::test_mixed_timing_parameters
+FAILED converter/tests/integration/test_zmk_to_kanata_conversion_edge_cases.py::test_malformed_input_recovery
+FAILED converter/tests/integration/test_zmk_to_kanata_error_handling.py::test_syntax_error_recovery
+FAILED converter/tests/integration/test_zmk_to_kanata_error_handling.py::test_missing_required_fields
+FAILED converter/tests/integration/test_zmk_to_kanata_error_handling.py::test_invalid_macro_definition_recovery
+FAILED converter/tests/integration/test_zmk_to_kanata_error_handling.py::test_layer_validation_errors
+FAILED converter/tests/integration/test_zmk_to_kanata_error_handling.py::test_binding_validation_errors
+FAILED converter/tests/integration/test_zmk_to_kanata_error_handling.py::test_error_context_information
+FAILED converter/tests/integration/test_zmk_to_kanata_error_handling.py::test_partial_recovery
+FAILED converter/tests/integration/test_zmk_to_kanata_error_handling.py::test_error_recovery_strategies
+FAILED converter/tests/performance/test_performance.py::test_parser_performance_small
+FAILED converter/tests/performance/test_performance.py::test_parser_performance_large
+FAILED converter/tests/performance/test_performance.py::test_transformer_performance
+FAILED converter/tests/performance/test_performance.py::test_end_to_end_performance
+FAILED converter/tests/performance/test_zmk_to_kanata_performance.py::test_large_layer_performance
+FAILED converter/tests/performance/test_zmk_to_kanata_performance.py::test_complex_macro_performance
+FAILED converter/tests/performance/test_zmk_to_kanata_performance.py::test_mixed_behavior_performance
+FAILED converter/tests/performance/test_zmk_to_kanata_performance.py::test_memory_usage
+FAILED converter/tests/test_basic_remap.py::test_parse_default_layer - Assert...
+FAILED converter/tests/test_basic_remap.py::test_transform_default_layer - As...
+FAILED converter/tests/test_basic_remap.py::test_parse_malformed_file - conve...
+FAILED converter/tests/test_global_settings.py::test_custom_global_settings
+FAILED converter/tests/test_global_settings.py::test_partial_global_settings
+FAILED converter/tests/test_global_settings.py::test_invalid_global_settings
+FAILED converter/tests/test_global_settings.py::test_malformed_global_settings
+FAILED converter/tests/test_holdtap_transformer.py::test_basic_holdtap_transformation
+FAILED converter/tests/test_holdtap_transformer.py::test_holdtap_with_release
+FAILED converter/tests/test_holdtap_transformer.py::test_holdtap_with_key_positions
+FAILED converter/tests/test_holdtap_transformer.py::test_holdtap_with_retro_tap
+FAILED converter/tests/test_holdtap_transformer.py::test_full_keymap_transformation
+FAILED converter/tests/test_integration.py::test_basic_conversion - Assertion...
+FAILED converter/tests/test_layer_parsing.py::test_multiple_layers - Assertio...
+FAILED converter/tests/test_layer_parsing.py::test_multiline_bindings - Asser...
+FAILED converter/tests/test_layer_parsing.py::test_missing_bindings - Failed:...
+FAILED converter/tests/test_layer_transformer.py::test_transform_binding - As...
+FAILED converter/tests/test_layer_transformer.py::test_parse_binding_matrix
+FAILED converter/tests/test_macro.py::TestMacroParser::test_parse_binding - A...
+FAILED converter/tests/test_macro_integration.py::TestMacroIntegration::test_macro_conversion
+!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 100 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+100 failed, 52 passed in 0.32s
