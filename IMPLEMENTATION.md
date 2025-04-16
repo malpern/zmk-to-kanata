@@ -45,12 +45,14 @@ The converter is in progress with ongoing work on macro handling and test covera
 
 ### Current Issues
 1. Macro Parser:
-   - Need to standardize error messages further
+   ✅ Error messages standardized with consistent formatting
+   ✅ Added rich context information to error messages
+   ✅ Improved error recovery and position tracking
 
 2. Error Handling:
-   - Error recovery needs more robust position tracking
-   - Need to improve synchronization between parser states
-   - Error messages need better context information
+   ✅ Implemented robust position tracking in error recovery
+   ✅ Added clear synchronization between parser states
+   ✅ Enhanced error messages with better context information
 
 3. Testing:
    - 69/208 tests currently passing (improved from 63)
@@ -60,13 +62,28 @@ The converter is in progress with ongoing work on macro handling and test covera
 ### Next Steps
 1. Improve test coverage:
    - Add test cases for error recovery
-   - Update integration tests
-   - Add performance tests for large configurations
+   - Update integration tests for new parser behavior
+   - Focus on fixing remaining failing tests (139/208 still failing)
+   - Add test cases for edge cases in macro parsing
 
 2. Documentation:
    - Update macro parser documentation
    - Add error handling guidelines
    - Document token type requirements
+   - Add examples for common macro usage patterns
+
+3. Transformer Standardization:
+   - Review and standardize output formats across transformers
+   - Ensure consistent structure for all transformers
+   - Implement proper handling of nested bindings
+   - Fix ZMK to Kanata type mapping
+   - Add validation for transformer outputs
+
+4. Error Handling Improvements:
+   ✅ Implemented robust position tracking in error recovery
+   ✅ Improved synchronization between parser states
+   ✅ Added better context information to error messages
+   ✅ Standardized error message format across codebase
 
 ## Project Goals
 

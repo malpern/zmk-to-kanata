@@ -308,22 +308,59 @@ class MacroParser:
             self._advance()
 
     def _add_error(self, message: str, severity: ErrorSeverity) -> None:
-        """Add an error with source location information."""
+        """Add an error with detailed source location and context information.
+
+        Args:
+            message: The error message describing the issue
+            severity: The severity level of the error
+        """
         token = self._peek()
         location = token.location
+
+        # Build rich context information
         context = {
             "line": location.line,
             "column": location.column,
             "token": token.value,
+            "parser_state": str(self.state),
+            "expected_token_type": None,
+            "macro_name": getattr(self.current_macro, "name", None),
+            "token_position": self.position,
+            "token_type": str(token.type),
         }
-        error_msg = f"Line {location.line}: {message}"
-        logger.error(error_msg)
+
+        # Format error message consistently
+        error_prefix = f"Line {location.line}, Column {location.column}"
+        if context["macro_name"]:
+            error_prefix += f" (in macro '{context['macro_name']}')"
+
+        formatted_message = f"{error_prefix}: {message}"
+        if not message.endswith(".") and not message.endswith("?"):
+            formatted_message += "."
+
+        logger.error(formatted_message)
 
         # Get the error manager instance and add the error
         from converter.error_handling.error_manager import get_error_manager
 
         error_manager = get_error_manager()
-        error_manager.add_error(error_msg, severity, context)
+        error_manager.add_error(formatted_message, severity, context)
+
+    def _add_syntax_error(
+        self, expected: str, found: Optional[str] = None
+    ) -> None:
+        """Add a standardized syntax error with expected/found information.
+
+        Args:
+            expected: What was expected at this point in parsing
+            found: What was actually found (defaults to current token)
+        """
+        token = self._peek()
+        if found is None:
+            found = f"'{token.value}' ({token.type})"
+
+        msg = f"Expected {expected}, but found {found}"
+        self._add_error(msg, ErrorSeverity.ERROR)
 
     def parse_behavior(
         self, name: str, config: dict
@@ -493,7 +530,7 @@ class MacroParser:
                 and self._peek().value == "macros"
             ):
                 pos = self.position
-                logger.debug(f"Found 'macros' keyword at position {pos}")
+                logger.debug(f"Found 'macros' at position {pos}")
                 self._advance()  # Consume the 'macros' token
                 break
             self._advance()
@@ -505,10 +542,7 @@ class MacroParser:
             raise ParserError("Expected 'macros' keyword")
 
         # Expect opening brace
-        if not (
-            self._check(TokenType.IDENTIFIER)
-            or self._check(TokenType.OPEN_BRACE)
-        ):
+        if not self._match(TokenType.OPEN_BRACE):
             token_type = self._peek().type
             msg = (
                 "Expected opening brace after 'macros' keyword, "
@@ -518,7 +552,6 @@ class MacroParser:
             err_msg = "Expected opening brace after 'macros' keyword"
             self._add_error(err_msg, ErrorSeverity.ERROR)
             raise ParserError(err_msg)
-        self._advance()  # Consume the opening brace
 
         # Parse all macro definitions until we find the closing brace
         macro_defs: Dict[str, MacroDefinition] = {}
@@ -577,17 +610,17 @@ class MacroParser:
         and steps enclosed in braces.
         """
         if not self._check(TokenType.IDENTIFIER):
-            msg = "Expected macro name after macro keyword"
-            self._add_error(msg, ErrorSeverity.ERROR)
+            self._add_syntax_error("macro name", "invalid token")
+            self._synchronize_to_next_macro()
             return None
 
-        name = self._previous().value
+        name = self._advance().value  # Consume the macro name
         # Initialize current_macro here
         self.current_macro = MacroDefinition(name=name)
 
-        if not self._check(TokenType.OPEN_BRACE):
-            msg = "Expected '{' after macro name"
-            self._add_error(msg, ErrorSeverity.ERROR)
+        if not self._match(TokenType.OPEN_BRACE):
+            self._add_syntax_error("'{'", "invalid token")
+            self._synchronize_to_next_macro()
             return None
 
         self.state = MacroParserState.IN_MACRO_DEFINITION
@@ -599,15 +632,15 @@ class MacroParser:
 
             # Parse settings
             if self._check(TokenType.IDENTIFIER):
-                setting_name = self._peek().value
-                if self._peek_next().type == TokenType.EQUALS:
+                setting_name = self._advance().value  # Consume setting name
+                if self._match(TokenType.EQUALS):
                     self._parse_setting(setting_name)
                     if self.position == start_pos:
-                        self._add_error(
-                            f"Parser stuck while processing setting "
-                            f"'{setting_name}'",
-                            ErrorSeverity.ERROR,
+                        msg = (
+                            "Parser unable to make progress while "
+                            f"processing setting '{setting_name}'"
                         )
+                        self._add_error(msg, ErrorSeverity.ERROR)
                         self._synchronize_to_next_macro()
                         parse_successful = False
                         break
@@ -618,18 +651,17 @@ class MacroParser:
                     if step:
                         self.current_macro.steps.append(step)
                     elif self.position == start_pos:
-                        self._add_error(
-                            "Parser stuck while processing step",
-                            ErrorSeverity.ERROR,
+                        msg = (
+                            "Parser unable to make progress while "
+                            "processing step"
                         )
+                        self._add_error(msg, ErrorSeverity.ERROR)
                         self._synchronize_to_next_macro()
                         parse_successful = False
                         break
             else:
                 # Neither a setting nor a step
-                self._add_error(
-                    "Expected setting or macro step", ErrorSeverity.ERROR
-                )
+                self._add_syntax_error("setting or macro step")
                 self._synchronize_to_next_macro()
                 parse_successful = False
                 break
@@ -637,39 +669,30 @@ class MacroParser:
             # Expect semicolon after each step/setting
             if not self._match(TokenType.SEMICOLON):
                 if not self._check(TokenType.CLOSE_BRACE):
-                    self._add_error(
-                        "Expected ; after macro step or setting",
-                        ErrorSeverity.ERROR,
-                    )
-                    self._synchronize_to_next_step()
-                    if self.position == start_pos:
-                        self._add_error(
-                            "Parser stuck after missing semicolon",
-                            ErrorSeverity.ERROR,
-                        )
-                        self._synchronize_to_next_macro()
-                        parse_successful = False
-                        break
+                    self._add_syntax_error("';' after macro step or setting")
+                    self._synchronize_to_next_macro()
+                    parse_successful = False
+                    break
 
         if not self._match(TokenType.CLOSE_BRACE):
             if parse_successful:
-                self._add_error(
-                    "Expected } after macro definition", ErrorSeverity.ERROR
-                )
+                self._add_syntax_error("'}'")
             parse_successful = False
 
         if not self._match(TokenType.SEMICOLON):
             if parse_successful:
-                self._add_error(
-                    "Expected ; after macro definition", ErrorSeverity.ERROR
-                )
+                self._add_syntax_error("';' after macro definition")
             parse_successful = False
 
         # Validate the macro
         is_valid, errors = self.current_macro.validate()
         if not is_valid:
             for error in errors:
-                self._add_error(error, ErrorSeverity.WARNING)
+                msg = (
+                    f"Validation error in macro "
+                    f"'{self.current_macro.name}': {error}"
+                )
+                self._add_error(msg, ErrorSeverity.WARNING)
 
         self.state = MacroParserState.IN_MACROS_BLOCK
         return self.current_macro if parse_successful else None
@@ -816,21 +839,25 @@ class MacroParser:
         return steps
 
     def _synchronize_to_next_macro(self) -> None:
-        """Skip tokens until we find a synchronization point for macro
-        definitions.
+        """Skip tokens until we find a synchronization point.
 
         This method is used for error recovery. It skips tokens until it finds
         a point where we can reasonably continue parsing macro definitions.
         """
         while not self._is_at_end():
-            # Look for the start of a new macro definition
-            if self._check(TokenType.IDENTIFIER):
-                # Found a potential macro name
+            # Skip until we find a closing brace or semicolon
+            if self._check(TokenType.CLOSE_BRACE):
+                self._advance()  # Consume the closing brace
+                # Look for semicolon after brace
+                if self._match(TokenType.SEMICOLON):
+                    return
+            elif self._check(TokenType.SEMICOLON):
+                self._advance()  # Consume the semicolon
                 return
-            elif self._check(TokenType.CLOSE_BRACE):
-                # Found the end of the macros block
+            elif self._check(TokenType.IDENTIFIER):
+                # Found potential start of next macro
                 return
-            self._advance()
+            self._advance()  # Skip current token
 
     def _parse_setting(self, setting_name: str) -> None:
         """Parse a macro setting.
@@ -839,83 +866,183 @@ class MacroParser:
         - setting_name = value;
         - bindings = <command1, command2, ...>;
         """
-        if not self._check(TokenType.EQUALS):
-            msg = "Expected '=' after setting " f"name '{setting_name}'"
-            self._add_error(msg, ErrorSeverity.ERROR)
-            return
-
-        self._advance()  # Consume equals sign
-
         if setting_name == "bindings":
-            if not self._check(TokenType.LESS_THAN):
-                msg = "Expected '<' after 'bindings ='"
-                self._add_error(msg, ErrorSeverity.ERROR)
+            # Handle bindings setting
+            if not self._match(TokenType.EQUALS):
+                self._add_error(
+                    "Expected = after bindings", ErrorSeverity.ERROR
+                )
+                self._synchronize_to_next_step()
+                return
+
+            if not self._match(TokenType.OPEN_ANGLE):
+                self._add_error(
+                    "Expected < after bindings =", ErrorSeverity.ERROR
+                )
+                self._synchronize_to_next_step()
                 return
 
             # Parse commands within bindings
             while not self._is_at_end() and not self._check(
-                TokenType.GREATER_THAN
+                TokenType.CLOSE_ANGLE
             ):
-                if self._check(TokenType.IDENTIFIER):
-                    command = self._previous().value
-                    if command.startswith("&"):
-                        # Valid command, add it as a step
-                        self.current_macro.steps.append(
-                            MacroStep(command=command)
+                if self._match(TokenType.AMPERSAND):
+                    if not self._check(TokenType.IDENTIFIER):
+                        self._add_error(
+                            "Expected command after &", ErrorSeverity.ERROR
                         )
-                    else:
-                        msg = "Unknown command " f"'{command}' in bindings"
-                        self._add_error(msg, ErrorSeverity.ERROR)
-                elif self._check(TokenType.COMMA):
+                        # Skip until next command or end of bindings
+                        while (
+                            not self._is_at_end()
+                            and not self._check(TokenType.CLOSE_ANGLE)
+                            and not self._check(TokenType.AMPERSAND)
+                        ):
+                            self._advance()
+                        continue
+
+                    command = self._advance().value
+                    # Add error for invalid command but continue parsing
+                    if command not in ["kp", "macro_tap", "macro_wait_time"]:
+                        self._add_error(
+                            f"Unknown command '{command}' in bindings",
+                            ErrorSeverity.ERROR,
+                        )
+
+                    # Parse parameters
+                    params = []
+                    while (
+                        not self._is_at_end()
+                        and not self._check(TokenType.CLOSE_ANGLE)
+                        and not self._check(TokenType.COMMA)
+                    ):
+                        if self._check(TokenType.IDENTIFIER):
+                            params.append(self._advance().value)
+                        else:
+                            break
+
+                    # Add the command as a step regardless of validity
+                    self.current_macro.steps.append(
+                        MacroStep(command=command, params=params)
+                    )
+
+                elif self._match(TokenType.COMMA):
                     continue  # Skip commas between commands
                 else:
-                    msg = "Expected command in bindings"
-                    self._add_error(msg, ErrorSeverity.ERROR)
-                    break
+                    self._add_error(
+                        "Expected & at start of command", ErrorSeverity.ERROR
+                    )
+                    # Skip until next command or end of bindings
+                    while (
+                        not self._is_at_end()
+                        and not self._check(TokenType.CLOSE_ANGLE)
+                        and not self._check(TokenType.AMPERSAND)
+                    ):
+                        self._advance()
 
-            if not self._check(TokenType.GREATER_THAN):
-                msg = "Expected '>' after bindings commands"
-                self._add_error(msg, ErrorSeverity.ERROR)
+            if not self._match(TokenType.CLOSE_ANGLE):
+                self._add_error(
+                    "Expected > after bindings commands", ErrorSeverity.ERROR
+                )
+                self._synchronize_to_next_step()
                 return
 
-            if not self._check(TokenType.SEMICOLON):
-                msg = "Expected ';' after bindings"
-                self._add_error(msg, ErrorSeverity.ERROR)
+            if not self._match(TokenType.SEMICOLON):
+                self._add_error(
+                    "Expected ; after bindings", ErrorSeverity.ERROR
+                )
+                self._synchronize_to_next_step()
                 return
 
         elif setting_name == "compatible":
-            if not self._check(TokenType.STRING):
-                msg = "Expected string value for " "'compatible' setting"
+            can_match = self._match(TokenType.STRING) or self._match(
+                TokenType.IDENTIFIER
+            )
+            if not can_match:
+                msg = "Expected string value for 'compatible' setting"
                 self._add_error(msg, ErrorSeverity.ERROR)
                 return
-            self.current_macro.compatible = self._previous().value
+            value = self._previous().value
+            if value not in [
+                "zmk,behavior-macro",
+                "zmk,behavior-macro-one-param",
+                "zmk,behavior-macro-two-param",
+            ]:
+                msg = f"Invalid compatible value: {value}"
+                self._add_error(msg, ErrorSeverity.ERROR)
+            else:
+                self.current_macro.compatible = value
 
-            if not self._check(TokenType.SEMICOLON):
+            if not self._match(TokenType.SEMICOLON):
                 msg = "Expected ';' after compatible value"
                 self._add_error(msg, ErrorSeverity.ERROR)
                 return
 
         elif setting_name == "wait-ms":
-            if not self._check(TokenType.NUMBER):
-                msg = "Expected number value for " "'wait-ms' setting"
+            can_match = self._match(TokenType.NUMBER) or self._match(
+                TokenType.IDENTIFIER
+            )
+            if not can_match:
+                msg = "Expected number value for 'wait-ms' setting"
                 self._add_error(msg, ErrorSeverity.ERROR)
                 return
-            self.current_macro.wait_ms = int(self._previous().value)
+            value = self._previous().value
+            try:
+                self.current_macro.wait_ms = int(value)
+                if self.current_macro.wait_ms < 0:
+                    msg = "wait-ms value must be non-negative"
+                    self._add_error(msg, ErrorSeverity.ERROR)
+            except ValueError:
+                msg = f"Invalid wait-ms value: {value}"
+                self._add_error(msg, ErrorSeverity.ERROR)
 
-            if not self._check(TokenType.SEMICOLON):
+            if not self._match(TokenType.SEMICOLON):
                 msg = "Expected ';' after wait-ms value"
                 self._add_error(msg, ErrorSeverity.ERROR)
                 return
 
         elif setting_name == "tap-ms":
-            if not self._check(TokenType.NUMBER):
-                msg = "Expected number value for " "'tap-ms' setting"
+            can_match = self._match(TokenType.NUMBER) or self._match(
+                TokenType.IDENTIFIER
+            )
+            if not can_match:
+                msg = "Expected number value for 'tap-ms' setting"
                 self._add_error(msg, ErrorSeverity.ERROR)
                 return
-            self.current_macro.tap_ms = int(self._previous().value)
+            value = self._previous().value
+            try:
+                self.current_macro.tap_ms = int(value)
+                if self.current_macro.tap_ms < 0:
+                    msg = "tap-ms value must be non-negative"
+                    self._add_error(msg, ErrorSeverity.ERROR)
+            except ValueError:
+                msg = f"Invalid tap-ms value: {value}"
+                self._add_error(msg, ErrorSeverity.ERROR)
 
-            if not self._check(TokenType.SEMICOLON):
+            if not self._match(TokenType.SEMICOLON):
                 msg = "Expected ';' after tap-ms value"
+                self._add_error(msg, ErrorSeverity.ERROR)
+                return
+
+        elif setting_name == "#binding-cells":
+            can_match = self._match(TokenType.NUMBER) or self._match(
+                TokenType.IDENTIFIER
+            )
+            if not can_match:
+                msg = "Expected number value for '#binding-cells' setting"
+                self._add_error(msg, ErrorSeverity.ERROR)
+                return
+            value = self._previous().value
+            try:
+                binding_cells = int(value)
+                if binding_cells not in [0, 1, 2]:
+                    msg = "binding-cells value must be 0, 1, or 2"
+                    self._add_error(msg, ErrorSeverity.ERROR)
+            except ValueError:
+                msg = f"Invalid binding-cells value: {value}"
+                self._add_error(msg, ErrorSeverity.ERROR)
+
+            if not self._match(TokenType.SEMICOLON):
+                msg = "Expected ';' after binding-cells value"
                 self._add_error(msg, ErrorSeverity.ERROR)
                 return
 
