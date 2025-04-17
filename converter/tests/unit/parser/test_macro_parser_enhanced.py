@@ -378,7 +378,7 @@ def test_error_recovery_missing_semicolon(macro_parser):
 
 
 def test_error_recovery_invalid_parameter(macro_parser):
-    """Test error recovery when a command has an invalid parameter."""
+    """Test error recovery when an invalid parameter is encountered."""
     tokens = [
         Token(TokenType.IDENTIFIER, "macros", SourceLocation(1, 1, 0)),
         Token(TokenType.OPEN_BRACE, "{", SourceLocation(1, 7, 6)),
@@ -388,18 +388,15 @@ def test_error_recovery_invalid_parameter(macro_parser):
         Token(TokenType.EQUALS, "=", SourceLocation(3, 16, 38)),
         Token(TokenType.OPEN_ANGLE, "<", SourceLocation(3, 18, 40)),
         Token(TokenType.AMPERSAND, "&", SourceLocation(3, 19, 41)),
-        Token(
-            TokenType.IDENTIFIER, "macro_wait_time", SourceLocation(3, 20, 42)
-        ),
-        Token(
-            TokenType.IDENTIFIER, "invalid", SourceLocation(3, 35, 57)
-        ),  # Invalid parameter
-        Token(TokenType.CLOSE_ANGLE, ">", SourceLocation(3, 42, 64)),
-        Token(TokenType.SEMICOLON, ";", SourceLocation(3, 43, 65)),
-        Token(TokenType.CLOSE_BRACE, "}", SourceLocation(4, 4, 69)),
-        Token(TokenType.SEMICOLON, ";", SourceLocation(4, 5, 70)),
-        Token(TokenType.CLOSE_BRACE, "}", SourceLocation(5, 1, 71)),
-        Token(TokenType.SEMICOLON, ";", SourceLocation(5, 2, 72)),
+        Token(TokenType.IDENTIFIER, "kp", SourceLocation(3, 20, 42)),
+        # Invalid parameter (number where string expected)
+        Token(TokenType.IDENTIFIER, "123", SourceLocation(3, 23, 45)),
+        Token(TokenType.CLOSE_ANGLE, ">", SourceLocation(3, 26, 48)),
+        Token(TokenType.SEMICOLON, ";", SourceLocation(3, 27, 49)),
+        Token(TokenType.CLOSE_BRACE, "}", SourceLocation(4, 4, 53)),
+        Token(TokenType.SEMICOLON, ";", SourceLocation(4, 5, 54)),
+        Token(TokenType.CLOSE_BRACE, "}", SourceLocation(5, 1, 55)),
+        Token(TokenType.SEMICOLON, ";", SourceLocation(5, 2, 56)),
     ]
 
     macro_parser.tokens = tokens
@@ -410,8 +407,9 @@ def test_error_recovery_invalid_parameter(macro_parser):
         macro_parser.parse_macros_block()
 
     error_message = str(exc_info.value)
-    assert "parameter must be a number" in error_message.lower()
+    assert "Invalid parameter" in error_message
     assert "Line " in error_message
+    assert "123" in error_message
 
 
 def test_error_recovery_unclosed_bindings(macro_parser):

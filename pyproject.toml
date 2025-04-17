@@ -12,16 +12,3 @@ build-backend = "hatchling.build"
 testpaths = ["converter/tests"]
 python_files = ["test_*.py"]
 python_functions = ["test_*"]
-
-[tool.black]
-line-length = 79
-include = '\.pyi?$'
-extend-exclude = '''
-# A regex preceded with ^/ will apply only to files and directories
-# in the root of the project.
-^/docs
-'''
-
-[tool.isort]
-profile = "black"
-line_length = 79

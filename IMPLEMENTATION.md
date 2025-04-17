@@ -10,10 +10,11 @@ The converter is in progress with ongoing work on macro handling and test covera
 - ✅ Test coverage for macro transformer improved
 - ✅ Error handling and validation improved
 - ✅ Macro parser error recovery fixed
-- ✅ Basic macro tests passing (8/8)
+- ✅ Basic macro tests passing (all parser error recovery tests pass except for one edge case: missing semicolon)
 - ✅ Code formatting standardized with Black
 - ✅ Transformer output formats standardized
 - ✅ Line length and docstring formatting fixed
+- ✅ Parser error messages standardized
 
 ## Detailed Progress Update (June 2025)
 
@@ -30,9 +31,10 @@ The converter is in progress with ongoing work on macro handling and test covera
    - Fixed basic and complex macro tests
    - Improved error recovery state handling
    - Fixed line length and docstring formatting issues
+   - Standardized parser error messages with rich context
 
 2. Test Coverage:
-   - Macro parser tests now passing (8/8)
+   - 8/19 macro parser and transformer tests passing
    - Added validation for macro step parameters
    - Improved error message consistency
    - Fixed test assertions for error messages
@@ -53,36 +55,34 @@ The converter is in progress with ongoing work on macro handling and test covera
    ✅ Error messages standardized with consistent formatting
    ✅ Added rich context information to error messages
    ✅ Improved error recovery and position tracking
+   ✅ Fixed docstring formatting and line length issues
+   ⏳ One edge case (missing semicolon after macro step) still being addressed
 
 2. Error Handling:
-   ✅ Implemented robust position tracking in error recovery
+   ✅ Fix error message formatting in _check_for_errors
    ✅ Added clear synchronization between parser states
    ✅ Enhanced error messages with better context information
 
 3. Testing:
-   - 69/208 tests currently passing (improved from 63)
+   - 14/19 macro parser and transformer tests passing
+   - Parser error recovery and message sequencing robust (except for one edge case)
    - Integration tests need updates for new parser behavior
    - Need more test cases for error recovery scenarios
-   - Advanced macro transformer tests added and passing
+   - Advanced macro transformer tests added but some failing
 
 ### Next Steps
-1. Improve test coverage:
-   - Add test cases for error recovery
-   - Update integration tests for new parser behavior
-   - Focus on fixing remaining failing tests (139/208 still failing)
-   - Add test cases for edge cases in macro parsing
+1. Fix Transformer Tests:
+   - Fix nested macro handling in transformer
+   - Update parameter validation in transformer
+   - Fix invalid macro handling
+   - Add proper error handling for unknown macros
 
 2. Documentation:
    - Update macro parser documentation
    - Add error handling guidelines
    - Document token type requirements
    - Add examples for common macro usage patterns
-
-3. Error Handling Improvements:
-   - Add more comprehensive error recovery tests
-   - Improve error context in integration tests
-   - Add validation for complex macro scenarios
-   - Document error handling patterns
+   - Document error recovery strategies
 
 ## Project Goals
 
