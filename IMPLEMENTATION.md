@@ -13,6 +13,7 @@ The converter is in progress with ongoing work on macro handling and test covera
 - ✅ Basic macro tests passing (8/8)
 - ✅ Code formatting standardized with Black
 - ✅ Transformer output formats standardized
+- ✅ Line length and docstring formatting fixed
 
 ## Detailed Progress Update (June 2025)
 
@@ -28,6 +29,7 @@ The converter is in progress with ongoing work on macro handling and test covera
    - Added support for invalid command detection
    - Fixed basic and complex macro tests
    - Improved error recovery state handling
+   - Fixed line length and docstring formatting issues
 
 2. Test Coverage:
    - Macro parser tests now passing (8/8)
@@ -44,6 +46,7 @@ The converter is in progress with ongoing work on macro handling and test covera
    - Fixed line length issues across codebase
    - Standardized code formatting
    - Standardized transformer output formats
+   - Fixed docstring formatting and line length issues
 
 ### Current Issues
 1. Macro Parser:
