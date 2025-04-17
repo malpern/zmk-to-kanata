@@ -25,7 +25,7 @@ class TestLayerParser(unittest.TestCase):
         layers = self.parser.extract_layers(keymap_content)
         self.assertEqual(len(layers), 1)
         self.assertEqual(layers[0].name, "default")
-        self.assertEqual(len(layers[0].bindings), 6)
+        self.assertEqual(sum(len(row) for row in layers[0].keys), 6)
 
     def test_parse_zmk_file(self):
         """Test parsing a complete ZMK file."""

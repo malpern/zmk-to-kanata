@@ -55,9 +55,7 @@ class KeySequenceBinding(Binding):
         "DELETE": "del",
     }
 
-    def __init__(
-        self, keys: List[str], behavior: Optional[KeySequenceBehavior] = None
-    ):
+    def __init__(self, keys: List[str], behavior: Optional[KeySequenceBehavior] = None):
         self.keys = keys
         self.behavior = behavior or KeySequenceBehavior()
 
@@ -65,9 +63,7 @@ class KeySequenceBinding(Binding):
         """Convert the key sequence binding to Kanata format."""
         # Kanata uses (chord ...) for key sequences
         # Convert each key using the mapping or lowercase
-        key_str = " ".join(
-            self.key_mapping.get(k, k.lower()) for k in self.keys
-        )
+        key_str = " ".join(self.key_mapping.get(k, k.lower()) for k in self.keys)
         return f"(chord {key_str})"
 
     @classmethod
@@ -101,10 +97,6 @@ def parse_key_sequence_behavior(config: dict) -> KeySequenceBehavior:
     if "bindings" in config:
         bindings_str = config["bindings"].strip("<>").strip()
         # Split by comma and clean up each binding
-        bindings = [
-            b.strip().replace("&", "").strip() for b in bindings_str.split(",")
-        ]
+        bindings = [b.strip().replace("&", "").strip() for b in bindings_str.split(",")]
 
-    return KeySequenceBehavior(
-        wait_ms=wait_ms, tap_ms=tap_ms, bindings=bindings
-    )
+    return KeySequenceBehavior(wait_ms=wait_ms, tap_ms=tap_ms, bindings=bindings)

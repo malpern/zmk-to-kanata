@@ -64,24 +64,18 @@ class HoldTapTransformer:
             tap_hold_type = "tap-hold-press-timeout"
 
         # Map the hold key (usually a modifier)
-        hold_key = self.modifier_map.get(
-            binding.hold_key, binding.hold_key.lower()
-        )
+        hold_key = self.modifier_map.get(binding.hold_key, binding.hold_key.lower())
 
         # Map the tap key
         tap_key = binding.tap_key.lower()
 
         # Basic tap-hold configuration
-        config = (
-            f"({tap_hold_type} {tap_time} {hold_time} {tap_key} {hold_key}"
-        )
+        config = f"({tap_hold_type} {tap_time} {hold_time} {tap_key} {hold_key}"
 
         # Add extra parameters for advanced features
         if tap_hold_type == "tap-hold-release-keys":
             # Convert key positions to a list
-            positions = " ".join(
-                str(pos) for pos in binding.hold_trigger_key_positions
-            )
+            positions = " ".join(str(pos) for pos in binding.hold_trigger_key_positions)
             config += f" ({positions})"
         elif tap_hold_type == "tap-hold-press-timeout" and binding.retro_tap:
             # Add tap key as timeout action for retro-tap

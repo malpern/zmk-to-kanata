@@ -12,9 +12,7 @@ from converter.behaviors.key_sequence import (
 
 def test_key_sequence_creation():
     """Test creating a valid key sequence behavior."""
-    sequence = KeySequenceBehavior(
-        wait_ms=40, tap_ms=40, bindings=["A", "B", "C"]
-    )
+    sequence = KeySequenceBehavior(wait_ms=40, tap_ms=40, bindings=["A", "B", "C"])
     assert sequence.wait_ms == 40
     assert sequence.tap_ms == 40
     assert sequence.bindings == ["A", "B", "C"]
@@ -37,9 +35,7 @@ def test_key_sequence_validation():
 
 def test_key_sequence_binding_creation():
     """Test creating a key sequence binding."""
-    behavior = KeySequenceBehavior(
-        wait_ms=40, tap_ms=40, bindings=["A", "B", "C"]
-    )
+    behavior = KeySequenceBehavior(wait_ms=40, tap_ms=40, bindings=["A", "B", "C"])
     binding = KeySequenceBinding(keys=["A", "B", "C"], behavior=behavior)
     assert binding.keys == ["A", "B", "C"]
     assert binding.behavior.wait_ms == 40

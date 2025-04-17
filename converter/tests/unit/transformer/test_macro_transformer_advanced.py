@@ -171,9 +171,7 @@ def test_invalid_parameterized_macro(transformer):
         name="bad_param_macro",
         params=["key1"],
         steps=[
-            MacroStep(
-                command="kp", params=["key2"]
-            ),  # Using undefined parameter
+            MacroStep(command="kp", params=["key2"]),  # Using undefined parameter
         ],
     )
     result = transformer.transform_definition(macro_def)
@@ -198,6 +196,4 @@ def test_invalid_nested_macro(transformer):
     errors = get_error_manager().get_errors()
 
     assert any("Unknown macro" in e["message"] for e in errors)
-    assert (
-        "<unknown:macro_usage>" in result or "non_existent_macro" not in result
-    )
+    assert "<unknown:macro_usage>" in result or "non_existent_macro" not in result

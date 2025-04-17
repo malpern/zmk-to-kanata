@@ -52,9 +52,7 @@ class TapHoldParser:
         )
 
         # Configuration patterns
-        self.tapping_term_pattern = re.compile(
-            r"tapping-term-ms\s*=\s*<(\d+)>"
-        )
+        self.tapping_term_pattern = re.compile(r"tapping-term-ms\s*=\s*<(\d+)>")
         self.quick_tap_pattern = re.compile(r"quick-tap-ms\s*=\s*<(\d+)>")
         self.require_prior_idle_pattern = re.compile(
             r"require-prior-idle-ms\s*=\s*<(\d+)>"
@@ -63,9 +61,7 @@ class TapHoldParser:
         self.hold_trigger_positions_pattern = re.compile(
             r"hold-trigger-key-positions\s*=\s*<([^>]+)>"
         )
-        self.hold_trigger_on_release_pattern = re.compile(
-            r"hold-trigger-on-release"
-        )
+        self.hold_trigger_on_release_pattern = re.compile(r"hold-trigger-on-release")
         self.retro_tap_pattern = re.compile(r"retro-tap")
 
         # Registry for custom behaviors
@@ -120,9 +116,7 @@ class TapHoldParser:
         """
         # Check if this is a hold-tap behavior
         if not self.compatible_pattern.search(zmk_config):
-            raise ValueError(
-                "Not a hold-tap behavior: missing compatible string"
-            )
+            raise ValueError("Not a hold-tap behavior: missing compatible string")
 
         # Extract basic properties
         name_match = self.name_pattern.search(zmk_config)
@@ -144,13 +138,9 @@ class TapHoldParser:
             bindings.append(match.group(1))
 
         # Extract configuration parameters
-        tapping_term = self._parse_int_param(
-            self.tapping_term_pattern, zmk_config
-        )
+        tapping_term = self._parse_int_param(self.tapping_term_pattern, zmk_config)
         quick_tap = self._parse_int_param(self.quick_tap_pattern, zmk_config)
-        prior_idle = self._parse_int_param(
-            self.require_prior_idle_pattern, zmk_config
-        )
+        prior_idle = self._parse_int_param(self.require_prior_idle_pattern, zmk_config)
 
         flavor_match = self.flavor_pattern.search(zmk_config)
         flavor = flavor_match.group(1) if flavor_match else None
@@ -185,9 +175,7 @@ class TapHoldParser:
 
         return behavior
 
-    def _parse_int_param(
-        self, pattern: re.Pattern, config: str
-    ) -> Optional[int]:
+    def _parse_int_param(self, pattern: re.Pattern, config: str) -> Optional[int]:
         """Helper method to parse integer parameters from config."""
         match = pattern.search(config)
         return int(match.group(1)) if match else None
@@ -205,8 +193,7 @@ class TapHoldParser:
             return [int(pos.rstrip(",")) for pos in positions]
         except ValueError as e:
             raise ValueError(
-                f"Invalid key position value in "
-                f"hold-trigger-key-positions: {e}"
+                f"Invalid key position value in " f"hold-trigger-key-positions: {e}"
             )
 
     @staticmethod

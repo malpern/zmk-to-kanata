@@ -95,9 +95,7 @@ def test_error_recovery_with_context(macro_parser):
         Token(TokenType.EQUALS, "=", SourceLocation(4, 15, 36)),
         Token(TokenType.OPEN_ANGLE, "<", SourceLocation(4, 17, 38)),
         Token(TokenType.AMPERSAND, "&", SourceLocation(4, 18, 39)),
-        Token(
-            TokenType.IDENTIFIER, "invalid_command", SourceLocation(4, 19, 40)
-        ),
+        Token(TokenType.IDENTIFIER, "invalid_command", SourceLocation(4, 19, 40)),
         Token(TokenType.CLOSE_ANGLE, ">", SourceLocation(4, 33, 54)),
         Token(TokenType.SEMICOLON, ";", SourceLocation(4, 34, 55)),
         Token(TokenType.CLOSE_BRACE, "}", SourceLocation(5, 9, 64)),
@@ -210,9 +208,7 @@ def test_basic_macro(macro_parser):
         Token(TokenType.IDENTIFIER, "A", SourceLocation(4, 23, 85)),
         Token(TokenType.COMMA, ",", SourceLocation(4, 24, 86)),
         Token(TokenType.AMPERSAND, "&", SourceLocation(4, 26, 88)),
-        Token(
-            TokenType.IDENTIFIER, "macro_wait_time", SourceLocation(4, 27, 89)
-        ),
+        Token(TokenType.IDENTIFIER, "macro_wait_time", SourceLocation(4, 27, 89)),
         Token(TokenType.IDENTIFIER, "50", SourceLocation(4, 42, 104)),
         Token(TokenType.CLOSE_ANGLE, ">", SourceLocation(4, 44, 106)),
         Token(TokenType.SEMICOLON, ";", SourceLocation(4, 45, 107)),
@@ -267,9 +263,7 @@ def test_complex_macro(macro_parser):
         Token(TokenType.EQUALS, "=", SourceLocation(5, 15, 110)),
         Token(TokenType.IDENTIFIER, "20", SourceLocation(5, 17, 112)),
         Token(TokenType.SEMICOLON, ";", SourceLocation(5, 19, 114)),
-        Token(
-            TokenType.IDENTIFIER, "#binding-cells", SourceLocation(6, 8, 123)
-        ),
+        Token(TokenType.IDENTIFIER, "#binding-cells", SourceLocation(6, 8, 123)),
         Token(TokenType.EQUALS, "=", SourceLocation(6, 22, 137)),
         Token(TokenType.IDENTIFIER, "2", SourceLocation(6, 24, 139)),
         Token(TokenType.SEMICOLON, ";", SourceLocation(6, 25, 140)),
@@ -291,9 +285,7 @@ def test_complex_macro(macro_parser):
         Token(TokenType.COMMA, ",", SourceLocation(8, 41, 201)),
         # Second sequence
         Token(TokenType.AMPERSAND, "&", SourceLocation(9, 12, 214)),
-        Token(
-            TokenType.IDENTIFIER, "macro_wait_time", SourceLocation(9, 13, 215)
-        ),
+        Token(TokenType.IDENTIFIER, "macro_wait_time", SourceLocation(9, 13, 215)),
         Token(TokenType.IDENTIFIER, "100", SourceLocation(9, 28, 230)),
         Token(TokenType.COMMA, ",", SourceLocation(9, 31, 233)),
         Token(TokenType.AMPERSAND, "&", SourceLocation(9, 33, 235)),
@@ -358,7 +350,6 @@ def test_error_recovery_missing_semicolon(macro_parser):
         Token(TokenType.IDENTIFIER, "A", SourceLocation(3, 23, 45)),
         # Missing semicolon here
         Token(TokenType.CLOSE_ANGLE, ">", SourceLocation(3, 24, 46)),
-        Token(TokenType.SEMICOLON, ";", SourceLocation(3, 25, 47)),
         Token(TokenType.CLOSE_BRACE, "}", SourceLocation(4, 4, 51)),
         Token(TokenType.SEMICOLON, ";", SourceLocation(4, 5, 52)),
         Token(TokenType.CLOSE_BRACE, "}", SourceLocation(5, 1, 53)),
@@ -373,7 +364,7 @@ def test_error_recovery_missing_semicolon(macro_parser):
         macro_parser.parse_macros_block()
 
     error_message = str(exc_info.value)
-    assert "Expected ," in error_message or "Expected ;" in error_message
+    assert "Expected ';'" in error_message
     assert "Line " in error_message
 
 

@@ -44,6 +44,13 @@ class TestLayerIntegration(unittest.TestCase):
         self.assertIn("a b c", kanata_content)
         self.assertIn("left right up", kanata_content)
 
+        # Check the number of keys in each layer
+        for layer in layers:
+            if layer.name == "default":
+                assert sum(len(row) for row in layer.keys) == 6
+            elif layer.name == "nav":
+                assert sum(len(row) for row in layer.keys) == 6
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -204,9 +204,7 @@ def test_missing_required_fields():
     )
 
     parser = HoldTapParser()
-    with pytest.raises(
-        ValueError, match="Invalid behavior: missing binding-cells"
-    ):
+    with pytest.raises(ValueError, match="Invalid behavior: missing binding-cells"):
         parser.parse_behavior(zmk_incomplete)
 
 

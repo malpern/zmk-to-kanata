@@ -5,6 +5,7 @@ from enum import Enum
 from typing import Dict, List, Optional
 
 from ..model.keymap_model import Binding
+from converter.behaviors.unicode import is_unicode_binding
 
 
 class MacroActivationMode(Enum):
@@ -67,9 +68,28 @@ class MacroBinding(Binding):
 
 def is_macro_binding(binding_str: str) -> bool:
     """Check if a binding string is a macro binding."""
+    # Exclude Unicode bindings
+    if is_unicode_binding(binding_str):
+        return False
     # Macro bindings start with & followed by a behavior name
     # We'll need to check against known macro behaviors
-    excluded_prefixes = ["&kp", "&mo", "&lt", "&to", "&sk", "&key_sequence"]
+    excluded_prefixes = [
+        "&kp",
+        "&mo",
+        "&lt",
+        "&to",
+        "&sk",
+        "&key_sequence",
+        "&mt",
+        "&ht",
+        "&td",
+        "&out",
+        "&bt",
+        "&rgb",
+        "&reset",
+        "&boot",
+        "&ext_power",
+    ]
     return binding_str.startswith("&") and not any(
         binding_str.startswith(prefix) for prefix in excluded_prefixes
     )

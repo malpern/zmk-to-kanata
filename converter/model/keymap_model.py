@@ -247,9 +247,7 @@ class KeyMapping(Binding):
         if binding_str.startswith("&mo"):
             parts = binding_str.split()
             if len(parts) != 2:
-                raise ValueError(
-                    f"Invalid layer switch binding: {binding_str}"
-                )
+                raise ValueError(f"Invalid layer switch binding: {binding_str}")
             layer_num = parts[1]
             return cls(key=f"mo {layer_num}")
 
@@ -257,9 +255,7 @@ class KeyMapping(Binding):
         if binding_str.startswith("&to"):
             parts = binding_str.split()
             if len(parts) != 2:
-                raise ValueError(
-                    f"Invalid layer toggle binding: {binding_str}"
-                )
+                raise ValueError(f"Invalid layer toggle binding: {binding_str}")
             layer_num = parts[1]
             return cls(key=f"to {layer_num}")
 
@@ -282,72 +278,47 @@ class KeyMapping(Binding):
 
 @dataclass
 class Layer:
-    """Represents a layer in the keymap."""
+    """Represents a layer in the keymap.
+
+    Now stores the keys matrix as a 2D list (rows x columns).
+    The 'bindings' attribute is deprecated; use 'keys' instead.
+    """
 
     name: str
-    bindings: List[Binding] = field(default_factory=list)
+    keys: List[List[Binding]] = field(default_factory=list)
 
-    def __init__(self, name: str, bindings: List[Binding] = None, keys=None):
-        """Initialize a Layer with either bindings or keys for backward compatibility.
+    def __init__(
+        self,
+        name: str,
+        bindings: List[Binding] = None,
+        keys: List[List[Binding]] = None,
+    ):
+        """Initialize a Layer with a keys matrix (preferred) or flat bindings list (deprecated).
 
         Args:
             name: The name of the layer
-            bindings: List of bindings (new style)
-            keys: Matrix of keys (old style, for backward compatibility)
+            bindings: (Deprecated) List of bindings (flat)
+            keys: Matrix of keys (rows x columns, preferred)
         """
         self.name = name
-        self.bindings = []
-
-        # Handle old-style initialization with keys parameter
         if keys is not None:
-            # Flatten the keys matrix into a single list of bindings
-            for row in keys:
-                for key in row:
-                    self.bindings.append(key)
-        # Handle new-style initialization with bindings parameter
+            self.keys = keys
         elif bindings is not None:
-            self.bindings = bindings
-
-    @property
-    def keys(self):
-        """Return a 2D list of bindings for backward compatibility.
-
-        This is a simplified implementation that puts all bindings in rows
-        of 3 elements each to match the test fixture.
-        """
-        # For backward compatibility with tests, we need to return a 2D list
-        # with specific structure. We'll split the bindings into rows of 3
-        # elements each to match the test fixture.
-        rows = []
-        row = []
-        for i, binding in enumerate(self.bindings):
-            row.append(binding)
-            if (i + 1) % 3 == 0:  # Every 3 elements
-                rows.append(row)
-                row = []
-
-        # Add any remaining bindings
-        if row:
-            rows.append(row)
-
-        # If no rows, return at least one empty row
-        if not rows:
-            rows = [[]]
-
-        return rows
+            # For backward compatibility, treat as a single row
+            self.keys = [bindings]
+        else:
+            self.keys = []
 
     def to_kanata(self) -> str:
         """Convert the layer to Kanata format."""
-        # Convert bindings to Kanata format
         kanata_bindings = []
-        for binding in self.bindings:
-            kanata_bindings.append(binding.to_kanata())
-
-        # Format the layer definition
+        for row in self.keys:
+            kanata_bindings.append(
+                "  " + "  ".join(binding.to_kanata() for binding in row)
+            )
         layer_def = f"(deflayer {self.name}\n"
-        layer_def += "  " + " ".join(kanata_bindings) + "\n"
+        layer_def += "\n".join(kanata_bindings) + "\n"
         layer_def += ")"
-
         return layer_def
 
 

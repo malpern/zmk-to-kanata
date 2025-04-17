@@ -1,7 +1,6 @@
 """Main module for the ZMK to Kanata converter."""
 
 import argparse
-import os
 import sys
 from pathlib import Path
 from typing import List, Union
@@ -57,9 +56,7 @@ def generate_kanata_keymap(layers: List[KanataLayer]) -> str:
     return "\n".join(kanata_config)
 
 
-def convert_keymap(
-    input_file: Union[str, Path], output_file: Union[str, Path]
-) -> None:
+def convert_keymap(input_file: Union[str, Path], output_file: Union[str, Path]) -> None:
     """Convert a ZMK keymap file to Kanata format.
 
     Args:
@@ -83,18 +80,16 @@ def convert_keymap(
 
     # Write output file
     with open(output_file, "w") as f:
+        if not output.endswith("\n"):
+            output += "\n"
         f.write(output)
 
 
 def main(args=None):
-    """Main entry point for the converter."""
-    parser = argparse.ArgumentParser(
-        description="Convert ZMK keymap to Kanata keymap"
-    )
+    """Run the main entry point for the converter."""
+    parser = argparse.ArgumentParser(description="Convert ZMK keymap to Kanata keymap")
     parser.add_argument("input_file", help="Path to input ZMK keymap file")
-    parser.add_argument(
-        "output_file", help="Path to output Kanata keymap file"
-    )
+    parser.add_argument("output_file", help="Path to output Kanata keymap file")
 
     if args is None:
         args = parser.parse_args()
@@ -132,6 +127,8 @@ def main(args=None):
         # Write output file
         try:
             with open(args.output_file, "w") as f:
+                if not output.endswith("\n"):
+                    output += "\n"
                 f.write(output)
         except Exception as e:
             print(f"Error writing output file: {e}", file=sys.stderr)

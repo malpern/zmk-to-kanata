@@ -28,7 +28,7 @@ def test_empty_layer():
         config = parser.parse(Path(f.name))
         assert len(config.layers) == 1
         assert config.layers[0].name == "empty"
-        assert len(config.layers[0].bindings) == 0
+        assert sum(len(row) for row in config.layers[0].keys) == 0
 
 
 def test_multiple_layers():
@@ -55,8 +55,8 @@ def test_multiple_layers():
         assert len(config.layers) == 2
         assert config.layers[0].name == "first"
         assert config.layers[1].name == "second"
-        assert len(config.layers[0].bindings) == 1
-        assert len(config.layers[1].bindings) == 1
+        assert sum(len(row) for row in config.layers[0].keys) == 1
+        assert sum(len(row) for row in config.layers[1].keys) == 1
 
 
 def test_multiline_bindings():
@@ -82,8 +82,8 @@ def test_multiline_bindings():
         parser = ZMKParser()
         config = parser.parse(Path(f.name))
         assert len(config.layers) == 1
-        assert len(config.layers[0].bindings) == 3
-        assert [b.key for b in config.layers[0].bindings] == ["A", "B", "C"]
+        assert sum(len(row) for row in config.layers[0].keys) == 3
+        assert [b.key for row in config.layers[0].keys for b in row] == ["A", "B", "C"]
 
 
 def test_invalid_layer_name():

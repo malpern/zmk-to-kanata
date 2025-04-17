@@ -42,6 +42,9 @@ def convert_zmk_to_kanata(input_file: str) -> str:
         # Parse macros
         macro_behaviors = macro_parser.parse_behaviors(content)
 
+        # Register macro behaviors in the layer parser's macro parser
+        layer_parser.macro_parser.behaviors = {m.name: m for m in macro_behaviors}
+
         # Parse Unicode mappings
         unicode_parser.parse_unicode_mappings(content)
     except ValueError as e:

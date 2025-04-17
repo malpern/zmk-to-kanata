@@ -1,4 +1,4 @@
-"""ZMK Parser Module
+"""ZMK Parser Module.
 
 This module is responsible for parsing ZMK keymap files into our intermediate
 representation.
@@ -7,12 +7,11 @@ representation.
 import logging
 from enum import Enum, auto
 from pathlib import Path
-from typing import Dict, List, Optional, Set
+from typing import Dict, List, Set
+import re
 
 from converter.model.keymap_model import (
-    GlobalSettings,
     KeymapConfig,
-    KeyMapping,
     Layer,
 )
 from converter.parser.sticky_key_parser import StickyKeyParser
@@ -34,6 +33,7 @@ class ParserState(Enum):
     IN_BINDINGS = auto()
 
     def __str__(self) -> str:
+        """Return the name of the state as a string."""
         return self.name
 
 
@@ -41,11 +41,10 @@ class InvalidStateTransitionError(ParserError):
     """Error raised when an invalid state transition is attempted."""
 
     def __init__(self, from_state: ParserState, to_state: ParserState) -> None:
+        """Initialize the error with the from and to states."""
         self.from_state = from_state
         self.to_state = to_state
-        super().__init__(
-            f"Invalid state transition from {from_state} to {to_state}"
-        )
+        super().__init__(f"Invalid state transition from {from_state} to {to_state}")
 
 
 class ZMKParser:
@@ -59,6 +58,10 @@ class ZMKParser:
         ParserState.IN_LAYER: {ParserState.IN_BINDINGS, ParserState.IN_KEYMAP},
         ParserState.IN_BINDINGS: {ParserState.IN_LAYER, ParserState.IN_KEYMAP},
     }
+
+    # For test/debug compatibility
+    bindings_pattern = re.compile(r"&[^&]+")
+    global_pattern = re.compile(r"tap-time|hold-time")
 
     def __init__(self):
         """Initialize the parser."""
@@ -110,6 +113,9 @@ class ZMKParser:
         try:
             # Read and process file
             content = file_path.read_text()
+
+            # Populate unicode mappings before parsing layers
+            self.layer_parser.unicode_parser.parse_unicode_mappings(content)
 
             # Process file line by line
             for line in content.split("\n"):
@@ -215,7 +221,7 @@ class ZMKParser:
         """
         try:
             layer = self.layer_parser.finish_layer()
-            bindings_count = len(layer.bindings)
+            bindings_count = sum(len(row) for row in layer.keys)
             logger.debug("Layer %s: %d bindings", layer.name, bindings_count)
             logger.debug("Adding layer to list: %s", layer.name)
             self.layers.append(layer)
@@ -238,3 +244,17 @@ class ZMKParser:
             logger.debug("Added bindings: %s", line)
         except ValueError as e:
             raise ParserError(f"Invalid bindings: {line}") from e
+
+    def _parse_bindings(self, binding_text: str):
+        """
+        Parse bindings for test/debug utilities.
+
+        Returns a list of lists of KeyMapping.
+        """
+        parser = LayerParser()
+        rows = []
+        for line in binding_text.strip().splitlines():
+            bindings = parser.parse_bindings_line(line.strip())
+            if bindings:
+                rows.append(bindings)
+        return rows

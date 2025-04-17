@@ -56,9 +56,7 @@ def test_qwerty_standard_layout(tmp_path, monkeypatch):
     zmk_file.write_text(zmk_content)
 
     # Set up sys.argv for the main function
-    monkeypatch.setattr(
-        sys, "argv", ["converter", str(zmk_file), str(kanata_file)]
-    )
+    monkeypatch.setattr(sys, "argv", ["converter", str(zmk_file), str(kanata_file)])
 
     # Run the converter
     from converter.main import main
@@ -133,9 +131,7 @@ def test_colemak_layout(tmp_path, monkeypatch):
     zmk_file.write_text(zmk_content)
 
     # Set up sys.argv for the main function
-    monkeypatch.setattr(
-        sys, "argv", ["converter", str(zmk_file), str(kanata_file)]
-    )
+    monkeypatch.setattr(sys, "argv", ["converter", str(zmk_file), str(kanata_file)])
 
     # Run the converter
     from converter.main import main
@@ -157,9 +153,7 @@ def test_colemak_layout(tmp_path, monkeypatch):
 
     # Check for specific Colemak key mappings
     # In Colemak, F is where D would be in QWERTY, etc.
-    default_layer = kanata_content.split("(deflayer default")[1].split(
-        "(deflayer"
-    )[0]
+    default_layer = kanata_content.split("(deflayer default")[1].split("(deflayer")[0]
 
     # Check that the Colemak layout is preserved
     assert "q w f p g" in default_layer.lower()
@@ -220,9 +214,7 @@ def test_split_keyboard_layout(tmp_path, monkeypatch):
     zmk_file.write_text(zmk_content)
 
     # Set up sys.argv for the main function
-    monkeypatch.setattr(
-        sys, "argv", ["converter", str(zmk_file), str(kanata_file)]
-    )
+    monkeypatch.setattr(sys, "argv", ["converter", str(zmk_file), str(kanata_file)])
 
     # Run the converter
     from converter.main import main
@@ -250,9 +242,7 @@ def test_split_keyboard_layout(tmp_path, monkeypatch):
     assert "ret" in kanata_content.lower() or "enter" in kanata_content.lower()
 
     # Check for layer switching
-    lower_layer = kanata_content.split("(deflayer lower")[1].split(
-        "(deflayer"
-    )[0]
+    lower_layer = kanata_content.split("(deflayer lower")[1].split("(deflayer")[0]
     raise_layer = (
         kanata_content.split("(deflayer raise")[1].split(")")[0]
         if "(deflayer raise" in kanata_content
@@ -342,9 +332,7 @@ def test_ergonomic_layout_with_homerow_mods(tmp_path, monkeypatch):
     zmk_file.write_text(zmk_content)
 
     # Set up sys.argv for the main function
-    monkeypatch.setattr(
-        sys, "argv", ["converter", str(zmk_file), str(kanata_file)]
-    )
+    monkeypatch.setattr(sys, "argv", ["converter", str(zmk_file), str(kanata_file)])
 
     # Run the converter
     from converter.main import main
@@ -467,9 +455,7 @@ def test_ben_vallack_cradio_layout(tmp_path, monkeypatch):
     zmk_file.write_text(zmk_content)
 
     # Set up sys.argv for the main function
-    monkeypatch.setattr(
-        sys, "argv", ["converter", str(zmk_file), str(kanata_file)]
-    )
+    monkeypatch.setattr(sys, "argv", ["converter", str(zmk_file), str(kanata_file)])
 
     # Run the converter
     from converter.main import main
@@ -578,9 +564,7 @@ def test_dvorak_layout(tmp_path, monkeypatch):
     zmk_file.write_text(zmk_content)
 
     # Set up sys.argv for the main function
-    monkeypatch.setattr(
-        sys, "argv", ["converter", str(zmk_file), str(kanata_file)]
-    )
+    monkeypatch.setattr(sys, "argv", ["converter", str(zmk_file), str(kanata_file)])
 
     # Run the converter
     from converter.main import main
@@ -602,9 +586,7 @@ def test_dvorak_layout(tmp_path, monkeypatch):
     assert "(deflayer raise" in kanata_content
 
     # Check for specific Dvorak key mappings
-    default_layer = kanata_content.split("(deflayer default")[1].split(
-        "(deflayer"
-    )[0]
+    default_layer = kanata_content.split("(deflayer default")[1].split("(deflayer")[0]
 
     # Check that the Dvorak layout is preserved
     # Dvorak has a unique layout with vowels on the left home row
@@ -680,9 +662,7 @@ def test_ergonomic_kyria_layout(tmp_path, monkeypatch):
     zmk_file.write_text(zmk_content)
 
     # Set up sys.argv for the main function
-    monkeypatch.setattr(
-        sys, "argv", ["converter", str(zmk_file), str(kanata_file)]
-    )
+    monkeypatch.setattr(sys, "argv", ["converter", str(zmk_file), str(kanata_file)])
 
     # Run the converter
     from converter.main import main
@@ -704,24 +684,16 @@ def test_ergonomic_kyria_layout(tmp_path, monkeypatch):
     assert "(deflayer raise" in kanata_content
 
     # Check for specific ergonomic keyboard features
-    default_layer = kanata_content.split("(deflayer default")[1].split(
-        "(deflayer"
-    )[0]
-    lower_layer = kanata_content.split("(deflayer lower")[1].split(
-        "(deflayer"
-    )[0]
+    default_layer = kanata_content.split("(deflayer default")[1].split("(deflayer")[0]
+    lower_layer = kanata_content.split("(deflayer lower")[1].split("(deflayer")[0]
 
     # Check for thumb cluster keys
     assert "space" in default_layer.lower()
     assert "ret" in default_layer.lower() or "enter" in default_layer.lower()
 
     # Check for layer switching
-    assert (
-        "@layer1" in default_layer.lower() or "@lower" in default_layer.lower()
-    )
-    assert (
-        "@layer2" in default_layer.lower() or "@raise" in default_layer.lower()
-    )
+    assert "@layer1" in default_layer.lower() or "@lower" in default_layer.lower()
+    assert "@layer2" in default_layer.lower() or "@raise" in default_layer.lower()
 
     # Check for navigation keys in lower layer
     assert "left" in lower_layer.lower()

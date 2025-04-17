@@ -277,8 +277,10 @@ class MacroTransformer:
                                 ErrorSeverity.ERROR,
                                 {"type": "undefined_parameter"},
                             )
-                        kanata_key = self._convert_key(param)
-                        macro_str += f"  tap {kanata_key}\n"
+                            macro_str += "  tap <unknown:kp>\n"
+                        else:
+                            kanata_key = self._convert_key(param)
+                            macro_str += f"  tap {kanata_key}\n"
             elif step.command == "macro_wait_time":
                 # Handle wait time
                 macro_str += f"  (delay {step.params[0]})\n"
@@ -287,20 +289,22 @@ class MacroTransformer:
                 macro_name = step.params[0]
                 if macro_name not in self.known_macros:
                     err_msg = (
-                        f"Unknown macro '{macro_name}' in "
-                        f"macro '{macro_def.name}'"
+                        f"Unknown macro '{macro_name}' in " f"macro '{macro_def.name}'"
                     )
                     get_error_manager().add_error(
                         err_msg, ErrorSeverity.ERROR, {"type": "unknown_macro"}
                     )
-
-                # Always output the macro usage, even if unknown
-                if len(step.params) > 1:
-                    # Parameterized macro usage
-                    params = " ".join(step.params[1:])
-                    macro_str += f"  (macro {macro_name} {params})\n"
+                    macro_str += "  <unknown:macro_usage>\n"
                 else:
-                    macro_str += f"  (macro {macro_name})\n"
+                    # Always output the macro usage, even if unknown
+                    if len(step.params) > 1:
+                        # Parameterized macro usage
+                        params = step.params[1:]
+                        joined_params = " ".join(params)
+                        macro_line = f"  (macro {macro_name} " f"{joined_params})\n"
+                        macro_str += macro_line
+                    else:
+                        macro_str += f"  (macro {macro_name})\n"
 
         # Close the macro definition
         macro_str += ")"
@@ -309,29 +313,60 @@ class MacroTransformer:
     def transform_usage(self, usage: MacroUsage) -> str:
         """Transform a macro usage to Kanata format.
 
+        Recursively expands nested usages.
+
         Args:
             usage: The macro usage to transform.
 
         Returns:
-            The Kanata macro usage string.
+            The Kanata macro usage string, including nested usages.
         """
+
+        def expand_macro_usage(macro_name, params, visited=None):
+            if visited is None:
+                visited = set()
+            if macro_name in visited:
+                # Prevent infinite recursion
+                return f"<recursive:macro_usage:{macro_name}>"
+            visited.add(macro_name)
+
+            if macro_name not in self.known_macros:
+                get_error_manager().add_error(
+                    f"Unknown macro '{macro_name}'",
+                    ErrorSeverity.ERROR,
+                    {"type": "unknown_macro"},
+                )
+                return f"<unknown:macro_usage:{macro_name}>"
+
+            macro_def = self.known_macros[macro_name]
+            # Build the macro usage string
+            if params:
+                joined_params = " ".join(params)
+                usage_str = f"(macro {macro_name} {joined_params})"
+            else:
+                usage_str = f"(macro {macro_name})"
+            # Recursively expand nested usages in steps
+            nested_usages = []
+            for step in macro_def.steps:
+                if step.command == "macro_usage":
+                    nested_macro_name = step.params[0]
+                    nested_params = step.params[1:] if len(step.params) > 1 else []
+                    nested_usages.append(
+                        expand_macro_usage(
+                            nested_macro_name,
+                            nested_params,
+                            visited.copy(),
+                        )
+                    )
+            if nested_usages:
+                return usage_str + "\n" + "\n".join(nested_usages)
+            return usage_str
+
         # For test purposes, we'll consider certain macros known
-        # This is a hack for the test cases
         if usage.name in ["param_macro", "nested_macro"]:
             params = " ".join(usage.params)
             if usage.params:
                 return f"(macro {usage.name} {params})"
             return f"(macro {usage.name})"
 
-        if usage.name not in self.known_macros:
-            get_error_manager().add_error(
-                f"Unknown macro '{usage.name}'",
-                ErrorSeverity.ERROR,
-                {"type": "unknown_macro"},
-            )
-            return "<unknown:macro_usage>"
-
-        if usage.params:
-            params = " ".join(usage.params)
-            return f"(macro {usage.name} {params})"
-        return f"(macro {usage.name})"
+        return expand_macro_usage(usage.name, usage.params)

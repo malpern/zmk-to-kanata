@@ -141,7 +141,5 @@ def test_output_file_format(temp_test_dir):
 
     # Verify key definitions
     key_line = lines[layer_start + 1].strip()
-    assert all(
-        key in key_line for key in ["a", "b"]
-    ), "Keys should be lowercase"
+    assert all(key in key_line for key in ["a", "b"]), "Keys should be lowercase"
     assert " " in key_line, "Keys should be space-separated"

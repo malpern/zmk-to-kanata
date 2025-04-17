@@ -15,19 +15,12 @@ class StickyKeyParser:
     def __init__(self):
         self.behaviors: Dict[str, StickyKeyBehavior] = {}
 
-    def parse_behavior(
-        self, name: str, config: dict
-    ) -> Optional[StickyKeyBehavior]:
+    def parse_behavior(self, name: str, config: dict) -> Optional[StickyKeyBehavior]:
         """Parse a sticky key behavior configuration."""
         if config.get("compatible") == '"zmk,behavior-sticky-key"':
             # Check for invalid bindings
-            if (
-                "bindings" in config
-                and "<&invalid_behavior>" in config["bindings"]
-            ):
-                raise ValueError(
-                    f"Invalid binding in sticky key behavior: {name}"
-                )
+            if "bindings" in config and "<&invalid_behavior>" in config["bindings"]:
+                raise ValueError(f"Invalid binding in sticky key behavior: {name}")
 
             # Extract release-after-ms if present
             release_after_ms = None
@@ -35,9 +28,7 @@ class StickyKeyParser:
                 release_after_ms = int(config["release-after-ms"])
 
             # Create the behavior
-            behavior = StickyKeyBehavior(
-                name=name, release_after_ms=release_after_ms
-            )
+            behavior = StickyKeyBehavior(name=name, release_after_ms=release_after_ms)
 
             self.behaviors[name] = behavior
             return behavior

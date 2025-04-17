@@ -42,9 +42,7 @@ def test_single_layer_keymap(temp_test_dir):
     # Verify proper indentation and structure
     lines = content.splitlines()
     # Skip header comment and empty lines
-    layer_lines = [
-        line for line in lines if line and not line.startswith(";;")
-    ]
+    layer_lines = [line for line in lines if line and not line.startswith(";;")]
     print("\nGenerated content:")
     print(content)
     print("\nLayer lines:")
@@ -184,9 +182,7 @@ def test_comments_and_whitespace(temp_test_dir):
     # Check key layout
     lines = content.splitlines()
     # Skip header comment and empty lines
-    layer_lines = [
-        line for line in lines if line and not line.startswith(";;")
-    ]
+    layer_lines = [line for line in lines if line and not line.startswith(";;")]
     print("\nLayer lines:")
     print(layer_lines)
 

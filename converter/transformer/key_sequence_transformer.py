@@ -21,9 +21,7 @@ class KeySequenceTransformer:
             str: Kanata S-expression for the key sequence
         """
         # Accept KeySequenceBinding or compatible object
-        if not hasattr(binding, "keys") or not isinstance(
-            binding, KeySequenceBinding
-        ):
+        if not hasattr(binding, "keys") or not isinstance(binding, KeySequenceBinding):
             self.error_manager.add_error(
                 message=f"Invalid binding type for key sequence: {type(binding)}",
                 source="key_sequence_transformer",

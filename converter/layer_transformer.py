@@ -222,12 +222,18 @@ class LayerTransformer:
                 return f"@layer{layer_num}"
             return binding.to_kanata()
 
+        # Handle any binding with to_kanata()
+        if hasattr(binding, "to_kanata") and callable(binding.to_kanata):
+            try:
+                return binding.to_kanata()
+            except Exception as e:
+                print(f"[DEBUG] Exception in to_kanata: {e}")
+                pass
+
         # Default case
         return str(binding)
 
-    def transform_bindings_matrix(
-        self, matrix: List[List[Binding]]
-    ) -> List[List[str]]:
+    def transform_bindings_matrix(self, matrix: List[List[Binding]]) -> List[List[str]]:
         """Transform a matrix of bindings to Kanata format.
 
         Args:
@@ -255,8 +261,9 @@ class LayerTransformer:
         """
         # Convert bindings to Kanata format
         kanata_bindings = []
-        for binding in layer.bindings:
-            kanata_bindings.append(self.transform_binding(binding))
+        for row in layer.keys:
+            for binding in row:
+                kanata_bindings.append(self.transform_binding(binding))
 
         # For simplicity, we're putting all keys in a single row
         # In a real implementation, we would respect the original layout

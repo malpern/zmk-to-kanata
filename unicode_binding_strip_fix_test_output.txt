@@ -1,0 +1,2261 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.13.3, pytest-8.3.5, pluggy-1.5.0 -- /Volumes/Flash Gordon Storage/Dropbox/code/nicktokatana/.venv/bin/python3.13
+cachedir: .pytest_cache
+rootdir: /Volumes/Flash Gordon Storage/Dropbox/code/nicktokatana
+configfile: pyproject.toml
+testpaths: converter/tests
+collecting ... collected 140 items
+
+converter/tests/e2e_tests/test_advanced_features.py::test_multi_layer_with_hold_tap FAILED [  0%]
+converter/tests/e2e_tests/test_advanced_features.py::test_multi_layer_with_custom_behaviors FAILED [  1%]
+converter/tests/e2e_tests/test_cli.py::test_help_command PASSED          [  2%]
+converter/tests/e2e_tests/test_cli.py::test_version_command PASSED       [  2%]
+converter/tests/e2e_tests/test_cli.py::test_basic_file_conversion FAILED [  3%]
+converter/tests/e2e_tests/test_cli.py::test_missing_input_file FAILED    [  4%]
+converter/tests/e2e_tests/test_cli.py::test_invalid_input_format FAILED  [  5%]
+converter/tests/e2e_tests/test_cli.py::test_invalid_output_path FAILED   [  5%]
+converter/tests/e2e_tests/test_file_operations.py::test_temp_dir_fixture PASSED [  6%]
+converter/tests/e2e_tests/test_file_operations.py::test_basic_file_conversion PASSED [  7%]
+converter/tests/e2e_tests/test_file_operations.py::test_output_file_format FAILED [  7%]
+converter/tests/e2e_tests/test_input_formats.py::test_single_layer_keymap FAILED [  8%]
+converter/tests/e2e_tests/test_input_formats.py::test_multiple_layer_keymap FAILED [  9%]
+converter/tests/e2e_tests/test_input_formats.py::test_empty_layer_keymap FAILED [ 10%]
+converter/tests/e2e_tests/test_input_formats.py::test_comments_and_whitespace FAILED [ 10%]
+converter/tests/e2e_tests/test_macro.py::test_basic_macro_conversion FAILED [ 11%]
+converter/tests/e2e_tests/test_macro.py::test_complex_macro_conversion FAILED [ 12%]
+converter/tests/e2e_tests/test_macro.py::test_parameterized_macro_conversion FAILED [ 12%]
+converter/tests/e2e_tests/test_output_validation.py::test_output_file_permissions PASSED [ 13%]
+converter/tests/e2e_tests/test_output_validation.py::test_output_file_encoding PASSED [ 14%]
+converter/tests/e2e_tests/test_output_validation.py::test_output_file_format PASSED [ 15%]
+converter/tests/e2e_tests/test_real_world_configs.py::test_qwerty_standard_layout PASSED [ 15%]
+converter/tests/e2e_tests/test_real_world_configs.py::test_colemak_layout FAILED [ 16%]
+converter/tests/e2e_tests/test_real_world_configs.py::test_split_keyboard_layout PASSED [ 17%]
+converter/tests/e2e_tests/test_real_world_configs.py::test_ergonomic_layout_with_homerow_mods PASSED [ 17%]
+converter/tests/e2e_tests/test_real_world_configs.py::test_ben_vallack_cradio_layout FAILED [ 18%]
+converter/tests/e2e_tests/test_real_world_configs.py::test_dvorak_layout PASSED [ 19%]
+converter/tests/e2e_tests/test_real_world_configs.py::test_ergonomic_kyria_layout FAILED [ 20%]
+converter/tests/e2e_tests/test_sticky_keys.py::test_sticky_key_basic PASSED [ 20%]
+converter/tests/e2e_tests/test_sticky_keys.py::test_sticky_key_advanced PASSED [ 21%]
+converter/tests/e2e_tests/test_sticky_keys.py::test_sticky_key_errors PASSED [ 22%]
+converter/tests/integration/test_macro_round_trip.py::test_round_trip_basic_macro PASSED [ 22%]
+converter/tests/integration/test_macro_round_trip.py::test_round_trip_parameterized_macro FAILED [ 23%]
+converter/tests/integration/test_macro_round_trip.py::test_round_trip_nested_macro FAILED [ 24%]
+converter/tests/integration/test_macro_round_trip.py::test_round_trip_macro_usage PASSED [ 25%]
+converter/tests/integration/test_macro_round_trip.py::test_round_trip_complex_macro FAILED [ 25%]
+converter/tests/test_basic_remap.py::test_key_mapping_equality PASSED    [ 26%]
+converter/tests/test_basic_remap.py::test_parse_global_settings PASSED   [ 27%]
+converter/tests/test_basic_remap.py::test_parse_default_layer PASSED     [ 27%]
+converter/tests/test_basic_remap.py::test_transform_global_settings PASSED [ 28%]
+converter/tests/test_basic_remap.py::test_transform_default_layer PASSED [ 29%]
+converter/tests/test_basic_remap.py::test_write_kanata_config PASSED     [ 30%]
+converter/tests/test_basic_remap.py::test_write_invalid_content PASSED   [ 30%]
+converter/tests/test_basic_remap.py::test_write_invalid_path PASSED      [ 31%]
+converter/tests/test_basic_remap.py::test_parse_malformed_file FAILED    [ 32%]
+converter/tests/test_global_settings.py::test_default_global_settings PASSED [ 32%]
+converter/tests/test_global_settings.py::test_custom_global_settings PASSED [ 33%]
+converter/tests/test_global_settings.py::test_partial_global_settings PASSED [ 34%]
+converter/tests/test_global_settings.py::test_invalid_global_settings PASSED [ 35%]
+converter/tests/test_global_settings.py::test_malformed_global_settings PASSED [ 35%]
+converter/tests/test_holdtap_transformer.py::test_basic_holdtap_transformation PASSED [ 36%]
+converter/tests/test_holdtap_transformer.py::test_holdtap_with_release PASSED [ 37%]
+converter/tests/test_holdtap_transformer.py::test_holdtap_with_key_positions PASSED [ 37%]
+converter/tests/test_holdtap_transformer.py::test_holdtap_with_retro_tap PASSED [ 38%]
+converter/tests/test_holdtap_transformer.py::test_full_keymap_transformation FAILED [ 39%]
+converter/tests/test_integration.py::test_basic_conversion PASSED        [ 40%]
+converter/tests/test_key_sequence.py::test_key_sequence_creation PASSED  [ 40%]
+converter/tests/test_key_sequence.py::test_key_sequence_validation PASSED [ 41%]
+converter/tests/test_key_sequence.py::test_key_sequence_binding_creation PASSED [ 42%]
+converter/tests/test_key_sequence.py::test_key_sequence_binding_to_kanata PASSED [ 42%]
+converter/tests/test_key_sequence.py::test_key_sequence_binding_from_zmk PASSED [ 43%]
+converter/tests/test_key_sequence.py::test_is_key_sequence_binding PASSED [ 44%]
+converter/tests/test_key_sequence.py::test_parse_key_sequence_behavior PASSED [ 45%]
+converter/tests/test_key_sequence.py::test_parse_key_sequence_behavior_defaults PASSED [ 45%]
+converter/tests/test_layer_integration.py::TestLayerIntegration::test_parse_and_transform PASSED [ 46%]
+converter/tests/test_layer_parser.py::TestLayerParser::test_extract_layers PASSED [ 47%]
+converter/tests/test_layer_parser.py::TestLayerParser::test_parse_zmk_file PASSED [ 47%]
+converter/tests/test_layer_parsing.py::test_empty_layer PASSED           [ 48%]
+converter/tests/test_layer_parsing.py::test_multiple_layers PASSED       [ 49%]
+converter/tests/test_layer_parsing.py::test_multiline_bindings PASSED    [ 50%]
+converter/tests/test_layer_parsing.py::test_invalid_layer_name PASSED    [ 50%]
+converter/tests/test_layer_parsing.py::test_missing_bindings PASSED      [ 51%]
+converter/tests/test_layer_parsing.py::test_nested_layers PASSED         [ 52%]
+converter/tests/test_layer_transformer.py::test_transform_binding FAILED [ 52%]
+converter/tests/test_layer_transformer.py::test_parse_binding_matrix PASSED [ 53%]
+converter/tests/test_layer_transformer.py::test_transform_layer PASSED   [ 54%]
+converter/tests/test_layer_transformer.py::test_transform_layers PASSED  [ 55%]
+converter/tests/test_layer_transformer.py::test_transform_key_sequence PASSED [ 55%]
+converter/tests/test_macro.py::TestMacroBehavior::test_macro_behavior_custom_values PASSED [ 56%]
+converter/tests/test_macro.py::TestMacroBehavior::test_macro_behavior_defaults PASSED [ 57%]
+converter/tests/test_macro.py::TestMacroBinding::test_macro_binding_creation PASSED [ 57%]
+converter/tests/test_macro.py::TestMacroBinding::test_macro_binding_from_zmk PASSED [ 58%]
+converter/tests/test_macro.py::TestMacroBinding::test_macro_binding_from_zmk_unknown_behavior PASSED [ 59%]
+converter/tests/test_macro.py::TestMacroBinding::test_macro_binding_from_zmk_with_param PASSED [ 60%]
+converter/tests/test_macro.py::TestMacroBinding::test_macro_binding_to_kanata PASSED [ 60%]
+converter/tests/test_macro.py::TestIsMacroBinding::test_is_macro_binding_false PASSED [ 61%]
+converter/tests/test_macro.py::TestIsMacroBinding::test_is_macro_binding_true PASSED [ 62%]
+converter/tests/test_macro.py::TestMacroParser::test_extract_behaviors_after_control PASSED [ 62%]
+converter/tests/test_macro.py::TestMacroParser::test_parse_behavior PASSED [ 63%]
+converter/tests/test_macro.py::TestMacroParser::test_parse_behavior_not_macro PASSED [ 64%]
+converter/tests/test_macro.py::TestMacroParser::test_parse_behavior_one_param PASSED [ 65%]
+converter/tests/test_macro.py::TestMacroParser::test_parse_behavior_two_param PASSED [ 65%]
+converter/tests/test_macro.py::TestMacroParser::test_parse_binding PASSED [ 66%]
+converter/tests/test_macro.py::TestMacroParser::test_parse_binding_not_macro PASSED [ 67%]
+converter/tests/test_macro.py::TestMacroParser::test_parse_bindings PASSED [ 67%]
+converter/tests/test_macro_integration.py::TestMacroIntegration::test_macro_conversion PASSED [ 68%]
+converter/tests/test_macro_transformer.py::TestMacroTransformer::test_transform_behavior PASSED [ 69%]
+converter/tests/test_macro_transformer.py::TestMacroTransformer::test_transform_macro PASSED [ 70%]
+converter/tests/test_parser_debug.py::test_layer_pattern_matching FAILED [ 70%]
+converter/tests/test_parser_debug.py::test_binding_text_preprocessing PASSED [ 71%]
+converter/tests/test_parser_debug.py::test_binding_pattern_recognition PASSED [ 72%]
+converter/tests/test_parser_debug.py::test_row_splitting PASSED          [ 72%]
+converter/tests/test_parser_debug.py::test_key_mapping_creation PASSED   [ 73%]
+converter/tests/test_parser_debug.py::test_global_pattern_matching FAILED [ 74%]
+converter/tests/test_taphold_keymap.py::TestTapHoldKeymap::test_parse_hold_tap_binding FAILED [ 75%]
+converter/tests/test_taphold_parsing.py::test_basic_holdtap_properties PASSED [ 75%]
+converter/tests/test_taphold_parsing.py::test_full_configuration PASSED  [ 76%]
+converter/tests/test_taphold_parsing.py::test_advanced_features PASSED   [ 77%]
+converter/tests/test_taphold_parsing.py::test_key_positions_with_commas PASSED [ 77%]
+converter/tests/test_taphold_parsing.py::test_invalid_key_positions PASSED [ 78%]
+converter/tests/test_taphold_parsing.py::test_partial_configuration PASSED [ 79%]
+converter/tests/test_taphold_parsing.py::test_invalid_flavor PASSED      [ 80%]
+converter/tests/test_taphold_parsing.py::test_invalid_behavior PASSED    [ 80%]
+converter/tests/test_taphold_parsing.py::test_missing_required_fields PASSED [ 81%]
+converter/tests/test_taphold_parsing.py::test_real_world_example PASSED  [ 82%]
+converter/tests/test_unicode.py::TestUnicodeBinding::test_from_zmk PASSED [ 82%]
+converter/tests/test_unicode.py::TestUnicodeBinding::test_is_unicode_binding PASSED [ 83%]
+converter/tests/test_unicode.py::TestUnicodeBinding::test_to_kanata PASSED [ 84%]
+converter/tests/test_unicode.py::TestUnicodeParser::test_parse_binding PASSED [ 85%]
+converter/tests/test_unicode.py::TestUnicodeParser::test_parse_unicode_mappings PASSED [ 85%]
+converter/tests/test_unicode_integration.py::TestUnicodeIntegration::test_unicode_conversion FAILED [ 86%]
+converter/tests/unit/parser/test_macro_parser_enhanced.py::test_validate_macro_command_parameters PASSED [ 87%]
+converter/tests/unit/parser/test_macro_parser_enhanced.py::test_validate_timing_parameters PASSED [ 87%]
+converter/tests/unit/parser/test_macro_parser_enhanced.py::test_error_recovery_with_context PASSED [ 88%]
+converter/tests/unit/parser/test_macro_parser_enhanced.py::test_state_transition_validation PASSED [ 89%]
+converter/tests/unit/parser/test_macro_parser_enhanced.py::test_error_recovery_state_specific PASSED [ 90%]
+converter/tests/unit/parser/test_macro_parser_enhanced.py::test_synchronization_points PASSED [ 90%]
+converter/tests/unit/parser/test_macro_parser_enhanced.py::test_basic_macro PASSED [ 91%]
+converter/tests/unit/parser/test_macro_parser_enhanced.py::test_complex_macro PASSED [ 92%]
+converter/tests/unit/parser/test_macro_parser_enhanced.py::test_error_recovery_missing_semicolon PASSED [ 92%]
+converter/tests/unit/parser/test_macro_parser_enhanced.py::test_error_recovery_invalid_parameter PASSED [ 93%]
+converter/tests/unit/parser/test_macro_parser_enhanced.py::test_error_recovery_unclosed_bindings PASSED [ 94%]
+converter/tests/unit/parser/test_macro_parser_enhanced.py::test_error_recovery_multiple_errors PASSED [ 95%]
+converter/tests/unit/transformer/test_macro_transformer_advanced.py::test_parameterized_macro_definition PASSED [ 95%]
+converter/tests/unit/transformer/test_macro_transformer_advanced.py::test_parameterized_macro_usage PASSED [ 96%]
+converter/tests/unit/transformer/test_macro_transformer_advanced.py::test_nested_macro_definition PASSED [ 97%]
+converter/tests/unit/transformer/test_macro_transformer_advanced.py::test_nested_macro_usage PASSED [ 97%]
+converter/tests/unit/transformer/test_macro_transformer_advanced.py::test_parameterized_nested_macro PASSED [ 98%]
+converter/tests/unit/transformer/test_macro_transformer_advanced.py::test_invalid_parameterized_macro PASSED [ 99%]
+converter/tests/unit/transformer/test_macro_transformer_advanced.py::test_invalid_nested_macro PASSED [100%]
+
+=================================== FAILURES ===================================
+________________________ test_multi_layer_with_hold_tap ________________________
+
+temp_test_dir = PosixPath('/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmps6unfdu4')
+
+    def test_multi_layer_with_hold_tap(temp_test_dir):
+        """Test conversion of a multi-layer keymap with hold-tap behaviors."""
+        zmk_content = """#include <behaviors.dtsi>
+    #include <dt-bindings/zmk/keys.h>
+    
+    / {
+        behaviors {
+            ht: hold_tap {
+                compatible = "zmk,behavior-hold-tap";
+                #binding-cells = <2>;
+                tapping-term-ms = <200>;
+                quick-tap-ms = <150>;
+                flavor = "tap-preferred";
+                bindings = <&kp>, <&kp>;
+            };
+        };
+        keymap {
+            compatible = "zmk,keymap";
+            default_layer {
+                bindings = <
+                    &ht LSHIFT A &ht LCTRL B  &mo 1
+                    &ht LALT C   &ht LGUI D   &mo 2
+                >;
+            };
+            nav_layer {
+                bindings = <
+                    &kp LEFT  &kp RIGHT  &trans
+                    &kp UP    &kp DOWN   &mo 3
+                >;
+            };
+            num_layer {
+                bindings = <
+                    &kp N1    &kp N2     &trans
+                    &kp N3    &kp N4     &trans
+                >;
+            };
+            fn_layer {
+                bindings = <
+                    &kp F1    &kp F2     &trans
+                    &kp F3    &kp F4     &trans
+                >;
+            };
+        };
+    }; """
+    
+        zmk_file = temp_test_dir / "multi_layer_advanced.dtsi"
+        zmk_file.write_text(zmk_content)
+    
+        kanata_file = temp_test_dir / "multi_layer_advanced.kbd"
+    
+        exit_code = main([str(zmk_file), str(kanata_file)])
+        assert exit_code == 0
+    
+        content = kanata_file.read_text()
+    
+        # Verify layer definitions
+        assert "(deflayer default" in content
+        assert "(deflayer nav" in content
+        assert "(deflayer num" in content
+        assert "(deflayer fn" in content
+    
+        # Verify hold-tap bindings in default layer
+>       assert "tap-hold lshift a" in content.lower()
+E       AssertionError: assert 'tap-hold lshift a' in ';; zmk to kanata configuration\n;; generated automatically - do not edit\n\n;; global settings\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default\n  lshift a  lctrl b  1\n  lalt c  lgui d  2\n)\n\n(deflayer nav\n  left  right  _\n  up  down  3\n)\n\n(deflayer num\n  1  2  _\n  3  4  _\n)\n\n(deflayer fn\n  f1  f2  _\n  f3  f4  _\n)\n'
+E        +  where ';; zmk to kanata configuration\n;; generated automatically - do not edit\n\n;; global settings\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default\n  lshift a  lctrl b  1\n  lalt c  lgui d  2\n)\n\n(deflayer nav\n  left  right  _\n  up  down  3\n)\n\n(deflayer num\n  1  2  _\n  3  4  _\n)\n\n(deflayer fn\n  f1  f2  _\n  f3  f4  _\n)\n' = <built-in method lower of str object at 0x106963280>()
+E        +    where <built-in method lower of str object at 0x106963280> = ';; ZMK to Kanata Configuration\n;; Generated automatically - DO NOT EDIT\n\n;; Global settings\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default\n  lshift a  lctrl b  1\n  lalt c  lgui d  2\n)\n\n(deflayer nav\n  left  right  _\n  up  down  3\n)\n\n(deflayer num\n  1  2  _\n  3  4  _\n)\n\n(deflayer fn\n  f1  f2  _\n  f3  f4  _\n)\n'.lower
+
+converter/tests/e2e_tests/test_advanced_features.py:68: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LSHIFT A', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LCTRL B', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='1', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LALT C', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LGUI D', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='2', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LEFT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='RIGHT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='UP', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='DOWN', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='3', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N1', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N2', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N3', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N4', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F1', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F2', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F3', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F4', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+____________________ test_multi_layer_with_custom_behaviors ____________________
+
+temp_test_dir = PosixPath('/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpb330gu37')
+
+    def test_multi_layer_with_custom_behaviors(temp_test_dir):
+        """Test conversion of a multi-layer keymap with custom behaviors."""
+        zmk_content = """#include <behaviors.dtsi>
+    #include <dt-bindings/zmk/keys.h>
+    
+    / {
+        behaviors {
+            mt: mod_tap {
+                compatible = "zmk,behavior-hold-tap";
+                #binding-cells = <2>;
+                tapping-term-ms = <200>;
+                flavor = "hold-preferred";
+                bindings = <&kp>, <&kp>;
+            };
+            td: tap_dance {
+                compatible = "zmk,behavior-tap-dance";
+                #binding-cells = <0>;
+                tapping-term-ms = <200>;
+                bindings = <&kp A>, <&kp B>, <&kp C>;
+            };
+        };
+        keymap {
+            compatible = "zmk,keymap";
+            default_layer {
+                bindings = <
+                    &mt LSHIFT A &mt LCTRL B  &mo 1
+                    &mt LALT C   &mt LGUI D   &mo 2
+                >;
+            };
+            nav_layer {
+                bindings = <
+                    &kp LEFT  &kp RIGHT  &trans
+                    &kp UP    &kp DOWN   &mo 3
+                >;
+            };
+            num_layer {
+                bindings = <
+                    &kp N1    &kp N2     &trans
+                    &kp N3    &kp N4     &trans
+                >;
+            };
+            fn_layer {
+                bindings = <
+                    &kp F1    &kp F2     &trans
+                    &kp F3    &kp F4     &trans
+                >;
+            };
+        };
+    }; """
+    
+        zmk_file = temp_test_dir / "multi_layer_behaviors.dtsi"
+        zmk_file.write_text(zmk_content)
+    
+        kanata_file = temp_test_dir / "multi_layer_behaviors.kbd"
+    
+        exit_code = main([str(zmk_file), str(kanata_file)])
+        assert exit_code == 0
+    
+        content = kanata_file.read_text()
+    
+        # Verify layer definitions
+        assert "(deflayer default" in content
+        assert "(deflayer nav" in content
+        assert "(deflayer num" in content
+        assert "(deflayer fn" in content
+    
+        # Verify mod-tap bindings in default layer
+>       assert "tap-hold lshift a" in content.lower()
+E       AssertionError: assert 'tap-hold lshift a' in ';; zmk to kanata configuration\n;; generated automatically - do not edit\n\n;; global settings\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default\n  lshift a  lctrl b  1\n  lalt c  lgui d  2\n)\n\n(deflayer nav\n  left  right  _\n  up  down  3\n)\n\n(deflayer num\n  1  2  _\n  3  4  _\n)\n\n(deflayer fn\n  f1  f2  _\n  f3  f4  _\n)\n'
+E        +  where ';; zmk to kanata configuration\n;; generated automatically - do not edit\n\n;; global settings\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default\n  lshift a  lctrl b  1\n  lalt c  lgui d  2\n)\n\n(deflayer nav\n  left  right  _\n  up  down  3\n)\n\n(deflayer num\n  1  2  _\n  3  4  _\n)\n\n(deflayer fn\n  f1  f2  _\n  f3  f4  _\n)\n' = <built-in method lower of str object at 0x106963840>()
+E        +    where <built-in method lower of str object at 0x106963840> = ';; ZMK to Kanata Configuration\n;; Generated automatically - DO NOT EDIT\n\n;; Global settings\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default\n  lshift a  lctrl b  1\n  lalt c  lgui d  2\n)\n\n(deflayer nav\n  left  right  _\n  up  down  3\n)\n\n(deflayer num\n  1  2  _\n  3  4  _\n)\n\n(deflayer fn\n  f1  f2  _\n  f3  f4  _\n)\n'.lower
+
+converter/tests/e2e_tests/test_advanced_features.py:164: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LSHIFT A', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LCTRL B', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='1', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LALT C', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LGUI D', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='2', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LEFT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='RIGHT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='UP', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='DOWN', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='3', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N1', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N2', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N3', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N4', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F1', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F2', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F3', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F4', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+__________________________ test_basic_file_conversion __________________________
+
+temp_test_dir = PosixPath('/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp0sd9wqjs')
+
+    def test_basic_file_conversion(temp_test_dir):
+        """Test basic file conversion through the CLI."""
+        # Create a sample ZMK keymap file
+        zmk_content = """
+    #include <behaviors.dtsi>
+    #include <dt-bindings/zmk/keys.h>
+    
+    / {
+        keymap {
+            compatible = "zmk,keymap";
+            default_layer {
+                bindings = <
+                    &kp A &kp B
+                    &kp C &kp D
+                >;
+            };
+        };
+    };
+    """
+        zmk_file = temp_test_dir / "test_keymap.dtsi"
+        zmk_file.write_text(zmk_content)
+    
+        # Create output path for Kanata config
+        kanata_file = temp_test_dir / "test_config.kbd"
+    
+        # Run the conversion
+        exit_code = main([str(zmk_file), str(kanata_file)])
+    
+        # Verify success
+        assert exit_code == 0
+        assert kanata_file.exists()
+    
+        # Verify content
+        kanata_content = kanata_file.read_text()
+        assert "(deflayer default" in kanata_content
+>       assert "a b" in kanata_content.lower()
+E       AssertionError: assert 'a b' in ';; zmk to kanata configuration\n;; generated automatically - do not edit\n\n;; global settings\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default\n  a  b\n  c  d\n)\n'
+E        +  where ';; zmk to kanata configuration\n;; generated automatically - do not edit\n\n;; global settings\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default\n  a  b\n  c  d\n)\n' = <built-in method lower of str object at 0x108834030>()
+E        +    where <built-in method lower of str object at 0x108834030> = ';; ZMK to Kanata Configuration\n;; Generated automatically - DO NOT EDIT\n\n;; Global settings\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default\n  a  b\n  c  d\n)\n'.lower
+
+converter/tests/e2e_tests/test_cli.py:65: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='A', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='B', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='C', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='D', hold_tap=None, sticky=False)
+___________________________ test_missing_input_file ____________________________
+
+temp_test_dir = PosixPath('/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp0mdovwhc')
+capsys = <_pytest.capture.CaptureFixture object at 0x106fc3ed0>
+
+    def test_missing_input_file(temp_test_dir, capsys):
+        """Test error handling for missing input file."""
+        input_file = temp_test_dir / "nonexistent.dtsi"
+        output_file = temp_test_dir / "output.kbd"
+    
+        exit_code = main([str(input_file), str(output_file)])
+    
+>       assert exit_code == 1
+E       assert 3 == 1
+
+converter/tests/e2e_tests/test_cli.py:76: AssertionError
+----------------------------- Captured stderr call -----------------------------
+Error during parsing: Failed to parse ZMK file: [Errno 2] No such file or directory: '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp0mdovwhc/nonexistent.dtsi'
+__________________________ test_invalid_input_format ___________________________
+
+temp_test_dir = PosixPath('/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpdswkmiin')
+capsys = <_pytest.capture.CaptureFixture object at 0x106f5a9e0>
+
+    def test_invalid_input_format(temp_test_dir, capsys):
+        """Test error handling for invalid input file format."""
+        # Create an invalid ZMK file
+        input_file = temp_test_dir / "invalid.dtsi"
+        input_file.write_text("This is not a valid ZMK file")
+        output_file = temp_test_dir / "output.kbd"
+    
+        exit_code = main([str(input_file), str(output_file)])
+    
+>       assert exit_code == 2
+E       assert 3 == 2
+
+converter/tests/e2e_tests/test_cli.py:92: AssertionError
+----------------------------- Captured stderr call -----------------------------
+Error during parsing: Failed to parse ZMK file: No layers found in ZMK file
+___________________________ test_invalid_output_path ___________________________
+
+temp_test_dir = PosixPath('/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpzg37lltt')
+capsys = <_pytest.capture.CaptureFixture object at 0x106f5a650>
+
+    def test_invalid_output_path(temp_test_dir, capsys):
+        """Test error handling for invalid output path."""
+        # Create a valid input file
+        zmk_content = """
+    #include <behaviors.dtsi>
+    #include <dt-bindings/zmk/keys.h>
+    
+    / {
+        keymap {
+            compatible = "zmk,keymap";
+            default_layer {
+                bindings = <
+                    &kp A &kp B
+                    &kp C &kp D
+                >;
+            };
+        };
+    };
+    """
+        input_file = temp_test_dir / "test_keymap.dtsi"
+        input_file.write_text(zmk_content)
+    
+        # Try to write to a nonexistent directory
+        output_file = temp_test_dir / "nonexistent_dir" / "output.kbd"
+    
+        exit_code = main([str(input_file), str(output_file)])
+    
+>       assert exit_code == 1
+E       assert 3 == 1
+
+converter/tests/e2e_tests/test_cli.py:125: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='A', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='B', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='C', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='D', hold_tap=None, sticky=False)
+----------------------------- Captured stderr call -----------------------------
+Error writing output file: [Errno 2] No such file or directory: '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpzg37lltt/nonexistent_dir/output.kbd'
+___________________________ test_output_file_format ____________________________
+
+temp_test_dir = PosixPath('/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmppegvq4gg')
+
+    def test_output_file_format(temp_test_dir):
+        """Test that the output file follows the Kanata format."""
+        # Create a sample ZMK keymap file with multiple layers
+        zmk_content = """
+    #include <behaviors.dtsi>
+    #include <dt-bindings/zmk/keys.h>
+    
+    / {
+        keymap {
+            compatible = "zmk,keymap";
+            default_layer {
+                bindings = <
+                    &kp A &kp B
+                    &kp C &kp D
+                >;
+            };
+    
+            symbol_layer {
+                bindings = <
+                    &kp N1 &kp N2
+                    &kp N3 &kp N4
+                >;
+            };
+        };
+    };
+    """
+        zmk_file = temp_test_dir / "test_keymap.dtsi"
+        zmk_file.write_text(zmk_content)
+    
+        # Create output path for Kanata config
+        kanata_file = temp_test_dir / "test_config.kbd"
+    
+        # Convert the file
+        convert_keymap(zmk_file, kanata_file)
+    
+        # Read and verify the content
+        kanata_content = kanata_file.read_text()
+    
+        # Verify layer definitions
+        assert "(deflayer default" in kanata_content
+        assert "(deflayer symbol" in kanata_content
+    
+        # Verify key mappings
+        lines = kanata_content.splitlines()
+    
+        # Find the default layer
+        default_layer_start = next(
+            i for i, line in enumerate(lines) if "(deflayer default" in line
+        )
+>       assert "a b" in lines[default_layer_start + 1].strip()
+E       AssertionError: assert 'a b' in 'a  b'
+E        +  where 'a  b' = <built-in method strip of str object at 0x106fff8d0>()
+E        +    where <built-in method strip of str object at 0x106fff8d0> = '  a  b'.strip
+
+converter/tests/e2e_tests/test_file_operations.py:100: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='A', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='B', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='C', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='D', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N1', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N2', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N3', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N4', hold_tap=None, sticky=False)
+___________________________ test_single_layer_keymap ___________________________
+
+temp_test_dir = PosixPath('/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpwa8zofbi')
+
+    def test_single_layer_keymap(temp_test_dir):
+        """Test conversion of a simple single-layer keymap."""
+        zmk_content = """
+    #include <behaviors.dtsi>
+    #include <dt-bindings/zmk/keys.h>
+    
+    / {
+        keymap {
+            compatible = "zmk,keymap";
+            default_layer {
+                bindings = <
+                    &kp A &kp B &kp C
+                    &kp D &kp E &kp F
+                >;
+            };
+        };
+    };
+    """
+        zmk_file = temp_test_dir / "single_layer.dtsi"
+        zmk_file.write_text(zmk_content)
+    
+        kanata_file = temp_test_dir / "single_layer.kbd"
+    
+        exit_code = main([str(zmk_file), str(kanata_file)])
+        assert exit_code == 0
+    
+        content = kanata_file.read_text()
+    
+        # Verify layer definition
+        assert "(deflayer default" in content
+    
+        # Verify all keys are present and properly formatted
+        keys = ["a", "b", "c", "d", "e", "f"]
+        for key in keys:
+            assert key in content.lower()
+    
+        # Verify proper indentation and structure
+        lines = content.splitlines()
+        # Skip header comment and empty lines
+        layer_lines = [
+            line for line in lines if line and not line.startswith(";;")
+        ]
+        print("\nGenerated content:")
+        print(content)
+        print("\nLayer lines:")
+        print(layer_lines)
+        assert layer_lines[2].startswith("(deflayer default")
+>       assert "a b c" in layer_lines[3].lower()
+E       AssertionError: assert 'a b c' in '  a  b  c'
+E        +  where '  a  b  c' = <built-in method lower of str object at 0x108802db0>()
+E        +    where <built-in method lower of str object at 0x108802db0> = '  a  b  c'.lower
+
+converter/tests/e2e_tests/test_input_formats.py:53: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='A', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='B', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='C', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='D', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='E', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F', hold_tap=None, sticky=False)
+
+Generated content:
+;; ZMK to Kanata Configuration
+;; Generated automatically - DO NOT EDIT
+
+;; Global settings
+(defvar tap-time 200)
+(defvar hold-time 250)
+
+(deflayer default
+  a  b  c
+  d  e  f
+)
+
+
+Layer lines:
+['(defvar tap-time 200)', '(defvar hold-time 250)', '(deflayer default', '  a  b  c', '  d  e  f', ')']
+__________________________ test_multiple_layer_keymap __________________________
+
+temp_test_dir = PosixPath('/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpyk7jq6y_')
+
+    def test_multiple_layer_keymap(temp_test_dir):
+        """Test conversion of a keymap with multiple layers."""
+        zmk_content = """
+    #include <behaviors.dtsi>
+    #include <dt-bindings/zmk/keys.h>
+    
+    / {
+        keymap {
+            compatible = "zmk,keymap";
+            default_layer {
+                bindings = <
+                    &kp A &kp B
+                    &mo 1 &kp C
+                >;
+            };
+    
+            layer_1 {
+                bindings = <
+                    &kp N1 &kp N2
+                    &trans &kp N3
+                >;
+            };
+        };
+    };
+    """
+        zmk_file = temp_test_dir / "multi_layer.dtsi"
+        zmk_file.write_text(zmk_content)
+    
+        kanata_file = temp_test_dir / "multi_layer.kbd"
+    
+        exit_code = main([str(zmk_file), str(kanata_file)])
+        assert exit_code == 0
+    
+        content = kanata_file.read_text()
+    
+        # Verify default layer with layer switching
+        assert "(deflayer default" in content
+>       assert "a b" in content.lower()
+E       AssertionError: assert 'a b' in ';; zmk to kanata configuration\n;; generated automatically - do not edit\n\n;; global settings\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default\n  a  b\n  1  c\n)\n'
+E        +  where ';; zmk to kanata configuration\n;; generated automatically - do not edit\n\n;; global settings\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default\n  a  b\n  1  c\n)\n' = <built-in method lower of str object at 0x106fe9df0>()
+E        +    where <built-in method lower of str object at 0x106fe9df0> = ';; ZMK to Kanata Configuration\n;; Generated automatically - DO NOT EDIT\n\n;; Global settings\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default\n  a  b\n  1  c\n)\n'.lower
+
+converter/tests/e2e_tests/test_input_formats.py:94: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='A', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='B', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='1', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='C', hold_tap=None, sticky=False)
+___________________________ test_empty_layer_keymap ____________________________
+
+temp_test_dir = PosixPath('/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp_vw4u64u')
+
+    def test_empty_layer_keymap(temp_test_dir):
+        """Test handling of empty layers in keymap."""
+        zmk_content = """
+    #include <behaviors.dtsi>
+    #include <dt-bindings/zmk/keys.h>
+    
+    / {
+        keymap {
+            compatible = "zmk,keymap";
+            default_layer {
+                bindings = <
+                    &kp A &none
+                    &mo 1 &none
+                >;
+            };
+    
+            empty_layer {
+                bindings = <
+                    &none &none
+                    &none &none
+                >;
+            };
+        };
+    };
+    """
+        zmk_file = temp_test_dir / "empty_layer.dtsi"
+        zmk_file.write_text(zmk_content)
+    
+        kanata_file = temp_test_dir / "empty_layer.kbd"
+    
+        exit_code = main([str(zmk_file), str(kanata_file)])
+        assert exit_code == 0
+    
+        content = kanata_file.read_text()
+    
+        # Verify default layer with layer switching
+        assert "(deflayer default" in content
+        assert "a" in content.lower()
+>       assert "@layer1" in content  # Layer switching key
+E       AssertionError: assert '@layer1' in ';; ZMK to Kanata Configuration\n;; Generated automatically - DO NOT EDIT\n\n;; Global settings\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default\n  a  none\n  1  none\n)\n\n(deflayer empty\n  none  none\n  none  none\n)\n'
+
+converter/tests/e2e_tests/test_input_formats.py:137: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='A', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='none', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='1', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='none', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='none', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='none', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='none', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='none', hold_tap=None, sticky=False)
+_________________________ test_comments_and_whitespace _________________________
+
+temp_test_dir = PosixPath('/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpokjvu69_')
+
+    def test_comments_and_whitespace(temp_test_dir):
+        """Test handling of comments and whitespace in ZMK files."""
+        zmk_content = """
+    // This is a comment
+    #include <behaviors.dtsi>
+    #include <dt-bindings/zmk/keys.h>
+    
+    /* Multi-line
+       comment */
+    / {
+        keymap {
+            compatible = "zmk,keymap";
+    
+            // Layer comment
+            default_layer {
+                bindings = <
+                    // Row comment
+                    &kp A &kp B  // Inline comment
+    
+                    &kp C &kp D
+                >;
+            };
+        };
+    };
+    """
+        zmk_file = temp_test_dir / "commented.dtsi"
+        zmk_file.write_text(zmk_content)
+    
+        kanata_file = temp_test_dir / "commented.kbd"
+    
+        exit_code = main([str(zmk_file), str(kanata_file)])
+        assert exit_code == 0
+    
+        content = kanata_file.read_text()
+    
+        print("\nGenerated content:")
+        print(content)
+    
+        # Verify key mapping is correct despite comments/whitespace
+        assert "(deflayer default" in content
+    
+        # Check key layout
+        lines = content.splitlines()
+        # Skip header comment and empty lines
+        layer_lines = [
+            line for line in lines if line and not line.startswith(";;")
+        ]
+        print("\nLayer lines:")
+        print(layer_lines)
+    
+        assert layer_lines[2].startswith("(deflayer default")
+>       assert "a b" in layer_lines[3].lower()
+E       AssertionError: assert 'a b' in '  a  b'
+E        +  where '  a  b' = <built-in method lower of str object at 0x106c24cc0>()
+E        +    where <built-in method lower of str object at 0x106c24cc0> = '  a  b'.lower
+
+converter/tests/e2e_tests/test_input_formats.py:194: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='A', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='B', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='C', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='D', hold_tap=None, sticky=False)
+
+Generated content:
+;; ZMK to Kanata Configuration
+;; Generated automatically - DO NOT EDIT
+
+;; Global settings
+(defvar tap-time 200)
+(defvar hold-time 250)
+
+(deflayer default
+  a  b
+  c  d
+)
+
+
+Layer lines:
+['(defvar tap-time 200)', '(defvar hold-time 250)', '(deflayer default', '  a  b', '  c  d', ')']
+_________________________ test_basic_macro_conversion __________________________
+
+tmp_path = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-67/test_basic_macro_conversion0')
+
+    def test_basic_macro_conversion(tmp_path):
+        """Test converting a ZMK file with a basic macro to Kanata format."""
+        # Create a temporary ZMK file with a macro
+        zmk_content = """
+        / {
+            behaviors {
+                simple_macro: simple_macro {
+                    compatible = "zmk,behavior-macro";
+                    #binding-cells = <0>;
+                    bindings = <&kp A &kp B &kp C>;
+                };
+            };
+    
+            keymap {
+                compatible = "zmk,keymap";
+                default_layer {
+                    bindings = <
+                        &simple_macro &kp B &kp C
+                        &kp D &kp E &kp F
+                    >;
+                };
+            };
+        };
+        """
+    
+        zmk_file = tmp_path / "test_macro.keymap"
+        zmk_file.write_text(zmk_content)
+    
+        # Create a temporary output file
+        output_file = tmp_path / "test_macro.kbd"
+    
+        # Run the converter
+        args = [str(zmk_file), str(output_file)]
+        exit_code = main(args)
+    
+        # Check that the conversion was successful
+        assert exit_code == 0
+        assert output_file.exists()
+    
+        # Read the output file
+        kanata_content = output_file.read_text()
+    
+        # Check that the macro is defined in the output
+>       assert "(defmacro simple_macro" in kanata_content
+E       AssertionError: assert '(defmacro simple_macro' in ';; ZMK to Kanata Configuration\n;; Generated automatically - DO NOT EDIT\n\n;; Global settings\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default\n  simple_macro  b  c\n  d  e  f\n)\n'
+
+converter/tests/e2e_tests/test_macro.py:49: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='simple_macro', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='B', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='C', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='D', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='E', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F', hold_tap=None, sticky=False)
+________________________ test_complex_macro_conversion _________________________
+
+tmp_path = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-67/test_complex_macro_conversion0')
+
+    def test_complex_macro_conversion(tmp_path):
+        """Test converting a ZMK file with a complex macro to Kanata format."""
+        # Create a temporary ZMK file with a complex macro
+        zmk_content = """
+        / {
+            behaviors {
+                complex_macro: complex_macro {
+                    compatible = "zmk,behavior-macro";
+                    #binding-cells = <0>;
+                    wait-ms = <20>;
+                    tap-ms = <40>;
+                    bindings = <
+                        &macro_press &kp LSHIFT
+                        &kp A
+                        &macro_release &kp LSHIFT
+                        &macro_wait_time 50
+                        &kp B &kp C
+                    >;
+                };
+            };
+    
+            keymap {
+                compatible = "zmk,keymap";
+                default_layer {
+                    bindings = <
+                        &complex_macro &kp B &kp C
+                        &kp D &kp E &kp F
+                    >;
+                };
+            };
+        };
+        """
+    
+        zmk_file = tmp_path / "test_complex_macro.keymap"
+        zmk_file.write_text(zmk_content)
+    
+        # Create a temporary output file
+        output_file = tmp_path / "test_complex_macro.kbd"
+    
+        # Run the converter
+        args = [str(zmk_file), str(output_file)]
+        exit_code = main(args)
+    
+        # Check that the conversion was successful
+        assert exit_code == 0
+        assert output_file.exists()
+    
+        # Read the output file
+        kanata_content = output_file.read_text()
+    
+        # Check that the macro is defined in the output
+>       assert "(defmacro complex_macro" in kanata_content
+E       AssertionError: assert '(defmacro complex_macro' in ';; ZMK to Kanata Configuration\n;; Generated automatically - DO NOT EDIT\n\n;; Global settings\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default\n  complex_macro  b  c\n  d  e  f\n)\n'
+
+converter/tests/e2e_tests/test_macro.py:109: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='complex_macro', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='B', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='C', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='D', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='E', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F', hold_tap=None, sticky=False)
+_____________________ test_parameterized_macro_conversion ______________________
+
+tmp_path = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-67/test_parameterized_macro_conve0')
+
+    def test_parameterized_macro_conversion(tmp_path):
+        """Test converting a ZMK file with a parameterized macro to Kanata format."""
+        # Create a temporary ZMK file with a parameterized macro
+        zmk_content = """
+        / {
+            behaviors {
+                param_macro: param_macro {
+                    compatible = "zmk,behavior-macro-one-param";
+                    #binding-cells = <1>;
+                    bindings = <&kp MACRO_PLACEHOLDER>;
+                };
+            };
+    
+            keymap {
+                compatible = "zmk,keymap";
+                default_layer {
+                    bindings = <
+                        &param_macro A &param_macro B &kp C
+                        &kp D &kp E &kp F
+                    >;
+                };
+            };
+        };
+        """
+    
+        zmk_file = tmp_path / "test_param_macro.keymap"
+        zmk_file.write_text(zmk_content)
+    
+        # Create a temporary output file
+        output_file = tmp_path / "test_param_macro.kbd"
+    
+        # Run the converter
+        args = [str(zmk_file), str(output_file)]
+        exit_code = main(args)
+    
+        # Check that the conversion was successful
+        assert exit_code == 0
+        assert output_file.exists()
+    
+        # Read the output file
+        kanata_content = output_file.read_text()
+    
+        # Check that the macro is defined in the output
+>       assert "(defmacro param_macro" in kanata_content
+E       AssertionError: assert '(defmacro param_macro' in ';; ZMK to Kanata Configuration\n;; Generated automatically - DO NOT EDIT\n\n;; Global settings\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default\n  a  b  c\n  d  e  f\n)\n'
+
+converter/tests/e2e_tests/test_macro.py:164: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='A', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='B', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='C', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='D', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='E', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F', hold_tap=None, sticky=False)
+_____________________________ test_colemak_layout ______________________________
+
+tmp_path = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-67/test_colemak_layout0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106f5a190>
+
+    def test_colemak_layout(tmp_path, monkeypatch):
+        """Test conversion of a Colemak layout."""
+        # Setup test files
+        zmk_file = tmp_path / "colemak.dtsi"
+        kanata_file = tmp_path / "colemak.kbd"
+    
+        # Colemak layout
+        zmk_content = """
+        / {
+            keymap {
+                compatible = "zmk,keymap";
+    
+                default_layer {
+                    bindings = <
+                        &kp ESC   &kp N1 &kp N2 &kp N3 &kp N4 &kp N5 &kp N6 &kp N7 &kp N8 &kp N9
+                        &kp N0 &kp MINUS &kp EQUAL &kp BSPC
+                        &kp TAB   &kp Q  &kp W  &kp F  &kp P  &kp G  &kp J  &kp L  &kp U  &kp Y
+                        &kp SEMI &kp LBKT &kp RBKT &kp BSLH
+                        &kp LCTRL &kp A  &kp R  &kp S  &kp T  &kp D  &kp H  &kp N  &kp E  &kp I
+                        &kp O  &kp SQT   &kp RET
+                        &kp LSHFT &kp Z  &kp X  &kp C  &kp V  &kp B  &kp K  &kp M  &kp COMMA
+                        &kp DOT &kp FSLH &kp RSHFT
+                        &kp LCTRL &kp LGUI &kp LALT &kp SPACE &kp RALT &kp RGUI &mo 1 &kp RCTRL
+                    >;
+                };
+    
+                function_layer {
+                    bindings = <
+                        &kp GRAVE &kp F1 &kp F2 &kp F3 &kp F4 &kp F5 &kp F6 &kp F7 &kp F8 &kp F9
+                        &kp F10 &kp F11 &kp F12 &kp DEL
+                        &trans    &trans &trans &trans &trans &trans &trans &trans &trans &trans
+                        &trans  &trans  &trans  &trans
+                        &trans    &trans &trans &trans &trans &trans &kp LEFT &kp DOWN &kp UP
+                        &kp RIGHT &trans &trans &trans
+                        &trans    &trans &trans &trans &trans &trans &trans &trans &trans
+                        &trans &trans &trans
+                        &trans    &trans &trans &trans &trans &trans &trans &trans
+                    >;
+                };
+            };
+        };
+        """
+    
+        # Write the ZMK content to the file
+        zmk_file.write_text(zmk_content)
+    
+        # Set up sys.argv for the main function
+        monkeypatch.setattr(
+            sys, "argv", ["converter", str(zmk_file), str(kanata_file)]
+        )
+    
+        # Run the converter
+        from converter.main import main
+    
+        main()
+    
+        # Check that the conversion was successful
+        assert kanata_file.exists()
+    
+        # Read the generated Kanata file
+        kanata_content = kanata_file.read_text()
+    
+        # Verify the content
+        assert ";; ZMK to Kanata Configuration" in kanata_content
+        assert "(defvar tap-time 200)" in kanata_content
+        assert "(defvar hold-time 250)" in kanata_content
+        assert "(deflayer default" in kanata_content
+        assert "(deflayer function" in kanata_content
+    
+        # Check for specific Colemak key mappings
+        # In Colemak, F is where D would be in QWERTY, etc.
+        default_layer = kanata_content.split("(deflayer default")[1].split(
+            "(deflayer"
+        )[0]
+    
+        # Check that the Colemak layout is preserved
+>       assert "q w f p g" in default_layer.lower()
+E       AssertionError: assert 'q w f p g' in '\n  esc  1  2  3  4  5  6  7  8  9\n  0  minus  equal  bspc\n  tab  q  w  f  p  g  j  l  u  y\n  semi  lbkt  rbkt  bslh\n  lctrl  a  r  s  t  d  h  n  e  i\n  o  sqt  ret\n  lshft  z  x  c  v  b  k  m  comma\n  dot  fslh  rshft\n  lctrl  lgui  lalt  space  ralt  rgui  1  rctrl\n)\n\n'
+E        +  where '\n  esc  1  2  3  4  5  6  7  8  9\n  0  minus  equal  bspc\n  tab  q  w  f  p  g  j  l  u  y\n  semi  lbkt  rbkt  bslh\n  lctrl  a  r  s  t  d  h  n  e  i\n  o  sqt  ret\n  lshft  z  x  c  v  b  k  m  comma\n  dot  fslh  rshft\n  lctrl  lgui  lalt  space  ralt  rgui  1  rctrl\n)\n\n' = <built-in method lower of str object at 0x106fc3af0>()
+E        +    where <built-in method lower of str object at 0x106fc3af0> = '\n  esc  1  2  3  4  5  6  7  8  9\n  0  minus  equal  bspc\n  tab  q  w  f  p  g  j  l  u  y\n  semi  lbkt  rbkt  bslh\n  lctrl  a  r  s  t  d  h  n  e  i\n  o  sqt  ret\n  lshft  z  x  c  v  b  k  m  comma\n  dot  fslh  rshft\n  lctrl  lgui  lalt  space  ralt  rgui  1  rctrl\n)\n\n'.lower
+
+converter/tests/e2e_tests/test_real_world_configs.py:165: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='ESC', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N1', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N2', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N3', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N4', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N5', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N6', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N7', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N8', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N9', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N0', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='MINUS', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='EQUAL', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='BSPC', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='TAB', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='Q', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='W', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='P', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='G', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='J', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='L', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='U', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='Y', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='SEMI', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LBKT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='RBKT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='BSLH', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LCTRL', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='A', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='R', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='S', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='T', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='D', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='H', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='E', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='I', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='O', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='SQT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='RET', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LSHFT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='Z', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='X', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='C', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='V', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='B', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='K', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='M', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='COMMA', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='DOT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='FSLH', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='RSHFT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LCTRL', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LGUI', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LALT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='SPACE', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='RALT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='RGUI', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='1', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='RCTRL', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='GRAVE', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F1', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F2', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F3', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F4', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F5', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F6', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F7', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F8', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F9', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F10', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F11', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F12', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='DEL', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LEFT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='DOWN', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='UP', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='RIGHT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+________________________ test_ben_vallack_cradio_layout ________________________
+
+tmp_path = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-67/test_ben_vallack_cradio_layout0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106cfb8a0>
+
+    def test_ben_vallack_cradio_layout(tmp_path, monkeypatch):
+        """Test conversion of Ben Vallack's Cradio (Ferris Sweep) layout.
+    
+        This test uses a real-world ZMK configuration from Ben Vallack's GitHub repository.
+        The layout features a 34-key split keyboard with custom behaviors, combos, and
+        multiple layers.
+    
+        Source: https://github.com/benvallack/zmk-config
+        """
+        # Setup test files
+        zmk_file = tmp_path / "ben_vallack_cradio.dtsi"
+        kanata_file = tmp_path / "ben_vallack_cradio.kbd"
+    
+        # Ben Vallack's Cradio layout (simplified for testing)
+        zmk_content = """
+        / {
+            behaviors {
+                hm: homerow_mods {
+                    compatible = "zmk,behavior-hold-tap";
+                    label = "HOMEROW_MODS";
+                    #binding-cells = <2>;
+                    tapping-term-ms = <200>;
+                    quick_tap_ms = <0>;
+                    flavor = "tap-preferred";
+                    bindings = <&kp>, <&kp>;
+                };
+                hs: homerow_shifts {
+                    compatible = "zmk,behavior-hold-tap";
+                    label = "HOMEROW_SHIFTS";
+                    #binding-cells = <2>;
+                    tapping-term-ms = <150>;
+                    quick_tap_ms = <0>;
+                    flavor = "balanced";
+                    bindings = <&kp>, <&kp>;
+                };
+                td: tapdance {
+                    compatible = "zmk,behavior-hold-tap";
+                    label = "TAPDANCE";
+                    #binding-cells = <2>;
+                    tapping-term-ms = <150>;
+                    quick_tap_ms = <0>;
+                    flavor = "tap-preferred";
+                    bindings = <&kp>, <&kp>;
+                };
+            };
+    
+            keymap {
+                compatible = "zmk,keymap";
+    
+                default_layer {
+                    bindings = <
+                        &kp TAB &kp C &kp L &kp M &trans
+                        &trans &kp F  &kp U    &kp Z  &kp BKSP
+                        &kp I &hm LCTL S &hm LALT R &hm LGUI T &trans
+                        &trans  &hm RGUI N &hm RALT K &hm RCTL A &kp O
+                        &hs LSHIFT Q &kp V &kp W &kp D &mt LC(LS(LALT)) SPC
+                        &kp E &kp H  &kp Y &td EXCL DOT &hs RSHIFT X
+                                        &mt LC(LS(LALT)) SPC &trans
+                                        &trans &kp E
+                    >;
+                };
+    
+                left_layer {
+                    bindings = <
+                        &trans  &kp ATSN   &td LC(LG(LS(N4))) LS(N3) &kp DLLR &trans
+                        &trans &kp LS(COMMA) &kp LS(DOT) &kp CARET &trans
+                        &kp TAB &hm LCTL EQUAL &hm LALT LA(RBKT) &hm LGUI LA(LS(RBKT)) &trans
+                        &trans &hm RGUI LBRC &hm RALT RBRC &hm RCTL PIPE &kp AMPS
+                        &hs LSHIFT TILDE &kp GRAVE &kp LA(LBKT) &kp LA(LS(LBKT)) &to 0
+                        &to 2 &kp LPRN &kp RPRN &kp RBKT &kp RSHIFT
+                                        &to 0 &trans
+                                        &trans &to 2
+                    >;
+                };
+    
+                right_layer {
+                    bindings = <
+                        &trans &kp C_PP &kp C_PREV &kp C_NEXT &trans
+                        &trans &kp N7 &kp N8 &kp N9 &trans
+                        &kp TAB &trans &hm LALT C_VOL_DN &hm LGUI C_VOL_UP &trans
+                        &trans &hm RGUI N4 &kp N5 &kp N6 &kp EQUAL
+                        &hs LSHIFT PRCNT &kp PRCNT &kp SLASH &kp STAR &to 0
+                        &trans &kp N1 &kp N2 &td DOT N3 &kp MINUS
+                                        &to 0 &trans
+                                        &trans &trans
+                    >;
+                };
+            };
+        };
+        """
+    
+        # Write the ZMK content to the file
+        zmk_file.write_text(zmk_content)
+    
+        # Set up sys.argv for the main function
+        monkeypatch.setattr(
+            sys, "argv", ["converter", str(zmk_file), str(kanata_file)]
+        )
+    
+        # Run the converter
+        from converter.main import main
+    
+        # Capture stderr to check for error message
+        stderr_capture = io.StringIO()
+        old_stderr = sys.stderr
+        sys.stderr = stderr_capture
+    
+        try:
+            exit_code = main()
+            # Print the error message for debugging
+            error_output = stderr_capture.getvalue()
+            print(f"Error output: {error_output}")
+            # The main function should now succeed
+            assert exit_code == 0
+        except SystemExit as e:
+            # Print the error message for debugging
+            error_output = stderr_capture.getvalue()
+            print(f"Error output: {error_output}")
+            # If it exits, it should exit with code 0
+            assert e.code == 0
+        finally:
+            # Restore stderr
+            sys.stderr = old_stderr
+    
+        # Check that the output file exists
+        assert kanata_file.exists()
+    
+        # Read the output file
+        kanata_content = kanata_file.read_text()
+    
+        # Check that the output contains expected content
+        assert "(deflayer default" in kanata_content
+        assert "(deflayer left" in kanata_content
+        assert "(deflayer right" in kanata_content
+    
+        # Check for custom hold-tap behaviors
+>       assert ";; Hold-tap aliases" in kanata_content
+E       AssertionError: assert ';; Hold-tap aliases' in ';; ZMK to Kanata Configuration\n;; Generated automatically - DO NOT EDIT\n\n;; Global settings\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default\n  tab  c  l  m  _\n  _  f  u  z  bksp\n  i  lctl s  lalt r  lgui t  _\n  _  rgui n  ralt k  rctl a  o\n  lshift q  v  w  d  lc(ls(lalt)) spc\n  e  h  y  excl dot  rshift x\n  lc(ls(lalt)) spc  _\n  _  e\n)\n\n(deflayer left\n  _  atsn  lc(lg(ls(n4))) ls(n3)  dllr  _\n  _  ls(comma)  ls(dot)  caret  _\n  tab  lctl equal  lalt la(rbkt)  lgui la(ls(rbkt))  _\n  _  rgui lbrc  ralt rbrc  rctl pipe  amps\n  lshift tilde  grave  la(lbkt)  la(ls(lbkt))  0\n  2  lprn  rprn  rbkt  rshift\n  0  _\n  _  2\n)\n\n(deflayer right\n  _  c_pp  c_prev  c_next  _\n  _  7  8  9  _\n  tab  _  lalt c_vol_dn  lgui c_vol_up  _\n  _  rgui n4  5  6  equal\n  lshift prcnt  prcnt  slash  star  0\n  _  1  2  dot n3  minus\n  0  _\n  _  _\n)\n'
+
+converter/tests/e2e_tests/test_real_world_configs.py:511: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='TAB', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='C', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='L', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='M', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='U', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='Z', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='BKSP', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='I', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LCTL S', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LALT R', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LGUI T', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='RGUI N', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='RALT K', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='RCTL A', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='O', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LSHIFT Q', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='V', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='W', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='D', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LC(LS(LALT)) SPC', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='E', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='H', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='Y', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='EXCL DOT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='RSHIFT X', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LC(LS(LALT)) SPC', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='E', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='ATSN', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LC(LG(LS(N4))) LS(N3)', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='DLLR', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LS(COMMA)', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LS(DOT)', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='CARET', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='TAB', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LCTL EQUAL', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LALT LA(RBKT)', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LGUI LA(LS(RBKT))', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='RGUI LBRC', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='RALT RBRC', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='RCTL PIPE', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='AMPS', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LSHIFT TILDE', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='GRAVE', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LA(LBKT)', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LA(LS(LBKT))', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='0', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='2', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LPRN', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='RPRN', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='RBKT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='RSHIFT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='0', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='2', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='C_PP', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='C_PREV', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='C_NEXT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N7', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N8', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N9', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='TAB', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LALT C_VOL_DN', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LGUI C_VOL_UP', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='RGUI N4', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N5', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N6', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='EQUAL', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LSHIFT PRCNT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='PRCNT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='SLASH', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='STAR', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='0', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N1', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N2', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='DOT N3', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='MINUS', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='0', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+Error output: 
+_________________________ test_ergonomic_kyria_layout __________________________
+
+tmp_path = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-67/test_ergonomic_kyria_layout0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106cab350>
+
+    def test_ergonomic_kyria_layout(tmp_path, monkeypatch):
+        """Test conversion of an ergonomic Kyria layout.
+    
+        The Kyria is a popular ergonomic split keyboard with thumb clusters
+        and a columnar staggered layout. This test verifies that the converter
+        correctly handles the unique layout and features of ergonomic keyboards.
+        """
+        # Setup test files
+        zmk_file = tmp_path / "kyria_ergonomic.dtsi"
+        kanata_file = tmp_path / "kyria_ergonomic.kbd"
+    
+        # Kyria ergonomic layout
+        zmk_content = """
+        / {
+            keymap {
+                compatible = "zmk,keymap";
+    
+                default_layer {
+                    bindings = <
+                        &kp TAB   &kp Q &kp W &kp E &kp R &kp T                 &kp Y &kp U  &kp I     &kp O   &kp P    &kp BSPC
+                        &kp ESC   &kp A &kp S &kp D &kp F &kp G                 &kp H &kp J  &kp K     &kp L   &kp SEMI &kp SQT
+                        &kp LSHFT &kp Z &kp X &kp C &kp V &kp B &kp LBKT     &kp RBKT &kp N &kp M  &kp COMMA &kp DOT &kp FSLH &kp RSHFT
+                                     &kp LGUI &kp LALT &kp LCTRL &kp SPACE   &kp RET &mo 1 &mo 2 &kp RALT
+                    >;
+                };
+    
+                lower_layer {
+                    bindings = <
+                        &kp GRAVE &kp N1 &kp N2 &kp N3 &kp N4 &kp N5           &kp N6 &kp N7 &kp N8 &kp N9 &kp N0 &kp DEL
+                        &trans    &trans &trans &trans &trans &trans           &kp LEFT &kp DOWN &kp UP &kp RIGHT &trans &trans
+                        &trans    &trans &trans &trans &trans &trans &trans  &trans &trans &trans &trans &trans &trans &trans
+                                     &trans &trans &trans &trans              &trans &trans &trans &trans
+                    >;
+                };
+    
+                raise_layer {
+                    bindings = <
+                        &kp F1    &kp F2 &kp F3 &kp F4 &kp F5 &kp F6           &kp F7 &kp F8 &kp F9 &kp F10 &kp F11 &kp F12
+                        &trans    &trans &trans &trans &trans &trans           &trans &trans &trans &trans &trans &trans
+                        &trans    &trans &trans &trans &trans &trans &trans  &trans &trans &trans &trans &trans &trans &trans
+                                     &trans &trans &trans &trans              &trans &trans &trans &trans
+                    >;
+                };
+            };
+        };
+        """
+    
+        # Write the ZMK content to the file
+        zmk_file.write_text(zmk_content)
+    
+        # Set up sys.argv for the main function
+        monkeypatch.setattr(
+            sys, "argv", ["converter", str(zmk_file), str(kanata_file)]
+        )
+    
+        # Run the converter
+        from converter.main import main
+    
+        main()
+    
+        # Check that the conversion was successful
+        assert kanata_file.exists()
+    
+        # Read the generated Kanata file
+        kanata_content = kanata_file.read_text()
+    
+        # Verify the content
+        assert ";; ZMK to Kanata Configuration" in kanata_content
+        assert "(defvar tap-time 200)" in kanata_content
+        assert "(defvar hold-time 250)" in kanata_content
+        assert "(deflayer default" in kanata_content
+        assert "(deflayer lower" in kanata_content
+        assert "(deflayer raise" in kanata_content
+    
+        # Check for specific ergonomic keyboard features
+        default_layer = kanata_content.split("(deflayer default")[1].split(
+            "(deflayer"
+        )[0]
+        lower_layer = kanata_content.split("(deflayer lower")[1].split(
+            "(deflayer"
+        )[0]
+    
+        # Check for thumb cluster keys
+        assert "space" in default_layer.lower()
+        assert "ret" in default_layer.lower() or "enter" in default_layer.lower()
+    
+        # Check for layer switching
+>       assert (
+            "@layer1" in default_layer.lower() or "@lower" in default_layer.lower()
+        )
+E       AssertionError: assert ('@layer1' in '\n  tab  q  w  e  r  t  y  u  i  o  p  bspc\n  esc  a  s  d  f  g  h  j  k  l  semi  sqt\n  lshft  z  x  c  v  b  lbkt  rbkt  n  m  comma  dot  fslh  rshft\n  lgui  lalt  lctrl  space  ret  1  2  ralt\n)\n\n' or '@lower' in '\n  tab  q  w  e  r  t  y  u  i  o  p  bspc\n  esc  a  s  d  f  g  h  j  k  l  semi  sqt\n  lshft  z  x  c  v  b  lbkt  rbkt  n  m  comma  dot  fslh  rshft\n  lgui  lalt  lctrl  space  ret  1  2  ralt\n)\n\n')
+E        +  where '\n  tab  q  w  e  r  t  y  u  i  o  p  bspc\n  esc  a  s  d  f  g  h  j  k  l  semi  sqt\n  lshft  z  x  c  v  b  lbkt  rbkt  n  m  comma  dot  fslh  rshft\n  lgui  lalt  lctrl  space  ret  1  2  ralt\n)\n\n' = <built-in method lower of str object at 0x106cab430>()
+E        +    where <built-in method lower of str object at 0x106cab430> = '\n  tab  q  w  e  r  t  y  u  i  o  p  bspc\n  esc  a  s  d  f  g  h  j  k  l  semi  sqt\n  lshft  z  x  c  v  b  lbkt  rbkt  n  m  comma  dot  fslh  rshft\n  lgui  lalt  lctrl  space  ret  1  2  ralt\n)\n\n'.lower
+E        +  and   '\n  tab  q  w  e  r  t  y  u  i  o  p  bspc\n  esc  a  s  d  f  g  h  j  k  l  semi  sqt\n  lshft  z  x  c  v  b  lbkt  rbkt  n  m  comma  dot  fslh  rshft\n  lgui  lalt  lctrl  space  ret  1  2  ralt\n)\n\n' = <built-in method lower of str object at 0x106cab430>()
+E        +    where <built-in method lower of str object at 0x106cab430> = '\n  tab  q  w  e  r  t  y  u  i  o  p  bspc\n  esc  a  s  d  f  g  h  j  k  l  semi  sqt\n  lshft  z  x  c  v  b  lbkt  rbkt  n  m  comma  dot  fslh  rshft\n  lgui  lalt  lctrl  space  ret  1  2  ralt\n)\n\n'.lower
+
+converter/tests/e2e_tests/test_real_world_configs.py:719: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='TAB', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='Q', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='W', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='E', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='R', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='T', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='Y', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='U', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='I', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='O', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='P', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='BSPC', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='ESC', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='A', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='S', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='D', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='G', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='H', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='J', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='K', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='L', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='SEMI', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='SQT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LSHFT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='Z', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='X', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='C', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='V', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='B', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LBKT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='RBKT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='M', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='COMMA', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='DOT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='FSLH', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='RSHFT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LGUI', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LALT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LCTRL', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='SPACE', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='RET', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='1', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='2', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='RALT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='GRAVE', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N1', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N2', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N3', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N4', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N5', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N6', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N7', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N8', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N9', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='N0', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='DEL', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='LEFT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='DOWN', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='UP', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='RIGHT', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F1', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F2', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F3', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F4', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F5', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F6', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F7', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F8', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F9', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F10', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F11', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='F12', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='trans', hold_tap=None, sticky=False)
+_____________________ test_round_trip_parameterized_macro ______________________
+
+transformer = <converter.transformer.macro_transformer.MacroTransformer object at 0x108895910>
+
+    def test_round_trip_parameterized_macro(transformer):
+        """Test round-trip conversion of a parameterized macro."""
+        # Original macro definition
+        original_def = MacroDefinition(
+            name="param_macro",
+            params=["key1", "key2"],
+            steps=[
+                MacroStep(command="kp", params=["key1"]),
+                MacroStep(command="macro_wait_time", params=["100"]),
+                MacroStep(command="kp", params=["key2"]),
+            ],
+        )
+    
+        # Convert to Kanata format
+        kanata_def = transformer.transform_definition(original_def)
+    
+        # Parse back to ZMK format
+        parsed_def = parse_macro_definition(kanata_def)
+    
+        # Compare original and parsed definitions
+        assert parsed_def.name == original_def.name
+>       assert parsed_def.params == original_def.params
+E       AssertionError: assert None == ['key1', 'key2']
+E        +  where None = MacroDefinition(name='param_macro', steps=[<converter.parser.macro_parser.MacroStep object at 0x108848850>, <converter.parser.macro_parser.MacroStep object at 0x10881d5e0>, <converter.parser.macro_parser.MacroStep object at 0x10881d220>], wait_ms=50, tap_ms=40, binding_cells=0, compatible='zmk,behavior-macro', params=None, settings={}, errors=[]).params
+E        +  and   ['key1', 'key2'] = MacroDefinition(name='param_macro', steps=[<converter.parser.macro_parser.MacroStep object at 0x106cfa9c0>, <converter.parser.macro_parser.MacroStep object at 0x106cfa8b0>, <converter.parser.macro_parser.MacroStep object at 0x108848a50>], wait_ms=50, tap_ms=40, binding_cells=0, compatible='zmk,behavior-macro', params=['key1', 'key2'], settings={}, errors=[]).params
+
+converter/tests/integration/test_macro_round_trip.py:71: AssertionError
+_________________________ test_round_trip_nested_macro _________________________
+
+transformer = <converter.transformer.macro_transformer.MacroTransformer object at 0x108896ff0>
+
+    def test_round_trip_nested_macro(transformer):
+        """Test round-trip conversion of a nested macro."""
+        # Original macro definition
+        original_def = MacroDefinition(
+            name="nested_macro",
+            steps=[
+                MacroStep(command="kp", params=["A"]),
+                MacroStep(command="macro_wait_time", params=["100"]),
+                MacroStep(command="macro_usage", params=["inner_macro"]),
+                MacroStep(command="kp", params=["B"]),
+            ],
+        )
+    
+        # Convert to Kanata format
+        kanata_def = transformer.transform_definition(original_def)
+    
+        # Parse back to ZMK format
+        parsed_def = parse_macro_definition(kanata_def)
+    
+        # Compare original and parsed definitions
+        assert parsed_def.name == original_def.name
+>       assert len(parsed_def.steps) == len(original_def.steps)
+E       AssertionError: assert 3 == 4
+E        +  where 3 = len([<converter.parser.macro_parser.MacroStep object at 0x10883c650>, <converter.parser.macro_parser.MacroStep object at 0x106c67490>, <converter.parser.macro_parser.MacroStep object at 0x106c67750>])
+E        +    where [<converter.parser.macro_parser.MacroStep object at 0x10883c650>, <converter.parser.macro_parser.MacroStep object at 0x106c67490>, <converter.parser.macro_parser.MacroStep object at 0x106c67750>] = MacroDefinition(name='nested_macro', steps=[<converter.parser.macro_parser.MacroStep object at 0x10883c650>, <converter.parser.macro_parser.MacroStep object at 0x106c67490>, <converter.parser.macro_parser.MacroStep object at 0x106c67750>], wait_ms=50, tap_ms=40, binding_cells=0, compatible='zmk,behavior-macro', params=None, settings={}, errors=[]).steps
+E        +  and   4 = len([<converter.parser.macro_parser.MacroStep object at 0x108835a90>, <converter.parser.macro_parser.MacroStep object at 0x108835390>, <converter.parser.macro_parser.MacroStep object at 0x108845d90>, <converter.parser.macro_parser.MacroStep object at 0x10883cc50>])
+E        +    where [<converter.parser.macro_parser.MacroStep object at 0x108835a90>, <converter.parser.macro_parser.MacroStep object at 0x108835390>, <converter.parser.macro_parser.MacroStep object at 0x108845d90>, <converter.parser.macro_parser.MacroStep object at 0x10883cc50>] = MacroDefinition(name='nested_macro', steps=[<converter.parser.macro_parser.MacroStep object at 0x108835a90>, <converter.parser.macro_parser.MacroStep object at 0x108835390>, <converter.parser.macro_parser.MacroStep object at 0x108845d90>, <converter.parser.macro_parser.MacroStep object at 0x10883cc50>], wait_ms=50, tap_ms=40, binding_cells=0, compatible='zmk,behavior-macro', params=None, settings={}, errors=[]).steps
+
+converter/tests/integration/test_macro_round_trip.py:99: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    converter.error_handling.error_manager:error_manager.py:53 Unknown macro 'inner_macro' in macro 'nested_macro'
+________________________ test_round_trip_complex_macro _________________________
+
+transformer = <converter.transformer.macro_transformer.MacroTransformer object at 0x1088974d0>
+
+    def test_round_trip_complex_macro(transformer):
+        """Test round-trip conversion of a complex macro with parameters and nesting."""
+        # Original macro definition
+        original_def = MacroDefinition(
+            name="complex_macro",
+            params=["key1", "key2"],
+            steps=[
+                MacroStep(command="kp", params=["key1"]),
+                MacroStep(command="macro_wait_time", params=["100"]),
+                MacroStep(command="macro_usage", params=["inner_macro", "key2"]),
+                MacroStep(command="kp", params=["key1"]),
+            ],
+        )
+    
+        # Convert to Kanata format
+        kanata_def = transformer.transform_definition(original_def)
+    
+        # Parse back to ZMK format
+        parsed_def = parse_macro_definition(kanata_def)
+    
+        # Compare original and parsed definitions
+        assert parsed_def.name == original_def.name
+>       assert parsed_def.params == original_def.params
+E       AssertionError: assert None == ['key1', 'key2']
+E        +  where None = MacroDefinition(name='complex_macro', steps=[<converter.parser.macro_parser.MacroStep object at 0x1088b87d0>, <converter.parser.macro_parser.MacroStep object at 0x106f41f60>, <converter.parser.macro_parser.MacroStep object at 0x106f42190>], wait_ms=50, tap_ms=40, binding_cells=0, compatible='zmk,behavior-macro', params=None, settings={}, errors=[]).params
+E        +  and   ['key1', 'key2'] = MacroDefinition(name='complex_macro', steps=[<converter.parser.macro_parser.MacroStep object at 0x108864a50>, <converter.parser.macro_parser.MacroStep object at 0x108864eb0>, <converter.parser.macro_parser.MacroStep object at 0x10888d7f0>, <converter.parser.macro_parser.MacroStep object at 0x1088b8650>], wait_ms=50, tap_ms=40, binding_cells=0, compatible='zmk,behavior-macro', params=['key1', 'key2'], settings={}, errors=[]).params
+
+converter/tests/integration/test_macro_round_trip.py:143: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    converter.error_handling.error_manager:error_manager.py:53 Unknown macro 'inner_macro' in macro 'complex_macro'
+__________________________ test_parse_malformed_file ___________________________
+
+self = <converter.parser.zmk_parser.ZMKParser object at 0x106f64ad0>
+file_path = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-67/test_parse_malformed_file0/malformed.zmk')
+
+    def parse(self, file_path: Path) -> KeymapConfig:
+        """Parse a ZMK keymap file.
+    
+        Args:
+            file_path: Path to the keymap file.
+    
+        Returns:
+            A KeymapConfig object containing the parsed keymap.
+    
+        Raises:
+            ParserError: If there are any parsing errors.
+        """
+        try:
+            # Read and process file
+            content = file_path.read_text()
+    
+            # Process file line by line
+            for line in content.split("\n"):
+                self._process_line(line.strip())
+    
+            if not self.layers:
+>               raise ValueError("No layers found in ZMK file")
+E               ValueError: No layers found in ZMK file
+
+converter/parser/zmk_parser.py:124: ValueError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-67/test_parse_malformed_file0')
+
+    def test_parse_malformed_file(tmp_path):
+        """Test parsing a malformed ZMK file raises appropriate errors."""
+        from converter.parser.zmk_parser import ZMKParser
+    
+        # Test missing global settings
+        malformed_file = tmp_path / "malformed.zmk"
+        malformed_file.write_text("/ { keymap { } };")
+        parser = ZMKParser()
+        with pytest.raises(ValueError, match="Could not find global settings"):
+>           parser.parse(malformed_file)
+
+converter/tests/test_basic_remap.py:190: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <converter.parser.zmk_parser.ZMKParser object at 0x106f64ad0>
+file_path = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-67/test_parse_malformed_file0/malformed.zmk')
+
+    def parse(self, file_path: Path) -> KeymapConfig:
+        """Parse a ZMK keymap file.
+    
+        Args:
+            file_path: Path to the keymap file.
+    
+        Returns:
+            A KeymapConfig object containing the parsed keymap.
+    
+        Raises:
+            ParserError: If there are any parsing errors.
+        """
+        try:
+            # Read and process file
+            content = file_path.read_text()
+    
+            # Process file line by line
+            for line in content.split("\n"):
+                self._process_line(line.strip())
+    
+            if not self.layers:
+                raise ValueError("No layers found in ZMK file")
+    
+            return KeymapConfig(
+                global_settings=self.global_settings_parser.finish(),
+                layers=self.layers,
+            )
+        except ParserError as e:
+            raise e
+        except Exception as e:
+>           raise ParserError(f"Failed to parse ZMK file: {e}") from e
+E           converter.parser.parser_error.ParserError: Failed to parse ZMK file: No layers found in ZMK file
+
+converter/parser/zmk_parser.py:133: ParserError
+_______________________ test_full_keymap_transformation ________________________
+
+    def test_full_keymap_transformation():
+        """Test transformation of a complete keymap with hold-tap bindings."""
+        config = KeymapConfig(
+            global_settings=GlobalSettings(tap_time=200, hold_time=250),
+            layers=[
+                Layer(
+                    name="default",
+                    keys=[
+                        [
+                            KeyMapping(key="Q"),
+                            KeyMapping(key="W"),
+                            KeyMapping(
+                                key="E",
+                                hold_tap=HoldTapBinding(
+                                    behavior_name="lh_hm",
+                                    hold_key="LALT",
+                                    tap_key="E",
+                                    hold_trigger_key_positions=None,
+                                    hold_trigger_on_release=False,
+                                    retro_tap=False,
+                                ),
+                            ),
+                        ],
+                        [
+                            KeyMapping(
+                                key="A",
+                                hold_tap=HoldTapBinding(
+                                    behavior_name="lh_hm",
+                                    hold_key="LGUI",
+                                    tap_key="A",
+                                    hold_trigger_key_positions=None,
+                                    hold_trigger_on_release=True,
+                                    retro_tap=False,
+                                ),
+                            ),
+                            KeyMapping(
+                                key="S",
+                                hold_tap=HoldTapBinding(
+                                    behavior_name="lh_hm",
+                                    hold_key="LCTRL",
+                                    tap_key="S",
+                                    hold_trigger_key_positions=(1, 2),
+                                    hold_trigger_on_release=False,
+                                    retro_tap=False,
+                                ),
+                            ),
+                            KeyMapping(key="D"),
+                        ],
+                    ],
+                )
+            ],
+        )
+    
+        transformer = KanataTransformer()
+        result = transformer.transform(config)
+    
+        expected_lines = [
+            ";; ZMK to Kanata Configuration",
+            ";; Generated automatically - DO NOT EDIT",
+            "",
+            ";; Global settings",
+            "(defvar tap-time 200)",
+            "(defvar hold-time 250)",
+            "",
+            ";; Hold-tap aliases",
+            "(defalias",
+            "  lh_hm_LALT_E (tap-hold 200 250 e lalt)",
+            "  lh_hm_LCTRL_S (tap-hold-release-keys 200 250 s lctl (1 2))",
+            "  lh_hm_LGUI_A (tap-hold-release 200 250 a lmet)",
+            ")",
+            "",
+            "(deflayer default",
+            "  q  w  @lh_hm_LALT_E",
+            "  @lh_hm_LGUI_A  @lh_hm_LCTRL_S  d",
+            ")",
+        ]
+    
+>       assert result.splitlines() == expected_lines
+E       AssertionError: assert [';; ZMK to K...me 250)', ...] == [';; ZMK to K...me 250)', ...]
+E         
+E         At index 10 diff: '  lh_hm_LGUI_A (tap-hold-release 200 250 a lmet)' != '  lh_hm_LCTRL_S (tap-hold-release-keys 200 250 s lctl (1 2))'
+E         
+E         Full diff:
+E           [
+E               ';; ZMK to Kanata Configuration',
+E               ';; Generated automatically - DO NOT EDIT',...
+E         
+E         ...Full output truncated (18 lines hidden), use '-vv' to show
+
+converter/tests/test_holdtap_transformer.py:155: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='Q', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='W', hold_tap=None, sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='E', hold_tap=HoldTapBinding(behavior_name='lh_hm', hold_key='LALT', tap_key='E', hold_trigger_key_positions=None, hold_trigger_on_release=False, retro_tap=False), sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='A', hold_tap=HoldTapBinding(behavior_name='lh_hm', hold_key='LGUI', tap_key='A', hold_trigger_key_positions=None, hold_trigger_on_release=True, retro_tap=False), sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='S', hold_tap=HoldTapBinding(behavior_name='lh_hm', hold_key='LCTRL', tap_key='S', hold_trigger_key_positions=(1, 2), hold_trigger_on_release=False, retro_tap=False), sticky=False)
+[DEBUG] Transforming binding: type=<class 'converter.model.keymap_model.KeyMapping'>, value=KeyMapping(key='D', hold_tap=None, sticky=False)
+____________________________ test_transform_binding ____________________________
+
+    def test_transform_binding():
+        """Test transformation of individual ZMK bindings."""
+        transformer = LayerTransformer()
+    
+        # Test letters
+        assert transformer.transform_binding(KeyMapping(key="A")) == "a"
+        assert transformer.transform_binding(KeyMapping(key="B")) == "b"
+    
+        # Test numbers
+        assert transformer.transform_binding(KeyMapping(key="N1")) == "1"
+        assert transformer.transform_binding(KeyMapping(key="N0")) == "0"
+        key = KeyMapping(key="KP_N7")
+        assert transformer.transform_binding(key) == "kp7"
+    
+        # Test symbols and punctuation
+        assert transformer.transform_binding(KeyMapping(key="EXCL")) == "excl"
+        assert transformer.transform_binding(KeyMapping(key="MINUS")) == "minus"
+        assert transformer.transform_binding(KeyMapping(key="PLUS")) == "plus"
+        assert transformer.transform_binding(KeyMapping(key="DOT")) == "dot"
+    
+        # Test function keys
+        assert transformer.transform_binding(KeyMapping(key="F1")) == "f1"
+        assert transformer.transform_binding(KeyMapping(key="F12")) == "f12"
+    
+        # Test navigation and editing
+        key_mapping = KeyMapping(key="ENTER")
+        assert transformer.transform_binding(key_mapping) == "enter"
+        space_key = KeyMapping(key="SPACE")
+        assert transformer.transform_binding(space_key) == "space"
+        key_up = KeyMapping(key="PG_UP")
+        assert transformer.transform_binding(key_up) == "pg_up"
+    
+        # Test modifiers
+        assert transformer.transform_binding(KeyMapping(key="LSHIFT")) == "lshift"
+        assert transformer.transform_binding(KeyMapping(key="RGUI")) == "rgui"
+    
+        # Test system and media
+        assert transformer.transform_binding(KeyMapping(key="C_MUTE")) == "c_mute"
+        key_vol = KeyMapping(key="C_VOL_UP")
+        assert transformer.transform_binding(key_vol) == "c_vol_up"
+    
+        # Test numpad special keys
+        kp_plus = KeyMapping(key="KP_PLUS")
+        assert transformer.transform_binding(kp_plus) == "kp_plus"
+        assert transformer.transform_binding(KeyMapping(key="KP_DOT")) == "kp_dot"
+    
+        # Test layer momentary switch
+        assert transformer.transform_binding(KeyMapping(key="mo 1")) == "@layer1"
+        assert transformer.transform_binding(KeyMapping(key="mo 2")) == "@layer2"
+    
+        # Test transparent key
+        assert transformer.transform_binding(KeyMapping(key="trans")) == "_"
+    
+        # Test sticky key
+        sticky_key = KeyMapping(key="sk LSHIFT")
+        expected_sticky = "sticky-lsft"
+>       assert transformer.transform_binding(sticky_key) == expected_sticky
+E       AssertionError: assert 'sk lshift' == 'sticky-lsft'
+E         
+E         - sticky-lsft
+E         + sk lshift
+
+converter/tests/test_layer_transformer.py:64: AssertionError
+_________________________ test_layer_pattern_matching __________________________
+
+    def test_layer_pattern_matching():
+        """Test that layer patterns are correctly matched."""
+        parser = ZMKParser()
+        sample_text = """
+        / {
+            keymap {
+                compatible = "zmk,keymap";
+                default_layer {
+                    bindings = <
+                        &kp A &kp B
+                        &kp C &kp D
+                    >;
+                };
+            };
+        };
+        """
+        print("\nSample text:")
+        print(sample_text)
+        print("\nBindings pattern:", parser.bindings_pattern.pattern)
+        matches = list(parser.bindings_pattern.finditer(sample_text))
+        print("\nFound matches:", len(matches))
+        if matches:
+            for i, match in enumerate(matches):
+                print(f"\nMatch {i + 1}:")
+                print("Groups:", match.groups())
+                print("Start:", match.start())
+                print("End:", match.end())
+>       assert len(matches) == 1, "Should find one layer"
+E       AssertionError: Should find one layer
+E       assert 4 == 1
+E        +  where 4 = len([<re.Match object; span=(142, 148), match='&kp A '>, <re.Match object; span=(148, 174), match='&kp B\n                    '>, <re.Match object; span=(174, 180), match='&kp C '>, <re.Match object; span=(180, 242), match='&kp D\n                >;\n            };\n      >])
+
+converter/tests/test_parser_debug.py:36: AssertionError
+----------------------------- Captured stdout call -----------------------------
+
+Sample text:
+
+    / {
+        keymap {
+            compatible = "zmk,keymap";
+            default_layer {
+                bindings = <
+                    &kp A &kp B
+                    &kp C &kp D
+                >;
+            };
+        };
+    };
+    
+
+Bindings pattern: &[^&]+
+
+Found matches: 4
+
+Match 1:
+Groups: ()
+Start: 142
+End: 148
+
+Match 2:
+Groups: ()
+Start: 148
+End: 174
+
+Match 3:
+Groups: ()
+Start: 174
+End: 180
+
+Match 4:
+Groups: ()
+Start: 180
+End: 242
+_________________________ test_global_pattern_matching _________________________
+
+    def test_global_pattern_matching():
+        """Test that global settings are correctly matched."""
+        parser = ZMKParser()
+        sample_text = """
+        / {
+            global {
+                tap-time = <200>;
+                hold-time = <300>;
+            };
+        };
+        """
+        match = parser.global_pattern.search(sample_text)
+        assert match is not None, "Should find global settings"
+>       assert match.group(1) == "200", "Should capture tap time"
+E       IndexError: no such group
+
+converter/tests/test_parser_debug.py:113: IndexError
+________________ TestTapHoldKeymap.test_parse_hold_tap_binding _________________
+
+self = <converter.tests.test_taphold_keymap.TestTapHoldKeymap testMethod=test_parse_hold_tap_binding>
+
+    def test_parse_hold_tap_binding(self):
+        """Test parsing a hold-tap binding."""
+        zmk_content = """
+        / {
+            keymap {
+                compatible = "zmk,keymap";
+                default_layer {
+                    bindings = <
+                        &mt LSHIFT A &ht LCTRL B
+                    >;
+                };
+            };
+        };
+        """
+        layers = self.parser.parse_zmk_file(zmk_content)
+        self.assertEqual(len(layers), 1)
+    
+        layer = layers[0]
+        self.assertEqual(sum(len(row) for row in layer.keys), 2)
+    
+        # Check first binding (mt LSHIFT A)
+        binding1 = [item for row in layer.keys for item in row][0]
+>       self.assertEqual(binding1.key, "A")
+E       AttributeError: 'MacroBinding' object has no attribute 'key'
+
+converter/tests/test_taphold_keymap.py:37: AttributeError
+----------------------------- Captured stdout call -----------------------------
+[DEBUG] Parsing binding string: &mt LSHIFT A
+[DEBUG] MacroParser returned: <class 'converter.behaviors.macro.MacroBinding'>
+[DEBUG] Parsing binding string: &ht LCTRL B
+[DEBUG] MacroParser returned: <class 'converter.behaviors.macro.MacroBinding'>
+------------------------------ Captured log call -------------------------------
+WARNING  root:macro_parser.py:545 Unknown macro behavior 'mt' encountered in binding. 
+WARNING  root:macro_parser.py:549 Creating placeholder MacroBehavior.
+WARNING  root:macro_parser.py:545 Unknown macro behavior 'ht' encountered in binding. 
+WARNING  root:macro_parser.py:549 Creating placeholder MacroBehavior.
+________________ TestUnicodeIntegration.test_unicode_conversion ________________
+
+self = <converter.tests.test_unicode_integration.TestUnicodeIntegration testMethod=test_unicode_conversion>
+
+        def test_unicode_conversion(self):
+            """Test converting a ZMK file with Unicode to Kanata format."""
+            # Create a temporary ZMK file with Unicode definitions
+            zmk_content = """
+    / {
+        macros {
+            // Define a macro for the pi symbol
+            ZMK_UNICODE_SINGLE(pi, N0, N3, C, N0)
+    
+            // Define a macro for the n with tilde
+            ZMK_UNICODE_PAIR(n_tilde, N0, N0, F, N1, N0, N0, D, N1)
+        };
+    
+        keymap {
+            compatible = "zmk,keymap";
+            default_layer {
+                bindings = <
+                    &pi &n_tilde &kp A
+                >;
+            };
+        };
+    };
+    """
+            with tempfile.NamedTemporaryFile(mode="w", delete=False) as temp_file:
+                temp_file.write(zmk_content)
+                temp_file_path = temp_file.name
+    
+            try:
+                # Convert the ZMK file to Kanata format
+                kanata_content = convert_zmk_to_kanata(temp_file_path)
+    
+                # Check that the Unicode characters are included in the output
+>               self.assertIn("(unicode π)", kanata_content)
+E               AssertionError: '(unicode π)' not found in ';; ZMK to Kanata Configuration\n;; Generated automatically - DO NOT EDIT\n\n;; Global settings\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default\n  (unicode ?) (unicode ?) a\n)'
+
+converter/tests/test_unicode_integration.py:45: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[DEBUG] Parsing binding string: &pi
+[DEBUG] UnicodeParser returned: <class 'converter.behaviors.unicode.UnicodeBinding'>
+[DEBUG] Parsing binding string: &n_tilde
+[DEBUG] UnicodeParser returned: <class 'converter.behaviors.unicode.UnicodeBinding'>
+[DEBUG] Parsing binding string: &kp A
+[DEBUG] Default KeyMapping returned: <class 'converter.model.keymap_model.KeyMapping'>
+=========================== short test summary info ============================
+FAILED converter/tests/e2e_tests/test_advanced_features.py::test_multi_layer_with_hold_tap
+FAILED converter/tests/e2e_tests/test_advanced_features.py::test_multi_layer_with_custom_behaviors
+FAILED converter/tests/e2e_tests/test_cli.py::test_basic_file_conversion - As...
+FAILED converter/tests/e2e_tests/test_cli.py::test_missing_input_file - asser...
+FAILED converter/tests/e2e_tests/test_cli.py::test_invalid_input_format - ass...
+FAILED converter/tests/e2e_tests/test_cli.py::test_invalid_output_path - asse...
+FAILED converter/tests/e2e_tests/test_file_operations.py::test_output_file_format
+FAILED converter/tests/e2e_tests/test_input_formats.py::test_single_layer_keymap
+FAILED converter/tests/e2e_tests/test_input_formats.py::test_multiple_layer_keymap
+FAILED converter/tests/e2e_tests/test_input_formats.py::test_empty_layer_keymap
+FAILED converter/tests/e2e_tests/test_input_formats.py::test_comments_and_whitespace
+FAILED converter/tests/e2e_tests/test_macro.py::test_basic_macro_conversion
+FAILED converter/tests/e2e_tests/test_macro.py::test_complex_macro_conversion
+FAILED converter/tests/e2e_tests/test_macro.py::test_parameterized_macro_conversion
+FAILED converter/tests/e2e_tests/test_real_world_configs.py::test_colemak_layout
+FAILED converter/tests/e2e_tests/test_real_world_configs.py::test_ben_vallack_cradio_layout
+FAILED converter/tests/e2e_tests/test_real_world_configs.py::test_ergonomic_kyria_layout
+FAILED converter/tests/integration/test_macro_round_trip.py::test_round_trip_parameterized_macro
+FAILED converter/tests/integration/test_macro_round_trip.py::test_round_trip_nested_macro
+FAILED converter/tests/integration/test_macro_round_trip.py::test_round_trip_complex_macro
+FAILED converter/tests/test_basic_remap.py::test_parse_malformed_file - conve...
+FAILED converter/tests/test_holdtap_transformer.py::test_full_keymap_transformation
+FAILED converter/tests/test_layer_transformer.py::test_transform_binding - As...
+FAILED converter/tests/test_parser_debug.py::test_layer_pattern_matching - As...
+FAILED converter/tests/test_parser_debug.py::test_global_pattern_matching - I...
+FAILED converter/tests/test_taphold_keymap.py::TestTapHoldKeymap::test_parse_hold_tap_binding
+FAILED converter/tests/test_unicode_integration.py::TestUnicodeIntegration::test_unicode_conversion
+======================== 27 failed, 113 passed in 0.14s ========================

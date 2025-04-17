@@ -4,6 +4,7 @@ import logging
 from dataclasses import dataclass, field
 from enum import Enum, auto
 from typing import Dict, List, Optional, Tuple
+import re
 
 from converter.behaviors.macro import (
     MacroActivationMode,
@@ -191,10 +192,15 @@ def parse_macro_definition(kanata_def: str) -> MacroDefinition:
     Returns:
         A MacroDefinition object
     """
-    # TODO: Implement actual parsing logic
-    # For now, return a dummy definition for testing
+    # Extract the macro name from the Kanata definition string
+    match = re.search(r"\(defmacro\s+(\w+)", kanata_def)
+    if match:
+        macro_name = match.group(1)
+    else:
+        macro_name = "unknown_macro"
+    # This is still a stub for steps, but now uses the correct name
     return MacroDefinition(
-        name="test_macro",
+        name=macro_name,
         steps=[
             MacroStep(command="kp", params=["A"]),
             MacroStep(command="macro_wait_time", params=["100"]),
@@ -415,9 +421,7 @@ class MacroParser:
             error_msg = "Parsing failed with the following errors:\n"
             raise ParserError(f"{error_msg}{error_summary}")
 
-    def parse_behavior(
-        self, name: str, config: dict
-    ) -> Optional[MacroBehavior]:
+    def parse_behavior(self, name: str, config: dict) -> Optional[MacroBehavior]:
         """Parse a macro behavior configuration."""
         if config.get("compatible") in [
             "zmk,behavior-macro",
@@ -448,9 +452,7 @@ class MacroParser:
 
         return None
 
-    def parse_bindings(
-        self, behavior: MacroBehavior, bindings_str: str
-    ) -> None:
+    def parse_bindings(self, behavior: MacroBehavior, bindings_str: str) -> None:
         """Parse the bindings list for a macro behavior."""
         # Split the bindings string into individual bindings
         bindings = []
@@ -468,16 +470,12 @@ class MacroParser:
             if "&macro_tap" in part:
                 self.activation_mode = MacroActivationMode.TAP
                 # Extract the behaviors after &macro_tap
-                behaviors = self._extract_behaviors_after_control(
-                    part, "&macro_tap"
-                )
+                behaviors = self._extract_behaviors_after_control(part, "&macro_tap")
                 bindings.extend(behaviors)
             elif "&macro_press" in part:
                 self.activation_mode = MacroActivationMode.PRESS
                 # Extract the behaviors after &macro_press
-                behaviors = self._extract_behaviors_after_control(
-                    part, "&macro_press"
-                )
+                behaviors = self._extract_behaviors_after_control(part, "&macro_press")
                 behaviors = self._extract_behaviors_after_control(
                     part, "&macro_release"
                 )
@@ -489,9 +487,7 @@ class MacroParser:
         # Store the parsed bindings in the behavior
         behavior.bindings = bindings
 
-    def _extract_behaviors_after_control(
-        self, part: str, control: str
-    ) -> List[str]:
+    def _extract_behaviors_after_control(self, part: str, control: str) -> List[str]:
         """Extract behaviors after a macro control behavior."""
         # Remove the control part
         behaviors_str = part.replace(control, "").strip()
@@ -532,8 +528,20 @@ class MacroParser:
         try:
             return MacroBinding.from_zmk(binding_str, self.behaviors)
         except (ValueError, KeyError):
-            # If we can't parse it as a macro binding, return None
-            return None
+            # If the macro behavior is not found, create a placeholder
+            parts = binding_str.replace("&", "").strip().split()
+            behavior_name = parts[0]
+            if behavior_name not in self.behaviors:
+                logging.warning(
+                    f"Unknown macro behavior '{behavior_name}' encountered in "
+                    f"binding. "
+                )
+                logging.warning("Creating placeholder MacroBehavior.")
+                self.behaviors[behavior_name] = MacroBehavior(name=behavior_name)
+            try:
+                return MacroBinding.from_zmk(binding_str, self.behaviors)
+            except Exception:
+                return None
 
     def parse_behaviors(self, content: str) -> List[MacroBehavior]:
         """Parse all macro behaviors from ZMK content.
@@ -577,10 +585,7 @@ class MacroParser:
         macro_defs: Dict[str, MacroDefinition] = {}
         # Skip tokens until we find the 'macros' keyword
         while not self._is_at_end():
-            if (
-                self._check(TokenType.IDENTIFIER)
-                and self._peek().value == "macros"
-            ):
+            if self._check(TokenType.IDENTIFIER) and self._peek().value == "macros":
                 self._advance()  # consume 'macros'
                 break
             self._advance()
@@ -650,7 +655,7 @@ class MacroParser:
             self._add_syntax_error("macro name", "invalid token")
             self._synchronize_to_next_macro()
             self._check_for_errors()
-            return None
+            raise ParserError("Missing macro name")
 
         name = self._advance().value  # Consume the macro name
         # Initialize current_macro here
@@ -660,7 +665,7 @@ class MacroParser:
             self._add_syntax_error("'{'", "invalid token")
             self._synchronize_to_next_macro()
             self._check_for_errors()
-            return None
+            raise ParserError("Missing '{' after macro name")
 
         self._transition_state(MacroParserState.IN_MACRO_DEFINITION)
 
@@ -691,19 +696,19 @@ class MacroParser:
                         self.current_macro.steps.append(step)
                         # Check for semicolon after macro step
                         if not self._match(TokenType.SEMICOLON):
-                            self._add_syntax_error(
-                                "';' after macro step"
-                            )
+                            self._add_syntax_error("';' after macro step")
                             self._synchronize_to_next_step()
                             self._check_for_errors()
-                            return None
+                            raise ParserError("Missing semicolon after macro step")
                     else:
                         parse_successful = False
                         break
 
                 if self.position == start_pos:
-                    msg = "Parser unable to make progress"
-                    self._add_error(msg, ErrorSeverity.ERROR)
+                    self._add_error(
+                        ("Parser unable to make progress in " "bindings list"),
+                        ErrorSeverity.ERROR,
+                    )
                     self._synchronize_to_next_macro()
                     self._check_for_errors()
                     parse_successful = False
@@ -725,12 +730,14 @@ class MacroParser:
             self._add_syntax_error("'}'")
             self._synchronize_to_next_macro()
             self._check_for_errors()
+            raise ParserError("Missing '}' after macro definition")
             return None
 
         if not self._match(TokenType.SEMICOLON):
             self._add_syntax_error("';' after macro definition")
             self._synchronize_to_next_macro()
             self._check_for_errors()
+            raise ParserError("Missing ';' after macro definition")
             return None
 
         self._check_for_errors()
@@ -778,7 +785,7 @@ class MacroParser:
                     self._synchronize_to_next_step()
                     if self.position == start_pos:
                         self._add_error(
-                            "Parser unable to make progress in bindings list",
+                            ("Parser unable to make progress in " "bindings list"),
                             ErrorSeverity.ERROR,
                         )
                         break
@@ -788,7 +795,7 @@ class MacroParser:
                     self._synchronize_to_next_step()
                     if self.position == start_pos:
                         self._add_error(
-                            "Parser unable to make progress in bindings list",
+                            ("Parser unable to make progress in " "bindings list"),
                             ErrorSeverity.ERROR,
                         )
                         break
@@ -799,7 +806,7 @@ class MacroParser:
                     self._synchronize_to_next_step()
                     if self.position == start_pos:
                         self._add_error(
-                            "Parser unable to make progress in bindings list",
+                            ("Parser unable to make progress in " "bindings list"),
                             ErrorSeverity.ERROR,
                         )
                         break
@@ -847,7 +854,7 @@ class MacroParser:
                         self._synchronize_to_next_step()
                         if self.position == start_pos:
                             self._add_error(
-                                "Parser unable to make progress in bindings list",
+                                ("Parser unable to make progress in " "bindings list"),
                                 ErrorSeverity.ERROR,
                             )
                             break
@@ -863,10 +870,10 @@ class MacroParser:
                 )
                 self._synchronize_to_next_step()
             if not self._match(TokenType.SEMICOLON):
-                self._add_syntax_error(
-                    "';' after bindings", token=self._previous()
-                )
+                self._add_syntax_error("';' after bindings", token=self._previous())
                 self._synchronize_to_next_step()
+                self._check_for_errors()
+                raise ParserError("Missing semicolon after bindings")
             self.current_macro.steps.extend(commands)
             self._check_for_errors()
             return not (missing_equals or missing_angle)
@@ -982,9 +989,7 @@ class MacroParser:
         else:
             # Parse parameters until we hit a comma or semicolon
             while not self._is_at_end():
-                if self._check(TokenType.COMMA) or self._check(
-                    TokenType.SEMICOLON
-                ):
+                if self._check(TokenType.COMMA) or self._check(TokenType.SEMICOLON):
                     break
                 if self._match(TokenType.IDENTIFIER):
                     param = self._previous().value

@@ -107,9 +107,7 @@ class HoldTapBehavior:
         ):
             # TODO: Log error via error manager
             raise TypeError("tapping_term_ms must be int or None")
-        if self.quick_tap_ms is not None and not isinstance(
-            self.quick_tap_ms, int
-        ):
+        if self.quick_tap_ms is not None and not isinstance(self.quick_tap_ms, int):
             # TODO: Log error via error manager
             raise TypeError("quick_tap_ms must be int or None")
         if self.require_prior_idle_ms is not None and not isinstance(
@@ -124,16 +122,12 @@ class HoldTapBehavior:
             self.hold_trigger_key_positions, list
         ):
             # TODO: Log error via error manager
-            raise TypeError(
-                "hold_trigger_key_positions must be a list of ints or None"
-            )
+            raise TypeError("hold_trigger_key_positions must be a list of ints or None")
         if self.hold_trigger_key_positions:
             for pos in self.hold_trigger_key_positions:
                 if not isinstance(pos, int):
                     # TODO: Log error via error manager
-                    raise TypeError(
-                        "Each hold_trigger_key_position must be an int"
-                    )
+                    raise TypeError("Each hold_trigger_key_position must be an int")
         if not isinstance(self.hold_trigger_on_release, bool):
             # TODO: Log error via error manager
             raise TypeError("hold_trigger_on_release must be a bool")

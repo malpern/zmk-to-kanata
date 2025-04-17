@@ -38,9 +38,7 @@ class StickyKeyTransformer:
             timeout = getattr(binding, "timeout", None)
         else:
             self.error_manager.add_error(
-                message=(
-                    f"Invalid binding type for sticky key: " f"{type(binding)}"
-                ),
+                message=(f"Invalid binding type for sticky key: " f"{type(binding)}"),
                 source="sticky_key_transformer",
                 severity=ErrorSeverity.ERROR,
             )
@@ -133,8 +131,6 @@ class StickyKeyTransformer:
                     severity=ErrorSeverity.WARNING,
                     exception=e,
                 )
-                self.logger.warning(
-                    f"Invalid timeout value for sticky key: {timeout}"
-                )
+                self.logger.warning(f"Invalid timeout value for sticky key: {timeout}")
 
         return expr

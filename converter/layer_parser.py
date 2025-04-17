@@ -19,6 +19,7 @@ class LayerParser:
     """Parser for ZMK layer configurations."""
 
     def __init__(self):
+        """Initialize all sub-parsers for different ZMK behaviors."""
         self.sticky_key_parser = StickyKeyParser()
         self.key_sequence_parser = KeySequenceParser()
         self.macro_parser = MacroParser()
@@ -71,11 +72,17 @@ class LayerParser:
                     continue
 
                 # Check for macro behaviors
-                if config.get("compatible") == '"zmk,behavior-macro"':
-                    if "bindings" in config:
-                        behavior = name
+                macro_compatibles = [
+                    '"zmk,behavior-macro"',
+                    '"zmk,behavior-macro-one-param"',
+                    '"zmk,behavior-macro-two-param"',
+                ]
+                if config.get("compatible") in macro_compatibles:
+                    # Register the macro behavior
+                    behavior_obj = self.macro_parser.parse_behavior(name, config)
+                    if behavior_obj and "bindings" in config:
                         self.macro_parser.parse_bindings(
-                            behavior, config["bindings"]
+                            behavior_obj, config["bindings"]
                         )
                     continue
 
@@ -84,27 +91,32 @@ class LayerParser:
 
     def parse_binding(self, binding_str: str) -> Binding:
         """Parse a binding string into a Binding object."""
+        print(f"[DEBUG] Parsing binding string: {binding_str}")
         # Try parsing as a sticky key binding
         if is_sticky_key_binding(binding_str):
             binding = self.sticky_key_parser.parse_binding(binding_str)
+            print(f"[DEBUG] StickyKeyParser returned: {type(binding)}")
             if binding:
                 return binding
 
         # Try parsing as a key sequence binding
         if is_key_sequence_binding(binding_str):
             binding = self.key_sequence_parser.parse_binding(binding_str)
+            print(f"[DEBUG] KeySequenceParser returned: {type(binding)}")
             if binding:
                 return binding
 
         # Try parsing as a macro binding
         if is_macro_binding(binding_str):
             binding = self.macro_parser.parse_binding(binding_str)
+            print(f"[DEBUG] MacroParser returned: {type(binding)}")
             if binding:
                 return binding
 
         # Try parsing as a Unicode binding
         if is_unicode_binding(binding_str):
             binding = self.unicode_parser.parse_binding(binding_str)
+            print(f"[DEBUG] UnicodeParser returned: {type(binding)}")
             if binding:
                 return binding
 
@@ -119,20 +131,22 @@ class LayerParser:
                 # by the KeyMapping.from_zmk method
                 from .model.keymap_model import KeyMapping
 
-                return KeyMapping.from_zmk(binding_str)
+                binding = KeyMapping.from_zmk(binding_str)
+                print(f"[DEBUG] TapHoldParser returned: {type(binding)}")
+                return binding
 
         # Default to a regular key binding
         from .model.keymap_model import KeyMapping
 
-        return KeyMapping.from_zmk(binding_str)
+        binding = KeyMapping.from_zmk(binding_str)
+        print(f"[DEBUG] Default KeyMapping returned: {type(binding)}")
+        return binding
 
     def extract_layers(self, keymap_content: str) -> List[Layer]:
         """Extract layers from a ZMK keymap content."""
         layers = []
         # Updated pattern to be more flexible with whitespace
-        layer_pattern = (
-            r"(\w+)_layer\s*{\s*" r"bindings\s*=\s*<([^>]*)>" r"[^}]*}\s*;"
-        )
+        layer_pattern = r"(\w+)_layer\s*{\s*" r"bindings\s*=\s*<([^>]*)>" r"[^}]*}\s*;"
 
         for match in re.finditer(layer_pattern, keymap_content):
             layer_name = match.group(1)
@@ -173,8 +187,7 @@ class LayerParser:
 
         # Extract keymap section - simplified pattern
         keymap_pattern = (
-            r'keymap\s*{\s*compatible\s*=\s*"zmk,keymap";\s*'
-            r"([\s\S]*?)}\s*;"
+            r'keymap\s*{\s*compatible\s*=\s*"zmk,keymap";\s*' r"([\s\S]*?)}\s*;"
         )
         match = re.search(keymap_pattern, content)
         if not match:
@@ -182,9 +195,7 @@ class LayerParser:
 
         # Extract layers directly from the content
         layers = []
-        layer_pattern = (
-            r"(\w+)_layer\s*{\s*" r"bindings\s*=\s*<([^>]*)>" r"[^}]*}\s*;"
-        )
+        layer_pattern = r"(\w+)_layer\s*{\s*" r"bindings\s*=\s*<([^>]*)>" r"[^}]*}\s*;"
 
         for match in re.finditer(layer_pattern, content):
             layer_name = match.group(1)

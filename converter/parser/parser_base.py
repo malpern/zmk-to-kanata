@@ -27,17 +27,13 @@ class ParserBase(ABC):
         """
         Optionally parse a single binding. Subclasses may override.
         """
-        raise NotImplementedError(
-            "parse_binding() not implemented for this parser."
-        )
+        raise NotImplementedError("parse_binding() not implemented for this parser.")
 
     def parse_layer(self, *args, **kwargs):
         """
         Optionally parse a single layer. Subclasses may override.
         """
-        raise NotImplementedError(
-            "parse_layer() not implemented for this parser."
-        )
+        raise NotImplementedError("parse_layer() not implemented for this parser.")
 
     def get_error_summary(self):
         """

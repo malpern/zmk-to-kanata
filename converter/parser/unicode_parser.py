@@ -39,9 +39,7 @@ class UnicodeParser:
 
         # Look for urob/zmk-nodefree-config style Unicode pair definitions
         # ZMK_UNICODE_PAIR(n_tilde, N0, N0, F, N1, N0, N0, D, N1)
-        pair_pattern = re.compile(
-            r"ZMK_UNICODE_PAIR\((\w+),\s*([^)]+)\)", re.DOTALL
-        )
+        pair_pattern = re.compile(r"ZMK_UNICODE_PAIR\((\w+),\s*([^)]+)\)", re.DOTALL)
 
         for match in pair_pattern.finditer(content):
             name = match.group(1)

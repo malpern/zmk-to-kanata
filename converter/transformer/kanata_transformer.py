@@ -1,13 +1,12 @@
-"""Kanata Transformer Module
+"""Kanata Transformer Module.
 
 This module converts our intermediate representation into Kanata DSL format.
 """
 
 from typing import Dict, List
 
-from converter.behaviors.macro import MacroBehavior, MacroBinding
+from converter.behaviors.macro import MacroBehavior
 from converter.behaviors.sticky_key import StickyKeyBinding
-from converter.behaviors.unicode import UnicodeBinding
 from converter.model.keymap_model import KeymapConfig, KeyMapping
 
 from .holdtap_transformer import HoldTapTransformer
@@ -132,11 +131,14 @@ class KanataTransformer:
         Returns:
             The Kanata key representation as a string.
         """
+        # Debug: print the type and value of the binding
+        print(
+            f"[DEBUG] Transforming binding: type={type(key_mapping)}, "
+            f"value={key_mapping}"
+        )
         # Handle sticky key bindings first
         if isinstance(key_mapping, StickyKeyBinding):
-            # Get the key from the binding
             key = key_mapping.key
-            # Map modifiers to their shorter form
             mod_map = {
                 "LSHIFT": "lsft",
                 "RSHIFT": "rsft",
@@ -147,23 +149,17 @@ class KanataTransformer:
                 "LGUI": "lmet",
                 "RGUI": "rmet",
             }
-            # For function keys, keep the case
             if key.startswith("F") and key[1:].isdigit():
                 return f"sticky-{key}"
-            # For modifiers, use the mapping
             return f"sticky-{mod_map.get(key, key.lower())}"
 
-        # Handle transparent keys
-        if key_mapping.key == "trans":
+        if hasattr(key_mapping, "key") and key_mapping.key == "trans":
             return "_"
 
-        # Handle layer switch keys
-        if key_mapping.key.startswith("mo "):
+        if hasattr(key_mapping, "key") and key_mapping.key.startswith("mo "):
             layer_num = key_mapping.key.split(" ")[1]
-            # Return using @layer format for momentary layer switch
             return f"@layer{layer_num}"
 
-        # Handle hold-tap bindings
         if hasattr(key_mapping, "hold_tap") and key_mapping.hold_tap:
             alias_name = self._generate_hold_tap_alias_name(
                 key_mapping.hold_tap.behavior_name,
@@ -172,20 +168,21 @@ class KanataTransformer:
             )
             return f"@{alias_name}"
 
-        # Handle Unicode bindings
-        if isinstance(key_mapping, UnicodeBinding):
-            return key_mapping.to_kanata()
-
-        # Handle macro bindings
-        if isinstance(key_mapping, MacroBinding):
-            return key_mapping.to_kanata()
+        # Handle Unicode and Macro bindings by calling to_kanata if available
+        if hasattr(key_mapping, "to_kanata") and callable(key_mapping.to_kanata):
+            try:
+                return key_mapping.to_kanata()
+            except Exception as e:
+                print(f"[DEBUG] Exception in to_kanata: {e}")
+                pass
 
         # Handle regular key bindings
-        key = key_mapping.key
-        # For function keys, keep the case
-        if key.startswith("F") and key[1:].isdigit():
-            return key
-        return key.lower()
+        if hasattr(key_mapping, "key"):
+            key = key_mapping.key
+            if key.startswith("F") and key[1:].isdigit():
+                return key
+            return key.lower()
+        return str(key_mapping)
 
     def _generate_hold_tap_alias_name(
         self, behavior_name: str, hold_key: str, tap_key: str
@@ -303,12 +300,13 @@ class KanataTransformer:
             config: The keymap configuration.
 
         Returns:
-            A list of macro definitions.
+            A list of macro definitions (each as a list of lines).
         """
-        # This would need access to the MacroBehavior objects
-        # For now, we'll return an empty list as a placeholder
-        # This should be implemented later to properly support macros
-        return []
+        macros = []
+        for macro in self.macro_behaviors.values():
+            macro_def = self.macro_transformer.transform_macro(macro)
+            macros.append(macro_def.splitlines())
+        return macros
 
     def register_macro_behavior(self, behavior: MacroBehavior) -> None:
         """Register a macro behavior for later transformation.

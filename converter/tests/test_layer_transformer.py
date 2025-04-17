@@ -90,10 +90,8 @@ def test_transform_layer():
     """Test transforming a layer to Kanata format."""
     layer = Layer(
         name="default",
-        bindings=[
-            KeyMapping(key="A"),
-            KeyMapping(key="B"),
-            KeyMapping(key="C"),
+        keys=[
+            [KeyMapping(key="A"), KeyMapping(key="B"), KeyMapping(key="C")],
         ],
     )
 
@@ -109,16 +107,14 @@ def test_transform_layers():
     layers = [
         Layer(
             name="default",
-            bindings=[
-                KeyMapping(key="A"),
-                KeyMapping(key="B"),
+            keys=[
+                [KeyMapping(key="A"), KeyMapping(key="B")],
             ],
         ),
         Layer(
             name="num",
-            bindings=[
-                KeyMapping(key="1"),
-                KeyMapping(key="2"),
+            keys=[
+                [KeyMapping(key="1"), KeyMapping(key="2")],
             ],
         ),
     ]
