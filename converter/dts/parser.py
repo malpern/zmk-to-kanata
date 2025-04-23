@@ -1,7 +1,7 @@
 """DTS parser for converting DTS to keymap configuration."""
 
-from typing import Dict, List, Optional, Union, Any
-import re
+from typing import Dict, List, Any
+
 
 class DtsNode:
     """Represents a DTS node."""
@@ -37,9 +37,9 @@ class DtsProperty:
 class DtsRoot:
     """Represents the root of a DTS AST."""
     
-    def __init__(self):
+    def __init__(self, root: DtsNode):
         """Initialize root."""
-        self.root = DtsNode("/")
+        self.root = root
 
 
 class DtsParser:
@@ -52,29 +52,18 @@ class DtsParser:
         self.labels: Dict[str, DtsNode] = {}
         
     def parse(self, content: str) -> DtsRoot:
-        """Parse DTS content.
-        
-        Args:
-            content: DTS content string
-            
-        Returns:
-            DtsRoot instance
-        """
-        # Remove comments
-        content = re.sub(r'//.*$', '', content, flags=re.MULTILINE)
-        content = re.sub(r'#.*$', '', content, flags=re.MULTILINE)
-        
-        # Tokenize
+        """Parse DTS content into an AST."""
         self.tokens = self._tokenize(content)
         self.pos = 0
         
-        # Create root
-        root = DtsRoot()
-        
         # Parse root node
-        self._parse_node_body(root.root)
+        if not self.tokens or self.tokens[0] != "/":
+            raise ValueError("Expected root node")
+            
+        root = DtsNode("/")
+        self._parse_node_body(root)
         
-        return root
+        return DtsRoot(root)
         
     def _tokenize(self, content: str) -> List[str]:
         """Tokenize DTS content.
@@ -199,11 +188,12 @@ class DtsParser:
                         
                 node.properties[name] = prop
                 
-                # Skip semicolon
-                if (self.pos < len(self.tokens) 
-                        and self.tokens[self.pos] == ';'):
-                    self.pos += 1
-                    
+                # Require semicolon after property value
+                if (self.pos >= len(self.tokens) 
+                        or self.tokens[self.pos] != ';'):
+                    raise ValueError("Expected ';' after property value")
+                self.pos += 1
+                
             # Handle child nodes
             elif (self.pos + 1 < len(self.tokens) 
                     and self.tokens[self.pos + 1] == '{'):
@@ -215,4 +205,7 @@ class DtsParser:
                 self._parse_node_body(child)
                 
             else:
+                # Node without opening brace
+                if token != ';':
+                    raise ValueError("Expected '{' after node name")
                 self.pos += 1 
