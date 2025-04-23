@@ -9,6 +9,8 @@ from ..models import (
     Behavior,
     HoldTap,
     MacroBehavior,
+    Combo,
+    ConditionalLayer
 )
 
 
@@ -19,6 +21,8 @@ class KeymapExtractor:
         """Initialize the extractor."""
         self.behaviors: Dict[str, Behavior] = {}
         self.layers: Dict[str, Layer] = {}
+        self.combos: List[Combo] = []
+        self.conditional_layers: List[ConditionalLayer] = []
 
     def extract(self, ast: DtsRoot) -> KeymapConfig:
         """Extract keymap configuration from DTS AST.
@@ -32,13 +36,21 @@ class KeymapExtractor:
         # First extract behaviors
         self._extract_behaviors(ast.root)
         
-        # Then extract layers
+        # Then extract combos
+        self._extract_combos(ast.root)
+        
+        # Then extract conditional layers
+        self._extract_conditional_layers(ast.root)
+        
+        # Finally extract layers
         self._extract_layers(ast.root)
         
         # Create and return keymap config
         return KeymapConfig(
             layers=list(self.layers.values()),
-            behaviors=list(self.behaviors.values())
+            behaviors=list(self.behaviors.values()),
+            combos=self.combos,
+            conditional_layers=self.conditional_layers
         )
 
     def _extract_behaviors(self, node: DtsNode) -> None:
@@ -69,6 +81,69 @@ class KeymapExtractor:
         for child in node.children.values():
             self._extract_behaviors(child)
 
+    def _extract_combos(self, node: DtsNode) -> None:
+        """Extract combo definitions from node.
+        
+        Args:
+            node: Current node to process
+        """
+        if node.name == "combos":
+            for name, child in node.children.items():
+                if name != "compatible":
+                    timeout = child.properties.get("timeout-ms")
+                    positions = child.properties.get("key-positions")
+                    bindings = child.properties.get("bindings")
+                    
+                    if timeout and positions and bindings:
+                        timeout_ms = int(timeout.value[1:-1])
+                        key_positions = [
+                            int(p) for p in positions.value[1:-1].split()
+                        ]
+                        binding = self._parse_bindings(bindings.value)[0]
+                        
+                        combo = Combo(
+                            name=name,
+                            timeout_ms=timeout_ms,
+                            key_positions=key_positions,
+                            binding=binding
+                        )
+                        self.combos.append(combo)
+                        print(f"Added combo {name}: {combo}")
+        
+        # Recursively process children
+        for child in node.children.values():
+            self._extract_combos(child)
+
+    def _extract_conditional_layers(self, node: DtsNode) -> None:
+        """Extract conditional layer definitions from node.
+        
+        Args:
+            node: Current node to process
+        """
+        if node.name == "conditional_layers":
+            for name, child in node.children.items():
+                if name != "compatible":
+                    if_layers = child.properties.get("if-layers")
+                    then_layer = child.properties.get("then-layer")
+                    
+                    if if_layers and then_layer:
+                        if_layer_nums = [
+                            int(layer_num) for layer_num in if_layers.value[1:-1].split()
+                        ]
+                        then_layer_num = int(then_layer.value[1:-1])
+                        
+                        cond_layer = ConditionalLayer(
+                            name=name,
+                            if_layers=if_layer_nums,
+                            then_layer=then_layer_num
+                        )
+                        self.conditional_layers.append(cond_layer)
+                        print(f"Added conditional layer {name}: {cond_layer}")
+        
+        # Recursively process children
+        for child in node.children.values():
+            self._extract_conditional_layers(child)
+
     def _create_behavior(self, node: DtsNode) -> Optional[Behavior]:
         """Create a behavior instance from a node.
         
@@ -87,6 +162,10 @@ class KeymapExtractor:
             return self._create_hold_tap_behavior(node)
         elif compatible.value == "zmk,behavior-macro":
             return self._create_macro_behavior(node)
+        elif compatible.value == "zmk,behavior-unicode":
+            return self._create_unicode_behavior(node)
+        elif compatible.value == "zmk,behavior-unicode-string":
+            return self._create_unicode_string_behavior(node)
         # Add other behavior types as needed
             
         return None
@@ -137,6 +216,36 @@ class KeymapExtractor:
         return MacroBehavior(
             name="",  # Will be set by caller
             bindings=self._parse_bindings(bindings.value)
+        )
+
+    def _create_unicode_behavior(self, node: DtsNode) -> Optional[Behavior]:
+        """Create a unicode behavior instance.
+        
+        Args:
+            node: Node containing unicode behavior definition
+            
+        Returns:
+            Behavior instance or None if invalid
+        """
+        return Behavior(
+            name="",  # Will be set by caller
+            type="unicode"
+        )
+
+    def _create_unicode_string_behavior(
+        self, node: DtsNode
+    ) -> Optional[Behavior]:
+        """Create a unicode string behavior instance.
+        
+        Args:
+            node: Node containing unicode string behavior definition
+            
+        Returns:
+            Behavior instance or None if invalid
+        """
+        return Behavior(
+            name="",  # Will be set by caller
+            type="unicode_string"
         )
 
     def _extract_layers(self, node: DtsNode) -> None:
@@ -202,7 +311,10 @@ class KeymapExtractor:
                 continue
                 
             # Validate binding format
-            valid_prefixes = ["kp", "mt", "lt", "macro"]
+            valid_prefixes = [
+                "kp", "mt", "lt", "macro", "unicode", "uc_string",
+                "reset", "bootloader", "none"
+            ]
             if not any(
                 binding.startswith(prefix) 
                 for prefix in valid_prefixes
@@ -233,7 +345,10 @@ class KeymapExtractor:
         params = parts[1:]
         
         # Validate behavior name
-        valid_prefixes = ["kp", "mt", "lt", "macro"]
+        valid_prefixes = [
+            "kp", "mt", "lt", "macro", "unicode", "uc_string",
+            "reset", "bootloader", "none"
+        ]
         if not any(
             behavior_name.startswith(prefix) 
             for prefix in valid_prefixes
@@ -244,7 +359,7 @@ class KeymapExtractor:
         behavior = self.behaviors.get(behavior_name)
         
         # Handle built-in behaviors
-        if behavior_name == "kp":
-            behavior = None  # Key press is built-in
+        if behavior_name in ["kp", "reset", "bootloader", "none"]:
+            behavior = None  # These are built-in
             
         return Binding(behavior=behavior, params=params) 
