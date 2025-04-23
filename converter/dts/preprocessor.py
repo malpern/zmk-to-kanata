@@ -8,13 +8,52 @@ import platform
 import subprocess
 import re
 import tempfile
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Dict
 
 
 class PreprocessorError(Exception):
     """Exception raised when preprocessing fails."""
 
-    pass
+    def __init__(
+        self,
+        message: str,
+        file: Optional[str] = None,
+        line: Optional[int] = None,
+        column: Optional[int] = None,
+        context: Optional[str] = None,
+        help_text: Optional[str] = None,
+    ):
+        """Initialize the error with detailed information.
+
+        Args:
+            message: The error message
+            file: The file where the error occurred
+            line: The line number where the error occurred
+            column: The column number where the error occurred
+            context: Additional context about the error
+            help_text: Helpful text for fixing the error
+        """
+        self.file = file
+        self.line = line
+        self.column = column
+        self.context = context
+        self.help_text = help_text
+
+        # Build the full error message
+        full_message = message
+        if file:
+            full_message = f"{file}: {full_message}"
+        if line:
+            full_message = f"{full_message} at line {line}"
+            if column:
+                full_message = f"{full_message}, column {column}"
+
+        if context:
+            full_message = f"{full_message}\n\n{context}"
+        if help_text:
+            full_message = f"{full_message}\n\nHelp: {help_text}"
+
+        super().__init__(full_message)
 
 
 class DtsPreprocessor:
@@ -176,7 +215,7 @@ class DtsPreprocessor:
 
         Raises:
             FileNotFoundError: If the input file does not exist
-            PreprocessorError: If the preprocessor fails
+            PreprocessorError: If the preprocessor fails with detailed context
         """
         if not os.path.exists(input_file):
             raise FileNotFoundError(f"Input file does not exist: {input_file}")
@@ -185,12 +224,27 @@ class DtsPreprocessor:
         input_file = os.path.abspath(input_file)
         input_dir = os.path.dirname(input_file)
 
-        # Read input file to get matrix size and preserve DTS directives
-        with open(input_file, "r") as f:
-            content = f.read()
+        try:
+            # Read input file to get matrix size and preserve DTS directives
+            with open(input_file, "r") as f:
+                content = f.read()
+        except Exception as e:
+            raise PreprocessorError(
+                f"Failed to read input file: {str(e)}",
+                file=input_file,
+                help_text="Ensure the file exists and has proper read permissions."
+            )
 
-        # Preserve DTS directives
-        content, directives = self._preserve_dts_directives(content)
+        try:
+            # Preserve DTS directives
+            content, directives = self._preserve_dts_directives(content)
+        except Exception as e:
+            raise PreprocessorError(
+                "Failed to process DTS directives",
+                file=input_file,
+                context=str(e),
+                help_text="Check for malformed DTS directives in the input file."
+            )
 
         # Get matrix size if available
         matrix_size = self._get_matrix_size(content)
@@ -201,71 +255,103 @@ class DtsPreprocessor:
             if matrix_size:
                 rows, cols = matrix_size
                 matrix_header = self._create_matrix_transform_header(rows, cols)
+                self.include_paths.insert(0, os.path.dirname(matrix_header))
 
-            # Build preprocessor command
-            if platform.system() == "Windows":
-                cmd = [self.cpp_path, "/E", "/C"]
-                # Add input directory first
-                cmd.extend(["/I", input_dir])
-                for path in self.include_paths:
-                    cmd.extend(["/I", os.path.abspath(path)])
-                cmd.append(input_file)
-            else:
-                cmd = [
-                    self.cpp_path,
-                    "-E",  # Preprocess only
-                    "-x",
-                    "c",  # Treat input as C source
-                    "-P",  # Don't include line markers
-                    "-D__DTS__",
-                ]
-                # Add input directory first
-                cmd.extend(["-I", input_dir])
-                for path in self.include_paths:
-                    cmd.extend(["-I", os.path.abspath(path)])
-                if matrix_header:
-                    cmd.extend(["-include", matrix_header])
-                cmd.append(input_file)
+            # Build cpp command
+            cpp_args = [
+                self.cpp_path,
+                "-E",  # Preprocess only
+                "-x", "c",  # Treat as C source
+                "-P",  # No line markers
+            ]
 
-            # Write preserved content to temporary file
-            with tempfile.NamedTemporaryFile(
-                mode="w", suffix=".dts", delete=False
-            ) as f:
-                f.write(content)
-                temp_input = f.name
+            # Add include paths
+            for path in self.include_paths:
+                cpp_args.extend(["-I", path])
 
-            try:
-                # Run preprocessor
-                result = subprocess.run(
-                    cmd,
-                    capture_output=True,
-                    text=True,
-                    check=False,
-                )
+            # Add input file
+            cpp_args.append(input_file)
 
-                if result.returncode != 0:
+            # Run preprocessor
+            result = subprocess.run(
+                cpp_args,
+                capture_output=True,
+                text=True,
+                cwd=input_dir
+            )
+
+            if result.returncode != 0:
+                # Parse error message for line/column info
+                error_pattern = r"([^:]+):(\d+):(\d+):\s*(.+)"
+                match = re.search(error_pattern, result.stderr)
+                
+                if match:
+                    err_file, line, col, msg = match.groups()
+                    # Get the problematic line for context
+                    with open(err_file, 'r') as f:
+                        lines = f.readlines()
+                        context_line = lines[int(line) - 1].strip()
+                        pointer = ' ' * (int(col) - 1) + '^'
+                        context = f"  |\n{line}| {context_line}\n  | {pointer}"
+                    
                     raise PreprocessorError(
-                        f"Preprocessor failed with code {result.returncode}:\n"
-                        f"Command: {' '.join(cmd)}\n"
-                        f"Error: {result.stderr}"
+                        msg,
+                        file=err_file,
+                        line=int(line),
+                        column=int(col),
+                        context=context,
+                        help_text=self._get_help_text(msg)
+                    )
+                else:
+                    raise PreprocessorError(
+                        "Preprocessing failed",
+                        file=input_file,
+                        context=result.stderr,
+                        help_text="Check the error message above for details."
                     )
 
-                # Process output
-                output = result.stdout
+            # Process the output
+            output = result.stdout
 
-                # Restore RC macros
-                output = self._restore_rc_macros(output)
+            # Restore RC macros and DTS directives
+            output = self._restore_rc_macros(output)
+            output = self._restore_dts_directives(output, directives)
 
-                # Restore DTS directives
-                output = self._restore_dts_directives(output, directives)
-
-                return output
-
-            finally:
-                # Clean up temporary files
-                os.unlink(temp_input)
+            return output
 
         finally:
-            # Clean up matrix header if created
+            # Clean up temporary matrix header
             if matrix_header and os.path.exists(matrix_header):
                 os.unlink(matrix_header)
+
+    def _get_help_text(self, error_msg: str) -> str:
+        """Get helpful text based on the error message.
+
+        Args:
+            error_msg: The error message from the preprocessor
+
+        Returns:
+            A helpful message for fixing the error
+        """
+        help_texts = {
+            "file not found": "Make sure the file exists and the path is correct.",
+            "'dt-bindings/zmk/keys.h' file not found": (
+                "The ZMK header files are missing. Check that the include paths "
+                "are set correctly and the required headers are present."
+            ),
+            "unterminated conditional directive": (
+                "There's an unclosed #if/#ifdef/#ifndef directive. "
+                "Make sure all conditional directives are properly closed with #endif."
+            ),
+            "expected expression": (
+                "The preprocessor expected a valid C expression. "
+                "Check for syntax errors in macro definitions or conditional directives."
+            ),
+        }
+
+        # Find the most relevant help text
+        for key, text in help_texts.items():
+            if key.lower() in error_msg.lower():
+                return text
+
+        return "Check the syntax and ensure all required files are present."
