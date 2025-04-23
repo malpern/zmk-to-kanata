@@ -67,9 +67,17 @@
    - ⚠️ Minor linter issues remain
 
 8. **HoldTap Transformer (converter/transformer/holdtap_transformer.py)**
-   - 🟡 Structure exists
-   - ⚠️ Needs review/update to align with `KanataTransformer` expectations (return `alias_def, alias_name`, handle `mt`/`lt` naming)
-   - ⚠️ Tests likely need significant updates
+   - ✅ Core structure implemented
+   - ✅ Comprehensive modifier mapping (`LSHIFT`, `RCTRL`, etc.)
+   - ✅ Support for different hold-tap flavors (hold-preferred, balanced, tap-preferred, etc.)
+   - ✅ Handles both layer-tap and mod-tap configurations
+   - ✅ Advanced features implemented:
+     - Hold trigger key positions
+     - Retro tap support
+     - Hold trigger on release
+   - ✅ Proper timeout handling for tap and hold actions
+   - ⚠️ May need API alignment with `KanataTransformer` expectations
+   - ⚠️ Tests need updating to match new implementation
 
 9. **Main Script (converter/main.py)**
    - ✅ Updated to use `DtsPreprocessor`, `DtsParser`, `KeymapExtractor`, `KanataTransformer`
