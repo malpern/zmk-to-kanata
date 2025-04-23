@@ -203,8 +203,10 @@ class KeymapExtractor:
                 
             # Validate binding format
             valid_prefixes = ["kp", "mt", "lt", "macro"]
-            if not any(binding.startswith(prefix) 
-                      for prefix in valid_prefixes):
+            if not any(
+                binding.startswith(prefix) 
+                for prefix in valid_prefixes
+            ):
                 raise ValueError(f"Invalid binding format: {binding}")
                 
             bindings.append(self._create_binding(binding))
@@ -225,15 +227,17 @@ class KeymapExtractor:
         """
         parts = value.split()
         if not parts:
-            raise ValueError(f"Invalid binding format: empty binding")
+            raise ValueError("Invalid binding format: empty binding")
             
         behavior_name = parts[0]
         params = parts[1:]
         
         # Validate behavior name
         valid_prefixes = ["kp", "mt", "lt", "macro"]
-        if not any(behavior_name.startswith(prefix) 
-                  for prefix in valid_prefixes):
+        if not any(
+            behavior_name.startswith(prefix) 
+            for prefix in valid_prefixes
+        ):
             raise ValueError(f"Invalid binding format: {value}")
         
         # Look up behavior

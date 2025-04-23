@@ -1,10 +1,9 @@
 """End-to-end tests for the DTS-based ZMK parser using real keymap files."""
 
 import pytest
-from pathlib import Path
 from converter.dts.parser import DtsParser
 from converter.dts.extractor import KeymapExtractor
-from converter.models import KeymapConfig, Layer, Binding, Behavior
+from converter.models import KeymapConfig, Binding, Behavior
 
 
 def test_simple_keymap():
@@ -36,7 +35,10 @@ def test_simple_keymap():
     assert len(config.layers) == 1
     
     # Verify default layer
-    default_layer = next(layer for layer in config.layers if layer.name == "default_layer")
+    default_layer = next(
+        layer for layer in config.layers 
+        if layer.name == "default_layer"
+    )
     assert len(default_layer.bindings) == 6
     
     # Verify bindings
@@ -107,7 +109,10 @@ def test_complex_keymap_with_behaviors():
     assert len(macro.bindings) == 2
     
     # Verify default layer
-    default_layer = next(layer for layer in config.layers if layer.name == "default_layer")
+    default_layer = next(
+        layer for layer in config.layers 
+        if layer.name == "default_layer"
+    )
     assert len(default_layer.bindings) == 6
     
     # Check specific bindings
@@ -121,7 +126,10 @@ def test_complex_keymap_with_behaviors():
     assert not default_layer.bindings[2].params
     
     # Verify lower layer
-    lower_layer = next(layer for layer in config.layers if layer.name == "lower_layer")
+    lower_layer = next(
+        layer for layer in config.layers 
+        if layer.name == "lower_layer"
+    )
     assert len(lower_layer.bindings) == 6
     for binding in lower_layer.bindings:
         assert binding.behavior is None  # kp is built-in
@@ -158,5 +166,8 @@ def test_error_handling():
     };
     """)
     extractor = KeymapExtractor()
-    with pytest.raises(ValueError, match="Invalid binding format: invalid_binding"):
+    with pytest.raises(
+        ValueError, 
+        match="Invalid binding format: invalid_binding"
+    ):
         extractor.extract(ast) 
