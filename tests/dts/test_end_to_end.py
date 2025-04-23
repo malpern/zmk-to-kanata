@@ -35,18 +35,21 @@ def test_simple_keymap():
     assert len(config.layers) == 1
     
     # Verify default layer
-    default_layer = next(
-        layer for layer in config.layers 
-        if layer.name == "default_layer"
+    default_layer_node = next(
+        layer_node for layer_node in config.layers 
+        if layer_node.name == "default_layer"
     )
-    assert len(default_layer.bindings) == 6
+    assert len(default_layer_node.bindings) == 6
     
     # Verify bindings
-    expected_keys = ["A", "B", "C", "D", "E", "F"]
-    for binding, expected_key in zip(default_layer.bindings, expected_keys):
-        assert isinstance(binding, Binding)
-        assert binding.behavior is None  # kp is built-in
-        assert binding.params == [expected_key]
+    expected_key_codes = ["A", "B", "C", "D", "E", "F"]
+    for binding_node, expected_key_code in zip(
+        default_layer_node.bindings, 
+        expected_key_codes
+    ):
+        assert isinstance(binding_node, Binding)
+        assert binding_node.behavior is None  # kp is built-in
+        assert binding_node.params == [expected_key_code]
 
 
 def test_complex_keymap_with_behaviors():
@@ -119,34 +122,34 @@ def test_complex_keymap_with_behaviors():
     assert len(macro.bindings) == 2
     
     # Verify default layer
-    default_layer = next(
-        layer for layer in config.layers 
-        if layer.name == "default_layer"
+    default_layer_node = next(
+        layer_node for layer_node in config.layers 
+        if layer_node.name == "default_layer"
     )
-    assert len(default_layer.bindings) == 6
+    assert len(default_layer_node.bindings) == 6
     
     # Check specific bindings
-    assert default_layer.bindings[0].behavior == mt
-    assert default_layer.bindings[0].params == ["LSHIFT", "A"]
+    assert default_layer_node.bindings[0].behavior == mt
+    assert default_layer_node.bindings[0].params == ["LSHIFT", "A"]
     
-    assert default_layer.bindings[1].behavior is None  # kp is built-in
-    assert default_layer.bindings[1].params == ["B"]
+    assert default_layer_node.bindings[1].behavior is None  # kp is built-in
+    assert default_layer_node.bindings[1].params == ["B"]
     
-    assert default_layer.bindings[2].behavior == macro
-    assert not default_layer.bindings[2].params
+    assert default_layer_node.bindings[2].behavior == macro
+    assert not default_layer_node.bindings[2].params
     
-    assert default_layer.bindings[4].behavior == lt
-    assert default_layer.bindings[4].params == ["1", "E"]
+    assert default_layer_node.bindings[4].behavior == lt
+    assert default_layer_node.bindings[4].params == ["1", "E"]
     
     # Verify lower layer
-    lower_layer = next(
-        layer for layer in config.layers 
-        if layer.name == "lower_layer"
+    lower_layer_node = next(
+        layer_node for layer_node in config.layers 
+        if layer_node.name == "lower_layer"
     )
-    assert len(lower_layer.bindings) == 6
-    for binding in lower_layer.bindings:
-        assert binding.behavior is None  # kp is built-in
-        assert binding.params[0].startswith("N")
+    assert len(lower_layer_node.bindings) == 6
+    for binding_node in lower_layer_node.bindings:
+        assert binding_node.behavior is None  # kp is built-in
+        assert binding_node.params[0].startswith("N")
 
 
 def test_keymap_with_unicode():
@@ -199,14 +202,14 @@ def test_keymap_with_unicode():
     assert isinstance(uc_string, Behavior)
     
     # Verify bindings
-    layer = config.layers[0]
-    assert len(layer.bindings) == 6
+    layer_node = config.layers[0]
+    assert len(layer_node.bindings) == 6
     
-    assert layer.bindings[0].behavior == unicode
-    assert layer.bindings[0].params == ["U0001F600"]
+    assert layer_node.bindings[0].behavior == unicode
+    assert layer_node.bindings[0].params == ["U0001F600"]
     
-    assert layer.bindings[1].behavior == uc_string
-    assert layer.bindings[1].params == ["smile"]
+    assert layer_node.bindings[1].behavior == uc_string
+    assert layer_node.bindings[1].params == ["smile"]
 
 
 def test_error_handling():
@@ -348,7 +351,7 @@ def test_keymap_with_conditional_layers():
     
     # Verify all layers exist
     assert len(config.layers) == 4
-    layer_names = [layer.name for layer in config.layers]
+    layer_names = [layer_node.name for layer_node in config.layers]
     assert "default_layer" in layer_names
     assert "lower_layer" in layer_names
     assert "raise_layer" in layer_names
