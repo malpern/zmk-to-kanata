@@ -142,8 +142,8 @@ class DtsParser:
                 continue
                 
             # Handle labels
-            if (self.pos + 1 < len(self.tokens) and 
-                self.tokens[self.pos + 1] == ':'):
+            if (self.pos + 1 < len(self.tokens) 
+                    and self.tokens[self.pos + 1] == ':'):
                 label = token
                 self.pos += 2  # Skip label and colon
                 if self.pos >= len(self.tokens):
@@ -158,8 +158,8 @@ class DtsParser:
                 
                 # Skip to opening brace
                 self.pos += 1
-                if (self.pos >= len(self.tokens) or 
-                    self.tokens[self.pos] != '{'):
+                if (self.pos >= len(self.tokens) 
+                        or self.tokens[self.pos] != '{'):
                     raise ValueError("Expected '{' after labeled node")
                 self.pos += 1
                 
@@ -168,8 +168,8 @@ class DtsParser:
                 continue
                 
             # Handle property assignments
-            if (self.pos + 1 < len(self.tokens) and 
-                self.tokens[self.pos + 1] == '='):
+            if (self.pos + 1 < len(self.tokens) 
+                    and self.tokens[self.pos + 1] == '='):
                 name = token
                 self.pos += 2  # Skip name and =
                 if self.pos >= len(self.tokens):
@@ -200,13 +200,13 @@ class DtsParser:
                 node.properties[name] = prop
                 
                 # Skip semicolon
-                if (self.pos < len(self.tokens) and 
-                    self.tokens[self.pos] == ';'):
+                if (self.pos < len(self.tokens) 
+                        and self.tokens[self.pos] == ';'):
                     self.pos += 1
                     
             # Handle child nodes
-            elif (self.pos + 1 < len(self.tokens) and 
-                  self.tokens[self.pos + 1] == '{'):
+            elif (self.pos + 1 < len(self.tokens) 
+                    and self.tokens[self.pos + 1] == '{'):
                 name = token
                 child = DtsNode(name)
                 node.children[name] = child
