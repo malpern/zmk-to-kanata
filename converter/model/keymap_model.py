@@ -8,13 +8,11 @@ all the model classes and conversion logic for the keymap converter.
 """
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, ForwardRef, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, List, Optional, Tuple, Union
 
 if TYPE_CHECKING:
     # These imports are only used for type checking
-    from converter.behaviors.macro import MacroBinding
-    from converter.behaviors.sticky_key import StickyKeyBinding
-    from converter.behaviors.unicode import UnicodeBinding
+    pass
 
 
 class Binding:
@@ -89,6 +87,19 @@ class HoldTapBinding:
     # Whether to allow tap on release after hold timeout
     retro_tap: bool = False
 
+    def __eq__(self, other) -> bool:
+        """Compare two HoldTapBinding instances for equality."""
+        if not isinstance(other, HoldTapBinding):
+            return False
+        return (
+            self.behavior_name == other.behavior_name
+            and self.hold_key == other.hold_key
+            and self.tap_key == other.tap_key
+            and self.hold_trigger_key_positions == other.hold_trigger_key_positions
+            and self.hold_trigger_on_release == other.hold_trigger_on_release
+            and self.retro_tap == other.retro_tap
+        )
+
     def to_kanata(self) -> str:
         """Convert to Kanata format."""
         # Convert hold key to short form
@@ -115,7 +126,28 @@ class HoldTapBinding:
         if tap_key.startswith("n") and tap_key[1:].isdigit():
             tap_key = tap_key[1:]  # Remove 'n' prefix for number keys
 
-        return f"tap-hold {hold_key} {tap_key}"
+        # Determine tap-hold variant based on binding properties
+        tap_hold_type = "tap-hold"  # Default to basic tap-hold
+
+        if self.hold_trigger_key_positions:
+            tap_hold_type = "tap-hold-release-keys"
+        elif self.hold_trigger_on_release:
+            tap_hold_type = "tap-hold-release"
+        elif self.retro_tap:
+            tap_hold_type = "tap-hold-press-timeout"
+
+        # Build the tap-hold configuration
+        config = f"({tap_hold_type} 200 200 {tap_key} {hold_key}"
+
+        # Add extra parameters for advanced features
+        if tap_hold_type == "tap-hold-release-keys":
+            positions = " ".join(str(pos) for pos in self.hold_trigger_key_positions)
+            config += f" ({positions})"
+        elif tap_hold_type == "tap-hold-press-timeout" and self.retro_tap:
+            config += f" {tap_key}"
+
+        config += ")"
+        return config
 
 
 @dataclass

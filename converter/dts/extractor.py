@@ -1,7 +1,7 @@
 """AST extractor for mapping DTS nodes to keymap model."""
 
-from typing import Dict, List, Optional
-from .ast import DtsNode, DtsRoot
+from typing import Dict, List, Optional, Any
+from .ast import DtsNode, DtsRoot, DtsProperty
 from ..models import (
     KeymapConfig,
     Layer,
@@ -10,7 +10,7 @@ from ..models import (
     HoldTap,
     MacroBehavior,
     Combo,
-    ConditionalLayer
+    ConditionalLayer,
 )
 
 
@@ -23,343 +23,418 @@ class KeymapExtractor:
         self.layers: Dict[str, Layer] = {}
         self.combos: List[Combo] = []
         self.conditional_layers: List[ConditionalLayer] = []
+        # Store nodes for second pass behavior processing
+        self._behavior_nodes_to_process: List[tuple[str, DtsNode]] = []
 
     def extract(self, ast: DtsRoot) -> KeymapConfig:
         """Extract keymap configuration from DTS AST.
-        
+
         Args:
             ast: The DTS AST root node
-            
+
         Returns:
             KeymapConfig instance with extracted information
         """
-        # First extract behaviors
-        self._extract_behaviors(ast.root)
-        
-        # Then extract combos
-        self._extract_combos(ast.root)
-        
-        # Then extract conditional layers
-        self._extract_conditional_layers(ast.root)
-        
-        # Finally extract layers
-        self._extract_layers(ast.root)
-        
+        # Reset state for potentially multiple calls
+        self.behaviors = {}
+        self.layers = {}
+        self.combos = []
+        self.conditional_layers = []
+        self._behavior_nodes_to_process = []
+
+        # Find top-level nodes first
+        root_node = ast.root.children.get("/")
+        if not root_node:
+            print("Warning: No root node '/' found in AST.")
+            return KeymapConfig(layers=[], behaviors={})
+
+        behaviors_node = root_node.children.get("behaviors")
+        combos_node = root_node.children.get("combos")
+        conditional_layers_node = root_node.children.get("conditional_layers")
+        keymap_node = root_node.children.get("keymap")
+
+        # Pass 1: Extract behaviors, combos, conditional layers
+        # (deferring nested parsing for behaviors)
+        if behaviors_node:
+            self._extract_behaviors_pass1(behaviors_node)
+
+        if combos_node:
+            # Combos might reference behaviors, but definition is simple.
+            # Parse them after pass 1.
+            self._extract_combos(combos_node)
+
+        if conditional_layers_node:
+            # Simple definitions, parse after pass 1.
+            self._extract_conditional_layers(conditional_layers_node)
+
+        # Pass 2: Process deferred behavior details (like macro bindings)
+        self._extract_behaviors_pass2()
+
+        # Pass 3: Extract layers (which can now reference fully defined behaviors)
+        if keymap_node:
+            self._extract_layers(keymap_node)
+        else:
+            print("Warning: No 'keymap' node found under root '/'.")
+
         # Create and return keymap config
         return KeymapConfig(
             layers=list(self.layers.values()),
-            behaviors=list(self.behaviors.values()),
+            behaviors=self.behaviors,  # Keep as dictionary
             combos=self.combos,
-            conditional_layers=self.conditional_layers
+            conditional_layers=self.conditional_layers,
         )
 
-    def _extract_behaviors(self, node: DtsNode) -> None:
-        """Extract behavior definitions from node.
-        
-        Args:
-            node: Current node to process
-        """
-        if node.name == "behaviors":
-            for name, child in node.children.items():
-                if "compatible" in child.properties:
-                    behavior = self._create_behavior(child)
-                    if behavior:
-                        # Find the label for this node
-                        for label, node_name in child.labels.items():
-                            if node_name == child.name:
-                                behavior.name = label
-                                self.behaviors[label] = behavior
-                                print(f"Added behavior {label}: {behavior}")
-                                break
-                        # If no label found, use the node name
-                        if not behavior.name:
-                            behavior.name = name
-                            self.behaviors[name] = behavior
-                            print(f"Added behavior {name}: {behavior}")
-        
-        # Recursively process children
-        for child in node.children.values():
-            self._extract_behaviors(child)
+    def _extract_behaviors_pass1(self, behaviors_node: DtsNode) -> None:
+        """Pass 1: Create behavior objects, register labels, defer nested parsing."""
+        for name, child_node in behaviors_node.children.items():
+            if "compatible" in child_node.properties:
+                compatible_prop = child_node.properties["compatible"]
+                if compatible_prop.type != "string":
+                    continue
 
-    def _extract_combos(self, node: DtsNode) -> None:
-        """Extract combo definitions from node.
-        
-        Args:
-            node: Current node to process
-        """
-        if node.name == "combos":
-            for name, child in node.children.items():
-                if name != "compatible":
-                    timeout = child.properties.get("timeout-ms")
-                    positions = child.properties.get("key-positions")
-                    bindings = child.properties.get("bindings")
-                    
-                    if timeout and positions and bindings:
-                        timeout_ms = int(timeout.value[1:-1])
-                        key_positions = [
-                            int(p) for p in positions.value[1:-1].split()
-                        ]
-                        binding = self._parse_bindings(bindings.value)[0]
-                        
-                        combo = Combo(
-                            name=name,
-                            timeout_ms=timeout_ms,
-                            key_positions=key_positions,
-                            binding=binding
+                compatible = compatible_prop.value
+                behavior_object = None
+                behavior_type = "unknown"
+
+                # Determine behavior type and create basic object
+                if compatible == "zmk,behavior-hold-tap":
+                    behavior_object = self._create_hold_tap_behavior(child_node)
+                    behavior_type = "hold-tap"
+                elif compatible == "zmk,behavior-macro":
+                    # Defer binding parsing
+                    behavior_object = MacroBehavior(name="", bindings=[])
+                    behavior_type = "macro"
+                    # Store node for pass 2
+                    label_key = next(iter(child_node.labels.keys()), name)
+                    self._behavior_nodes_to_process.append((label_key, child_node))
+                elif compatible == "zmk,behavior-unicode":
+                    behavior_object = Behavior(name="", type="unicode")
+                    behavior_type = "unicode"
+                elif compatible == "zmk,behavior-unicode-string":
+                    behavior_object = Behavior(name="", type="unicode_string")
+                    behavior_type = "unicode_string"
+                # Add other behavior types here...
+
+                if behavior_object:
+                    # Use the first label found as the primary key
+                    label_key = next(iter(child_node.labels.keys()), None)
+                    behavior_key = label_key if label_key else name
+                    behavior_object.name = behavior_key  # Assign name
+                    behavior_object.type = behavior_type  # Ensure type is set
+
+                    if behavior_key in self.behaviors:
+                        print(
+                            "Warning: Duplicate behavior key "
+                            f"{behavior_key}. Overwriting."
                         )
-                        self.combos.append(combo)
-                        print(f"Added combo {name}: {combo}")
-        
-        # Recursively process children
-        for child in node.children.values():
-            self._extract_combos(child)
+                    self.behaviors[behavior_key] = behavior_object
 
-    def _extract_conditional_layers(self, node: DtsNode) -> None:
-        """Extract conditional layer definitions from node.
-        
-        Args:
-            node: Current node to process
-        """
-        if node.name == "conditional_layers":
-            for name, child in node.children.items():
-                if name != "compatible":
-                    if_layers = child.properties.get("if-layers")
-                    then_layer = child.properties.get("then-layer")
-                    
-                    if if_layers and then_layer:
-                        if_layer_nums = [
-                            int(layer_num) for layer_num in if_layers.value[1:-1].split()
-                        ]
-                        then_layer_num = int(then_layer.value[1:-1])
-                        
-                        cond_layer = ConditionalLayer(
-                            name=name,
-                            if_layers=if_layer_nums,
-                            then_layer=then_layer_num
-                        )
-                        self.conditional_layers.append(cond_layer)
-                        print(f"Added conditional layer {name}: {cond_layer}")
-        
-        # Recursively process children
-        for child in node.children.values():
-            self._extract_conditional_layers(child)
+    def _extract_behaviors_pass2(self) -> None:
+        """Pass 2: Process deferred behavior details, parse macro bindings."""
+        for behavior_key, node in self._behavior_nodes_to_process:
+            behavior = self.behaviors.get(behavior_key)
+            if not behavior:
+                print(
+                    f"Warning: Behavior '{behavior_key}' not found "
+                    "during pass 2 processing."
+                )
+                continue
 
-    def _create_behavior(self, node: DtsNode) -> Optional[Behavior]:
-        """Create a behavior instance from a node.
-        
-        Args:
-            node: Node containing behavior definition
-            
-        Returns:
-            Behavior instance or None if invalid
-        """
-        compatible = node.properties.get("compatible")
-        if not compatible or compatible.type != "string":
-            return None
-            
-        # Create appropriate behavior type based on compatible string
-        if compatible.value == "zmk,behavior-hold-tap":
-            return self._create_hold_tap_behavior(node)
-        elif compatible.value == "zmk,behavior-macro":
-            return self._create_macro_behavior(node)
-        elif compatible.value == "zmk,behavior-unicode":
-            return self._create_unicode_behavior(node)
-        elif compatible.value == "zmk,behavior-unicode-string":
-            return self._create_unicode_string_behavior(node)
-        # Add other behavior types as needed
-            
-        return None
+            if isinstance(behavior, MacroBehavior):
+                bindings_prop = node.properties.get("bindings")
+                if bindings_prop and bindings_prop.type == "array":
+                    # Now parse the bindings, all behaviors should be available
+                    behavior.bindings = self._parse_bindings(bindings_prop.value)
+                else:
+                    print(
+                        f"Warning: Macro behavior '{behavior_key}' missing "
+                        "valid bindings property."
+                    )
+            # Add processing for other behaviors needing a second pass here...
+
+    def _extract_combos(self, combos_node: DtsNode) -> None:
+        """Extract combo definitions from the 'combos' node."""
+        for name, child in combos_node.children.items():
+            # Skip the compatible property if present
+            if name == "compatible" and "compatible" in child.properties:
+                continue
+
+            timeout_prop = child.properties.get("timeout-ms")
+            positions_prop = child.properties.get("key-positions")
+            bindings_prop = child.properties.get("bindings")
+
+            # Ensure properties exist and have expected types
+            if not (
+                timeout_prop
+                and timeout_prop.type in ["integer", "array"]
+                and positions_prop
+                and positions_prop.type == "array"
+                and bindings_prop
+                and bindings_prop.type == "array"
+            ):
+                print(
+                    f"Warning: Skipping combo '{name}' due to "
+                    f"missing/invalid properties."
+                )
+                continue
+
+            # Parse timeout (handle single int or array)
+            timeout_ms = self._parse_integer_prop(timeout_prop)
+            if timeout_ms is None:
+                print(
+                    f"Warning: Skipping combo '{name}' due to " f"invalid timeout-ms."
+                )
+                continue
+
+            # Parse positions
+            try:
+                key_positions = [int(p) for p in positions_prop.value]
+            except (ValueError, TypeError):
+                print(
+                    f"Warning: Skipping combo '{name}' due to "
+                    f"invalid key-positions."
+                )
+                continue
+
+            # Parse bindings (expecting a single binding for the combo)
+            # This parsing happens *after* behaviors pass 1
+            parsed_bindings = self._parse_bindings(bindings_prop.value)
+            if not parsed_bindings:
+                print(f"Warning: Skipping combo '{name}' due to invalid bindings.")
+                continue
+            # Combos expect a single resulting binding
+            if len(parsed_bindings) != 1:
+                print(
+                    f"Warning: Skipping combo '{name}' - expected 1 binding, "
+                    f"found {len(parsed_bindings)}."
+                )
+                continue
+            binding = parsed_bindings[0]
+
+            combo = Combo(
+                name=name,
+                timeout_ms=timeout_ms,
+                key_positions=key_positions,
+                binding=binding,
+            )
+            self.combos.append(combo)
+            print(f"Added combo {name}: {combo}")
+
+    def _extract_conditional_layers(self, cond_layers_node: DtsNode) -> None:
+        """Extract conditional layers from 'conditional_layers' node."""
+        for name, child in cond_layers_node.children.items():
+            # Skip the compatible property if present
+            if name == "compatible" and "compatible" in child.properties:
+                continue
+
+            if_layers_prop = child.properties.get("if-layers")
+            then_layer_prop = child.properties.get("then-layer")
+
+            if not (
+                if_layers_prop
+                and if_layers_prop.type == "array"
+                and then_layer_prop
+                and then_layer_prop.type in ["integer", "array"]
+            ):
+                print(
+                    f"Warning: Skipping conditional layer '{name}' due to "
+                    f"missing/invalid properties."
+                )
+                continue
+
+            # Parse if-layers
+            try:
+                if_layer_nums = [int(layer_num) for layer_num in if_layers_prop.value]
+            except (ValueError, TypeError):
+                print(
+                    f"Warning: Skipping conditional layer '{name}' due to "
+                    f"invalid if-layers."
+                )
+                continue
+
+            # Parse then-layer (handle single int or array)
+            then_layer_num = self._parse_integer_prop(then_layer_prop)
+            if then_layer_num is None:
+                print(
+                    f"Warning: Skipping conditional layer '{name}' due to "
+                    f"invalid then-layer."
+                )
+                continue
+
+            cond_layer = ConditionalLayer(
+                name=name, if_layers=if_layer_nums, then_layer=then_layer_num
+            )
+            self.conditional_layers.append(cond_layer)
+            print(f"Added conditional layer {name}: {cond_layer}")
 
     def _create_hold_tap_behavior(self, node: DtsNode) -> Optional[HoldTap]:
-        """Create a hold-tap behavior instance.
-        
-        Args:
-            node: Node containing hold-tap behavior definition
-            
-        Returns:
-            HoldTap behavior instance or None if invalid
-        """
-        # Extract required properties
-        tapping_term = node.properties.get("tapping-term-ms")
-        if not tapping_term or tapping_term.type != "array":
+        """Create a hold-tap behavior instance (called in Pass 1)."""
+        tapping_term_prop = node.properties.get("tapping-term-ms")
+        if not tapping_term_prop:
+            print(
+                f"Warning: Hold-tap behavior '{node.name}' missing " f"tapping-term-ms."
+            )
             return None
-            
-        # Parse array value
-        value = tapping_term.value[1:-1].strip()  # Strip < and >
-        if not value:
+
+        tapping_term_ms = self._parse_integer_prop(tapping_term_prop)
+        if tapping_term_ms is None:
+            print(
+                f"Warning: Hold-tap behavior '{node.name}' has invalid "
+                f"tapping-term-ms."
+            )
             return None
-        try:
-            tapping_term_ms = int(value)
-        except ValueError:
-            return None
-            
-        return HoldTap(
-            name="",  # Will be set by caller
-            tapping_term_ms=tapping_term_ms,
-            # Add other properties as needed
-        )
 
-    def _create_macro_behavior(self, node: DtsNode) -> Optional[MacroBehavior]:
-        """Create a macro behavior instance.
-        
-        Args:
-            node: Node containing macro behavior definition
-            
-        Returns:
-            MacroBehavior instance or None if invalid
-        """
-        # Extract required properties
-        bindings = node.properties.get("bindings")
-        if not bindings or bindings.type != "array":
-            return None
-            
-        return MacroBehavior(
-            name="",  # Will be set by caller
-            bindings=self._parse_bindings(bindings.value)
-        )
+        # Create object, name/type set by caller (_extract_behaviors_pass1)
+        return HoldTap(name="", tapping_term_ms=tapping_term_ms)
 
-    def _create_unicode_behavior(self, node: DtsNode) -> Optional[Behavior]:
-        """Create a unicode behavior instance.
-        
-        Args:
-            node: Node containing unicode behavior definition
-            
-        Returns:
-            Behavior instance or None if invalid
-        """
-        return Behavior(
-            name="",  # Will be set by caller
-            type="unicode"
-        )
+    def _extract_layers(self, keymap_node: DtsNode) -> None:
+        """Extract layer definitions from the 'keymap' node (Pass 3)."""
+        # Skip compatible property if present
+        for name, child in keymap_node.children.items():
+            if name == "compatible" and "compatible" in child.properties:
+                continue
 
-    def _create_unicode_string_behavior(
-        self, node: DtsNode
-    ) -> Optional[Behavior]:
-        """Create a unicode string behavior instance.
-        
-        Args:
-            node: Node containing unicode string behavior definition
-            
-        Returns:
-            Behavior instance or None if invalid
-        """
-        return Behavior(
-            name="",  # Will be set by caller
-            type="unicode_string"
-        )
-
-    def _extract_layers(self, node: DtsNode) -> None:
-        """Extract layer definitions from node.
-        
-        Args:
-            node: Current node to process
-        """
-        if node.name == "keymap":
-            for name, child in node.children.items():
-                if name.endswith("_layer"):
-                    layer = self._create_layer(child)
-                    if layer:
-                        self.layers[name] = layer
-                        print(f"Added layer {name}: {layer}")
-        
-        # Recursively process children
-        for child in node.children.values():
-            self._extract_layers(child)
+            # Assume direct children of keymap are layers
+            layer = self._create_layer(child)
+            if layer:
+                if layer.name in self.layers:
+                    print(
+                        f"Warning: Duplicate layer name {layer.name}. " f"Overwriting."
+                    )
+                self.layers[layer.name] = layer
+                print(f"Added layer {layer.name}: {layer}")
+            else:
+                print(f"Warning: Could not create layer from node '{name}'.")
 
     def _create_layer(self, node: DtsNode) -> Optional[Layer]:
-        """Create a layer instance from a node.
-        
-        Args:
-            node: Node containing layer definition
-            
-        Returns:
-            Layer instance or None if invalid
-        """
-        bindings = node.properties.get("bindings")
-        if not bindings or bindings.type != "array":
+        """Create a layer instance from a node (called in Pass 3)."""
+        bindings_prop = node.properties.get("bindings")
+        if not bindings_prop or bindings_prop.type != "array":
+            print(f"Warning: Layer '{node.name}' missing valid bindings property.")
             return None
-            
-        return Layer(
-            name=node.name,
-            bindings=self._parse_bindings(bindings.value)
-        )
 
-    def _parse_bindings(self, value: str) -> List[Binding]:
-        """Parse bindings from property value.
-        
-        Args:
-            value: Property value containing bindings
-            
-        Returns:
-            List of Binding instances
-            
-        Raises:
-            ValueError: If binding format is invalid
-        """
-        if not value.startswith('<') or not value.endswith('>'):
-            raise ValueError("Invalid binding format: must be enclosed in < >")
-            
-        # Parse array of bindings
-        content = value[1:-1].strip()
-        if not content:
-            return []
-            
+        # Parse bindings now, all behaviors should be available
+        parsed_bindings = self._parse_bindings(bindings_prop.value)
+        return Layer(name=node.name, bindings=parsed_bindings)
+
+    def _parse_bindings(self, value: List[Any]) -> List[Binding]:
+        """Parse bindings from a list value provided by the parser."""
+        if not isinstance(value, list):
+            raise ValueError("Invalid binding value type, expected list")
+
         bindings = []
-        for binding in content.split('&')[1:]:  # Skip empty first element
-            binding = binding.strip()
-            if not binding:
-                continue
-                
-            # Validate binding format
-            valid_prefixes = [
-                "kp", "mt", "lt", "macro", "unicode", "uc_string",
-                "reset", "bootloader", "none"
-            ]
-            if not any(
-                binding.startswith(prefix) 
-                for prefix in valid_prefixes
-            ):
-                raise ValueError(f"Invalid binding format: {binding}")
-                
-            bindings.append(self._create_binding(binding))
-                
+        i = 0
+        while i < len(value):
+            token = value[i]
+
+            if isinstance(token, str) and token.startswith("&"):
+                behavior_name = token[1:]  # Remove &
+                params = []
+                num_params_expected = 0
+
+                # Determine expected parameters
+                if behavior_name == "kp":
+                    num_params_expected = 1
+                elif behavior_name in self.behaviors:
+                    b_type = getattr(self.behaviors[behavior_name], "type", None)
+                    if b_type == "hold-tap":
+                        num_params_expected = 2
+                    elif b_type == "macro":
+                        # Macros take 0 params directly in binding list
+                        num_params_expected = 0
+                    # Add other known behaviors here...
+
+                # Consume expected parameters
+                param_start_index = i + 1
+                param_end_index = min(i + 1 + num_params_expected, len(value))
+                actual_params_consumed = 0
+                for j in range(param_start_index, param_end_index):
+                    next_token = value[j]
+                    if isinstance(next_token, str) and next_token.startswith("&"):
+                        # Found start of next behavior, stop consuming params
+                        break
+                    params.append(str(next_token))
+                    actual_params_consumed += 1
+
+                # Create binding
+                bindings.append(self._create_binding([behavior_name] + params))
+                i += 1 + actual_params_consumed
+            else:
+                # Treat as simple key binding (e.g., 'A')
+                bindings.append(self._create_binding(str(token)))
+                i += 1
         return bindings
 
-    def _create_binding(self, value: str) -> Binding:
-        """Create a binding instance from string value.
-        
-        Args:
-            value: String representation of binding
-            
-        Returns:
-            Binding instance
-            
-        Raises:
-            ValueError: If binding format is invalid
-        """
-        parts = value.split()
-        if not parts:
-            raise ValueError("Invalid binding format: empty binding")
-            
-        behavior_name = parts[0]
-        params = parts[1:]
-        
-        # Validate behavior name
-        valid_prefixes = [
-            "kp", "mt", "lt", "macro", "unicode", "uc_string",
-            "reset", "bootloader", "none"
-        ]
-        if not any(
-            behavior_name.startswith(prefix) 
-            for prefix in valid_prefixes
-        ):
-            raise ValueError(f"Invalid binding format: {value}")
-        
-        # Look up behavior
-        behavior = self.behaviors.get(behavior_name)
-        
-        # Handle built-in behaviors
-        if behavior_name in ["kp", "reset", "bootloader", "none"]:
-            behavior = None  # These are built-in
-            
-        return Binding(behavior=behavior, params=params) 
+    def _create_binding(self, value: str | List[str]) -> Binding:
+        """Create a binding instance from a value."""
+        if isinstance(value, list):
+            # Handle list format [behavior_name, param1, ...]
+            if not value:
+                raise ValueError("Empty binding list value")
+            behavior_name = value[0]
+            params = value[1:]
+
+            if behavior_name == "kp":
+                if len(params) != 1:
+                    raise ValueError(
+                        f"kp behavior expects 1 parameter, "
+                        f"got {len(params)}: {params}"
+                    )
+                # Ensure params is always a list
+                return Binding(behavior=None, params=[params[0]])  # Wrap param
+
+            # Look up custom behavior - should exist now
+            behavior = self.behaviors.get(behavior_name)
+            if behavior:
+                # TODO: Validate params against behavior definition if needed
+                return Binding(behavior=behavior, params=params)
+            else:
+                # This shouldn't happen if pass logic is correct
+                raise ValueError(
+                    f"Unknown behavior referenced during binding creation: "
+                    f"{behavior_name}"
+                )
+
+        elif isinstance(value, str):
+            # Handle simple binding ('A') or parameterless behavior ('&macro')
+            if value.startswith("&"):
+                behavior_name = value[1:]
+                if behavior_name == "kp":
+                    raise ValueError("&kp behavior requires a parameter")
+                behavior = self.behaviors.get(behavior_name)
+                if behavior:
+                    # Parameterless, use empty list for params
+                    return Binding(behavior=behavior, params=[])
+                else:
+                    raise ValueError(
+                        f"Unknown parameterless behavior reference: {value}"
+                    )
+            else:
+                # Simple value binding, treat param as list
+                return Binding(behavior=None, params=[value])  # Wrap param
+        else:
+            raise ValueError(f"Invalid type for _create_binding: {type(value)}")
+
+    def _parse_integer_prop(self, prop: DtsProperty) -> Optional[int]:
+        """Safely parse an integer value from a property."""
+        # print(f"DEBUG _parse_integer_prop: Received prop type='{prop.type}', value={repr(prop.value)}") # DEBUG
+        # Handle direct integer/scalar types from parser simplification
+        if prop.type in ["integer", "scalar"]:
+            try:
+                result = int(prop.value)
+                # print(f"DEBUG _parse_integer_prop: Parsed type '{prop.type}' to {result}") # DEBUG
+                return result
+            except (ValueError, TypeError):
+                # print(f"DEBUG _parse_integer_prop: Failed int(prop.value) for type '{prop.type}': {e}") # DEBUG
+                return None
+        # Handle case where parser left it as a single-element array
+        elif prop.type == "array" and len(prop.value) == 1:
+            try:
+                result = int(prop.value[0])
+                # print(f"DEBUG _parse_integer_prop: Parsed type 'array[1]' to {result}") # DEBUG
+                return result
+            except (ValueError, TypeError):
+                # print(f"DEBUG _parse_integer_prop: Failed int(prop.value[0]) for type 'array[1]': {e}") # DEBUG
+                return None
+        # print(f"DEBUG _parse_integer_prop: Property type '{prop.type}' not handled or array length != 1.") # DEBUG
+        return None

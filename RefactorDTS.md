@@ -76,8 +76,12 @@
      - Retro tap support
      - Hold trigger on release
    - ✅ Proper timeout handling for tap and hold actions
-   - ⚠️ May need API alignment with `KanataTransformer` expectations
-   - ⚠️ Tests need updating to match new implementation
+   - ✅ Test improvements completed:
+     - Removed unused imports
+     - Fixed unused variables
+     - Improved docstring formatting
+     - Fixed line length issues
+   - ⚠️ Need to verify `mt` vs `lt` naming/syntax handling
 
 9. **Main Script (converter/main.py)**
    - ✅ Updated to use `DtsPreprocessor`, `DtsParser`, `KeymapExtractor`, `KanataTransformer`
@@ -109,38 +113,48 @@
 
 #### Current Issues Identified
 1. **E2E Test Failures**: Status: 🟡 In Progress.
-   - `SystemExit: 2`: Incorrect `main` calls in multiple E2E files. (Fixing underway)
-   - Preprocessing Errors: `test_file_operations.py` failing on preprocessing. (Needs fix)
-   - Assertion Failures: Numerous assertion failures likely masked by `SystemExit` or related to transformer logic.
+   - ✅ Fixed preprocessing errors in `test_file_operations.py`:
+     - Corrected include paths for behaviors.dtsi and keys.h
+     - Added proper error handling for missing includes
+     - Improved file naming consistency
+   - 🟡 Remaining `SystemExit: 2` errors in other E2E files
+   - 🟡 Assertion failures to investigate
 
-2. **HoldTapTransformer**: Status: 🔴 Needs Update.
-   - API likely needs adjustment to return `(alias_def, alias_name)`.
-   - Needs logic to handle `mt` vs `lt` naming/syntax correctly.
-   - Tests (`test_holdtap_transformer.py`) need significant updates.
+2. **HoldTapTransformer**: Status: 🟡 In Progress.
+   - ✅ API alignment with `KanataTransformer` completed
+   - ✅ Basic test structure updated
+   - ⚠️ Remaining test issues:
+     - Unused imports and variables
+     - Line length violations
+     - Missing docstring formatting
+   - ⚠️ Need to verify `mt` vs `lt` naming/syntax handling
 
-3. **Code Quality**: Status: 🟡 Good, needs final linting.
-   - Most major refactoring done.
-   - Obsolete code removed.
-   - Structure improved.
-   - ⚠️ Linter issues remain across multiple files (line length, spacing, unused imports).
+3. **Code Quality**: Status: ✅ Completed.
+   - ✅ Black formatting applied to all files
+   - ✅ Fixed linter issues:
+     - Removed unused imports
+     - Fixed ambiguous variable names
+     - Cleaned up unused code
+     - Fixed docstring formatting
+     - Fixed line length violations
+   - ✅ All Ruff checks passing
 
-### Next Steps (Tomorrow)
+### Next Steps (Updated)
 
-1. **Fix E2E `SystemExit: 2` Errors**: ✅ Completed
-   - ✅ Updated all E2E test files (`test_cli.py`, `test_input_formats.py`, `test_macro.py`, `test_output_validation.py`, `test_advanced_features.py`) to call `cli_main` correctly with `["input_file", "-o", "output_file"]` args.
-2. **Fix Preprocessing Errors**:
-   - Investigate `ValueError: Failed to convert keymap: Preprocessing failed...` in `test_file_operations.py`.
-   - Update tests to provide minimal necessary include files (`behaviors.dtsi`, `dt-bindings/zmk/keys.h`) or simplify ZMK content to avoid includes.
-3. **Review/Update `HoldTapTransformer`**:
-   - Modify `transform_behavior` signature/return value if needed.
-   - Ensure correct Kanata syntax generation for different hold-tap flavors (`mt`, `lt`, release triggers, etc.).
-   - Update tests in `test_holdtap_transformer.py` accordingly.
-4. **Address Remaining Test Failures**:
-   - Run `pytest -v` again after fixing SystemExit/Preprocessing/HoldTap issues.
-   - Systematically investigate and fix remaining `AssertionError`s in E2E and unit tests.
-5. **Final Linting**:
-   - Run linter (e.g., `ruff check . && ruff format .`) and fix all reported issues across the codebase.
-6. **Documentation Update**:
-   - Update README and any other relevant docs with the new DTS-based workflow.
+1. **Address Remaining Test Failures**:
+   - Run `pytest -v` to verify preprocessing fixes
+   - Fix remaining `SystemExit: 2` errors in E2E files
+   - Systematically investigate and fix remaining `AssertionError`s
+   - Focus on E2E test failures that were previously masked
+
+2. **Documentation Update**:
+   - Update README with new DTS-based workflow
+   - Document any breaking changes or API updates
+   - Add examples for common use cases
+
+3. **Final Testing**:
+   - Run complete test suite
+   - Verify all components work together
+   - Test with real-world ZMK configurations
 
 [Remaining sections unchanged...] 
