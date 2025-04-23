@@ -3,10 +3,14 @@
 import argparse
 import sys
 from pathlib import Path
-from typing import List, Union
+from typing import List, Union, Dict, Any, Optional
 
 from .layer_transformer import KanataLayer
-from .parser.zmk_parser import ZMKParser
+from .models import Keymap, Layer, KanataConfig
+from .transformer.kanata_transformer import KanataTransformer
+from .dts.preprocessor import DtsPreprocessor
+from .dts.parser import DtsParser
+from .dts.extractor import KeymapExtractor
 
 
 def generate_kanata_keymap(layers: List[KanataLayer]) -> str:
@@ -46,102 +50,95 @@ def generate_kanata_keymap(layers: List[KanataLayer]) -> str:
                 kanata_config.append("  " + " ".join(row))
             kanata_config.append(")")
 
-        # Add empty line between layers, but not after the last one
-        if i < len(layers) - 1:
-            kanata_config.append("")
-
-    # Ensure file ends with a newline
-    kanata_config.append("")
-
     return "\n".join(kanata_config)
 
 
-def convert_keymap(input_file: Union[str, Path], output_file: Union[str, Path]) -> None:
-    """Convert a ZMK keymap file to Kanata format.
+def convert_zmk_to_kanata(
+    zmk_file: str, 
+    include_paths: List[str] = None
+) -> str:
+    """Convert a ZMK keymap file to Kanata configuration.
 
     Args:
-        input_file: Path to input ZMK keymap file
-        output_file: Path to output Kanata keymap file
+        zmk_file: Path to the ZMK keymap file
+        include_paths: Optional list of paths to search for included files
+
+    Returns:
+        String containing the Kanata configuration
 
     Raises:
-        FileNotFoundError: If input file doesn't exist
-        ValueError: If there's an error parsing the ZMK file
-        Exception: For other errors during conversion
+        FileNotFoundError: If the input file doesn't exist
+        ValueError: If the input file is invalid
     """
-    # Parse ZMK file
-    zmk_parser = ZMKParser()
-    config = zmk_parser.parse(Path(input_file))
-
-    # Transform to Kanata format
-    from .transformer.kanata_transformer import KanataTransformer
-
+    # Initialize components
+    preprocessor = DtsPreprocessor(include_paths=include_paths)
+    parser = DtsParser()
+    extractor = KeymapExtractor()
     transformer = KanataTransformer()
-    output = transformer.transform(config)
 
-    # Write output file
-    with open(output_file, "w") as f:
-        if not output.endswith("\n"):
-            output += "\n"
-        f.write(output)
+    try:
+        # Preprocess the input file
+        preprocessed_content = preprocessor.preprocess(zmk_file)
+        
+        # Parse the preprocessed content
+        ast = parser.parse(preprocessed_content)
+        
+        # Extract keymap configuration
+        keymap_config = extractor.extract(ast)
+        
+        # Transform to Kanata format
+        kanata_layers = transformer.transform(keymap_config)
+        
+        # Generate final configuration
+        return generate_kanata_keymap(kanata_layers)
+        
+    except FileNotFoundError as e:
+        raise FileNotFoundError(f"Input file not found: {zmk_file}") from e
+    except Exception as e:
+        raise ValueError(f"Failed to convert keymap: {str(e)}") from e
 
 
 def main(args=None):
-    """Run the main entry point for the converter."""
-    parser = argparse.ArgumentParser(description="Convert ZMK keymap to Kanata keymap")
-    parser.add_argument("input_file", help="Path to input ZMK keymap file")
-    parser.add_argument("output_file", help="Path to output Kanata keymap file")
+    """Main entry point for the converter."""
+    parser = argparse.ArgumentParser(
+        description="Convert ZMK keymap files to Kanata configuration"
+    )
+    parser.add_argument(
+        "input_file",
+        help="Path to the ZMK keymap file"
+    )
+    parser.add_argument(
+        "-o", "--output",
+        help="Path to the output file (default: stdout)"
+    )
+    parser.add_argument(
+        "-I", "--include",
+        action="append",
+        help="Additional include paths for preprocessing"
+    )
 
-    if args is None:
-        args = parser.parse_args()
-    else:
-        args = parser.parse_args(args)
+    args = parser.parse_args(args)
 
     try:
-        # Parse ZMK file
-        zmk_parser = ZMKParser()
-        try:
-            config = zmk_parser.parse(Path(args.input_file))
-        except FileNotFoundError:
-            print(f"Input file not found: {args.input_file}", file=sys.stderr)
-            return 1
-        except ValueError as e:
-            print(f"Error parsing ZMK file: {e}", file=sys.stderr)
-            return 2
-        except Exception as e:
-            print(f"Error during parsing: {e}", file=sys.stderr)
-            return 3
+        # Convert the keymap
+        kanata_config = convert_zmk_to_kanata(
+            args.input_file,
+            include_paths=args.include
+        )
 
-        # Transform to Kanata format
-        from .transformer.kanata_transformer import KanataTransformer
-
-        transformer = KanataTransformer()
-        try:
-            output = transformer.transform(config)
-        except ValueError as e:
-            print(f"Error transforming keymap: {e}", file=sys.stderr)
-            return 2
-        except Exception as e:
-            print(f"Error during transformation: {e}", file=sys.stderr)
-            return 3
-
-        # Write output file
-        try:
-            with open(args.output_file, "w") as f:
-                if not output.endswith("\n"):
-                    output += "\n"
-                f.write(output)
-        except Exception as e:
-            print(f"Error writing output file: {e}", file=sys.stderr)
-            return 3
-
-        return 0
+        # Write output
+        if args.output:
+            with open(args.output, "w") as f:
+                f.write(kanata_config)
+        else:
+            print(kanata_config)
 
     except Exception as e:
-        print(f"Unexpected error: {e}", file=sys.stderr)
-        return 3
+        print(f"Error: {str(e)}", file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()
 
 # Implementation will be added in subsequent tasks
