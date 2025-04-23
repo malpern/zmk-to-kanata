@@ -17,6 +17,7 @@ class DtsNode:
         self.children: Dict[str, DtsNode] = {}
         self.labels: Dict[str, str] = {}
 
+
 class DtsProperty:
     """Represents a DTS property."""
     
@@ -32,12 +33,14 @@ class DtsProperty:
         self.value = value
         self.type = type
 
+
 class DtsRoot:
     """Represents the root of a DTS AST."""
     
     def __init__(self):
         """Initialize root."""
         self.root = DtsNode("/")
+
 
 class DtsParser:
     """Parser for DTS content."""
@@ -139,7 +142,8 @@ class DtsParser:
                 continue
                 
             # Handle labels
-            if self.pos + 1 < len(self.tokens) and self.tokens[self.pos + 1] == ':':
+            if (self.pos + 1 < len(self.tokens) and 
+                self.tokens[self.pos + 1] == ':'):
                 label = token
                 self.pos += 2  # Skip label and colon
                 if self.pos >= len(self.tokens):
@@ -154,7 +158,8 @@ class DtsParser:
                 
                 # Skip to opening brace
                 self.pos += 1
-                if self.pos >= len(self.tokens) or self.tokens[self.pos] != '{':
+                if (self.pos >= len(self.tokens) or 
+                    self.tokens[self.pos] != '{'):
                     raise ValueError("Expected '{' after labeled node")
                 self.pos += 1
                 
@@ -163,7 +168,8 @@ class DtsParser:
                 continue
                 
             # Handle property assignments
-            if self.pos + 1 < len(self.tokens) and self.tokens[self.pos + 1] == '=':
+            if (self.pos + 1 < len(self.tokens) and 
+                self.tokens[self.pos + 1] == '='):
                 name = token
                 self.pos += 2  # Skip name and =
                 if self.pos >= len(self.tokens):
@@ -180,7 +186,11 @@ class DtsParser:
                 elif value.startswith('&'):
                     prop = DtsProperty(name, value[1:], "reference")
                 elif value.lower() in ('true', 'false'):
-                    prop = DtsProperty(name, value.lower() == 'true', "boolean")
+                    prop = DtsProperty(
+                        name, 
+                        value.lower() == 'true', 
+                        "boolean"
+                    )
                 else:
                     try:
                         prop = DtsProperty(name, int(value), "integer")
@@ -190,11 +200,13 @@ class DtsParser:
                 node.properties[name] = prop
                 
                 # Skip semicolon
-                if self.pos < len(self.tokens) and self.tokens[self.pos] == ';':
+                if (self.pos < len(self.tokens) and 
+                    self.tokens[self.pos] == ';'):
                     self.pos += 1
                     
             # Handle child nodes
-            elif self.pos + 1 < len(self.tokens) and self.tokens[self.pos + 1] == '{':
+            elif (self.pos + 1 < len(self.tokens) and 
+                  self.tokens[self.pos + 1] == '{'):
                 name = token
                 child = DtsNode(name)
                 node.children[name] = child

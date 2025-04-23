@@ -1,8 +1,16 @@
 """AST extractor for mapping DTS nodes to keymap model."""
 
-from typing import Dict, List, Optional, Union, Any
-from .ast import DtsNode, DtsProperty, DtsRoot
-from ..models import KeymapConfig, Layer, Binding, Behavior, HoldTap, MacroBehavior
+from typing import Dict, List, Optional
+from .ast import DtsNode, DtsRoot
+from ..models import (
+    KeymapConfig, 
+    Layer, 
+    Binding, 
+    Behavior, 
+    HoldTap, 
+    MacroBehavior
+)
+
 
 class KeymapExtractor:
     """Extracts keymap information from DTS AST."""

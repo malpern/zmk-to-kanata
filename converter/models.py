@@ -1,10 +1,12 @@
 from dataclasses import dataclass, field
-from typing import List, Optional, Union, Dict, Any
+from typing import List, Optional
+
 
 @dataclass
 class Behavior:
     """Base class for all behaviors."""
     name: str
+
 
 @dataclass
 class HoldTap(Behavior):
@@ -14,10 +16,12 @@ class HoldTap(Behavior):
     flavor: Optional[str] = None
     hold_triggered: Optional[bool] = None
 
+
 @dataclass
 class MacroBehavior(Behavior):
     """Macro behavior configuration."""
     bindings: List['Binding'] = field(default_factory=list)
+
 
 @dataclass
 class Binding:
@@ -25,17 +29,20 @@ class Binding:
     behavior: Optional[Behavior] = None
     params: List[str] = field(default_factory=list)
 
+
 @dataclass
 class Layer:
     """Layer configuration."""
     name: str
     bindings: List[Binding] = field(default_factory=list)
 
+
 @dataclass
 class KeymapConfig:
     """Complete keymap configuration."""
     layers: List[Layer] = field(default_factory=list)
     behaviors: List[Behavior] = field(default_factory=list)
+
 
 @dataclass
 class KanataConfig:
