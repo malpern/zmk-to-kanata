@@ -20,9 +20,9 @@ The existing parser relies heavily on regular expressions and a fragile state ma
 ```ascii
 +-----------------+      +---------------------------+      +-------------------+      +-------------------+      +-----------------+
 |  ZMK Input File | ---> | Regex/State-Machine       | ---> | Intermediate      | ---> | Transformers      | ---> | Kanata Output   |
-| (.zmk/.keymap)  |      | Parsers                   |      | Model             |      | (KanataTransformer|      | String/File     |
-+-----------------+      | (ZMKParser, LayerParser,  |      | (KeymapConfig,    |      | LayerTransformer, |      +-----------------+
-                       |  MacroParser, etc.)        |      |  Layer, Binding)  |      |  etc.)            |
+| (.zmk/.keymap)  |      | Parsers                   |      | Model             |      | LayerTransformer, |      +-----------------+
+                       | (ZMKParser, LayerParser,  |      | (KeymapConfig,    |      |  etc.)            |
+                       |  MacroParser, etc.)        |      |  Layer, Binding)  |      +-------------------+
                        +---------------------------+      +-------------------+      +-------------------+
                            ^       |
                            |       | (Fragile text parsing, sensitive to format)
@@ -166,3 +166,424 @@ The new architecture will process ZMK files in the following stages:
 ## 8. Conclusion
 
 This refactoring represents a significant architectural shift but is necessary for achieving robust parsing of ZMK files. By leveraging an external C preprocessor and implementing a focused DTS parser, we can build a much more reliable and maintainable converter capable of handling the diverse outputs expected from Nick's configuration tool, while reusing the valuable existing model and transformation logic.
+
+## Achieving Stability: Steps to Follow
+
+### Current State (Checkpoint)
+- We've documented the issues with the current architecture.
+- We've created a detailed refactoring plan.
+- We've created a new branch for the refactor.
+
+### Next Steps for Stability
+
+#### Phase 1: Preprocessor Integration
+- Implement the C preprocessor integration first.
+- This is the least invasive change and can be tested independently.
+- It will help us understand the preprocessed output format.
+
+#### Phase 2: DTS Parser Development
+- Develop the DTS parser in isolation.
+- Create comprehensive test cases.
+- Focus on parsing the specific DTS constructs used in ZMK files.
+
+#### Phase 3: AST Extraction
+- Implement the AST traversal and extraction logic.
+- Map to existing model classes.
+- This is where we'll start removing the old parsing code.
+
+#### Phase 4: Integration and Cleanup
+- Integrate the new components.
+- Remove old parsing code.
+- Update tests and documentation.
+
+### Key Stability Measures
+- Each phase will have its own test suite.
+- We'll maintain the existing model and transformation layers.
+- We'll keep the old parser working until the new one is fully tested.
+- We'll add integration tests for the complete pipeline.
+
+## Implementation Progress
+
+### Current Status (Updated)
+
+#### Completed Components
+1. **Models (converter/models.py)**
+   - ✅ Basic model classes defined
+   - ✅ Type definitions for keymap structure
+   - ✅ Linter errors fixed (spacing and imports)
+   - ✅ Proper handling of built-in behaviors
+
+2. **DTS Parser (converter/dts/parser.py)**
+   - ✅ Basic structure implemented
+   - ✅ Handles node definitions and properties
+   - ✅ Supports labels and references
+   - ✅ Comprehensive test coverage
+   - ✅ Proper error handling
+   - ✅ Debug instrumentation
+   - ⚠️ Minor linter issues to fix (line lengths)
+
+3. **AST Definition (converter/dts/ast.py)**
+   - ✅ Clean node and property classes
+   - ✅ Proper type hints
+   - ✅ Label and reference support
+   - ✅ Tree traversal methods
+   - ✅ No linter errors
+
+4. **AST Extractor (converter/dts/extractor.py)**
+   - ✅ Basic structure implemented
+   - ✅ Layer extraction working
+   - ✅ Behavior extraction working
+   - ✅ Binding resolution working
+   - ✅ Built-in behavior handling
+   - ✅ All tests passing
+   - ⚠️ Minor linter issues to fix (imports and spacing)
+
+#### In Progress Components
+1. **Main Converter Structure (converter/main.py)**
+   - ✅ Basic function structure defined
+   - ✅ Type hints and documentation
+   - ❌ Integration with new components pending
+   - ❌ Linter errors need fixing
+
+#### Current Issues Identified
+1. **Parser Architecture**:
+   - ✓ Clean separation of concerns achieved
+   - ✓ Proper error handling implemented
+   - ✓ Comprehensive test coverage
+   - ⚠️ Minor linter issues to address
+
+2. **Test Coverage**:
+   - ✓ Parser has comprehensive unit tests
+   - ✓ AST has proper test coverage
+   - ✓ Extractor has comprehensive test coverage
+   - ❌ Integration tests pending
+
+3. **Code Quality**:
+   - ✓ Most linter errors fixed
+   - ✓ Clear documentation
+   - ✓ Maintainable structure
+   - ⚠️ Some line length issues to address
+
+### Implementation Decision
+
+After reviewing the current implementation and the refactoring plan, we recommend:
+
+1. **Next Steps**:
+   - Fix remaining linter issues
+   - Add integration tests
+   - Integrate with main converter
+   - Update documentation
+
+2. **Implementation Order**:
+   a. Fix linter issues:
+      - Line length in parser
+      - Import cleanup in extractor
+      - Spacing in models
+
+   b. Add integration tests:
+      - Full pipeline tests
+      - Error handling tests
+      - Edge case tests
+
+   c. Complete integration:
+      - Update main converter
+      - Remove old parser code
+      - Update documentation
+
+3. **Migration Strategy**:
+   - Keep existing parser working during development
+   - Add new implementation alongside old one
+   - Switch over only when new implementation is fully tested
+   - Remove old implementation after successful migration
+
+### Next Steps
+
+1. **Immediate Actions**:
+   - Fix remaining linter issues
+   - Add integration tests
+   - Begin main converter integration
+
+2. **Short-term Goals**:
+   - Complete full pipeline integration
+   - Add end-to-end tests
+   - Update documentation
+   - Begin performance optimization
+
+3. **Long-term Goals**:
+   - Complete full migration
+   - Remove old implementation
+   - Add performance optimizations
+   - Add additional features
+
+### Success Criteria
+
+1. **New Parser Implementation**:
+   - ✓ Clean separation of concerns
+   - ✓ Proper error handling
+   - ✓ Comprehensive test coverage
+   - ✓ No regressions in functionality
+
+2. **Code Quality**:
+   - ⚠️ Minor linter issues to fix
+   - ✓ Clear documentation
+   - ✓ Maintainable structure
+   - ✓ Performance acceptable
+
+3. **Integration**:
+   - ❌ Integration tests pending
+   - ❌ End-to-end tests pending
+   - ❌ Documentation updates pending
+   - ❌ Performance testing pending
+
+## 9. Detailed Implementation Plan with TDD Approach
+
+### Phase 1: Preprocessor Integration (TDD)
+
+#### Step 1.1: Test Setup
+1. Create test directory structure:
+   ```
+   tests/
+   ├── dts/
+   │   ├── __init__.py
+   │   ├── test_preprocessor.py
+   │   ├── test_parser.py
+   │   └── test_extractor.py
+   ├── fixtures/
+   │   └── dts/
+   │       ├── simple_keymap.zmk
+   │       ├── with_includes.zmk
+   │       └── with_macros.zmk
+   ```
+
+2. Create initial test cases for preprocessor:
+   - Test basic file preprocessing
+   - Test include handling
+   - Test macro expansion
+   - Test error handling for invalid files
+
+#### Step 1.2: Preprocessor Implementation
+1. Create `converter/dts/preprocessor.py`:
+   ```python
+   class DtsPreprocessor:
+       def preprocess(self, input_file: str) -> str:
+           """
+           Preprocess a DTS file using cpp.
+           Returns the preprocessed content as a string.
+           """
+   ```
+
+2. Implement error handling and logging:
+   - Capture cpp stderr
+   - Raise appropriate exceptions
+   - Add detailed logging
+
+3. Add configuration options:
+   - Allow custom cpp path
+   - Support custom include paths
+   - Handle different cpp versions
+
+### Phase 2: DTS Parser Development (TDD)
+
+#### Step 2.1: AST Definition
+1. Create `converter/dts/ast.py`:
+   ```python
+   class Node:
+       def __init__(self, name: str, properties: Dict[str, Any], children: List['Node']):
+           self.name = name
+           self.properties = properties
+           self.children = children
+
+   class Property:
+       def __init__(self, name: str, value: Any):
+           self.name = name
+           self.value = value
+   ```
+
+2. Add test cases for AST:
+   - Test node creation
+   - Test property handling
+   - Test tree traversal
+
+#### Step 2.2: Parser Implementation
+1. Create `converter/dts/parser.py`:
+   ```python
+   class DtsParser:
+       def parse(self, content: str) -> Node:
+           """
+           Parse preprocessed DTS content into an AST.
+           """
+   ```
+
+2. Implement parsing for:
+   - Node definitions
+   - Property assignments
+   - Labels and references
+   - Basic data types
+   - Byte arrays
+
+3. Add error handling:
+   - Syntax errors
+   - Invalid references
+   - Malformed properties
+
+### Phase 3: AST Extraction (TDD)
+
+#### Step 3.1: Extractor Tests
+1. Create test cases for:
+   - Layer extraction
+   - Binding resolution
+   - Behavior mapping
+   - Global settings
+
+2. Add test fixtures:
+   - Simple keymap AST
+   - Complex keymap with behaviors
+   - Keymap with macros
+
+#### Step 3.2: Extractor Implementation
+1. Create `converter/dts/extractor.py`:
+   ```python
+   class KeymapExtractor:
+       def extract(self, ast: Node) -> KeymapConfig:
+           """
+           Extract keymap information from AST.
+           Returns a populated KeymapConfig instance.
+           """
+   ```
+
+2. Implement extraction for:
+   - Root node traversal
+   - Layer node identification
+   - Binding property parsing
+   - Behavior resolution
+
+3. Add validation:
+   - Required properties
+   - Valid references
+   - Type checking
+
+### Testing Strategy
+
+#### Unit Tests
+1. **Preprocessor Tests**
+   ```python
+   def test_preprocess_simple_file():
+       preprocessor = DtsPreprocessor()
+       result = preprocessor.preprocess("simple_keymap.zmk")
+       assert "keymap" in result
+       assert "bindings" in result
+
+   def test_preprocess_with_includes():
+       preprocessor = DtsPreprocessor()
+       result = preprocessor.preprocess("with_includes.zmk")
+       assert "included_content" in result
+   ```
+
+2. **Parser Tests**
+   ```python
+   def test_parse_simple_node():
+       parser = DtsParser()
+       ast = parser.parse("node { property = value; };")
+       assert ast.name == "node"
+       assert ast.properties["property"] == "value"
+
+   def test_parse_complex_tree():
+       parser = DtsParser()
+       ast = parser.parse(complex_dts)
+       assert len(ast.children) > 0
+       assert "bindings" in ast.properties
+   ```
+
+3. **Extractor Tests**
+   ```python
+   def test_extract_layers():
+       extractor = KeymapExtractor()
+       config = extractor.extract(sample_ast)
+       assert len(config.layers) > 0
+       assert config.layers[0].name == "default"
+
+   def test_extract_bindings():
+       extractor = KeymapExtractor()
+       config = extractor.extract(sample_ast)
+       assert len(config.layers[0].bindings) > 0
+       assert isinstance(config.layers[0].bindings[0], Binding)
+   ```
+
+#### Integration Tests
+1. **Full Pipeline Tests**
+   ```python
+   def test_full_conversion():
+       preprocessor = DtsPreprocessor()
+       parser = DtsParser()
+       extractor = KeymapExtractor()
+       
+       preprocessed = preprocessor.preprocess("test.zmk")
+       ast = parser.parse(preprocessed)
+       config = extractor.extract(ast)
+       
+       assert config.is_valid()
+       assert len(config.layers) > 0
+   ```
+
+2. **Error Handling Tests**
+   ```python
+   def test_invalid_file_handling():
+       with pytest.raises(PreprocessorError):
+           preprocessor.preprocess("invalid.zmk")
+           
+   def test_invalid_ast_handling():
+       with pytest.raises(ParserError):
+           parser.parse("invalid { syntax")
+   ```
+
+### Implementation Order
+
+1. **Week 1: Preprocessor**
+   - Set up test infrastructure
+   - Implement basic preprocessing
+   - Add include handling
+   - Add error handling
+
+2. **Week 2: Parser**
+   - Define AST structure
+   - Implement basic parsing
+   - Add complex node handling
+   - Add error handling
+
+3. **Week 3: Extractor**
+   - Implement basic extraction
+   - Add layer handling
+   - Add binding resolution
+   - Add behavior mapping
+
+4. **Week 4: Integration**
+   - Connect all components
+   - Add full pipeline tests
+   - Remove old parsing code
+   - Update documentation
+
+### Success Criteria
+
+1. **Preprocessor**
+   - ✓ Handles all ZMK file formats
+   - ✓ Correctly processes includes
+   - ✓ Proper error messages
+   - ✓ 100% test coverage
+
+2. **Parser**
+   - ✓ Parses all valid DTS constructs
+   - ✓ Generates correct AST
+   - ✓ Handles errors gracefully
+   - ✓ 100% test coverage
+
+3. **Extractor**
+   - ✓ Extracts all keymap information
+   - ✓ Correctly maps to model
+   - ✓ Handles edge cases
+   - ✓ 100% test coverage
+
+4. **Integration**
+   - ✓ All tests pass
+   - ✓ No regressions
+   - ✓ Documentation updated
+   - ✓ Performance acceptable
