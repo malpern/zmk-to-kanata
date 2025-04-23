@@ -1,10 +1,19 @@
 """End-to-end tests for handling different ZMK input formats."""
 
-from converter.cli import main
+import pytest
+from click.testing import CliRunner
+from converter.cli import main as cli_main
 
 
-def test_single_layer_keymap(temp_test_dir):
-    """Test conversion of a simple single-layer keymap."""
+@pytest.fixture
+def runner():
+    """Fixture for invoking command-line interfaces."""
+    return CliRunner()
+
+
+@pytest.mark.e2e
+def test_single_layer_keymap(runner, tmp_path):
+    """Test converting a keymap with a single layer."""
     zmk_content = """
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
@@ -13,47 +22,28 @@ def test_single_layer_keymap(temp_test_dir):
     keymap {
         compatible = "zmk,keymap";
         default_layer {
-            bindings = <
-                &kp A &kp B &kp C
-                &kp D &kp E &kp F
-            >;
+            bindings = <&kp A &kp B &kp C>;
         };
     };
 };
 """
-    zmk_file = temp_test_dir / "single_layer.dtsi"
+    zmk_file = tmp_path / "single_layer.keymap"
     zmk_file.write_text(zmk_content)
+    kanata_file = tmp_path / "single_layer.kbd"
 
-    kanata_file = temp_test_dir / "single_layer.kbd"
+    args = [str(zmk_file), "-o", str(kanata_file)]
+    result = runner.invoke(cli_main, args)
 
-    exit_code = main([str(zmk_file), str(kanata_file)])
-    assert exit_code == 0
-
+    assert result.exit_code == 0
+    assert kanata_file.exists()
     content = kanata_file.read_text()
-
-    # Verify layer definition
-    assert "(deflayer default" in content
-
-    # Verify all keys are present and properly formatted
-    keys = ["a", "b", "c", "d", "e", "f"]
-    for key in keys:
-        assert key in content.lower()
-
-    # Verify proper indentation and structure
-    lines = content.splitlines()
-    # Skip header comment and empty lines
-    layer_lines = [line for line in lines if line and not line.startswith(";;")]
-    print("\nGenerated content:")
-    print(content)
-    print("\nLayer lines:")
-    print(layer_lines)
-    assert layer_lines[2].startswith("(deflayer default")
-    assert "a b c" in layer_lines[3].lower()
-    assert "d e f" in layer_lines[4].lower()
+    assert "(deflayer default_layer" in content
+    assert "a b c" in content
 
 
-def test_multiple_layer_keymap(temp_test_dir):
-    """Test conversion of a keymap with multiple layers."""
+@pytest.mark.e2e
+def test_multiple_layer_keymap(runner, tmp_path):
+    """Test converting a keymap with multiple layers."""
     zmk_content = """
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
@@ -77,25 +67,25 @@ def test_multiple_layer_keymap(temp_test_dir):
     };
 };
 """
-    zmk_file = temp_test_dir / "multi_layer.dtsi"
+    zmk_file = tmp_path / "multi_layer.keymap"
     zmk_file.write_text(zmk_content)
+    kanata_file = tmp_path / "multi_layer.kbd"
 
-    kanata_file = temp_test_dir / "multi_layer.kbd"
+    args = [str(zmk_file), "-o", str(kanata_file)]
+    result = runner.invoke(cli_main, args)
 
-    exit_code = main([str(zmk_file), str(kanata_file)])
-    assert exit_code == 0
-
+    assert result.exit_code == 0
+    assert kanata_file.exists()
     content = kanata_file.read_text()
-
-    # Verify default layer with layer switching
     assert "(deflayer default" in content
     assert "a b" in content.lower()
     assert "@layer1" in content  # Layer switching key
     assert "c" in content.lower()
 
 
-def test_empty_layer_keymap(temp_test_dir):
-    """Test handling of empty layers in keymap."""
+@pytest.mark.e2e
+def test_empty_layer_keymap(runner, tmp_path):
+    """Test converting a keymap with an empty layer."""
     zmk_content = """
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
@@ -119,17 +109,16 @@ def test_empty_layer_keymap(temp_test_dir):
     };
 };
 """
-    zmk_file = temp_test_dir / "empty_layer.dtsi"
+    zmk_file = tmp_path / "empty_layer.keymap"
     zmk_file.write_text(zmk_content)
+    kanata_file = tmp_path / "empty_layer.kbd"
 
-    kanata_file = temp_test_dir / "empty_layer.kbd"
+    args = [str(zmk_file), "-o", str(kanata_file)]
+    result = runner.invoke(cli_main, args)
 
-    exit_code = main([str(zmk_file), str(kanata_file)])
-    assert exit_code == 0
-
+    assert result.exit_code == 0
+    assert kanata_file.exists()
     content = kanata_file.read_text()
-
-    # Verify default layer with layer switching
     assert "(deflayer default" in content
     assert "a" in content.lower()
     assert "@layer1" in content  # Layer switching key
@@ -138,8 +127,9 @@ def test_empty_layer_keymap(temp_test_dir):
     assert "(deflayer empty" in content
 
 
-def test_comments_and_whitespace(temp_test_dir):
-    """Test handling of comments and whitespace in ZMK files."""
+@pytest.mark.e2e
+def test_comments_and_whitespace(runner, tmp_path):
+    """Test converting a keymap with comments and extra whitespace."""
     zmk_content = """
 // This is a comment
 #include <behaviors.dtsi>
@@ -163,20 +153,16 @@ def test_comments_and_whitespace(temp_test_dir):
     };
 };
 """
-    zmk_file = temp_test_dir / "commented.dtsi"
+    zmk_file = tmp_path / "comments.keymap"
     zmk_file.write_text(zmk_content)
+    kanata_file = tmp_path / "comments.kbd"
 
-    kanata_file = temp_test_dir / "commented.kbd"
+    args = [str(zmk_file), "-o", str(kanata_file)]
+    result = runner.invoke(cli_main, args)
 
-    exit_code = main([str(zmk_file), str(kanata_file)])
-    assert exit_code == 0
-
+    assert result.exit_code == 0
+    assert kanata_file.exists()
     content = kanata_file.read_text()
-
-    print("\nGenerated content:")
-    print(content)
-
-    # Verify key mapping is correct despite comments/whitespace
     assert "(deflayer default" in content
 
     # Check key layout

@@ -1,167 +1,142 @@
 """End-to-end tests for macro support."""
 
-from converter.cli import main
+import pytest
+from click.testing import CliRunner
+from converter.cli import main as cli_main
 
 
-def test_basic_macro_conversion(tmp_path):
-    """Test converting a ZMK file with a basic macro to Kanata format."""
-    # Create a temporary ZMK file with a macro
+@pytest.fixture
+def runner():
+    """Fixture for invoking command-line interfaces."""
+    return CliRunner()
+
+
+@pytest.mark.e2e
+def test_basic_macro_conversion(runner, tmp_path):
+    """Test converting a ZMK file with basic macros."""
     zmk_content = """
+    #include <behaviors.dtsi>
+    #include <dt-bindings/zmk/keys.h>
     / {
         behaviors {
-            simple_macro: simple_macro {
+            macro_test: macro_test {
                 compatible = "zmk,behavior-macro";
+                label = "MACRO_TEST";
                 #binding-cells = <0>;
-                bindings = <&kp A &kp B &kp C>;
+                wait-ms = <30>;
+                tap-ms = <30>;
+                bindings = <&macro_tap &kp A &kp B>;
             };
         };
-
         keymap {
             compatible = "zmk,keymap";
             default_layer {
-                bindings = <
-                    &simple_macro &kp B &kp C
-                    &kp D &kp E &kp F
-                >;
+                bindings = <&macro_test>;
             };
         };
     };
     """
-
-    zmk_file = tmp_path / "test_macro.keymap"
+    zmk_file = tmp_path / "basic_macro.dtsi"
     zmk_file.write_text(zmk_content)
+    kanata_file = tmp_path / "basic_macro.kbd"
 
-    # Create a temporary output file
-    output_file = tmp_path / "test_macro.kbd"
+    args = [str(zmk_file), "-o", str(kanata_file)]
+    result = runner.invoke(cli_main, args)
 
-    # Run the converter
-    args = [str(zmk_file), str(output_file)]
-    exit_code = main(args)
-
-    # Check that the conversion was successful
-    assert exit_code == 0
-    assert output_file.exists()
-
-    # Read the output file
-    kanata_content = output_file.read_text()
-
-    # Check that the macro is defined in the output
-    assert "(defmacro simple_macro" in kanata_content
-    assert "tap a" in kanata_content
-    assert "tap b" in kanata_content
-    assert "tap c" in kanata_content
-
-    # Check that the macro is referenced in the keymap
-    assert "(macro simple_macro)" in kanata_content
+    assert result.exit_code == 0
+    assert kanata_file.exists()
+    content = kanata_file.read_text()
+    assert "(defmacro macro_test" in content
+    assert "tap a" in content
+    assert "tap b" in content
+    assert "(deflayer default_layer" in content
+    assert "(macro macro_test)" in content
 
 
-def test_complex_macro_conversion(tmp_path):
-    """Test converting a ZMK file with a complex macro to Kanata format."""
-    # Create a temporary ZMK file with a complex macro
+@pytest.mark.e2e
+def test_complex_macro_conversion(runner, tmp_path):
+    """Test converting a ZMK file with complex macros (press/release/wait)."""
     zmk_content = """
+    #include <behaviors.dtsi>
+    #include <dt-bindings/zmk/keys.h>
     / {
         behaviors {
             complex_macro: complex_macro {
                 compatible = "zmk,behavior-macro";
+                label = "COMPLEX_MACRO";
                 #binding-cells = <0>;
-                wait-ms = <20>;
-                tap-ms = <40>;
-                bindings = <
-                    &macro_press &kp LSHIFT
-                    &kp A
-                    &macro_release &kp LSHIFT
-                    &macro_wait_time 50
-                    &kp B &kp C
-                >;
+                bindings = <&macro_press &kp LCTRL &macro_tap &kp C &macro_release &kp LCTRL &macro_wait_time 100 &macro_tap &kp V>;
             };
         };
-
         keymap {
             compatible = "zmk,keymap";
             default_layer {
-                bindings = <
-                    &complex_macro &kp B &kp C
-                    &kp D &kp E &kp F
-                >;
+                bindings = <&complex_macro>;
             };
         };
     };
     """
-
-    zmk_file = tmp_path / "test_complex_macro.keymap"
+    zmk_file = tmp_path / "complex_macro.dtsi"
     zmk_file.write_text(zmk_content)
+    kanata_file = tmp_path / "complex_macro.kbd"
 
-    # Create a temporary output file
-    output_file = tmp_path / "test_complex_macro.kbd"
+    args = [str(zmk_file), "-o", str(kanata_file)]
+    result = runner.invoke(cli_main, args)
 
-    # Run the converter
-    args = [str(zmk_file), str(output_file)]
-    exit_code = main(args)
-
-    # Check that the conversion was successful
-    assert exit_code == 0
-    assert output_file.exists()
-
-    # Read the output file
-    kanata_content = output_file.read_text()
-
-    # Check that the macro is defined in the output
-    assert "(defmacro complex_macro" in kanata_content
-    assert "press lsft" in kanata_content
-    assert "press a" in kanata_content
-    assert "release lsft" in kanata_content
-    assert "delay 50" in kanata_content
-    assert "tap b" in kanata_content
-    assert "tap c" in kanata_content
-
-    # Check that the macro is referenced in the keymap
-    assert "(macro complex_macro)" in kanata_content
+    assert result.exit_code == 0
+    assert kanata_file.exists()
+    content = kanata_file.read_text()
+    assert "(defmacro complex_macro" in content
+    assert "press lctl" in content
+    assert "tap c" in content
+    assert "release lctl" in content
+    assert "delay 100" in content
+    assert "tap v" in content
+    assert "(deflayer default_layer" in content
+    assert "(macro complex_macro)" in content
 
 
-def test_parameterized_macro_conversion(tmp_path):
-    """Test converting a ZMK file with a parameterized macro to Kanata format."""
-    # Create a temporary ZMK file with a parameterized macro
+@pytest.mark.e2e
+def test_parameterized_macro_conversion(runner, tmp_path):
+    """Test converting a ZMK file with parameterized macros."""
+    # Note: Parameterized macros in ZMK often rely on C preprocessor.
+    # This test uses a basic DTS definition for simplicity.
     zmk_content = """
+    #include <behaviors.dtsi>
+    #include <dt-bindings/zmk/keys.h>
     / {
-        behaviors {
+        macros {
+            // Example from ZMK docs, actual implementation might vary
             param_macro: param_macro {
-                compatible = "zmk,behavior-macro-one-param";
-                #binding-cells = <1>;
-                bindings = <&kp MACRO_PLACEHOLDER>;
+                compatible = "zmk,behavior-macro-two-param";
+                label = "PARAM_MACRO";
+                #binding-cells = <2>; // Expects two parameters
+                bindings = <&macro_tap &kp MACRO_PLACEHOLDER_1 &macro_tap &kp MACRO_PLACEHOLDER_2>;
+                param1-transform = <&kp MACRO_PLACEHOLDER_1>;
+                param2-transform = <&kp MACRO_PLACEHOLDER_2>;
             };
         };
-
         keymap {
             compatible = "zmk,keymap";
             default_layer {
-                bindings = <
-                    &param_macro A &param_macro B &kp C
-                    &kp D &kp E &kp F
-                >;
+                bindings = <&param_macro(A B)>; // Using the macro with params
             };
         };
     };
     """
-
-    zmk_file = tmp_path / "test_param_macro.keymap"
+    zmk_file = tmp_path / "param_macro.dtsi"
     zmk_file.write_text(zmk_content)
+    kanata_file = tmp_path / "param_macro.kbd"
 
-    # Create a temporary output file
-    output_file = tmp_path / "test_param_macro.kbd"
+    args = [str(zmk_file), "-o", str(kanata_file)]
+    result = runner.invoke(cli_main, args)
 
-    # Run the converter
-    args = [str(zmk_file), str(output_file)]
-    exit_code = main(args)
-
-    # Check that the conversion was successful
-    assert exit_code == 0
-    assert output_file.exists()
-
-    # Read the output file
-    kanata_content = output_file.read_text()
-
-    # Check that the macro is defined in the output
-    assert "(defmacro param_macro" in kanata_content
-
-    # Check that the macro is referenced in the keymap
-    assert "(macro param_macro)" in kanata_content
+    assert result.exit_code == 0
+    assert kanata_file.exists()
+    content = kanata_file.read_text()
+    # Check for macro definition and usage with parameters
+    # Actual Kanata syntax for parameterized macros might need specific handling.
+    # This is a basic check assuming simple transformation.
+    assert "(defmacro param_macro" in content  # Check definition (name might vary)
+    # Check usage with parameters passed
+    assert "(macro param_macro a b)" in content

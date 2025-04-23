@@ -1,4 +1,4 @@
-"""Keymap Model Module
+"""Keymap Model Module.
 
 This module contains the intermediate representation classes for our keymap
 converter.
@@ -8,15 +8,19 @@ all the model classes and conversion logic for the keymap converter.
 """
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, List, Optional, Union, Dict, Any
 
 if TYPE_CHECKING:
     # These imports are only used for type checking
-    pass
+    from .behaviors import Behavior
 
 
+@dataclass
 class Binding:
     """Base class for all key bindings."""
+
+    behavior: Optional["Behavior"] = None
+    params: List[str] = field(default_factory=list)
 
     def to_kanata(self) -> str:
         """Convert the binding to Kanata format."""
@@ -35,13 +39,13 @@ class GlobalSettings:
 class HoldTap:
     """Represents a hold-tap behavior in ZMK."""
 
-    behavior_name: str
+    name: str
     hold_key: str
     tap_key: str
-    # Add missing attributes to match HoldTapBinding
-    hold_trigger_key_positions: Optional[Tuple[int, ...]] = None
-    hold_trigger_on_release: bool = False
-    retro_tap: bool = False
+    tapping_term_ms: int
+    hold_time_ms: Optional[int] = None
+    quick_tap_ms: Optional[int] = None
+    flavor: Optional[str] = None
 
     def to_kanata(self) -> str:
         """Convert the hold-tap to Kanata format."""
@@ -70,95 +74,68 @@ class HoldTap:
         if tap_key.startswith("N") and tap_key[1:].isdigit():
             tap_key = tap_key[1:]
 
-        return f"tap-hold {hold_key} {tap_key.lower()}"
+        # Determine tap-hold variant based on flavor
+        tap_hold_type = "tap-hold"
+        if self.flavor == "balanced":
+            tap_hold_type = "tap-hold-release"
+        elif self.flavor == "hold-preferred":
+            tap_hold_type = "tap-hold-press"
+
+        # Build tap-hold configuration
+        config = [
+            tap_hold_type,
+            str(self.tapping_term_ms),
+            str(self.hold_time_ms or self.tapping_term_ms),
+            hold_key.lower(),
+            tap_key.lower(),
+        ]
+
+        # Add quick-tap timing if specified
+        if self.quick_tap_ms:
+            config.append(str(self.quick_tap_ms))
+
+        return f"({' '.join(config)})"
 
 
 @dataclass(frozen=True)
 class HoldTapBinding:
-    """Represents a hold-tap binding with its behavior and parameters."""
+    """Represents a hold-tap binding with additional parameters."""
 
-    behavior_name: str  # e.g., "lh_hm", "rh_hm"
-    hold_key: str  # e.g., "LGUI", "LALT"
-    tap_key: str  # e.g., "A", "S"
-    # Key positions that trigger hold
-    hold_trigger_key_positions: Optional[Tuple[int, ...]] = None
-    # Whether to trigger hold on key release
-    hold_trigger_on_release: bool = False
-    # Whether to allow tap on release after hold timeout
-    retro_tap: bool = False
+    key: str
+    hold_tap: HoldTap
+    tap: str
+    hold: str
+    params: Dict[str, Any] = field(default_factory=dict)
 
-    def __eq__(self, other) -> bool:
-        """Compare two HoldTapBinding instances for equality."""
+    def __eq__(self, other: Any) -> bool:
+        """Compare two HoldTapBindings for equality."""
         if not isinstance(other, HoldTapBinding):
             return False
         return (
-            self.behavior_name == other.behavior_name
-            and self.hold_key == other.hold_key
-            and self.tap_key == other.tap_key
-            and self.hold_trigger_key_positions == other.hold_trigger_key_positions
-            and self.hold_trigger_on_release == other.hold_trigger_on_release
-            and self.retro_tap == other.retro_tap
+            self.key == other.key
+            and self.hold_tap == other.hold_tap
+            and self.params == other.params
+            and self.tap == other.tap
+            and self.hold == other.hold
         )
 
     def to_kanata(self) -> str:
-        """Convert to Kanata format."""
-        # Convert hold key to short form
-        hold_key = self.hold_key.lower()
-        if hold_key == "lshift":
-            hold_key = "lsft"
-        elif hold_key == "rshift":
-            hold_key = "rsft"
-        elif hold_key == "lcontrol":
-            hold_key = "lctl"
-        elif hold_key == "rcontrol":
-            hold_key = "rctl"
-        elif hold_key == "lctrl":
-            hold_key = "lctl"
-        elif hold_key == "rctrl":
-            hold_key = "rctl"
-        elif hold_key == "lgui":
-            hold_key = "lmet"
-        elif hold_key == "rgui":
-            hold_key = "rmet"
-
-        # Convert tap key
-        tap_key = self.tap_key.lower()
-        if tap_key.startswith("n") and tap_key[1:].isdigit():
-            tap_key = tap_key[1:]  # Remove 'n' prefix for number keys
-
-        # Determine tap-hold variant based on binding properties
-        tap_hold_type = "tap-hold"  # Default to basic tap-hold
-
-        if self.hold_trigger_key_positions:
-            tap_hold_type = "tap-hold-release-keys"
-        elif self.hold_trigger_on_release:
-            tap_hold_type = "tap-hold-release"
-        elif self.retro_tap:
-            tap_hold_type = "tap-hold-press-timeout"
-
-        # Build the tap-hold configuration
-        config = f"({tap_hold_type} 200 200 {tap_key} {hold_key}"
-
-        # Add extra parameters for advanced features
-        if tap_hold_type == "tap-hold-release-keys":
-            positions = " ".join(str(pos) for pos in self.hold_trigger_key_positions)
-            config += f" ({positions})"
-        elif tap_hold_type == "tap-hold-press-timeout" and self.retro_tap:
-            config += f" {tap_key}"
-
-        config += ")"
-        return config
+        """Convert the hold-tap binding to Kanata format."""
+        return self.hold_tap.to_kanata()
 
 
 @dataclass
-class KeyMapping(Binding):
+class KeyMapping:
     """Represents a key mapping in the keymap."""
 
     key: str
+    behavior: Optional["Behavior"] = None
+    params: List[str] = field(default_factory=list)
     hold_tap: Optional[Union[HoldTap, HoldTapBinding]] = None
     sticky: bool = False
 
     def __eq__(self, other):
+        """Compare two KeyMapping instances for equality."""
         if not isinstance(other, KeyMapping):
             return False
         return self.key == other.key
@@ -167,11 +144,11 @@ class KeyMapping(Binding):
         """Convert the key mapping to Kanata format."""
         if self.hold_tap:
             # Use the alias we created for this hold-tap binding
-            if hasattr(self.hold_tap, "behavior_name"):
+            if hasattr(self.hold_tap, "name"):
                 binding_id = (
-                    f"{self.hold_tap.behavior_name}_"
-                    f"{self.hold_tap.hold_key}_"
-                    f"{self.hold_tap.tap_key}"
+                    f"{self.hold_tap.name}_"
+                    f"{self.hold_tap.hold}_"
+                    f"{self.hold_tap.tap}"
                 )
                 return f"@{binding_id}"
             else:
@@ -216,11 +193,15 @@ class KeyMapping(Binding):
             return key
 
     @classmethod
-    def from_zmk(cls, binding_str: str) -> "KeyMapping":
+    def from_zmk(
+        cls, binding_str: str, tap_time: int = 200, hold_time: int = 200
+    ) -> "KeyMapping":
         """Create a KeyMapping from a ZMK binding string.
 
         Args:
             binding_str: The ZMK binding string
+            tap_time: The tapping term in milliseconds
+            hold_time: The hold term in milliseconds
 
         Returns:
             A KeyMapping object
@@ -229,7 +210,7 @@ class KeyMapping(Binding):
             ValueError: If the binding string is invalid
         """
         # Handle empty binding
-        if not binding_str or binding_str == "&none":
+        if binding_str == "&none":
             return cls(key="none")
 
         # Handle transparent binding
@@ -245,15 +226,7 @@ class KeyMapping(Binding):
             return cls(key=key, sticky=True)
 
         # Handle hold-tap bindings
-        hold_tap_prefixes = [
-            "&mt",
-            "&lh_hm",
-            "&rh_hm",
-            "&ht",
-            "&hm",
-            "&hs",
-            "&td",
-        ]
+        hold_tap_prefixes = ["&mt", "&lh_hm", "&rh_hm", "&ht", "&hm", "&hs", "&td"]
         has_hold_tap_prefix = any(
             binding_str.startswith(prefix) for prefix in hold_tap_prefixes
         )
@@ -266,13 +239,33 @@ class KeyMapping(Binding):
             hold_key = parts[1]
             tap_key = parts[2]
 
+            # Create HoldTap instance with proper timing parameters
+            hold_tap = HoldTap(
+                name=behavior_name,
+                hold_key=hold_key,
+                tap_key=tap_key,
+                tapping_term_ms=tap_time,
+                hold_time_ms=hold_time,  # Set hold_time_ms explicitly
+                quick_tap_ms=None,  # Can be set via params if needed
+                flavor="balanced",  # Default to balanced flavor
+            )
+
+            # Create HoldTapBinding with the hold-tap configuration
+            hold_tap_binding = HoldTapBinding(
+                key=tap_key,
+                hold_tap=hold_tap,
+                tap=tap_key,
+                hold=hold_key,
+                params={"tapping_term_ms": tap_time, "hold_time_ms": hold_time},
+            )
+
+            # Return KeyMapping with both behavior and hold_tap set
             return cls(
                 key=tap_key,
-                hold_tap=HoldTap(
-                    behavior_name=behavior_name,
-                    hold_key=hold_key,
-                    tap_key=tap_key,
-                ),
+                behavior=hold_tap,  # Set behavior to HoldTap instance
+                # Convert timing params to strings
+                params=[str(tap_time), str(hold_time)],
+                hold_tap=hold_tap_binding,
             )
 
         # Handle layer switch bindings
@@ -310,53 +303,16 @@ class KeyMapping(Binding):
 
 @dataclass
 class Layer:
-    """Represents a layer in the keymap.
-
-    Now stores the keys matrix as a 2D list (rows x columns).
-    The 'bindings' attribute is deprecated; use 'keys' instead.
-    """
+    """Represents a layer in the keymap."""
 
     name: str
-    keys: List[List[Binding]] = field(default_factory=list)
-
-    def __init__(
-        self,
-        name: str,
-        bindings: List[Binding] = None,
-        keys: List[List[Binding]] = None,
-    ):
-        """Initialize a Layer with a keys matrix (preferred) or flat bindings list (deprecated).
-
-        Args:
-            name: The name of the layer
-            bindings: (Deprecated) List of bindings (flat)
-            keys: Matrix of keys (rows x columns, preferred)
-        """
-        self.name = name
-        if keys is not None:
-            self.keys = keys
-        elif bindings is not None:
-            # For backward compatibility, treat as a single row
-            self.keys = [bindings]
-        else:
-            self.keys = []
-
-    def to_kanata(self) -> str:
-        """Convert the layer to Kanata format."""
-        kanata_bindings = []
-        for row in self.keys:
-            kanata_bindings.append(
-                "  " + "  ".join(binding.to_kanata() for binding in row)
-            )
-        layer_def = f"(deflayer {self.name}\n"
-        layer_def += "\n".join(kanata_bindings) + "\n"
-        layer_def += ")"
-        return layer_def
+    index: int
+    bindings: List[Binding] = field(default_factory=list)
 
 
 @dataclass
 class KeymapConfig:
     """Top-level configuration containing all keymap data."""
 
-    global_settings: GlobalSettings
     layers: List[Layer]
+    behaviors: Dict[str, "Behavior"] = field(default_factory=dict)

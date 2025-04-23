@@ -1,13 +1,14 @@
 """Main module for the ZMK to Kanata converter."""
 
 import argparse
+import os
 import sys
 from typing import List
 
-from .transformer.kanata_transformer import KanataTransformer
-from .dts.preprocessor import DtsPreprocessor
-from .dts.parser import DtsParser
-from .dts.extractor import KeymapExtractor
+from converter.transformer.kanata_transformer import KanataTransformer
+from converter.dts.preprocessor import DtsPreprocessor
+from converter.dts.parser import DtsParser
+from converter.dts.extractor import KeymapExtractor
 
 
 def convert_zmk_to_kanata(zmk_file: str, include_paths: List[str] = None) -> str:
@@ -24,8 +25,18 @@ def convert_zmk_to_kanata(zmk_file: str, include_paths: List[str] = None) -> str
         FileNotFoundError: If the input file doesn't exist
         ValueError: If the input file is invalid
     """
+    # Get the default include path from the package
+    default_include_path = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "dts", "include"
+    )
+
+    # Combine user-provided include paths with the default one
+    all_include_paths = [default_include_path]
+    if include_paths:
+        all_include_paths.extend(include_paths)
+
     # Initialize components
-    preprocessor = DtsPreprocessor(include_paths=include_paths)
+    preprocessor = DtsPreprocessor(include_paths=all_include_paths)
     parser = DtsParser()
     extractor = KeymapExtractor()
     transformer = KanataTransformer()

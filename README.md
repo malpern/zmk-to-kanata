@@ -1,6 +1,81 @@
 # ZMK to Kanata Converter
 
-A tool to convert ZMK keymap files into Kanata configuration files, enabling users to migrate their keyboard configurations between these firmware options.
+A tool to convert ZMK keymap files to Kanata format.
+
+## Features
+
+- Converts ZMK keymap files to Kanata format
+- Supports matrix layouts of any size
+- Handles hold-tap behaviors
+- Supports layer switching
+- Preserves transparent keys
+- Uses DTS parsing for robust handling of ZMK files
+
+## Requirements
+
+- Python 3.11+
+- C preprocessor (cpp) installed on your system
+- uv for Python package management
+
+## Installation
+
+```bash
+# Install uv if you haven't already
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Install dependencies
+uv pip install -r requirements.txt
+```
+
+## Usage
+
+```python
+from converter.main import convert_zmk_to_kanata
+
+# Convert a ZMK file to Kanata format
+kanata_config = convert_zmk_to_kanata(
+    "path/to/keymap.zmk",
+    include_paths=["path/to/zmk/include"]
+)
+
+# Write the configuration to a file
+with open("output.kbd", "w") as f:
+    f.write(kanata_config)
+```
+
+## Supported Features
+
+- Matrix layouts of any size
+- Hold-tap behaviors with configurable timing
+- Layer switching (to_layer, momentary_layer)
+- Transparent keys
+- Key bindings
+
+## Limitations
+
+- Some advanced ZMK features may not be supported
+- Requires a C preprocessor to be installed
+- Include paths must be specified for ZMK header files
+
+## Development
+
+### Running Tests
+
+```bash
+python -m pytest tests/ -v
+```
+
+### Code Style
+
+This project uses black for Python code formatting:
+
+```bash
+black .
+```
+
+## License
+
+MIT License
 
 ## Overview
 
@@ -23,97 +98,6 @@ This project provides a robust conversion tool that maintains feature parity whe
   - Complex modifier combinations
 - Comprehensive error reporting
 - Clean, readable output
-
-## Installation
-
-1. Install uv (if not already installed):
-```bash
-pip install uv
-```
-
-2. Create and activate virtual environment:
-```bash
-uv venv zmk-kanata-env
-source zmk-kanata-env/bin/activate  # On macOS/Linux
-```
-
-3. Install dependencies:
-```bash
-uv pip install pytest
-```
-
-## Usage
-
-### Basic Usage
-
-Convert a ZMK keymap file to Kanata format:
-
-```bash
-python -m converter.cli input.dtsi output.kbd
-```
-
-### Example
-
-Input ZMK file (`input.dtsi`):
-```c
-/ {
-    keymap {
-        compatible = "zmk,keymap";
-        default_layer {
-            bindings = <
-                &kp A &kp B &kp C
-                &mo 1 &kp D &kp E
-            >;
-        };
-
-        function_layer {
-            bindings = <
-                &kp F1 &kp F2 &kp F3
-                &trans &kp F4 &kp F5
-            >;
-        };
-    };
-};
-```
-
-Output Kanata file (`output.kbd`):
-```
-(defsrc
-  a b c
-  mo1 d e)
-
-(deflayer default
-  a b c
-  @fn d e)
-
-(deflayer function
-  f1 f2 f3
-  _ f4 f5)
-```
-
-### Supported Features
-
-1. **Basic Keys**
-   - Regular keys (letters, numbers, symbols)
-   - Function keys (F1-F24)
-   - Navigation keys (arrows, home, end, etc.)
-   - System keys (volume, media control, etc.)
-
-2. **Modifiers**
-   - Basic modifiers (shift, ctrl, alt, gui)
-   - Modifier combinations
-   - Sticky modifiers
-
-3. **Layers**
-   - Layer switching
-   - Momentary layers
-   - Transparent keys
-
-4. **Advanced Features**
-   - Hold-tap behaviors
-   - Custom behaviors
-   - Macros
-   - Unicode input
 
 ## Known Limitations
 
@@ -154,3 +138,31 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## DTS Preprocessor
+
+The converter includes a DTS preprocessor that uses the C preprocessor to handle ZMK keymap files. This allows for proper handling of includes, macros, and other preprocessor directives.
+
+### Usage
+
+```python
+from converter.dts_preprocessor import DtsPreprocessor
+
+# Initialize with include paths
+preprocessor = DtsPreprocessor(include_paths=['/path/to/includes'])
+
+# Preprocess a file
+result = preprocessor.preprocess('keymap.zmk')
+```
+
+### Features
+
+- Handles include files and paths
+- Processes macros and definitions
+- Proper error handling for missing files and invalid paths
+- Uses the system C preprocessor (cpp)
+
+### Requirements
+
+- A C preprocessor (cpp) must be installed on the system
+- Include paths must exist and be accessible

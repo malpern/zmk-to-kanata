@@ -3,10 +3,11 @@
 from typing import Dict, Optional
 
 from ..model.keymap_model import HoldTapBinding
+from ..behaviors.hold_tap import HoldTap
 
 
 class HoldTapTransformer:
-    """Transforms ZMK hold-tap behaviors into Kanata format."""
+    """Transformer for converting ZMK hold-tap behaviors to Kanata format."""
 
     def __init__(self):
         """Initialize the transformer with behavior mappings."""
@@ -36,52 +37,183 @@ class HoldTapTransformer:
             "RGUI": "rmet",
         }
 
+        # Default configuration values
+        self.config = {
+            "tapping_term_ms": 200,
+            "quick_tap_ms": 0,
+            "tap_hold_wait_ms": None,
+            "require_prior_idle_ms": None,
+            "tap_hold_flavor": "hold-preferred",
+        }
+
     def transform_binding(
-        self, binding: HoldTapBinding, tap_time: int, hold_time: int
-    ) -> Optional[str]:
-        """Transform a ZMK hold-tap binding into Kanata format.
+        self,
+        binding: HoldTapBinding,
+        tap_time: Optional[int] = None,
+        hold_time: Optional[int] = None,
+        quick_tap_ms: Optional[int] = None,
+        tap_hold_wait_ms: Optional[int] = None,
+        require_prior_idle_ms: Optional[int] = None,
+        flavor: Optional[str] = None,
+    ) -> str:
+        """Transform a hold-tap binding to Kanata format.
 
         Args:
             binding: The hold-tap binding to transform
-            tap_time: Global tap timeout in milliseconds
-            hold_time: Global hold timeout in milliseconds
+            tap_time: The tap time in milliseconds (default: from config)
+            hold_time: The hold time in milliseconds (default: same as tap_time)
+            quick_tap_ms: Optional quick tap time in ms
+            tap_hold_wait_ms: Optional tap-hold wait time in ms
+            require_prior_idle_ms: Optional prior idle time in ms
+            flavor: Optional tap-hold flavor (e.g., "hold-preferred")
 
         Returns:
-            Kanata tap-hold configuration string or None if invalid
+            The Kanata format string for the hold-tap binding
         """
-        # Get the appropriate tap-hold variant
-        tap_hold_type = "tap-hold"  # Default to basic tap-hold
+        if not binding.hold_tap:
+            raise ValueError("HoldTapBinding must have a hold_tap configuration")
 
-        # Handle advanced features
-        if binding.hold_trigger_key_positions:
-            # Use tap-hold-release-keys for hold-trigger-key-positions
-            tap_hold_type = "tap-hold-release-keys"
-        elif binding.hold_trigger_on_release:
-            # Use tap-hold-release for hold-trigger-on-release
-            tap_hold_type = "tap-hold-release"
-        elif binding.retro_tap:
-            # Use tap-hold-press-timeout for retro-tap
-            tap_hold_type = "tap-hold-press-timeout"
+        # Use provided values or fall back to binding values then config defaults
+        tap_time = (
+            tap_time
+            if tap_time is not None
+            else (
+                binding.hold_tap.tapping_term_ms
+                if binding.hold_tap.tapping_term_ms is not None
+                else self.config["tapping_term_ms"]
+            )
+        )
+        hold_time = (
+            hold_time
+            if hold_time is not None
+            else (
+                binding.hold_tap.hold_time_ms
+                if binding.hold_tap.hold_time_ms is not None
+                else tap_time
+            )
+        )
+        quick_tap_ms = (
+            quick_tap_ms
+            if quick_tap_ms is not None
+            else (
+                binding.hold_tap.quick_tap_ms
+                if binding.hold_tap.quick_tap_ms is not None
+                else self.config["quick_tap_ms"]
+            )
+        )
+        tap_hold_wait_ms = (
+            tap_hold_wait_ms
+            if tap_hold_wait_ms is not None
+            else (
+                binding.hold_tap.tap_hold_wait_ms
+                if binding.hold_tap.tap_hold_wait_ms is not None
+                else self.config["tap_hold_wait_ms"]
+            )
+        )
+        require_prior_idle_ms = (
+            require_prior_idle_ms
+            if require_prior_idle_ms is not None
+            else (
+                binding.hold_tap.require_prior_idle_ms
+                if binding.hold_tap.require_prior_idle_ms is not None
+                else self.config["require_prior_idle_ms"]
+            )
+        )
+        flavor = (
+            flavor
+            if flavor is not None
+            else (
+                binding.hold_tap.flavor
+                if binding.hold_tap.flavor is not None
+                else self.config["tap_hold_flavor"]
+            )
+        )
 
-        # Map the hold key (usually a modifier)
-        hold_key = self.modifier_map.get(binding.hold_key, binding.hold_key.lower())
+        # Convert the hold and tap keys to Kanata format
+        hold_key = (
+            self.modifier_map.get(binding.hold.upper(), binding.hold.lower())
+            if binding.hold
+            else None
+        )
+        tap_key = binding.tap.lower() if binding.tap else None
 
-        # Map the tap key
-        tap_key = binding.tap_key.lower()
+        if not hold_key or not tap_key:
+            raise ValueError("Both hold and tap keys must be specified")
 
-        # Basic tap-hold configuration
-        config = f"({tap_hold_type} {tap_time} {hold_time} {tap_key} {hold_key}"
+        # Determine the tap-hold variant
+        tap_hold_type = self.flavor_map.get(flavor, "tap-hold")
 
-        # Add extra parameters for advanced features
-        if tap_hold_type == "tap-hold-release-keys":
-            # Convert key positions to a list
-            positions = " ".join(str(pos) for pos in binding.hold_trigger_key_positions)
-            config += f" ({positions})"
-        elif tap_hold_type == "tap-hold-press-timeout" and binding.retro_tap:
-            # Add tap key as timeout action for retro-tap
-            config += f" {tap_key}"
+        # Build the tap-hold configuration
+        config_parts = [
+            tap_hold_type,
+            str(tap_time),
+            str(hold_time),
+            tap_key,
+            hold_key,
+        ]
 
-        # Close the configuration
-        config += ")"
+        # Add optional parameters if present
+        if quick_tap_ms is not None and quick_tap_ms > 0:
+            config_parts.append(str(quick_tap_ms))
+        if tap_hold_wait_ms is not None:
+            if len(config_parts) == 5:  # Add quick_tap_ms if not present
+                config_parts.append("0")
+            config_parts.append(str(tap_hold_wait_ms))
+        if require_prior_idle_ms is not None:
+            while len(config_parts) < 7:  # Add missing params if needed
+                config_parts.append("0")
+            config_parts.append(str(require_prior_idle_ms))
 
-        return config
+        # Create and return the configuration string
+        return f"({' '.join(config_parts)})"
+
+    def transform_behavior(
+        self, behavior: HoldTap, hold_param: str, tap_param: str
+    ) -> tuple[str, str]:
+        """Transform a HoldTap behavior into a Kanata alias definition.
+
+        Args:
+            behavior: The HoldTap behavior to transform
+            hold_param: The hold key/action (e.g., 'LCTRL', '1' for layer)
+            tap_param: The tap key/action
+
+        Returns:
+            A tuple of (alias_definition, alias_name) where:
+            - alias_definition is the full Kanata alias definition string
+            - alias_name is the name of the alias for reference
+        """
+        # Convert the hold and tap params to Kanata format
+        hold_key = self.modifier_map.get(hold_param.upper(), hold_param.lower())
+        tap_key = tap_param.lower()
+
+        # Determine the tap-hold variant based on behavior properties
+        tap_hold_type = self.flavor_map.get(behavior.flavor, "tap-hold")
+
+        # Build the tap-hold configuration
+        config_parts = [
+            tap_hold_type,
+            str(behavior.tapping_term_ms),
+            str(behavior.hold_time_ms or behavior.tapping_term_ms),
+            tap_key,
+            hold_key,
+        ]
+
+        # Add optional parameters if present
+        if behavior.quick_tap_ms is not None and behavior.quick_tap_ms > 0:
+            config_parts.append(str(behavior.quick_tap_ms))
+        if behavior.tap_hold_wait_ms is not None:
+            if len(config_parts) == 5:  # Add quick_tap_ms if not present
+                config_parts.append("0")
+            config_parts.append(str(behavior.tap_hold_wait_ms))
+        if behavior.require_prior_idle_ms is not None:
+            while len(config_parts) < 7:  # Add missing params if needed
+                config_parts.append("0")
+            config_parts.append(str(behavior.require_prior_idle_ms))
+
+        # Create the configuration string
+        config = f"({' '.join(config_parts)})"
+
+        # Create the full alias definition
+        alias_def = f"(defalias {behavior.name} {config})"
+
+        return alias_def, behavior.name

@@ -1,0 +1,7 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+Before trying to fix Linter code be sure to run Black and "ruff check . --fix" on it first to see if that fixes the problem.

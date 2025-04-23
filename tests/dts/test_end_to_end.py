@@ -22,30 +22,28 @@ def test_simple_keymap():
         };
     };
     """
-    
+
     # Parse and extract
     parser = DtsParser()
     ast = parser.parse(content)
-    
+
     extractor = KeymapExtractor()
     config = extractor.extract(ast)
-    
+
     # Verify basic structure
     assert isinstance(config, KeymapConfig)
     assert len(config.layers) == 1
-    
+
     # Verify default layer
     default_layer_node = next(
-        layer_node for layer_node in config.layers 
-        if layer_node.name == "default_layer"
+        layer_node for layer_node in config.layers if layer_node.name == "default_layer"
     )
     assert len(default_layer_node.bindings) == 6
-    
+
     # Verify bindings
     expected_key_codes = ["A", "B", "C", "D", "E", "F"]
     for binding_node, expected_key_code in zip(
-        default_layer_node.bindings, 
-        expected_key_codes
+        default_layer_node.bindings, expected_key_codes
     ):
         assert isinstance(binding_node, Binding)
         assert binding_node.behavior is None  # kp is built-in
@@ -95,56 +93,54 @@ def test_complex_keymap_with_behaviors():
         };
     };
     """
-    
+
     # Parse and extract
     parser = DtsParser()
     ast = parser.parse(content)
-    
+
     extractor = KeymapExtractor()
     config = extractor.extract(ast)
-    
+
     # Verify basic structure
     assert isinstance(config, KeymapConfig)
     assert len(config.layers) == 2
     assert len(config.behaviors) == 3
-    
+
     # Verify behaviors
     mt = next(b for b in config.behaviors if b.name == "mt")
     assert isinstance(mt, Behavior)
     assert mt.tapping_term_ms == 200
-    
+
     lt = next(b for b in config.behaviors if b.name == "lt")
     assert isinstance(lt, Behavior)
     assert lt.tapping_term_ms == 200
-    
+
     macro = next(b for b in config.behaviors if b.name == "macro_a")
     assert isinstance(macro, Behavior)
     assert len(macro.bindings) == 2
-    
+
     # Verify default layer
     default_layer_node = next(
-        layer_node for layer_node in config.layers 
-        if layer_node.name == "default_layer"
+        layer_node for layer_node in config.layers if layer_node.name == "default_layer"
     )
     assert len(default_layer_node.bindings) == 6
-    
+
     # Check specific bindings
     assert default_layer_node.bindings[0].behavior == mt
     assert default_layer_node.bindings[0].params == ["LSHIFT", "A"]
-    
+
     assert default_layer_node.bindings[1].behavior is None  # kp is built-in
     assert default_layer_node.bindings[1].params == ["B"]
-    
+
     assert default_layer_node.bindings[2].behavior == macro
     assert not default_layer_node.bindings[2].params
-    
+
     assert default_layer_node.bindings[4].behavior == lt
     assert default_layer_node.bindings[4].params == ["1", "E"]
-    
+
     # Verify lower layer
     lower_layer_node = next(
-        layer_node for layer_node in config.layers 
-        if layer_node.name == "lower_layer"
+        layer_node for layer_node in config.layers if layer_node.name == "lower_layer"
     )
     assert len(lower_layer_node.bindings) == 6
     for binding_node in lower_layer_node.bindings:
@@ -184,30 +180,30 @@ def test_keymap_with_unicode():
         };
     };
     """
-    
+
     # Parse and extract
     parser = DtsParser()
     ast = parser.parse(content)
-    
+
     extractor = KeymapExtractor()
     config = extractor.extract(ast)
-    
+
     # Verify behaviors
     assert len(config.behaviors) == 2
-    
+
     unicode = next(b for b in config.behaviors if b.name == "unicode")
     assert isinstance(unicode, Behavior)
-    
+
     uc_string = next(b for b in config.behaviors if b.name == "uc_string")
     assert isinstance(uc_string, Behavior)
-    
+
     # Verify bindings
     layer_node = config.layers[0]
     assert len(layer_node.bindings) == 6
-    
+
     assert layer_node.bindings[0].behavior == unicode
     assert layer_node.bindings[0].params == ["U0001F600"]
-    
+
     assert layer_node.bindings[1].behavior == uc_string
     assert layer_node.bindings[1].params == ["smile"]
 
@@ -218,21 +214,24 @@ def test_error_handling():
     with pytest.raises(ValueError, match="Expected root node"):
         parser = DtsParser()
         parser.parse("keymap { };")
-    
+
     # Test invalid property assignment
     with pytest.raises(ValueError, match="Expected ';' after property value"):
         parser = DtsParser()
-        parser.parse("""
+        parser.parse(
+            """
         / {
             keymap {
                 prop = value
             };
         };
-        """)
-    
+        """
+        )
+
     # Test invalid binding format
     parser = DtsParser()
-    ast = parser.parse("""
+    ast = parser.parse(
+        """
     / {
         keymap {
             default_layer {
@@ -240,12 +239,10 @@ def test_error_handling():
             };
         };
     };
-    """)
+    """
+    )
     extractor = KeymapExtractor()
-    with pytest.raises(
-        ValueError, 
-        match="Invalid binding format: invalid_binding"
-    ):
+    with pytest.raises(ValueError, match="Invalid binding format: invalid_binding"):
         extractor.extract(ast)
 
 
@@ -279,22 +276,22 @@ def test_keymap_with_combos():
         };
     };
     """
-    
+
     # Parse and extract
     parser = DtsParser()
     ast = parser.parse(content)
-    
+
     extractor = KeymapExtractor()
     config = extractor.extract(ast)
-    
+
     # Verify combos
     assert len(config.combos) == 2
-    
+
     combo_esc = next(c for c in config.combos if c.name == "combo_esc")
     assert combo_esc.timeout_ms == 50
     assert combo_esc.key_positions == [0, 1]
     assert combo_esc.binding.params == ["ESC"]
-    
+
     combo_tab = next(c for c in config.combos if c.name == "combo_tab")
     assert combo_tab.timeout_ms == 50
     assert combo_tab.key_positions == [1, 2]
@@ -334,25 +331,25 @@ def test_keymap_with_conditional_layers():
         };
     };
     """
-    
+
     # Parse and extract
     parser = DtsParser()
     ast = parser.parse(content)
-    
+
     extractor = KeymapExtractor()
     config = extractor.extract(ast)
-    
+
     # Verify conditional layers
     assert len(config.conditional_layers) == 1
-    
+
     tri_layer = config.conditional_layers[0]
     assert tri_layer.if_layers == [1, 2]
     assert tri_layer.then_layer == 3
-    
+
     # Verify all layers exist
     assert len(config.layers) == 4
     layer_names = [layer_node.name for layer_node in config.layers]
     assert "default_layer" in layer_names
     assert "lower_layer" in layer_names
     assert "raise_layer" in layer_names
-    assert "adjust_layer" in layer_names 
+    assert "adjust_layer" in layer_names

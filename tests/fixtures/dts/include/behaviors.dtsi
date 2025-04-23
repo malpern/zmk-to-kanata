@@ -1,0 +1,40 @@
+/*
+ * Minimal behaviors.dtsi for testing
+ */
+
+/ {
+    behaviors {
+        kp: kp {
+            compatible = "zmk,behavior-key-press";
+            #binding-cells = <1>;
+        };
+        trans: trans {
+            compatible = "zmk,behavior-transparent";
+            #binding-cells = <0>;
+        };
+        mo: mo {
+            compatible = "zmk,behavior-momentary-layer";
+            #binding-cells = <1>;
+        };
+        to: to {
+            compatible = "zmk,behavior-to-layer";
+            #binding-cells = <1>;
+        };
+        tog: tog {
+            compatible = "zmk,behavior-toggle-layer";
+            #binding-cells = <1>;
+        };
+        mt: mt {
+            compatible = "zmk,behavior-mod-tap";
+            #binding-cells = <2>;
+        };
+        lt: lt {
+            compatible = "zmk,behavior-layer-tap";
+            #binding-cells = <2>;
+        };
+        sk: sk {
+            compatible = "zmk,behavior-sticky-key";
+            #binding-cells = <1>;
+        };
+    };
+}; 

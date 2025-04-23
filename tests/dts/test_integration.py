@@ -3,7 +3,7 @@
 import pytest
 from converter.dts.parser import DtsParser
 from converter.dts.extractor import KeymapExtractor
-from converter.models import KeymapConfig, Layer, Binding, Behavior
+from converter.models import KeymapConfig, Binding
 
 
 def test_full_pipeline_simple_keymap():
@@ -18,21 +18,21 @@ def test_full_pipeline_simple_keymap():
         };
     };
     """
-    
+
     # Parse DTS
     parser = DtsParser()
     ast = parser.parse(content)
-    
+
     # Extract keymap
     extractor = KeymapExtractor()
     config = extractor.extract(ast)
-    
+
     # Verify results
     assert isinstance(config, KeymapConfig)
     assert len(config.layers) == 1
     assert config.layers[0].name == "default_layer"
     assert len(config.layers[0].bindings) == 3
-    
+
     # Check bindings
     for binding in config.layers[0].bindings:
         assert isinstance(binding, Binding)
@@ -62,36 +62,36 @@ def test_full_pipeline_with_behaviors():
         };
     };
     """
-    
+
     # Parse DTS
     parser = DtsParser()
     ast = parser.parse(content)
-    
+
     # Extract keymap
     extractor = KeymapExtractor()
     config = extractor.extract(ast)
-    
+
     # Verify results
     assert isinstance(config, KeymapConfig)
     assert len(config.layers) == 1
     assert len(config.behaviors) == 2
-    
+
     # Check behaviors
     mt = next(b for b in config.behaviors if b.name == "mt")
     assert mt.tapping_term_ms == 200
-    
+
     macro = next(b for b in config.behaviors if b.name == "macro")
     assert len(macro.bindings) == 2
-    
+
     # Check layer bindings
     layer = config.layers[0]
     assert len(layer.bindings) == 2
-    
+
     # First binding should be mod-tap
     mt_binding = layer.bindings[0]
     assert mt_binding.behavior == mt
     assert mt_binding.params == ["LSHIFT", "A"]
-    
+
     # Second binding should be macro
     macro_binding = layer.bindings[1]
     assert macro_binding.behavior == macro
@@ -115,23 +115,23 @@ def test_full_pipeline_multiple_layers():
         };
     };
     """
-    
+
     # Parse DTS
     parser = DtsParser()
     ast = parser.parse(content)
-    
+
     # Extract keymap
     extractor = KeymapExtractor()
     config = extractor.extract(ast)
-    
+
     # Verify results
     assert isinstance(config, KeymapConfig)
     assert len(config.layers) == 3
-    
+
     # Check layer names
     layer_names = {layer.name for layer in config.layers}
     assert layer_names == {"default_layer", "lower_layer", "raise_layer"}
-    
+
     # Check each layer
     for layer in config.layers:
         assert len(layer.bindings) == 2
@@ -166,38 +166,38 @@ def test_full_pipeline_complex_bindings():
         };
     };
     """
-    
+
     # Parse DTS
     parser = DtsParser()
     ast = parser.parse(content)
-    
+
     # Extract keymap
     extractor = KeymapExtractor()
     config = extractor.extract(ast)
-    
+
     # Verify results
     assert isinstance(config, KeymapConfig)
     assert len(config.layers) == 1
     assert len(config.behaviors) == 2
-    
+
     # Check behaviors
     mt = next(b for b in config.behaviors if b.name == "mt")
     lt = next(b for b in config.behaviors if b.name == "lt")
-    
+
     # Check layer bindings
     layer = config.layers[0]
     assert len(layer.bindings) == 3
-    
+
     # First binding should be mod-tap
     mt_binding = layer.bindings[0]
     assert mt_binding.behavior == mt
     assert mt_binding.params == ["LSHIFT", "A"]
-    
+
     # Second binding should be layer-tap
     lt_binding = layer.bindings[1]
     assert lt_binding.behavior == lt
     assert lt_binding.params == ["1", "B"]
-    
+
     # Third binding should be key-press
     kp_binding = layer.bindings[2]
     assert kp_binding.behavior is None
@@ -211,7 +211,7 @@ def test_full_pipeline_error_handling():
     parser = DtsParser()
     with pytest.raises(ValueError, match="Expected root node"):
         parser.parse(content)
-    
+
     # Test invalid property assignment
     content = """
     / {
@@ -222,7 +222,7 @@ def test_full_pipeline_error_handling():
     """
     with pytest.raises(ValueError, match="Expected ';' after property value"):
         parser.parse(content)
-    
+
     # Test invalid node
     content = """
     / {
@@ -230,4 +230,4 @@ def test_full_pipeline_error_handling():
     };
     """
     with pytest.raises(ValueError, match="Expected '{' after node name"):
-        parser.parse(content) 
+        parser.parse(content)

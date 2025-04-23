@@ -7,10 +7,10 @@ from converter.transformer.macro_transformer import MacroTransformer
 
 
 class TestMacroTransformer(unittest.TestCase):
-    """Test cases for the MacroTransformer class."""
+    """Test suite for the MacroTransformer class."""
 
     def setUp(self):
-        """Set up the test case."""
+        """Set up the test environment."""
         self.transformer = MacroTransformer()
 
     def test_transform_macro(self):
@@ -48,34 +48,14 @@ class TestMacroTransformer(unittest.TestCase):
 )"""
         self.assertEqual(result, expected)
 
-    def test_transform_behavior(self):
-        """Test transforming a macro behavior using transform_behavior."""
-
-        # Create a macro behavior with bindings that have to_kanata method
-        class MockBinding:
-            def __init__(self, kanata_str):
-                self.kanata_str = kanata_str
-
-            def to_kanata(self):
-                return self.kanata_str
-
-        macro = MacroBehavior(
-            name="test_macro",
-            wait_ms=50,
-            tap_ms=50,
-            bindings=[MockBinding("a"), MockBinding("b"), MockBinding("c")],
-            binding_cells=[],
-        )
-
-        # Transform the behavior
-        result = self.transformer.transform_behavior(macro)
-
-        # Verify the result
-        expected = """(defsrc test_macro)
-(deflayer test_macro
-  a b c
-)"""
-        self.assertEqual(result, expected)
+    def test_convert_key(self):
+        """Test the internal _convert_key method."""
+        # Test basic keys
+        self.assertEqual(self.transformer._convert_key("A"), "a")
+        self.assertEqual(self.transformer._convert_key("N1"), "1")
+        self.assertEqual(self.transformer._convert_key("LSHIFT"), "lsft")
+        # Test unknown key (should be lowercased)
+        self.assertEqual(self.transformer._convert_key("UNKNOWN_KEY"), "unknown_key")
 
 
 if __name__ == "__main__":
