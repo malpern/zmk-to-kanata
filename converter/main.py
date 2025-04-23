@@ -2,61 +2,15 @@
 
 import argparse
 import sys
-from pathlib import Path
-from typing import List, Union, Dict, Any, Optional
+from typing import List
 
-from .layer_transformer import KanataLayer
-from .models import Keymap, Layer, KanataConfig
 from .transformer.kanata_transformer import KanataTransformer
 from .dts.preprocessor import DtsPreprocessor
 from .dts.parser import DtsParser
 from .dts.extractor import KeymapExtractor
 
 
-def generate_kanata_keymap(layers: List[KanataLayer]) -> str:
-    """Generate a Kanata keymap configuration from a list of layers.
-
-    Args:
-        layers: List of KanataLayer objects or strings
-
-    Returns:
-        String containing the complete Kanata keymap configuration
-    """
-    kanata_config = []
-
-    # Add header comments
-    kanata_config.extend(
-        [
-            ";; ZMK to Kanata Configuration",
-            ";; Generated automatically - DO NOT EDIT",
-            "",
-            ";; Global settings",
-            "(defvar tap-time 200)",
-            "(defvar hold-time 250)",
-            "",
-        ]
-    )
-
-    # Add layers
-    for i, layer in enumerate(layers):
-        # Handle both KanataLayer objects and strings
-        if isinstance(layer, str):
-            kanata_config.append(layer)
-        else:
-            # Add layer definition
-            kanata_config.append(f"(deflayer {layer.name}")
-            # Add key rows with proper spacing
-            for row in layer.keys:
-                kanata_config.append("  " + " ".join(row))
-            kanata_config.append(")")
-
-    return "\n".join(kanata_config)
-
-
-def convert_zmk_to_kanata(
-    zmk_file: str, 
-    include_paths: List[str] = None
-) -> str:
+def convert_zmk_to_kanata(zmk_file: str, include_paths: List[str] = None) -> str:
     """Convert a ZMK keymap file to Kanata configuration.
 
     Args:
@@ -79,22 +33,21 @@ def convert_zmk_to_kanata(
     try:
         # Preprocess the input file
         preprocessed_content = preprocessor.preprocess(zmk_file)
-        
+
         # Parse the preprocessed content
         ast = parser.parse(preprocessed_content)
-        
+
         # Extract keymap configuration
         keymap_config = extractor.extract(ast)
-        
+
         # Transform to Kanata format
-        kanata_layers = transformer.transform(keymap_config)
-        
-        # Generate final configuration
-        return generate_kanata_keymap(kanata_layers)
-        
+        # Directly return the transformed output
+        return transformer.transform(keymap_config)
+
     except FileNotFoundError as e:
         raise FileNotFoundError(f"Input file not found: {zmk_file}") from e
     except Exception as e:
+        # Consider more specific error handling/logging here
         raise ValueError(f"Failed to convert keymap: {str(e)}") from e
 
 
@@ -103,42 +56,44 @@ def main(args=None):
     parser = argparse.ArgumentParser(
         description="Convert ZMK keymap files to Kanata configuration"
     )
+    parser.add_argument("input_file", help="Path to the ZMK keymap file")
     parser.add_argument(
-        "input_file",
-        help="Path to the ZMK keymap file"
+        "-o", "--output", help="Path to the output file (default: stdout)"
     )
     parser.add_argument(
-        "-o", "--output",
-        help="Path to the output file (default: stdout)"
-    )
-    parser.add_argument(
-        "-I", "--include",
+        "-I",
+        "--include",
         action="append",
-        help="Additional include paths for preprocessing"
+        help="Additional include paths for preprocessing",
+        default=[],  # Add default value
     )
 
-    args = parser.parse_args(args)
+    parsed_args = parser.parse_args(args)
 
     try:
         # Convert the keymap
         kanata_config = convert_zmk_to_kanata(
-            args.input_file,
-            include_paths=args.include
+            parsed_args.input_file, include_paths=parsed_args.include
         )
 
         # Write output
-        if args.output:
-            with open(args.output, "w") as f:
+        if parsed_args.output:
+            with open(parsed_args.output, "w") as f:
                 f.write(kanata_config)
+            print(
+                f"Successfully converted {parsed_args.input_file} to {parsed_args.output}"
+            )  # Add success message
         else:
             print(kanata_config)
 
+        return 0  # Return success code
+
     except Exception as e:
         print(f"Error: {str(e)}", file=sys.stderr)
-        sys.exit(1)
+        # Potentially return different codes for different errors
+        return 1  # Return error code
 
 
 if __name__ == "__main__":
-    main()
-
-# Implementation will be added in subsequent tasks
+    exit_code = main()
+    sys.exit(exit_code)
