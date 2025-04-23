@@ -3,12 +3,12 @@
 from typing import Dict, List, Optional
 from .ast import DtsNode, DtsRoot
 from ..models import (
-    KeymapConfig, 
-    Layer, 
-    Binding, 
-    Behavior, 
-    HoldTap, 
-    MacroBehavior
+    KeymapConfig,
+    Layer,
+    Binding,
+    Behavior,
+    HoldTap,
+    MacroBehavior,
 )
 
 
@@ -183,9 +183,12 @@ class KeymapExtractor:
             
         Returns:
             List of Binding instances
+            
+        Raises:
+            ValueError: If binding format is invalid
         """
         if not value.startswith('<') or not value.endswith('>'):
-            return []
+            raise ValueError("Invalid binding format: must be enclosed in < >")
             
         # Parse array of bindings
         content = value[1:-1].strip()
@@ -195,8 +198,16 @@ class KeymapExtractor:
         bindings = []
         for binding in content.split('&')[1:]:  # Skip empty first element
             binding = binding.strip()
-            if binding:
-                bindings.append(self._create_binding(binding))
+            if not binding:
+                continue
+                
+            # Validate binding format
+            valid_prefixes = ["kp", "mt", "lt", "macro"]
+            if not any(binding.startswith(prefix) 
+                      for prefix in valid_prefixes):
+                raise ValueError(f"Invalid binding format: {binding}")
+                
+            bindings.append(self._create_binding(binding))
                 
         return bindings
 
@@ -208,16 +219,22 @@ class KeymapExtractor:
             
         Returns:
             Binding instance
+            
+        Raises:
+            ValueError: If binding format is invalid
         """
         parts = value.split()
         if not parts:
-            return Binding()
+            raise ValueError(f"Invalid binding format: empty binding")
             
         behavior_name = parts[0]
         params = parts[1:]
         
-        print(f"Creating binding for {behavior_name} with params {params}")
-        print(f"Available behaviors: {self.behaviors}")
+        # Validate behavior name
+        valid_prefixes = ["kp", "mt", "lt", "macro"]
+        if not any(behavior_name.startswith(prefix) 
+                  for prefix in valid_prefixes):
+            raise ValueError(f"Invalid binding format: {value}")
         
         # Look up behavior
         behavior = self.behaviors.get(behavior_name)
