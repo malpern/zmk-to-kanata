@@ -1,21 +1,25 @@
 # ZMK to Kanata Converter
 
-A tool to convert ZMK keymap files to Kanata format.
+A tool to convert ZMK keymap files to Kanata format, using a robust DTS (Device Tree Source) parser.
 
 ## Features
 
-- Converts ZMK keymap files to Kanata format
-- Supports matrix layouts of any size
-- Handles hold-tap behaviors
-- Supports layer switching
-- Preserves transparent keys
-- Uses DTS parsing for robust handling of ZMK files
+- Full DTS parsing support for ZMK keymap files
+- Comprehensive behavior handling:
+  - Hold-tap behaviors with configurable timing and flavors
+  - Layer switching (momentary, toggle, to-layer)
+  - Sticky keys and modifiers
+  - Macro support
+  - Transparent keys
+- Matrix layout support with automatic size detection
+- Built-in ZMK header files - no external dependencies needed
+- Clean, readable Kanata output
 
 ## Requirements
 
 - Python 3.11+
-- C preprocessor (cpp) installed on your system
-- uv for Python package management
+- C preprocessor (cpp) - included on most Unix systems, needs manual install on Windows
+- uv for Python package management (recommended)
 
 ## Installation
 
@@ -23,11 +27,30 @@ A tool to convert ZMK keymap files to Kanata format.
 # Install uv if you haven't already
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
+# Clone the repository
+git clone https://github.com/yourusername/zmk-to-kanata.git
+cd zmk-to-kanata
+
 # Install dependencies
 uv pip install -r requirements.txt
+
+# Install for development
+uv pip install -e .
 ```
 
 ## Usage
+
+### Command Line
+
+```bash
+# Basic usage
+zmk-to-kanata input.zmk -o output.kbd
+
+# With custom include paths (optional)
+zmk-to-kanata input.zmk -o output.kbd -I /path/to/includes
+```
+
+### Python API
 
 ```python
 from converter.main import convert_zmk_to_kanata
@@ -35,7 +58,7 @@ from converter.main import convert_zmk_to_kanata
 # Convert a ZMK file to Kanata format
 kanata_config = convert_zmk_to_kanata(
     "path/to/keymap.zmk",
-    include_paths=["path/to/zmk/include"]
+    include_paths=None  # Optional - converter includes ZMK headers by default
 )
 
 # Write the configuration to a file
@@ -45,90 +68,127 @@ with open("output.kbd", "w") as f:
 
 ## Supported Features
 
-- Matrix layouts of any size
-- Hold-tap behaviors with configurable timing
-- Layer switching (to_layer, momentary_layer)
-- Transparent keys
-- Key bindings
+### Basic Features
+- Complete keymap configuration
+- Layer definitions and switching
+- Basic key bindings and modifiers
+- Matrix layout detection
 
-## Limitations
+### Advanced Features
+- Hold-tap behaviors with full configuration:
+  - Timing parameters (tap-time, hold-time)
+  - Flavor selection (balanced, hold-preferred, tap-preferred)
+  - Quick-tap and global quick-tap
+  - Hold-trigger key positions
+- Sticky keys with timing configuration
+- Macro support with key sequences
+- Transparent key handling
 
-- Some advanced ZMK features may not be supported
-- Requires a C preprocessor to be installed
-- Include paths must be specified for ZMK header files
+### DTS Features
+- Full DTS syntax support
+- Built-in ZMK header files
+- Proper handling of:
+  - Node definitions
+  - Properties and values
+  - Labels and references
+  - Include directives
+  - Preprocessor macros
 
-## Development
+## Breaking Changes
 
-### Running Tests
+If upgrading from a previous version, note these changes:
 
-```bash
-python -m pytest tests/ -v
+1. **API Changes**
+   - `convert_zmk_to_kanata()` now uses DTS parsing by default
+   - Include paths are optional - ZMK headers are bundled
+   - Improved error messages with file/line context
+
+2. **Configuration Changes**
+   - Hold-tap configuration format updated
+   - Layer behavior syntax aligned with ZMK spec
+   - Macro definition structure changed
+
+## Examples
+
+### Basic Keymap
+
+```dts
+/ {
+    keymap {
+        compatible = "zmk,keymap";
+        default_layer {
+            bindings = <
+                &kp A &kp B
+                &kp C &kp D
+            >;
+        };
+    };
+};
 ```
 
-### Code Style
+### Hold-Tap Configuration
 
-This project uses black for Python code formatting:
-
-```bash
-black .
+```dts
+/ {
+    behaviors {
+        hm: homerow_mods {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            flavor = "tap-preferred";
+            bindings = <&kp>, <&kp>;
+        };
+    };
+    
+    keymap {
+        compatible = "zmk,keymap";
+        default_layer {
+            bindings = <
+                &hm LSHIFT A &hm LCTL B
+                &kp C        &kp D
+            >;
+        };
+    };
+};
 ```
-
-## License
-
-MIT License
-
-## Overview
-
-This project provides a robust conversion tool that maintains feature parity where possible, provides clear error messages for unsupported features, and generates clean, readable Kanata output.
-
-## Features
-
-- Convert ZMK keymap files to Kanata format
-- Support for common keyboard features:
-  - Basic key mappings
-  - Layer definitions
-  - Modifiers and modifier combinations
-  - Media and special keys
-  - Unicode input
-  - Macros
-- Advanced features support:
-  - Hold-tap behaviors (including homerow mods)
-  - Sticky keys
-  - Custom behaviors
-  - Complex modifier combinations
-- Comprehensive error reporting
-- Clean, readable output
 
 ## Known Limitations
 
-- No support for advanced ZMK features like combos
-- Limited to standard keyboard layouts
-- Focus on common use cases first
+1. **Unsupported ZMK Features**
+   - Combos
+   - RGB/LED controls
+   - Bluetooth profiles
+   - Custom behaviors beyond standard types
+
+2. **Technical Limitations**
+   - Matrix size must be defined or detectable
+   - Some advanced preprocessor directives may not work
+   - Windows requires manual cpp installation
 
 ## Troubleshooting
 
 ### Common Issues
 
-1. **Invalid Key Names**
-   - Error: "Invalid key name in binding"
-   - Solution: Check that key names match ZMK's key codes
+1. **Preprocessing Errors**
+   - Error: "Failed to preprocess DTS file"
+   - Solution: Verify cpp is installed and in PATH
 
-2. **Layer Issues**
-   - Error: "Layer not found"
-   - Solution: Ensure all referenced layers are defined
+2. **Node Resolution Errors**
+   - Error: "Cannot resolve node reference"
+   - Solution: Check label definitions and references
 
-3. **Syntax Errors**
-   - Error: "Failed to parse ZMK file"
-   - Solution: Verify ZMK file syntax and formatting
+3. **Behavior Configuration**
+   - Error: "Invalid behavior configuration"
+   - Solution: Verify behavior properties match ZMK spec
 
 ### Getting Help
 
 If you encounter issues:
-1. Check the error message for specific details
-2. Verify your ZMK file syntax
-3. Open an issue on GitHub with:
+1. Enable debug logging: `zmk-to-kanata --debug input.zmk`
+2. Check error messages for file/line information
+3. Open an issue with:
    - Your ZMK file
-   - The error message
+   - Complete error output
    - Expected behavior
 
 ## Contributing
@@ -138,31 +198,3 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## DTS Preprocessor
-
-The converter includes a DTS preprocessor that uses the C preprocessor to handle ZMK keymap files. This allows for proper handling of includes, macros, and other preprocessor directives.
-
-### Usage
-
-```python
-from converter.dts_preprocessor import DtsPreprocessor
-
-# Initialize with include paths
-preprocessor = DtsPreprocessor(include_paths=['/path/to/includes'])
-
-# Preprocess a file
-result = preprocessor.preprocess('keymap.zmk')
-```
-
-### Features
-
-- Handles include files and paths
-- Processes macros and definitions
-- Proper error handling for missing files and invalid paths
-- Uses the system C preprocessor (cpp)
-
-### Requirements
-
-- A C preprocessor (cpp) must be installed on the system
-- Include paths must exist and be accessible
