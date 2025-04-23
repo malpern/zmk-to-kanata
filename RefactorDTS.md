@@ -242,7 +242,18 @@ This refactoring represents a significant architectural shift but is necessary f
    - ✅ Fixed built-in behavior handling
    - ⚠️ Minor linter issues to fix (imports and spacing)
 
-5. **End-to-End Tests (tests/dts/test_end_to_end.py)**
+5. **DTS Preprocessor (converter/dts/preprocessor.py)**
+   - ✅ Basic structure implemented
+   - ✅ C preprocessor integration working
+   - ✅ Include path handling
+   - ✅ Matrix size detection
+   - ✅ RC macro preservation
+   - ✅ Error handling and logging
+   - ✅ Cross-platform support (macOS/Windows)
+   - ✅ All tests passing
+   - ⚠️ Minor linter issues to fix (blank lines)
+
+6. **End-to-End Tests (tests/dts/test_end_to_end.py)**
    - ✅ Simple keymap tests passing
    - ✅ Complex keymap with behaviors tests passing
    - ✅ Unicode handling tests passing
@@ -250,6 +261,34 @@ This refactoring represents a significant architectural shift but is necessary f
    - ✅ Combo key tests passing
    - ✅ Conditional layer tests passing
    - ⚠️ Minor linter issues to fix (ambiguous variable names)
+
+7. **Preprocessor Tests (tests/dts/test_preprocessor.py)**
+   - ✅ Basic preprocessing tests
+   - ✅ Include handling tests
+   - ✅ Matrix transform tests
+   - ✅ Error handling tests
+   - ✅ Cross-platform tests
+   - ⚠️ Minor linter issues to fix (line length)
+
+#### Integration Steps (In Progress)
+1. **Main Converter Integration**
+   - ⚠️ Update converter/main.py to use new DTS parser
+   - ⚠️ Implement preprocessor integration
+   - ⚠️ Remove old parser classes
+   - ⚠️ Update CLI interface
+
+2. **Preprocessor Implementation**
+   - ✅ Create DtsPreprocessor class
+   - ✅ Implement cpp integration
+   - ✅ Add include path handling
+   - ✅ Add error handling and logging
+   - ⚠️ Add performance testing
+
+3. **Cleanup Tasks**
+   - ⚠️ Remove old parser classes
+   - ⚠️ Update documentation
+   - ⚠️ Add performance testing
+   - ⚠️ Fix remaining linter issues
 
 #### Current Issues Identified
 1. **Parser Architecture**:
@@ -273,62 +312,25 @@ This refactoring represents a significant architectural shift but is necessary f
    - ⚠️ Some import cleanup needed
    - ⚠️ Some variable naming improvements needed
 
-### Implementation Decision
+### Next Steps
 
-After reviewing the current implementation and the refactoring plan, we recommend:
+1. **Immediate Tasks**:
+   - Fix remaining linter issues in preprocessor and tests
+   - Update main.py to use new DTS parser
+   - Add preprocessor integration tests
+   - Remove old parser classes
 
-1. **Next Steps**:
-   - Fix remaining linter issues:
-     - Import cleanup in extractor
-     - Variable naming in tests
-     - Line length in unicode string behavior
-   - Update documentation
-   - Add performance testing
+2. **Documentation Updates**:
+   - Update API documentation
+   - Add performance metrics
+   - Update implementation details
+   - Add troubleshooting guide
 
-2. **Implementation Order**:
-   a. Fix linter issues:
-      - Import cleanup in extractor
-      - Variable naming in tests
-      - Line length in unicode string behavior
-
-   b. Update documentation:
-      - Add performance metrics
-      - Update implementation details
-      - Add troubleshooting guide
-
-   c. Add performance testing:
-      - Measure parsing time
-      - Measure extraction time
-      - Compare with old implementation
-
-3. **Migration Strategy**:
-   - Keep existing parser working during development
-   - Add new implementation alongside old one
-   - Switch over only when new implementation is fully tested
-   - Remove old implementation after successful migration
-
-### Success Criteria
-
-1. **New Parser Implementation**:
-   - ✓ Clean separation of concerns
-   - ✓ Proper error handling
-   - ✓ Comprehensive test coverage
-   - ✓ Integration tests passing
-   - ✓ No regressions in functionality
-   - ✓ All linter issues fixed
-
-2. **Code Quality**:
-   - ⚠️ Minor import cleanup needed
-   - ⚠️ Variable naming improvements needed
-   - ✓ Clear documentation
-   - ✓ Maintainable structure
-   - ✓ Performance acceptable
-
-3. **Integration**:
-   - ✓ Integration tests implemented
-   - ✓ End-to-end tests implemented
-   - ⚠️ Documentation updates pending
-   - ⚠️ Performance testing pending
+3. **Testing Additions**:
+   - Add preprocessor tests
+   - Add integration tests for full pipeline
+   - Add performance tests
+   - Update existing tests for new architecture
 
 ## 9. Detailed Implementation Plan with TDD Approach
 
