@@ -41,7 +41,7 @@ class DtsParser:
                 file=file,
                 line=1,
                 column=1,
-                context=format_error_context(content, 1, 1)
+                context=format_error_context(content, 1, 1),
             )
 
         root = DtsRoot()
@@ -55,7 +55,7 @@ class DtsParser:
                 file=file,
                 line=line,
                 column=col,
-                context=format_error_context(content, line, col)
+                context=format_error_context(content, line, col),
             )
         self.pos += 1
 
@@ -84,7 +84,7 @@ class DtsParser:
         except Exception as e:
             raise DtsParseError(
                 f"Failed to process comments: {str(e)}",
-                context=format_error_context(content, 1, 1)
+                context=format_error_context(content, 1, 1),
             )
 
         # Split on whitespace, but keep strings and arrays intact
@@ -136,12 +136,12 @@ class DtsParser:
                         "Unexpected '>'",
                         line=line,
                         column=column,
-                        context=format_error_context(content, line, column)
+                        context=format_error_context(content, line, column),
                     )
 
                 start_pos, start_line, start_col = array_stack.pop()
                 if not array_stack:  # Only add token if this is the outermost array
-                    array_content = content[start_pos:i + 1]
+                    array_content = content[start_pos : i + 1]
                     self.tokens.append(array_content)
                     self.line_map.append((start_line, start_col))
                 i += 1
@@ -165,7 +165,7 @@ class DtsParser:
                 "Unterminated string",
                 line=line,
                 column=column,
-                context=format_error_context(content, line, column)
+                context=format_error_context(content, line, column),
             )
 
         if array_stack:
@@ -174,7 +174,7 @@ class DtsParser:
                 "Unterminated array",
                 line=start_line,
                 column=start_col,
-                context=format_error_context(content, start_line, start_col)
+                context=format_error_context(content, start_line, start_col),
             )
 
         if current.strip():
@@ -260,7 +260,7 @@ class DtsParser:
                 line=line,
                 column=col,
                 context=format_error_context(self.content, line, col),
-                help_text="Array values must be enclosed in angle brackets: <value1 value2>"
+                help_text="Array values must be enclosed in angle brackets: <value1 value2>",
             )
         value = value[1:-1].strip()
 
@@ -287,7 +287,7 @@ class DtsParser:
                         "Unexpected '>' in array value",
                         line=line,
                         column=col + i,
-                        context=format_error_context(self.content, line, col + i)
+                        context=format_error_context(self.content, line, col + i),
                     )
                 array_stack.pop()
                 current += char
@@ -309,7 +309,7 @@ class DtsParser:
                 "Unterminated nested array",
                 line=line,
                 column=col,
-                context=format_error_context(self.content, line, col)
+                context=format_error_context(self.content, line, col),
             )
 
         if current.strip():
@@ -328,7 +328,7 @@ class DtsParser:
                         line=line,
                         column=col,
                         context=format_error_context(self.content, line, col),
-                        help_text="Hexadecimal values must start with '0x' followed by valid hex digits"
+                        help_text="Hexadecimal values must start with '0x' followed by valid hex digits",
                     )
             elif val.isdigit() or (val.startswith("-") and val[1:].isdigit()):
                 result.append(int(val))
@@ -372,7 +372,7 @@ class DtsParser:
                     line=line,
                     column=col,
                     context=format_error_context(self.content, line, col),
-                    help_text="Hexadecimal values must start with '0x' followed by valid hex digits"
+                    help_text="Hexadecimal values must start with '0x' followed by valid hex digits",
                 )
         elif value == "true":
             return DtsProperty(name=name, value=True, type="boolean")
@@ -385,7 +385,7 @@ class DtsParser:
                 line=line,
                 column=col,
                 context=format_error_context(self.content, line, col),
-                help_text="Property values must be strings, integers, arrays, or booleans"
+                help_text="Property values must be strings, integers, arrays, or booleans",
             )
 
     def _parse_node_body(self, node: DtsNode) -> None:
@@ -410,7 +410,7 @@ class DtsParser:
                     line=line,
                     column=col,
                     context=format_error_context(self.content, line, col),
-                    help_text="Node definitions must have a label or reference"
+                    help_text="Node definitions must have a label or reference",
                 )
 
             # Handle labels (node_name: or &node_name)
@@ -425,7 +425,7 @@ class DtsParser:
                         line=line,
                         column=col,
                         context=format_error_context(self.content, line, col),
-                        help_text="Node labels must be followed by a node definition"
+                        help_text="Node labels must be followed by a node definition",
                     )
                 token = self.tokens[self.pos]
 
@@ -448,7 +448,7 @@ class DtsParser:
                         line=line,
                         column=col,
                         context=format_error_context(self.content, line, col),
-                        help_text="Property definitions must end with a semicolon"
+                        help_text="Property definitions must end with a semicolon",
                     )
                 self.pos += 1
                 continue
@@ -470,7 +470,7 @@ class DtsParser:
                     line=line,
                     column=col,
                     context=format_error_context(self.content, line, col),
-                    help_text="Expected property assignment, node reference, or node definition"
+                    help_text="Expected property assignment, node reference, or node definition",
                 )
 
             if self.pos >= len(self.tokens) or self.tokens[self.pos] != "{":
@@ -480,7 +480,7 @@ class DtsParser:
                     line=line,
                     column=col,
                     context=format_error_context(self.content, line, col),
-                    help_text="Node definitions must be enclosed in curly braces"
+                    help_text="Node definitions must be enclosed in curly braces",
                 )
             self.pos += 1
 
@@ -493,5 +493,5 @@ class DtsParser:
             line=line,
             column=col,
             context=format_error_context(self.content, line, col),
-            help_text="Node body is not properly closed with '}'"
+            help_text="Node body is not properly closed with '}'",
         )

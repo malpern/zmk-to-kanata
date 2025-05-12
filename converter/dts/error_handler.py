@@ -4,7 +4,7 @@ This module provides custom error classes and utilities for handling
 errors that occur during DTS parsing and processing.
 """
 
-from typing import Optional, Dict, Any
+from typing import Optional, Any
 
 
 class DtsError(Exception):
@@ -147,7 +147,7 @@ class DtsExtractError(DtsError):
         help_texts = {
             "missing keymap node": (
                 "Could not find a keymap node. "
-                "Ensure there's a node with compatible = \"zmk,keymap\"."
+                'Ensure there\'s a node with compatible = "zmk,keymap".'
             ),
             "invalid layer definition": (
                 "Layer definition is invalid. "
@@ -171,10 +171,7 @@ class DtsExtractError(DtsError):
 
 
 def format_error_context(
-    content: str,
-    line: int,
-    column: int,
-    context_lines: int = 2
+    content: str, line: int, column: int, context_lines: int = 2
 ) -> str:
     """Format error context with line numbers and pointer.
 
@@ -204,4 +201,4 @@ def format_error_context(
         else:
             context.append(f"{line_num} | {lines[i]}")
 
-    return "\n".join(context) 
+    return "\n".join(context)

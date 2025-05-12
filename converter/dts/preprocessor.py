@@ -8,7 +8,7 @@ import platform
 import subprocess
 import re
 import tempfile
-from typing import List, Tuple, Optional, Dict
+from typing import List, Tuple, Optional
 
 
 class PreprocessorError(Exception):
@@ -232,7 +232,7 @@ class DtsPreprocessor:
             raise PreprocessorError(
                 f"Failed to read input file: {str(e)}",
                 file=input_file,
-                help_text="Ensure the file exists and has proper read permissions."
+                help_text="Ensure the file exists and has proper read permissions.",
             )
 
         try:
@@ -243,7 +243,7 @@ class DtsPreprocessor:
                 "Failed to process DTS directives",
                 file=input_file,
                 context=str(e),
-                help_text="Check for malformed DTS directives in the input file."
+                help_text="Check for malformed DTS directives in the input file.",
             )
 
         # Get matrix size if available
@@ -261,7 +261,8 @@ class DtsPreprocessor:
             cpp_args = [
                 self.cpp_path,
                 "-E",  # Preprocess only
-                "-x", "c",  # Treat as C source
+                "-x",
+                "c",  # Treat as C source
                 "-P",  # No line markers
             ]
 
@@ -274,40 +275,37 @@ class DtsPreprocessor:
 
             # Run preprocessor
             result = subprocess.run(
-                cpp_args,
-                capture_output=True,
-                text=True,
-                cwd=input_dir
+                cpp_args, capture_output=True, text=True, cwd=input_dir
             )
 
             if result.returncode != 0:
                 # Parse error message for line/column info
                 error_pattern = r"([^:]+):(\d+):(\d+):\s*(.+)"
                 match = re.search(error_pattern, result.stderr)
-                
+
                 if match:
                     err_file, line, col, msg = match.groups()
                     # Get the problematic line for context
-                    with open(err_file, 'r') as f:
+                    with open(err_file, "r") as f:
                         lines = f.readlines()
                         context_line = lines[int(line) - 1].strip()
-                        pointer = ' ' * (int(col) - 1) + '^'
+                        pointer = " " * (int(col) - 1) + "^"
                         context = f"  |\n{line}| {context_line}\n  | {pointer}"
-                    
+
                     raise PreprocessorError(
                         msg,
                         file=err_file,
                         line=int(line),
                         column=int(col),
                         context=context,
-                        help_text=self._get_help_text(msg)
+                        help_text=self._get_help_text(msg),
                     )
                 else:
                     raise PreprocessorError(
                         "Preprocessing failed",
                         file=input_file,
                         context=result.stderr,
-                        help_text="Check the error message above for details."
+                        help_text="Check the error message above for details.",
                     )
 
             # Process the output
