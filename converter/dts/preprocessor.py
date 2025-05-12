@@ -226,7 +226,77 @@ class DtsPreprocessor:
                     help_text=("Check for malformed DTS directives in " "input file"),
                 )
 
-            return result.stdout
+            # Post-process: replace symbolic key names with numeric values and add comments
+            keycode_map = {
+                "A": "0x04",
+                "B": "0x05",
+                "C": "0x06",
+                "D": "0x07",
+                "E": "0x08",
+                "F": "0x09",
+                "G": "0x0A",
+                "H": "0x0B",
+                "I": "0x0C",
+                "J": "0x0D",
+                "K": "0x0E",
+                "L": "0x0F",
+                "M": "0x10",
+                "N": "0x11",
+                "O": "0x12",
+                "P": "0x13",
+                "Q": "0x14",
+                "R": "0x15",
+                "S": "0x16",
+                "T": "0x17",
+                "U": "0x18",
+                "V": "0x19",
+                "W": "0x1A",
+                "X": "0x1B",
+                "Y": "0x1C",
+                "Z": "0x1D",
+                "1": "0x1E",
+                "2": "0x1F",
+                "3": "0x20",
+                "4": "0x21",
+                "5": "0x22",
+                "6": "0x23",
+                "7": "0x24",
+                "8": "0x25",
+                "9": "0x26",
+                "0": "0x27",
+            }
+
+            def repl(match):
+                key = match.group(2)
+                if key in keycode_map:
+                    code = keycode_map[key]
+                    # Only add comment if not already present
+                    if "/*" not in match.group(0):
+                        return f"{match.group(1)}{code} /* {key} */"
+                    else:
+                        return match.group(0)
+                return match.group(0)
+
+            # Replace &kp <key> with &kp 0xXX /* LETTER */
+            processed = re.sub(
+                r"(&kp\s+)([A-Z0-9])\b",
+                repl,
+                result.stdout,
+            )
+
+            # Replace bare <key> in arrays (e.g., <A B C>)
+            def array_repl(m):
+                key = m.group(2)
+                if key in keycode_map and "/*" not in m.group(0):
+                    return f"{m.group(1)}{keycode_map[key]} /* {key} */"
+                return m.group(0)
+
+            processed = re.sub(
+                r"(<|\s)([A-Z0-9])(?=\s|>)",
+                array_repl,
+                processed,
+            )
+            return processed
 
         finally:
             # Clean up temporary file

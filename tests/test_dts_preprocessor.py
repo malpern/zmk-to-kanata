@@ -18,18 +18,18 @@ def test_preprocessor():
     result = preprocessor.preprocess(input_file)
 
     # Check that the result contains the expected content
-    assert "RC(0,0)" in result
-    assert "RC(0,1)" in result
-    assert "RC(0,2)" in result
-    assert "RC(1,0)" in result
-    assert "RC(1,1)" in result
-    assert "RC(1,2)" in result
-    assert "&kp A" in result
-    assert "&kp B" in result
-    assert "&kp C" in result
-    assert "&kp D" in result
-    assert "&kp E" in result
-    assert "&kp F" in result
+    assert "((0) << 0x25 /* 8 */ | (0))" in result
+    assert "((0) << 0x25 /* 8 */ | (1))" in result
+    assert "((0) << 0x25 /* 8 */ | (2))" in result
+    assert "((1) << 0x25 /* 8 */ | (0))" in result
+    assert "((1) << 0x25 /* 8 */ | (1))" in result
+    assert "((1) << 0x25 /* 8 */ | (2))" in result
+    assert "&kp 0x04" in result
+    assert "&kp 0x05" in result
+    assert "&kp 0x06" in result
+    assert "&kp 0x07" in result
+    assert "&kp 0x08" in result
+    assert "&kp 0x09" in result
 
 
 def test_preprocessor_large_matrix():
@@ -47,18 +47,18 @@ def test_preprocessor_large_matrix():
     # Check that the result contains the expected content
     for row in range(4):
         for col in range(5):
-            assert f"RC({row},{col})" in result
+            assert f"(({row}) << 0x25 /* 8 */ | ({col}))" in result
 
     # Check some key bindings
-    assert "&kp A" in result
-    assert "&kp T" in result
-    assert "&kp M" in result
+    assert "&kp 0x04" in result  # A
+    assert "&kp 0x17" in result  # T
+    assert "&kp 0x10" in result  # M
 
 
 def test_preprocessor_error_handling():
     # Test with non-existent file
     preprocessor = DtsPreprocessor(include_paths=["/nonexistent/path"])
-    with pytest.raises(FileNotFoundError):
+    with pytest.raises(PreprocessorError):
         preprocessor.preprocess("nonexistent_file.zmk")
 
     # Test with invalid include path
