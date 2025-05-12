@@ -1,0 +1,1998 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.10.16, pytest-8.3.4, pluggy-1.5.0 -- /Users/malpern/.pyenv/versions/3.10.16/bin/python3.10
+cachedir: .pytest_cache
+rootdir: /Volumes/FlashGordon/Dropbox/code/nicktokatana
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.7.0
+collecting ... collected 72 items / 57 deselected / 15 selected
+
+tests/dts/test_performance.py::test_preprocessor_performance FAILED      [  6%]
+tests/dts/test_preprocessor.py::test_preprocessor_initialization FAILED  [ 13%]
+tests/dts/test_preprocessor.py::test_preprocess_simple_file FAILED       [ 20%]
+tests/dts/test_preprocessor.py::test_preprocess_with_matrix PASSED       [ 26%]
+tests/dts/test_preprocessor.py::test_preprocess_with_includes FAILED     [ 33%]
+tests/dts/test_preprocessor.py::test_preprocess_invalid_file FAILED      [ 40%]
+tests/dts/test_preprocessor.py::test_preprocess_invalid_cpp_command FAILED [ 46%]
+tests/dts/test_preprocessor.py::test_matrix_size_extraction PASSED       [ 53%]
+tests/dts/test_preprocessor.py::test_preprocess_simple_keymap FAILED     [ 60%]
+tests/dts/test_preprocessor.py::test_preprocess_with_include_paths PASSED [ 66%]
+tests/dts/test_preprocessor.py::test_matrix_size_detection PASSED        [ 73%]
+tests/dts/test_preprocessor.py::test_matrix_size_detection_no_matrix PASSED [ 80%]
+tests/test_dts_preprocessor.py::test_preprocessor FAILED                 [ 86%]
+tests/test_dts_preprocessor.py::test_preprocessor_large_matrix FAILED    [ 93%]
+tests/test_dts_preprocessor.py::test_preprocessor_error_handling FAILED  [100%]
+
+=================================== FAILURES ===================================
+________________________ test_preprocessor_performance _________________________
+
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x105de97e0>
+input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/complex_keymap.zmk')
+matrix_size = None
+
+    def preprocess(
+        self,
+        input_path: str,
+        matrix_size: Optional[Tuple[int, int]] = None,
+    ) -> str:
+        """Preprocess a DTS file.
+    
+        Args:
+            input_path: Path to the input file
+            matrix_size: Optional tuple of (rows, cols) for matrix transform
+    
+        Returns:
+            The preprocessed content as a string
+    
+        Raises:
+            PreprocessorError: If preprocessing fails
+        """
+        input_path = Path(input_path)
+        if not input_path.exists():
+            raise PreprocessorError(
+                f"Input file does not exist: {input_path}",
+                help_text=(
+                    "Ensure the input file exists and has proper "
+                    "read permissions"
+                ),
+            )
+    
+        try:
+            with open(input_path, "r") as f:
+                content_for_cpp = f.read()
+        except Exception as e:
+            raise PreprocessorError(
+                f"Failed to read input file: {str(e)}",
+                file=str(input_path),
+                help_text=(
+                    "Ensure the file exists and has proper "
+                    "read permissions"
+                ),
+            )
+    
+        # Create a temporary file for the preprocessor input
+        tmp_input = tempfile.NamedTemporaryFile(
+            mode="w",
+            delete=False,
+            suffix=".dts",
+            dir=None,  # Use system default temp dir (usually /tmp)
+        )
+        tmp_input.write(content_for_cpp)
+        tmp_input.close()
+        tmp_input_file = Path(tmp_input.name)
+    
+        try:
+            # Build cpp command as a list for shell=False
+            cpp_cmd = [
+                str(self.cpp_path),
+                "-E",
+            ]
+            for path in self.include_paths:
+                cpp_cmd.extend(["-I", str(path)])
+            cpp_cmd.append(str(tmp_input_file))
+    
+            # Debug: print the constructed command list
+            print("[DtsPreprocessor] cpp command:", cpp_cmd)
+    
+            # Run preprocessor with shell=False
+            try:
+>               result = subprocess.run(
+                    cpp_cmd,
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                    shell=False,
+                )
+
+converter/dts/preprocessor.py:194: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = True, timeout = None, check = True
+popenargs = (['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp6bhuvrvd.dts'],)
+kwargs = {'shell': False, 'stderr': -1, 'stdout': -1, 'text': True}
+process = <Popen: returncode: 1 args: ['/Applications/Xcode.app/Contents/Developer/Too...>
+stdout = '# 1 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp6bhuvrvd.dts"\n# 1 "<built-in>" 1\n# 1 "<built-in>" 3\n# 423...       \n        tri_layer {\n            if-layers = <1 2>;\n            then-layer = <3>;\n        };\n    };\n}; \n'
+stderr = "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp6bhuvrvd.dts:1:10: fatal error: 'dt-bindings/zmk/matrix_transform...lude <dt-bindings/zmk/matrix_transform.h>\n      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+retcode = 1
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp6bhuvrvd.dts']' returned non-zero exit status 1.
+
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:526: CalledProcessError
+
+During handling of the above exception, another exception occurred:
+
+sample_keymap_path = '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/complex_keymap.zmk'
+
+    def test_preprocessor_performance(sample_keymap_path):
+        """Test the performance of the preprocessor."""
+        preprocessor = DtsPreprocessor()
+    
+        # Run multiple times to get stable measurements
+        times = []
+        for _ in range(10):
+>           _, duration = measure_time(preprocessor.preprocess, sample_keymap_path)
+
+tests/dts/test_performance.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/dts/test_performance.py:16: in measure_time
+    result = func(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x105de97e0>
+input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/complex_keymap.zmk')
+matrix_size = None
+
+    def preprocess(
+        self,
+        input_path: str,
+        matrix_size: Optional[Tuple[int, int]] = None,
+    ) -> str:
+        """Preprocess a DTS file.
+    
+        Args:
+            input_path: Path to the input file
+            matrix_size: Optional tuple of (rows, cols) for matrix transform
+    
+        Returns:
+            The preprocessed content as a string
+    
+        Raises:
+            PreprocessorError: If preprocessing fails
+        """
+        input_path = Path(input_path)
+        if not input_path.exists():
+            raise PreprocessorError(
+                f"Input file does not exist: {input_path}",
+                help_text=(
+                    "Ensure the input file exists and has proper "
+                    "read permissions"
+                ),
+            )
+    
+        try:
+            with open(input_path, "r") as f:
+                content_for_cpp = f.read()
+        except Exception as e:
+            raise PreprocessorError(
+                f"Failed to read input file: {str(e)}",
+                file=str(input_path),
+                help_text=(
+                    "Ensure the file exists and has proper "
+                    "read permissions"
+                ),
+            )
+    
+        # Create a temporary file for the preprocessor input
+        tmp_input = tempfile.NamedTemporaryFile(
+            mode="w",
+            delete=False,
+            suffix=".dts",
+            dir=None,  # Use system default temp dir (usually /tmp)
+        )
+        tmp_input.write(content_for_cpp)
+        tmp_input.close()
+        tmp_input_file = Path(tmp_input.name)
+    
+        try:
+            # Build cpp command as a list for shell=False
+            cpp_cmd = [
+                str(self.cpp_path),
+                "-E",
+            ]
+            for path in self.include_paths:
+                cpp_cmd.extend(["-I", str(path)])
+            cpp_cmd.append(str(tmp_input_file))
+    
+            # Debug: print the constructed command list
+            print("[DtsPreprocessor] cpp command:", cpp_cmd)
+    
+            # Run preprocessor with shell=False
+            try:
+                result = subprocess.run(
+                    cpp_cmd,
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                    shell=False,
+                )
+            except subprocess.CalledProcessError as e:
+>               raise PreprocessorError(
+                    "Failed to process DTS directives",
+                    file=str(input_path),
+                    context=str(e),
+                    help_text=(
+                        "Check for malformed DTS directives in "
+                        "input file"
+                    ),
+                )
+E               converter.dts.preprocessor.PreprocessorError: Failed to process DTS directives
+
+converter/dts/preprocessor.py:202: PreprocessorError
+----------------------------- Captured stdout call -----------------------------
+[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp6bhuvrvd.dts']
+_______________________ test_preprocessor_initialization _______________________
+
+    def test_preprocessor_initialization():
+        """Test preprocessor initialization with different options."""
+        # Test default initialization
+        preprocessor = DtsPreprocessor()
+>       assert preprocessor.cpp_path.endswith("cpp") or preprocessor.cpp_path.endswith(
+            "clang"
+        )
+E       AttributeError: 'PosixPath' object has no attribute 'endswith'
+
+tests/dts/test_preprocessor.py:92: AttributeError
+_________________________ test_preprocess_simple_file __________________________
+
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x105f9fa90>
+input_path = PosixPath('/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpp8c6nunc/test.dts')
+matrix_size = None
+
+    def preprocess(
+        self,
+        input_path: str,
+        matrix_size: Optional[Tuple[int, int]] = None,
+    ) -> str:
+        """Preprocess a DTS file.
+    
+        Args:
+            input_path: Path to the input file
+            matrix_size: Optional tuple of (rows, cols) for matrix transform
+    
+        Returns:
+            The preprocessed content as a string
+    
+        Raises:
+            PreprocessorError: If preprocessing fails
+        """
+        input_path = Path(input_path)
+        if not input_path.exists():
+            raise PreprocessorError(
+                f"Input file does not exist: {input_path}",
+                help_text=(
+                    "Ensure the input file exists and has proper "
+                    "read permissions"
+                ),
+            )
+    
+        try:
+            with open(input_path, "r") as f:
+                content_for_cpp = f.read()
+        except Exception as e:
+            raise PreprocessorError(
+                f"Failed to read input file: {str(e)}",
+                file=str(input_path),
+                help_text=(
+                    "Ensure the file exists and has proper "
+                    "read permissions"
+                ),
+            )
+    
+        # Create a temporary file for the preprocessor input
+        tmp_input = tempfile.NamedTemporaryFile(
+            mode="w",
+            delete=False,
+            suffix=".dts",
+            dir=None,  # Use system default temp dir (usually /tmp)
+        )
+        tmp_input.write(content_for_cpp)
+        tmp_input.close()
+        tmp_input_file = Path(tmp_input.name)
+    
+        try:
+            # Build cpp command as a list for shell=False
+            cpp_cmd = [
+                str(self.cpp_path),
+                "-E",
+            ]
+            for path in self.include_paths:
+                cpp_cmd.extend(["-I", str(path)])
+            cpp_cmd.append(str(tmp_input_file))
+    
+            # Debug: print the constructed command list
+            print("[DtsPreprocessor] cpp command:", cpp_cmd)
+    
+            # Run preprocessor with shell=False
+            try:
+>               result = subprocess.run(
+                    cpp_cmd,
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                    shell=False,
+                )
+
+converter/dts/preprocessor.py:194: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = True, timeout = None, check = True
+popenargs = (['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-I', '/var/fold...l697hn0l1cdnx0vrvyr0000gn/T/tmpp8c6nunc/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmprehn3kyo.dts'],)
+kwargs = {'shell': False, 'stderr': -1, 'stdout': -1, 'text': True}
+process = <Popen: returncode: 1 args: ['/Applications/Xcode.app/Contents/Developer/Too...>
+stdout = ''
+stderr = "cc: error: no such file or directory: 'c'\ncc: warning: /var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpp8c6nunc/include: 'linker' input unused [-Wunused-command-line-argument]\n"
+retcode = 1
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-I', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpp8c6nunc/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmprehn3kyo.dts']' returned non-zero exit status 1.
+
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:526: CalledProcessError
+
+During handling of the above exception, another exception occurred:
+
+temp_dir = '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpp8c6nunc'
+
+    def test_preprocess_simple_file(temp_dir):
+        """Test preprocessing a simple DTS file."""
+        # Create a simple DTS file
+        input_path = os.path.join(temp_dir, "test.dts")
+        with open(input_path, "w") as f:
+            f.write(
+                """
+    #define TEST_VALUE 42
+    / {
+        test = <TEST_VALUE>;
+    };
+    """
+            )
+    
+        # Create a temporary include directory with a header file
+        include_dir = os.path.join(temp_dir, "include")
+        os.makedirs(include_dir)
+    
+        # Create a header file that defines TEST_VALUE
+        header_path = os.path.join(include_dir, "test.h")
+        with open(header_path, "w") as f:
+            f.write("#define TEST_VALUE 42\n")
+    
+        preprocessor = DtsPreprocessor(include_paths=[include_dir])
+>       result = preprocessor.preprocess(input_path)
+
+tests/dts/test_preprocessor.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x105f9fa90>
+input_path = PosixPath('/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpp8c6nunc/test.dts')
+matrix_size = None
+
+    def preprocess(
+        self,
+        input_path: str,
+        matrix_size: Optional[Tuple[int, int]] = None,
+    ) -> str:
+        """Preprocess a DTS file.
+    
+        Args:
+            input_path: Path to the input file
+            matrix_size: Optional tuple of (rows, cols) for matrix transform
+    
+        Returns:
+            The preprocessed content as a string
+    
+        Raises:
+            PreprocessorError: If preprocessing fails
+        """
+        input_path = Path(input_path)
+        if not input_path.exists():
+            raise PreprocessorError(
+                f"Input file does not exist: {input_path}",
+                help_text=(
+                    "Ensure the input file exists and has proper "
+                    "read permissions"
+                ),
+            )
+    
+        try:
+            with open(input_path, "r") as f:
+                content_for_cpp = f.read()
+        except Exception as e:
+            raise PreprocessorError(
+                f"Failed to read input file: {str(e)}",
+                file=str(input_path),
+                help_text=(
+                    "Ensure the file exists and has proper "
+                    "read permissions"
+                ),
+            )
+    
+        # Create a temporary file for the preprocessor input
+        tmp_input = tempfile.NamedTemporaryFile(
+            mode="w",
+            delete=False,
+            suffix=".dts",
+            dir=None,  # Use system default temp dir (usually /tmp)
+        )
+        tmp_input.write(content_for_cpp)
+        tmp_input.close()
+        tmp_input_file = Path(tmp_input.name)
+    
+        try:
+            # Build cpp command as a list for shell=False
+            cpp_cmd = [
+                str(self.cpp_path),
+                "-E",
+            ]
+            for path in self.include_paths:
+                cpp_cmd.extend(["-I", str(path)])
+            cpp_cmd.append(str(tmp_input_file))
+    
+            # Debug: print the constructed command list
+            print("[DtsPreprocessor] cpp command:", cpp_cmd)
+    
+            # Run preprocessor with shell=False
+            try:
+                result = subprocess.run(
+                    cpp_cmd,
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                    shell=False,
+                )
+            except subprocess.CalledProcessError as e:
+>               raise PreprocessorError(
+                    "Failed to process DTS directives",
+                    file=str(input_path),
+                    context=str(e),
+                    help_text=(
+                        "Check for malformed DTS directives in "
+                        "input file"
+                    ),
+                )
+E               converter.dts.preprocessor.PreprocessorError: Failed to process DTS directives
+
+converter/dts/preprocessor.py:202: PreprocessorError
+----------------------------- Captured stdout call -----------------------------
+[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-I', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpp8c6nunc/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmprehn3kyo.dts']
+________________________ test_preprocess_with_includes _________________________
+
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x10577fb50>
+input_path = PosixPath('/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp900nq2lu/main.dts')
+matrix_size = None
+
+    def preprocess(
+        self,
+        input_path: str,
+        matrix_size: Optional[Tuple[int, int]] = None,
+    ) -> str:
+        """Preprocess a DTS file.
+    
+        Args:
+            input_path: Path to the input file
+            matrix_size: Optional tuple of (rows, cols) for matrix transform
+    
+        Returns:
+            The preprocessed content as a string
+    
+        Raises:
+            PreprocessorError: If preprocessing fails
+        """
+        input_path = Path(input_path)
+        if not input_path.exists():
+            raise PreprocessorError(
+                f"Input file does not exist: {input_path}",
+                help_text=(
+                    "Ensure the input file exists and has proper "
+                    "read permissions"
+                ),
+            )
+    
+        try:
+            with open(input_path, "r") as f:
+                content_for_cpp = f.read()
+        except Exception as e:
+            raise PreprocessorError(
+                f"Failed to read input file: {str(e)}",
+                file=str(input_path),
+                help_text=(
+                    "Ensure the file exists and has proper "
+                    "read permissions"
+                ),
+            )
+    
+        # Create a temporary file for the preprocessor input
+        tmp_input = tempfile.NamedTemporaryFile(
+            mode="w",
+            delete=False,
+            suffix=".dts",
+            dir=None,  # Use system default temp dir (usually /tmp)
+        )
+        tmp_input.write(content_for_cpp)
+        tmp_input.close()
+        tmp_input_file = Path(tmp_input.name)
+    
+        try:
+            # Build cpp command as a list for shell=False
+            cpp_cmd = [
+                str(self.cpp_path),
+                "-E",
+            ]
+            for path in self.include_paths:
+                cpp_cmd.extend(["-I", str(path)])
+            cpp_cmd.append(str(tmp_input_file))
+    
+            # Debug: print the constructed command list
+            print("[DtsPreprocessor] cpp command:", cpp_cmd)
+    
+            # Run preprocessor with shell=False
+            try:
+>               result = subprocess.run(
+                    cpp_cmd,
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                    shell=False,
+                )
+
+converter/dts/preprocessor.py:194: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = True, timeout = None, check = True
+popenargs = (['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-I', '/var/fold...l697hn0l1cdnx0vrvyr0000gn/T/tmp900nq2lu/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpjgp1totd.dts'],)
+kwargs = {'shell': False, 'stderr': -1, 'stdout': -1, 'text': True}
+process = <Popen: returncode: 1 args: ['/Applications/Xcode.app/Contents/Developer/Too...>
+stdout = ''
+stderr = "cc: error: no such file or directory: 'c'\ncc: warning: /var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp900nq2lu/include: 'linker' input unused [-Wunused-command-line-argument]\n"
+retcode = 1
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-I', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp900nq2lu/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpjgp1totd.dts']' returned non-zero exit status 1.
+
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:526: CalledProcessError
+
+During handling of the above exception, another exception occurred:
+
+temp_dir = '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp900nq2lu'
+
+    def test_preprocess_with_includes(temp_dir):
+        """Test preprocessing with include files."""
+        # Create include directory and file
+        include_dir = os.path.join(temp_dir, "include")
+        os.makedirs(include_dir)
+    
+        header_path = os.path.join(include_dir, "test.h")
+        with open(header_path, "w") as f:
+            f.write("#define HEADER_VALUE 123\n")
+    
+        # Create main DTS file
+        input_path = os.path.join(temp_dir, "main.dts")
+        with open(input_path, "w") as f:
+            f.write(
+                """
+    #include "test.h"
+    / {
+        test = <HEADER_VALUE>;
+    };
+    """
+            )
+    
+        preprocessor = DtsPreprocessor(include_paths=[include_dir])
+>       result = preprocessor.preprocess(input_path)
+
+tests/dts/test_preprocessor.py:190: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x10577fb50>
+input_path = PosixPath('/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp900nq2lu/main.dts')
+matrix_size = None
+
+    def preprocess(
+        self,
+        input_path: str,
+        matrix_size: Optional[Tuple[int, int]] = None,
+    ) -> str:
+        """Preprocess a DTS file.
+    
+        Args:
+            input_path: Path to the input file
+            matrix_size: Optional tuple of (rows, cols) for matrix transform
+    
+        Returns:
+            The preprocessed content as a string
+    
+        Raises:
+            PreprocessorError: If preprocessing fails
+        """
+        input_path = Path(input_path)
+        if not input_path.exists():
+            raise PreprocessorError(
+                f"Input file does not exist: {input_path}",
+                help_text=(
+                    "Ensure the input file exists and has proper "
+                    "read permissions"
+                ),
+            )
+    
+        try:
+            with open(input_path, "r") as f:
+                content_for_cpp = f.read()
+        except Exception as e:
+            raise PreprocessorError(
+                f"Failed to read input file: {str(e)}",
+                file=str(input_path),
+                help_text=(
+                    "Ensure the file exists and has proper "
+                    "read permissions"
+                ),
+            )
+    
+        # Create a temporary file for the preprocessor input
+        tmp_input = tempfile.NamedTemporaryFile(
+            mode="w",
+            delete=False,
+            suffix=".dts",
+            dir=None,  # Use system default temp dir (usually /tmp)
+        )
+        tmp_input.write(content_for_cpp)
+        tmp_input.close()
+        tmp_input_file = Path(tmp_input.name)
+    
+        try:
+            # Build cpp command as a list for shell=False
+            cpp_cmd = [
+                str(self.cpp_path),
+                "-E",
+            ]
+            for path in self.include_paths:
+                cpp_cmd.extend(["-I", str(path)])
+            cpp_cmd.append(str(tmp_input_file))
+    
+            # Debug: print the constructed command list
+            print("[DtsPreprocessor] cpp command:", cpp_cmd)
+    
+            # Run preprocessor with shell=False
+            try:
+                result = subprocess.run(
+                    cpp_cmd,
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                    shell=False,
+                )
+            except subprocess.CalledProcessError as e:
+>               raise PreprocessorError(
+                    "Failed to process DTS directives",
+                    file=str(input_path),
+                    context=str(e),
+                    help_text=(
+                        "Check for malformed DTS directives in "
+                        "input file"
+                    ),
+                )
+E               converter.dts.preprocessor.PreprocessorError: Failed to process DTS directives
+
+converter/dts/preprocessor.py:202: PreprocessorError
+----------------------------- Captured stdout call -----------------------------
+[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-I', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp900nq2lu/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpjgp1totd.dts']
+_________________________ test_preprocess_invalid_file _________________________
+
+    def test_preprocess_invalid_file():
+        """Test preprocessing a non-existent file."""
+        preprocessor = DtsPreprocessor()
+        with pytest.raises(FileNotFoundError):
+>           preprocessor.preprocess("nonexistent.dts")
+
+tests/dts/test_preprocessor.py:201: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x105f387f0>
+input_path = PosixPath('nonexistent.dts'), matrix_size = None
+
+    def preprocess(
+        self,
+        input_path: str,
+        matrix_size: Optional[Tuple[int, int]] = None,
+    ) -> str:
+        """Preprocess a DTS file.
+    
+        Args:
+            input_path: Path to the input file
+            matrix_size: Optional tuple of (rows, cols) for matrix transform
+    
+        Returns:
+            The preprocessed content as a string
+    
+        Raises:
+            PreprocessorError: If preprocessing fails
+        """
+        input_path = Path(input_path)
+        if not input_path.exists():
+>           raise PreprocessorError(
+                f"Input file does not exist: {input_path}",
+                help_text=(
+                    "Ensure the input file exists and has proper "
+                    "read permissions"
+                ),
+            )
+E           converter.dts.preprocessor.PreprocessorError: Input file does not exist: nonexistent.dts
+
+converter/dts/preprocessor.py:147: PreprocessorError
+_____________________ test_preprocess_invalid_cpp_command ______________________
+
+temp_dir = '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp9h1fkh5k'
+
+    def test_preprocess_invalid_cpp_command(temp_dir):
+        """Test preprocessing with invalid cpp command."""
+        # Create a simple DTS file
+        input_path = os.path.join(temp_dir, "test.dts")
+        with open(input_path, "w") as f:
+            f.write("/ { test = <1>; };")
+    
+        # Use invalid cpp path
+        preprocessor = DtsPreprocessor(cpp_path="invalid_cpp")
+        with pytest.raises(PreprocessorError):
+>           preprocessor.preprocess(input_path)
+
+tests/dts/test_preprocessor.py:214: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+converter/dts/preprocessor.py:194: in preprocess
+    result = subprocess.run(
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:503: in run
+    with Popen(*popenargs, **kwargs) as process:
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:971: in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Popen: returncode: 255 args: ['invalid_cpp', '-E', '/var/folders/0s/42v7yl6...>
+args = ['invalid_cpp', '-E', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp05_dozsm.dts']
+executable = b'invalid_cpp', preexec_fn = None, close_fds = True, pass_fds = ()
+cwd = None, env = None, startupinfo = None, creationflags = 0, shell = False
+p2cread = -1, p2cwrite = -1, c2pread = 11, c2pwrite = 12, errread = 13
+errwrite = 14, restore_signals = True, gid = None, gids = None, uid = None
+umask = -1, start_new_session = False
+
+    def _execute_child(self, args, executable, preexec_fn, close_fds,
+                       pass_fds, cwd, env,
+                       startupinfo, creationflags, shell,
+                       p2cread, p2cwrite,
+                       c2pread, c2pwrite,
+                       errread, errwrite,
+                       restore_signals,
+                       gid, gids, uid, umask,
+                       start_new_session):
+        """Execute program (POSIX version)"""
+    
+        if isinstance(args, (str, bytes)):
+            args = [args]
+        elif isinstance(args, os.PathLike):
+            if shell:
+                raise TypeError('path-like args is not allowed when '
+                                'shell is true')
+            args = [args]
+        else:
+            args = list(args)
+    
+        if shell:
+            # On Android the default shell is at '/system/bin/sh'.
+            unix_shell = ('/system/bin/sh' if
+                      hasattr(sys, 'getandroidapilevel') else '/bin/sh')
+            args = [unix_shell, "-c"] + args
+            if executable:
+                args[0] = executable
+    
+        if executable is None:
+            executable = args[0]
+    
+        sys.audit("subprocess.Popen", executable, args, cwd, env)
+    
+        if (_USE_POSIX_SPAWN
+                and os.path.dirname(executable)
+                and preexec_fn is None
+                and not close_fds
+                and not pass_fds
+                and cwd is None
+                and (p2cread == -1 or p2cread > 2)
+                and (c2pwrite == -1 or c2pwrite > 2)
+                and (errwrite == -1 or errwrite > 2)
+                and not start_new_session
+                and gid is None
+                and gids is None
+                and uid is None
+                and umask < 0):
+            self._posix_spawn(args, executable, env, restore_signals,
+                              p2cread, p2cwrite,
+                              c2pread, c2pwrite,
+                              errread, errwrite)
+            return
+    
+        orig_executable = executable
+    
+        # For transferring possible exec failure from child to parent.
+        # Data format: "exception name:hex errno:description"
+        # Pickle is not used; it is complex and involves memory allocation.
+        errpipe_read, errpipe_write = os.pipe()
+        # errpipe_write must not be in the standard io 0, 1, or 2 fd range.
+        low_fds_to_close = []
+        while errpipe_write < 3:
+            low_fds_to_close.append(errpipe_write)
+            errpipe_write = os.dup(errpipe_write)
+        for low_fd in low_fds_to_close:
+            os.close(low_fd)
+        try:
+            try:
+                # We must avoid complex work that could involve
+                # malloc or free in the child process to avoid
+                # potential deadlocks, thus we do all this here.
+                # and pass it to fork_exec()
+    
+                if env is not None:
+                    env_list = []
+                    for k, v in env.items():
+                        k = os.fsencode(k)
+                        if b'=' in k:
+                            raise ValueError("illegal environment variable name")
+                        env_list.append(k + b'=' + os.fsencode(v))
+                else:
+                    env_list = None  # Use execv instead of execve.
+                executable = os.fsencode(executable)
+                if os.path.dirname(executable):
+                    executable_list = (executable,)
+                else:
+                    # This matches the behavior of os._execvpe().
+                    executable_list = tuple(
+                        os.path.join(os.fsencode(dir), executable)
+                        for dir in os.get_exec_path(env))
+                fds_to_keep = set(pass_fds)
+                fds_to_keep.add(errpipe_write)
+                self.pid = _posixsubprocess.fork_exec(
+                        args, executable_list,
+                        close_fds, tuple(sorted(map(int, fds_to_keep))),
+                        cwd, env_list,
+                        p2cread, p2cwrite, c2pread, c2pwrite,
+                        errread, errwrite,
+                        errpipe_read, errpipe_write,
+                        restore_signals, start_new_session,
+                        gid, gids, uid, umask,
+                        preexec_fn)
+                self._child_created = True
+            finally:
+                # be sure the FD is closed no matter what
+                os.close(errpipe_write)
+    
+            self._close_pipe_fds(p2cread, p2cwrite,
+                                 c2pread, c2pwrite,
+                                 errread, errwrite)
+    
+            # Wait for exec to fail or succeed; possibly raising an
+            # exception (limited in size)
+            errpipe_data = bytearray()
+            while True:
+                part = os.read(errpipe_read, 50000)
+                errpipe_data += part
+                if not part or len(errpipe_data) > 50000:
+                    break
+        finally:
+            # be sure the FD is closed no matter what
+            os.close(errpipe_read)
+    
+        if errpipe_data:
+            try:
+                pid, sts = os.waitpid(self.pid, 0)
+                if pid == self.pid:
+                    self._handle_exitstatus(sts)
+                else:
+                    self.returncode = sys.maxsize
+            except ChildProcessError:
+                pass
+    
+            try:
+                exception_name, hex_errno, err_msg = (
+                        errpipe_data.split(b':', 2))
+                # The encoding here should match the encoding
+                # written in by the subprocess implementations
+                # like _posixsubprocess
+                err_msg = err_msg.decode()
+            except ValueError:
+                exception_name = b'SubprocessError'
+                hex_errno = b'0'
+                err_msg = 'Bad exception data from child: {!r}'.format(
+                              bytes(errpipe_data))
+            child_exception_type = getattr(
+                    builtins, exception_name.decode('ascii'),
+                    SubprocessError)
+            if issubclass(child_exception_type, OSError) and hex_errno:
+                errno_num = int(hex_errno, 16)
+                child_exec_never_called = (err_msg == "noexec")
+                if child_exec_never_called:
+                    err_msg = ""
+                    # The error must be from chdir(cwd).
+                    err_filename = cwd
+                else:
+                    err_filename = orig_executable
+                if errno_num != 0:
+                    err_msg = os.strerror(errno_num)
+>               raise child_exception_type(errno_num, err_msg, err_filename)
+E               FileNotFoundError: [Errno 2] No such file or directory: 'invalid_cpp'
+
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:1863: FileNotFoundError
+----------------------------- Captured stdout call -----------------------------
+[DtsPreprocessor] cpp command: ['invalid_cpp', '-E', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp05_dozsm.dts']
+________________________ test_preprocess_simple_keymap _________________________
+
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x105ddef50>
+input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/simple_keymap.zmk')
+matrix_size = None
+
+    def preprocess(
+        self,
+        input_path: str,
+        matrix_size: Optional[Tuple[int, int]] = None,
+    ) -> str:
+        """Preprocess a DTS file.
+    
+        Args:
+            input_path: Path to the input file
+            matrix_size: Optional tuple of (rows, cols) for matrix transform
+    
+        Returns:
+            The preprocessed content as a string
+    
+        Raises:
+            PreprocessorError: If preprocessing fails
+        """
+        input_path = Path(input_path)
+        if not input_path.exists():
+            raise PreprocessorError(
+                f"Input file does not exist: {input_path}",
+                help_text=(
+                    "Ensure the input file exists and has proper "
+                    "read permissions"
+                ),
+            )
+    
+        try:
+            with open(input_path, "r") as f:
+                content_for_cpp = f.read()
+        except Exception as e:
+            raise PreprocessorError(
+                f"Failed to read input file: {str(e)}",
+                file=str(input_path),
+                help_text=(
+                    "Ensure the file exists and has proper "
+                    "read permissions"
+                ),
+            )
+    
+        # Create a temporary file for the preprocessor input
+        tmp_input = tempfile.NamedTemporaryFile(
+            mode="w",
+            delete=False,
+            suffix=".dts",
+            dir=None,  # Use system default temp dir (usually /tmp)
+        )
+        tmp_input.write(content_for_cpp)
+        tmp_input.close()
+        tmp_input_file = Path(tmp_input.name)
+    
+        try:
+            # Build cpp command as a list for shell=False
+            cpp_cmd = [
+                str(self.cpp_path),
+                "-E",
+            ]
+            for path in self.include_paths:
+                cpp_cmd.extend(["-I", str(path)])
+            cpp_cmd.append(str(tmp_input_file))
+    
+            # Debug: print the constructed command list
+            print("[DtsPreprocessor] cpp command:", cpp_cmd)
+    
+            # Run preprocessor with shell=False
+            try:
+>               result = subprocess.run(
+                    cpp_cmd,
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                    shell=False,
+                )
+
+converter/dts/preprocessor.py:194: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = True, timeout = None, check = True
+popenargs = (['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-I', '/Volumes/...ox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp6lepqlp9.dts'],)
+kwargs = {'shell': False, 'stderr': -1, 'stdout': -1, 'text': True}
+process = <Popen: returncode: 1 args: ['/Applications/Xcode.app/Contents/Developer/Too...>
+stdout = ''
+stderr = "cc: error: no such file or directory: 'c'\ncc: warning: /Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include: 'linker' input unused [-Wunused-command-line-argument]\n"
+retcode = 1
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp6lepqlp9.dts']' returned non-zero exit status 1.
+
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:526: CalledProcessError
+
+During handling of the above exception, another exception occurred:
+
+preprocessor = <converter.dts.preprocessor.DtsPreprocessor object at 0x105ddef50>
+simple_keymap_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/simple_keymap.zmk')
+
+    def test_preprocess_simple_keymap(preprocessor, simple_keymap_path):
+        """Test preprocessing a simple keymap."""
+>       result = preprocessor.preprocess(str(simple_keymap_path))
+
+tests/dts/test_preprocessor.py:245: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x105ddef50>
+input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/simple_keymap.zmk')
+matrix_size = None
+
+    def preprocess(
+        self,
+        input_path: str,
+        matrix_size: Optional[Tuple[int, int]] = None,
+    ) -> str:
+        """Preprocess a DTS file.
+    
+        Args:
+            input_path: Path to the input file
+            matrix_size: Optional tuple of (rows, cols) for matrix transform
+    
+        Returns:
+            The preprocessed content as a string
+    
+        Raises:
+            PreprocessorError: If preprocessing fails
+        """
+        input_path = Path(input_path)
+        if not input_path.exists():
+            raise PreprocessorError(
+                f"Input file does not exist: {input_path}",
+                help_text=(
+                    "Ensure the input file exists and has proper "
+                    "read permissions"
+                ),
+            )
+    
+        try:
+            with open(input_path, "r") as f:
+                content_for_cpp = f.read()
+        except Exception as e:
+            raise PreprocessorError(
+                f"Failed to read input file: {str(e)}",
+                file=str(input_path),
+                help_text=(
+                    "Ensure the file exists and has proper "
+                    "read permissions"
+                ),
+            )
+    
+        # Create a temporary file for the preprocessor input
+        tmp_input = tempfile.NamedTemporaryFile(
+            mode="w",
+            delete=False,
+            suffix=".dts",
+            dir=None,  # Use system default temp dir (usually /tmp)
+        )
+        tmp_input.write(content_for_cpp)
+        tmp_input.close()
+        tmp_input_file = Path(tmp_input.name)
+    
+        try:
+            # Build cpp command as a list for shell=False
+            cpp_cmd = [
+                str(self.cpp_path),
+                "-E",
+            ]
+            for path in self.include_paths:
+                cpp_cmd.extend(["-I", str(path)])
+            cpp_cmd.append(str(tmp_input_file))
+    
+            # Debug: print the constructed command list
+            print("[DtsPreprocessor] cpp command:", cpp_cmd)
+    
+            # Run preprocessor with shell=False
+            try:
+                result = subprocess.run(
+                    cpp_cmd,
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                    shell=False,
+                )
+            except subprocess.CalledProcessError as e:
+>               raise PreprocessorError(
+                    "Failed to process DTS directives",
+                    file=str(input_path),
+                    context=str(e),
+                    help_text=(
+                        "Check for malformed DTS directives in "
+                        "input file"
+                    ),
+                )
+E               converter.dts.preprocessor.PreprocessorError: Failed to process DTS directives
+
+converter/dts/preprocessor.py:202: PreprocessorError
+----------------------------- Captured stdout call -----------------------------
+[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp6lepqlp9.dts']
+______________________________ test_preprocessor _______________________________
+
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x105dea6e0>
+input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/simple_keymap.zmk')
+matrix_size = None
+
+    def preprocess(
+        self,
+        input_path: str,
+        matrix_size: Optional[Tuple[int, int]] = None,
+    ) -> str:
+        """Preprocess a DTS file.
+    
+        Args:
+            input_path: Path to the input file
+            matrix_size: Optional tuple of (rows, cols) for matrix transform
+    
+        Returns:
+            The preprocessed content as a string
+    
+        Raises:
+            PreprocessorError: If preprocessing fails
+        """
+        input_path = Path(input_path)
+        if not input_path.exists():
+            raise PreprocessorError(
+                f"Input file does not exist: {input_path}",
+                help_text=(
+                    "Ensure the input file exists and has proper "
+                    "read permissions"
+                ),
+            )
+    
+        try:
+            with open(input_path, "r") as f:
+                content_for_cpp = f.read()
+        except Exception as e:
+            raise PreprocessorError(
+                f"Failed to read input file: {str(e)}",
+                file=str(input_path),
+                help_text=(
+                    "Ensure the file exists and has proper "
+                    "read permissions"
+                ),
+            )
+    
+        # Create a temporary file for the preprocessor input
+        tmp_input = tempfile.NamedTemporaryFile(
+            mode="w",
+            delete=False,
+            suffix=".dts",
+            dir=None,  # Use system default temp dir (usually /tmp)
+        )
+        tmp_input.write(content_for_cpp)
+        tmp_input.close()
+        tmp_input_file = Path(tmp_input.name)
+    
+        try:
+            # Build cpp command as a list for shell=False
+            cpp_cmd = [
+                str(self.cpp_path),
+                "-E",
+            ]
+            for path in self.include_paths:
+                cpp_cmd.extend(["-I", str(path)])
+            cpp_cmd.append(str(tmp_input_file))
+    
+            # Debug: print the constructed command list
+            print("[DtsPreprocessor] cpp command:", cpp_cmd)
+    
+            # Run preprocessor with shell=False
+            try:
+>               result = subprocess.run(
+                    cpp_cmd,
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                    shell=False,
+                )
+
+converter/dts/preprocessor.py:194: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = True, timeout = None, check = True
+popenargs = (['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-I', '/Volumes/...ox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp3bmvnnv8.dts'],)
+kwargs = {'shell': False, 'stderr': -1, 'stdout': -1, 'text': True}
+process = <Popen: returncode: 1 args: ['/Applications/Xcode.app/Contents/Developer/Too...>
+stdout = ''
+stderr = "cc: error: no such file or directory: 'c'\ncc: warning: /Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include: 'linker' input unused [-Wunused-command-line-argument]\n"
+retcode = 1
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp3bmvnnv8.dts']' returned non-zero exit status 1.
+
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:526: CalledProcessError
+
+During handling of the above exception, another exception occurred:
+
+    def test_preprocessor():
+        # Get the absolute path to the test fixtures directory
+        fixtures_dir = os.path.join(os.path.dirname(__file__), "fixtures", "dts")
+        include_path = os.path.join(fixtures_dir, "include")
+    
+        # Create preprocessor with include path
+        preprocessor = DtsPreprocessor(include_paths=[include_path])
+    
+        # Preprocess the test file
+        input_file = os.path.join(fixtures_dir, "simple_keymap.zmk")
+>       result = preprocessor.preprocess(input_file)
+
+tests/test_dts_preprocessor.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x105dea6e0>
+input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/simple_keymap.zmk')
+matrix_size = None
+
+    def preprocess(
+        self,
+        input_path: str,
+        matrix_size: Optional[Tuple[int, int]] = None,
+    ) -> str:
+        """Preprocess a DTS file.
+    
+        Args:
+            input_path: Path to the input file
+            matrix_size: Optional tuple of (rows, cols) for matrix transform
+    
+        Returns:
+            The preprocessed content as a string
+    
+        Raises:
+            PreprocessorError: If preprocessing fails
+        """
+        input_path = Path(input_path)
+        if not input_path.exists():
+            raise PreprocessorError(
+                f"Input file does not exist: {input_path}",
+                help_text=(
+                    "Ensure the input file exists and has proper "
+                    "read permissions"
+                ),
+            )
+    
+        try:
+            with open(input_path, "r") as f:
+                content_for_cpp = f.read()
+        except Exception as e:
+            raise PreprocessorError(
+                f"Failed to read input file: {str(e)}",
+                file=str(input_path),
+                help_text=(
+                    "Ensure the file exists and has proper "
+                    "read permissions"
+                ),
+            )
+    
+        # Create a temporary file for the preprocessor input
+        tmp_input = tempfile.NamedTemporaryFile(
+            mode="w",
+            delete=False,
+            suffix=".dts",
+            dir=None,  # Use system default temp dir (usually /tmp)
+        )
+        tmp_input.write(content_for_cpp)
+        tmp_input.close()
+        tmp_input_file = Path(tmp_input.name)
+    
+        try:
+            # Build cpp command as a list for shell=False
+            cpp_cmd = [
+                str(self.cpp_path),
+                "-E",
+            ]
+            for path in self.include_paths:
+                cpp_cmd.extend(["-I", str(path)])
+            cpp_cmd.append(str(tmp_input_file))
+    
+            # Debug: print the constructed command list
+            print("[DtsPreprocessor] cpp command:", cpp_cmd)
+    
+            # Run preprocessor with shell=False
+            try:
+                result = subprocess.run(
+                    cpp_cmd,
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                    shell=False,
+                )
+            except subprocess.CalledProcessError as e:
+>               raise PreprocessorError(
+                    "Failed to process DTS directives",
+                    file=str(input_path),
+                    context=str(e),
+                    help_text=(
+                        "Check for malformed DTS directives in "
+                        "input file"
+                    ),
+                )
+E               converter.dts.preprocessor.PreprocessorError: Failed to process DTS directives
+
+converter/dts/preprocessor.py:202: PreprocessorError
+----------------------------- Captured stdout call -----------------------------
+[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp3bmvnnv8.dts']
+________________________ test_preprocessor_large_matrix ________________________
+
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x105df1240>
+input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/large_keymap.zmk')
+matrix_size = None
+
+    def preprocess(
+        self,
+        input_path: str,
+        matrix_size: Optional[Tuple[int, int]] = None,
+    ) -> str:
+        """Preprocess a DTS file.
+    
+        Args:
+            input_path: Path to the input file
+            matrix_size: Optional tuple of (rows, cols) for matrix transform
+    
+        Returns:
+            The preprocessed content as a string
+    
+        Raises:
+            PreprocessorError: If preprocessing fails
+        """
+        input_path = Path(input_path)
+        if not input_path.exists():
+            raise PreprocessorError(
+                f"Input file does not exist: {input_path}",
+                help_text=(
+                    "Ensure the input file exists and has proper "
+                    "read permissions"
+                ),
+            )
+    
+        try:
+            with open(input_path, "r") as f:
+                content_for_cpp = f.read()
+        except Exception as e:
+            raise PreprocessorError(
+                f"Failed to read input file: {str(e)}",
+                file=str(input_path),
+                help_text=(
+                    "Ensure the file exists and has proper "
+                    "read permissions"
+                ),
+            )
+    
+        # Create a temporary file for the preprocessor input
+        tmp_input = tempfile.NamedTemporaryFile(
+            mode="w",
+            delete=False,
+            suffix=".dts",
+            dir=None,  # Use system default temp dir (usually /tmp)
+        )
+        tmp_input.write(content_for_cpp)
+        tmp_input.close()
+        tmp_input_file = Path(tmp_input.name)
+    
+        try:
+            # Build cpp command as a list for shell=False
+            cpp_cmd = [
+                str(self.cpp_path),
+                "-E",
+            ]
+            for path in self.include_paths:
+                cpp_cmd.extend(["-I", str(path)])
+            cpp_cmd.append(str(tmp_input_file))
+    
+            # Debug: print the constructed command list
+            print("[DtsPreprocessor] cpp command:", cpp_cmd)
+    
+            # Run preprocessor with shell=False
+            try:
+>               result = subprocess.run(
+                    cpp_cmd,
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                    shell=False,
+                )
+
+converter/dts/preprocessor.py:194: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = True, timeout = None, check = True
+popenargs = (['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-I', '/Volumes/...ox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpxuwqpjsb.dts'],)
+kwargs = {'shell': False, 'stderr': -1, 'stdout': -1, 'text': True}
+process = <Popen: returncode: 1 args: ['/Applications/Xcode.app/Contents/Developer/Too...>
+stdout = ''
+stderr = "cc: error: no such file or directory: 'c'\ncc: warning: /Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include: 'linker' input unused [-Wunused-command-line-argument]\n"
+retcode = 1
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpxuwqpjsb.dts']' returned non-zero exit status 1.
+
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:526: CalledProcessError
+
+During handling of the above exception, another exception occurred:
+
+    def test_preprocessor_large_matrix():
+        # Get the absolute path to the test fixtures directory
+        fixtures_dir = os.path.join(os.path.dirname(__file__), "fixtures", "dts")
+        include_path = os.path.join(fixtures_dir, "include")
+    
+        # Create preprocessor with include path
+        preprocessor = DtsPreprocessor(include_paths=[include_path])
+    
+        # Preprocess the test file
+        input_file = os.path.join(fixtures_dir, "large_keymap.zmk")
+>       result = preprocessor.preprocess(input_file)
+
+tests/test_dts_preprocessor.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x105df1240>
+input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/large_keymap.zmk')
+matrix_size = None
+
+    def preprocess(
+        self,
+        input_path: str,
+        matrix_size: Optional[Tuple[int, int]] = None,
+    ) -> str:
+        """Preprocess a DTS file.
+    
+        Args:
+            input_path: Path to the input file
+            matrix_size: Optional tuple of (rows, cols) for matrix transform
+    
+        Returns:
+            The preprocessed content as a string
+    
+        Raises:
+            PreprocessorError: If preprocessing fails
+        """
+        input_path = Path(input_path)
+        if not input_path.exists():
+            raise PreprocessorError(
+                f"Input file does not exist: {input_path}",
+                help_text=(
+                    "Ensure the input file exists and has proper "
+                    "read permissions"
+                ),
+            )
+    
+        try:
+            with open(input_path, "r") as f:
+                content_for_cpp = f.read()
+        except Exception as e:
+            raise PreprocessorError(
+                f"Failed to read input file: {str(e)}",
+                file=str(input_path),
+                help_text=(
+                    "Ensure the file exists and has proper "
+                    "read permissions"
+                ),
+            )
+    
+        # Create a temporary file for the preprocessor input
+        tmp_input = tempfile.NamedTemporaryFile(
+            mode="w",
+            delete=False,
+            suffix=".dts",
+            dir=None,  # Use system default temp dir (usually /tmp)
+        )
+        tmp_input.write(content_for_cpp)
+        tmp_input.close()
+        tmp_input_file = Path(tmp_input.name)
+    
+        try:
+            # Build cpp command as a list for shell=False
+            cpp_cmd = [
+                str(self.cpp_path),
+                "-E",
+            ]
+            for path in self.include_paths:
+                cpp_cmd.extend(["-I", str(path)])
+            cpp_cmd.append(str(tmp_input_file))
+    
+            # Debug: print the constructed command list
+            print("[DtsPreprocessor] cpp command:", cpp_cmd)
+    
+            # Run preprocessor with shell=False
+            try:
+                result = subprocess.run(
+                    cpp_cmd,
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                    shell=False,
+                )
+            except subprocess.CalledProcessError as e:
+>               raise PreprocessorError(
+                    "Failed to process DTS directives",
+                    file=str(input_path),
+                    context=str(e),
+                    help_text=(
+                        "Check for malformed DTS directives in "
+                        "input file"
+                    ),
+                )
+E               converter.dts.preprocessor.PreprocessorError: Failed to process DTS directives
+
+converter/dts/preprocessor.py:202: PreprocessorError
+----------------------------- Captured stdout call -----------------------------
+[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpxuwqpjsb.dts']
+_______________________ test_preprocessor_error_handling _______________________
+
+    def test_preprocessor_error_handling():
+        # Test with non-existent file
+>       preprocessor = DtsPreprocessor(include_paths=["/nonexistent/path"])
+
+tests/test_dts_preprocessor.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x105f07700>
+cpp_path = '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp'
+include_paths = ['/nonexistent/path']
+
+    def __init__(
+        self,
+        cpp_path: Optional[str] = None,
+        include_paths: Optional[List[str]] = None,
+    ):
+        """Initialize the preprocessor.
+    
+        Args:
+            cpp_path: Path to the C preprocessor executable
+            include_paths: List of paths to search for include files
+        """
+        if cpp_path is None:
+            cpp_path = (
+                "/Applications/Xcode.app/Contents/Developer/Toolchains/"
+                "XcodeDefault.xctoolchain/usr/bin/cpp"
+            )
+        cpp_path = str(cpp_path)
+        if not cpp_path.endswith("cpp"):
+            raise PreprocessorError(
+                "Invalid cpp path",
+                help_text="The cpp path must point to a cpp executable",
+            )
+        self.cpp_path = Path(cpp_path)
+    
+        self.include_paths = []
+        if include_paths:
+            for path in include_paths:
+                path_obj = Path(path)
+                if not path_obj.exists():
+                    msg = f"Include path does not exist: {path}"
+                    help_text = (
+                        "Ensure all include paths exist and are "
+                        "accessible"
+                    )
+>                   raise PreprocessorError(msg, help_text=help_text)
+E                   converter.dts.preprocessor.PreprocessorError: Include path does not exist: /nonexistent/path
+
+converter/dts/preprocessor.py:83: PreprocessorError
+=========================== short test summary info ============================
+FAILED tests/dts/test_performance.py::test_preprocessor_performance - convert...
+FAILED tests/dts/test_preprocessor.py::test_preprocessor_initialization - Att...
+FAILED tests/dts/test_preprocessor.py::test_preprocess_simple_file - converte...
+FAILED tests/dts/test_preprocessor.py::test_preprocess_with_includes - conver...
+FAILED tests/dts/test_preprocessor.py::test_preprocess_invalid_file - convert...
+FAILED tests/dts/test_preprocessor.py::test_preprocess_invalid_cpp_command - ...
+FAILED tests/dts/test_preprocessor.py::test_preprocess_simple_keymap - conver...
+FAILED tests/test_dts_preprocessor.py::test_preprocessor - converter.dts.prep...
+FAILED tests/test_dts_preprocessor.py::test_preprocessor_large_matrix - conve...
+FAILED tests/test_dts_preprocessor.py::test_preprocessor_error_handling - con...
+================= 10 failed, 5 passed, 57 deselected in 0.29s ==================

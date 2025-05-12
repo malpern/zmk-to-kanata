@@ -1,151 +1,86 @@
 ============================= test session starts ==============================
-platform darwin -- Python 3.10.16, pytest-8.3.4, pluggy-1.5.0
+platform darwin -- Python 3.10.16, pytest-8.3.4, pluggy-1.5.0 -- /Users/malpern/.pyenv/versions/3.10.16/bin/python3.10
+cachedir: .pytest_cache
 rootdir: /Volumes/FlashGordon/Dropbox/code/nicktokatana
 configfile: pyproject.toml
 testpaths: tests
 plugins: anyio-4.7.0
-collected 72 items
+collecting ... collected 72 items
 
-tests/dts/test_ast.py .....                                              [  6%]
-tests/dts/test_end_to_end.py FFFFFF                                      [ 15%]
-tests/dts/test_extractor.py FFFFF                                        [ 22%]
-tests/dts/test_integration.py FFFFF                                      [ 29%]
-tests/dts/test_parser.py ...F.......F.                                   [ 47%]
-tests/dts/test_performance.py FFFF                                       [ 52%]
-tests/dts/test_preprocessor.py FFFFFF.F...                               [ 68%]
-tests/test_dts_parser.py FF......                                        [ 79%]
-tests/test_dts_preprocessor.py FFF                                       [ 83%]
-tests/test_kanata_converter.py .....                                     [ 90%]
-tests/test_main.py FFFFF..                                               [100%]
+tests/dts/test_ast.py::test_dts_property_creation PASSED                 [  1%]
+tests/dts/test_ast.py::test_dts_node_creation PASSED                     [  2%]
+tests/dts/test_ast.py::test_dts_node_find PASSED                         [  4%]
+tests/dts/test_ast.py::test_dts_root_creation PASSED                     [  5%]
+tests/dts/test_ast.py::test_dts_root_label_map PASSED                    [  6%]
+tests/dts/test_end_to_end.py::test_simple_keymap PASSED                  [  8%]
+tests/dts/test_end_to_end.py::test_complex_keymap_with_behaviors PASSED  [  9%]
+tests/dts/test_end_to_end.py::test_keymap_with_unicode FAILED            [ 11%]
+tests/dts/test_end_to_end.py::test_error_handling FAILED                 [ 12%]
+tests/dts/test_end_to_end.py::test_keymap_with_combos PASSED             [ 13%]
+tests/dts/test_end_to_end.py::test_keymap_with_conditional_layers PASSED [ 15%]
+tests/dts/test_extractor.py::test_extract_simple_keymap PASSED           [ 16%]
+tests/dts/test_extractor.py::test_extract_with_behaviors PASSED          [ 18%]
+tests/dts/test_extractor.py::test_extract_multiple_layers PASSED         [ 19%]
+tests/dts/test_extractor.py::test_extract_complex_bindings PASSED        [ 20%]
+tests/dts/test_extractor.py::test_extract_invalid_content FAILED         [ 22%]
+tests/dts/test_integration.py::test_full_pipeline_simple_keymap PASSED   [ 23%]
+tests/dts/test_integration.py::test_full_pipeline_with_behaviors PASSED  [ 25%]
+tests/dts/test_integration.py::test_full_pipeline_multiple_layers PASSED [ 26%]
+tests/dts/test_integration.py::test_full_pipeline_complex_bindings PASSED [ 27%]
+tests/dts/test_integration.py::test_full_pipeline_error_handling FAILED  [ 29%]
+tests/dts/test_parser.py::test_parse_simple_dts PASSED                   [ 30%]
+tests/dts/test_parser.py::test_parse_with_labels PASSED                  [ 31%]
+tests/dts/test_parser.py::test_parse_with_references PASSED              [ 33%]
+tests/dts/test_parser.py::test_parse_error_handling FAILED               [ 34%]
+tests/dts/test_parser.py::test_parse_complex_dts PASSED                  [ 36%]
+tests/dts/test_parser.py::test_parse_nested_nodes PASSED                 [ 37%]
+tests/dts/test_parser.py::test_parse_multiple_labels PASSED              [ 38%]
+tests/dts/test_parser.py::test_parse_complex_arrays PASSED               [ 40%]
+tests/dts/test_parser.py::test_parse_boolean_properties PASSED           [ 41%]
+tests/dts/test_parser.py::test_parse_empty_nodes_and_properties PASSED   [ 43%]
+tests/dts/test_parser.py::test_parse_comments PASSED                     [ 44%]
+tests/dts/test_parser.py::test_parse_zmk_specific_constructs FAILED      [ 45%]
+tests/dts/test_parser.py::test_parse_array_with_mixed_cell_types_and_references PASSED [ 47%]
+tests/dts/test_performance.py::test_preprocessor_performance FAILED      [ 48%]
+tests/dts/test_performance.py::test_parser_performance FAILED            [ 50%]
+tests/dts/test_performance.py::test_extractor_performance FAILED         [ 51%]
+tests/dts/test_performance.py::test_full_pipeline_performance FAILED     [ 52%]
+tests/dts/test_preprocessor.py::test_preprocessor_initialization FAILED  [ 54%]
+tests/dts/test_preprocessor.py::test_preprocess_simple_file FAILED       [ 55%]
+tests/dts/test_preprocessor.py::test_preprocess_with_matrix FAILED       [ 56%]
+tests/dts/test_preprocessor.py::test_preprocess_with_includes FAILED     [ 58%]
+tests/dts/test_preprocessor.py::test_preprocess_invalid_file FAILED      [ 59%]
+tests/dts/test_preprocessor.py::test_preprocess_invalid_cpp_command FAILED [ 61%]
+tests/dts/test_preprocessor.py::test_matrix_size_extraction PASSED       [ 62%]
+tests/dts/test_preprocessor.py::test_preprocess_simple_keymap FAILED     [ 63%]
+tests/dts/test_preprocessor.py::test_preprocess_with_include_paths PASSED [ 65%]
+tests/dts/test_preprocessor.py::test_matrix_size_detection PASSED        [ 66%]
+tests/dts/test_preprocessor.py::test_matrix_size_detection_no_matrix PASSED [ 68%]
+tests/test_dts_parser.py::test_parse_simple_keymap FAILED                [ 69%]
+tests/test_dts_parser.py::test_parse_large_keymap FAILED                 [ 70%]
+tests/test_dts_parser.py::test_parse_simple_dts PASSED                   [ 72%]
+tests/test_dts_parser.py::test_parse_with_labels PASSED                  [ 73%]
+tests/test_dts_parser.py::test_parse_complex_bindings PASSED             [ 75%]
+tests/test_dts_parser.py::test_parse_error_handling PASSED               [ 76%]
+tests/test_dts_parser.py::test_parse_invalid_content PASSED              [ 77%]
+tests/test_dts_parser.py::test_find_node PASSED                          [ 79%]
+tests/test_dts_preprocessor.py::test_preprocessor FAILED                 [ 80%]
+tests/test_dts_preprocessor.py::test_preprocessor_large_matrix FAILED    [ 81%]
+tests/test_dts_preprocessor.py::test_preprocessor_error_handling FAILED  [ 83%]
+tests/test_kanata_converter.py::test_convert_simple_keymap PASSED        [ 84%]
+tests/test_kanata_converter.py::test_convert_large_keymap PASSED         [ 86%]
+tests/test_kanata_converter.py::test_convert_multiple_layers PASSED      [ 87%]
+tests/test_kanata_converter.py::test_convert_invalid_key_code PASSED     [ 88%]
+tests/test_kanata_converter.py::test_convert_invalid_key_type PASSED     [ 90%]
+tests/test_main.py::test_main_simple_conversion_stdout FAILED            [ 91%]
+tests/test_main.py::test_main_simple_conversion_outfile FAILED           [ 93%]
+tests/test_main.py::test_main_with_include FAILED                        [ 94%]
+tests/test_main.py::test_main_input_file_not_found FAILED                [ 95%]
+tests/test_main.py::test_main_invalid_dts FAILED                         [ 97%]
+tests/test_main.py::test_main_no_args PASSED                             [ 98%]
+tests/test_main.py::test_main_help PASSED                                [100%]
 
 =================================== FAILURES ===================================
-______________________________ test_simple_keymap ______________________________
-
-    def test_simple_keymap():
-        """Test parsing a simple keymap file."""
-        content = """
-        / {
-            keymap {
-                compatible = "zmk,keymap";
-    
-                default_layer {
-                    bindings = <
-                        &kp A &kp B &kp C
-                        &kp D &kp E &kp F
-                    >;
-                };
-            };
-        };
-        """
-    
-        # Parse and extract
-        parser = DtsParser()
-        ast = parser.parse(content)
-    
-        extractor = KeymapExtractor()
->       config = extractor.extract(ast)
-
-tests/dts/test_end_to_end.py:31: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-converter/dts/extractor.py:77: in extract
-    self._extract_layers(keymap_node)
-converter/dts/extractor.py:300: in _extract_layers
-    layer = self._create_layer(child)
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <converter.dts.extractor.KeymapExtractor object at 0x103ea0eb0>
-node = DtsNode(name='default_layer', parent=DtsNode(name='keymap', parent=DtsNode(name='/', parent=None, children={'keymap': ...='bindings', value=['&kp', 'A', '&kp', 'B', '&kp', 'C', '&kp', 'D', '&kp', 'E', '&kp', 'F'], type='array')}, labels={})
-
-    def _create_layer(self, node: DtsNode) -> Optional[Layer]:
-        """Create a layer instance from a node (called in Pass 3)."""
-        bindings_prop = node.properties.get("bindings")
-        if not bindings_prop or bindings_prop.type != "array":
-            print(f"Warning: Layer '{node.name}' missing valid bindings property.")
-            return None
-    
-        # Parse bindings now, all behaviors should be available
-        parsed_bindings = self._parse_bindings(bindings_prop.value)
->       return Layer(name=node.name, bindings=parsed_bindings)
-E       TypeError: Layer.__init__() missing 1 required positional argument: 'index'
-
-converter/dts/extractor.py:320: TypeError
-______________________ test_complex_keymap_with_behaviors ______________________
-
-    def test_complex_keymap_with_behaviors():
-        """Test parsing a complex keymap with behaviors."""
-        content = """
-        / {
-            behaviors {
-                mt: mod_tap {
-                    compatible = "zmk,behavior-hold-tap";
-                    tapping-term-ms = <200>;
-                    #binding-cells = <2>;
-                };
-    
-                macro_a: macro_a {
-                    compatible = "zmk,behavior-macro";
-                    #binding-cells = <0>;
-                    bindings = <&kp A &kp B>;
-                };
-    
-                lt: layer_tap {
-                    compatible = "zmk,behavior-hold-tap";
-                    tapping-term-ms = <200>;
-                    #binding-cells = <2>;
-                };
-            };
-    
-            keymap {
-                compatible = "zmk,keymap";
-    
-                default_layer {
-                    bindings = <
-                        &mt LSHIFT A  &kp B        &macro_a
-                        &kp D         &lt 1 E      &kp F
-                    >;
-                };
-    
-                lower_layer {
-                    bindings = <
-                        &kp N1  &kp N2  &kp N3
-                        &kp N4  &kp N5  &kp N6
-                    >;
-                };
-            };
-        };
-        """
-    
-        # Parse and extract
-        parser = DtsParser()
-        ast = parser.parse(content)
-    
-        extractor = KeymapExtractor()
->       config = extractor.extract(ast)
-
-tests/dts/test_end_to_end.py:102: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-converter/dts/extractor.py:77: in extract
-    self._extract_layers(keymap_node)
-converter/dts/extractor.py:300: in _extract_layers
-    layer = self._create_layer(child)
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <converter.dts.extractor.KeymapExtractor object at 0x103ea1db0>
-node = DtsNode(name='default_layer', parent=DtsNode(name='keymap', parent=DtsNode(name='/', parent=None, children={'behaviors...value=['&mt', 'LSHIFT', 'A', '&kp', 'B', '&macro_a', '&kp', 'D', '&lt', 1, 'E', '&kp', 'F'], type='array')}, labels={})
-
-    def _create_layer(self, node: DtsNode) -> Optional[Layer]:
-        """Create a layer instance from a node (called in Pass 3)."""
-        bindings_prop = node.properties.get("bindings")
-        if not bindings_prop or bindings_prop.type != "array":
-            print(f"Warning: Layer '{node.name}' missing valid bindings property.")
-            return None
-    
-        # Parse bindings now, all behaviors should be available
-        parsed_bindings = self._parse_bindings(bindings_prop.value)
->       return Layer(name=node.name, bindings=parsed_bindings)
-E       TypeError: Layer.__init__() missing 1 required positional argument: 'index'
-
-converter/dts/extractor.py:320: TypeError
 ___________________________ test_keymap_with_unicode ___________________________
 
     def test_keymap_with_unicode():
@@ -186,422 +121,156 @@ ___________________________ test_keymap_with_unicode ___________________________
         ast = parser.parse(content)
     
         extractor = KeymapExtractor()
->       config = extractor.extract(ast)
-
-tests/dts/test_end_to_end.py:189: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-converter/dts/extractor.py:77: in extract
-    self._extract_layers(keymap_node)
-converter/dts/extractor.py:300: in _extract_layers
-    layer = self._create_layer(child)
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <converter.dts.extractor.KeymapExtractor object at 0x103ea0eb0>
-node = DtsNode(name='default_layer', parent=DtsNode(name='keymap', parent=DtsNode(name='/', parent=None, children={'behaviors... '&uc_string', 'smile', '&kp', 'A', '&unicode', 'U2764', '&uc_string', 'heart', '&kp', 'B'], type='array')}, labels={})
-
-    def _create_layer(self, node: DtsNode) -> Optional[Layer]:
-        """Create a layer instance from a node (called in Pass 3)."""
-        bindings_prop = node.properties.get("bindings")
-        if not bindings_prop or bindings_prop.type != "array":
-            print(f"Warning: Layer '{node.name}' missing valid bindings property.")
-            return None
+        config = extractor.extract(ast)
     
-        # Parse bindings now, all behaviors should be available
-        parsed_bindings = self._parse_bindings(bindings_prop.value)
->       return Layer(name=node.name, bindings=parsed_bindings)
-E       TypeError: Layer.__init__() missing 1 required positional argument: 'index'
+        # Verify behaviors
+        assert len(config.behaviors) == 2
+    
+        unicode = next(b for b in config.behaviors.values() if b.name == "unicode")
+        assert isinstance(unicode, Behavior)
+    
+        uc_string = next(b for b in config.behaviors.values() if b.name == "uc_string")
+        assert isinstance(uc_string, Behavior)
+    
+        # Verify bindings
+        layer_node = config.layers[0]
+>       assert len(layer_node.bindings) == 6
+E       AssertionError: assert 10 == 6
+E        +  where 10 = len([Binding(behavior=Behavior(name='unicode', type='unicode'), params=[]), Binding(behavior=None, params=['U0001F600']), Binding(behavior=Behavior(name='uc_string', type='unicode_string'), params=[]), Binding(behavior=None, params=['smile']), Binding(behavior=None, params=['A']), Binding(behavior=Behavior(name='unicode', type='unicode'), params=[]), ...])
+E        +    where [Binding(behavior=Behavior(name='unicode', type='unicode'), params=[]), Binding(behavior=None, params=['U0001F600']), Binding(behavior=Behavior(name='uc_string', type='unicode_string'), params=[]), Binding(behavior=None, params=['smile']), Binding(behavior=None, params=['A']), Binding(behavior=Behavior(name='unicode', type='unicode'), params=[]), ...] = Layer(name='default_layer', bindings=[Binding(behavior=Behavior(name='unicode', type='unicode'), params=[]), Binding(behavior=None, params=['U0001F600']), Binding(behavior=Behavior(name='uc_string', type='unicode_string'), params=[]), Binding(behavior=None, params=['smile']), Binding(behavior=None, params=['A']), Binding(behavior=Behavior(name='unicode', type='unicode'), params=[]), Binding(behavior=None, params=['U2764']), Binding(behavior=Behavior(name='uc_string', type='unicode_string'), params=[]), Binding(behavior=None, params=['heart']), Binding(behavior=None, params=['B'])], index=0).bindings
 
-converter/dts/extractor.py:320: TypeError
+tests/dts/test_end_to_end.py:203: AssertionError
+----------------------------- Captured stdout call -----------------------------
+Added layer default_layer: Layer(name='default_layer', bindings=[Binding(behavior=Behavior(name='unicode', type='unicode'), params=[]), Binding(behavior=None, params=['U0001F600']), Binding(behavior=Behavior(name='uc_string', type='unicode_string'), params=[]), Binding(behavior=None, params=['smile']), Binding(behavior=None, params=['A']), Binding(behavior=Behavior(name='unicode', type='unicode'), params=[]), Binding(behavior=None, params=['U2764']), Binding(behavior=Behavior(name='uc_string', type='unicode_string'), params=[]), Binding(behavior=None, params=['heart']), Binding(behavior=None, params=['B'])], index=0)
 _____________________________ test_error_handling ______________________________
 
     def test_error_handling():
         """Test error handling with malformed input."""
         # Test missing root node
-        with pytest.raises(ValueError, match="Expected root node"):
+        with pytest.raises(DtsParseError, match="DTS must start with root node"):
             parser = DtsParser()
->           parser.parse("keymap { };")
-
-tests/dts/test_end_to_end.py:216: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <converter.dts.parser.DtsParser object at 0x103f10d90>
-content = 'keymap { };', file = None
-
-    def parse(self, content: str, file: Optional[str] = None) -> DtsRoot:
-        """Parse DTS content into an AST.
+            parser.parse("keymap { };")
     
-        Args:
-            content: DTS content string
-            file: Optional file path for error reporting
-    
-        Returns:
-            DtsRoot object representing the parsed AST
-    
-        Raises:
-            DtsParseError: If the content is not valid DTS
-        """
-        self.content = content
-        self.tokens = []
-        self.line_map = []
-        self._tokenize(content)
-        self.pos = 0
-    
-        # Check for root node token '/'
-        if not self.tokens or self.tokens[0] != "/":
->           raise DtsParseError(
-                "DTS must start with root node '/'",
-                file=file,
-                line=1,
-                column=1,
-                context=format_error_context(content, 1, 1),
+        # Test invalid property assignment
+        with pytest.raises(DtsParseError, match="Invalid property value: value"):
+            parser = DtsParser()
+            parser.parse(
+                """
+            / {
+                keymap {
+                    prop = value
+                };
+            };
+            """
             )
-E           converter.dts.error_handler.DtsParseError: DTS must start with root node '/' at line 1, column 1
-E           
-E           1 | keymap { };
-E             | ^
-E           
-E           Help: Check the DTS syntax and ensure it follows the specification.
-
-converter/dts/parser.py:39: DtsParseError
-___________________________ test_keymap_with_combos ____________________________
-
-    def test_keymap_with_combos():
-        """Test parsing a keymap with combo behaviors."""
-        content = """
+    
+        # Test invalid binding format
+        parser = DtsParser()
+        ast = parser.parse(
+            """
         / {
-            combos {
-                compatible = "zmk,combos";
-                combo_esc {
-                    timeout-ms = <50>;
-                    key-positions = <0 1>;
-                    bindings = <&kp ESC>;
-                };
-                combo_tab {
-                    timeout-ms = <50>;
-                    key-positions = <1 2>;
-                    bindings = <&kp TAB>;
-                };
-            };
-    
             keymap {
-                compatible = "zmk,keymap";
-    
                 default_layer {
-                    bindings = <
-                        &kp A &kp B &kp C
-                        &kp D &kp E &kp F
-                    >;
+                    bindings = <&invalid_binding>;
                 };
             };
         };
         """
-    
-        # Parse and extract
-        parser = DtsParser()
-        ast = parser.parse(content)
-    
+        )
         extractor = KeymapExtractor()
->       config = extractor.extract(ast)
+        with pytest.raises(ValueError, match="Invalid binding format: invalid_binding"):
+>           extractor.extract(ast)
 
-tests/dts/test_end_to_end.py:285: 
+tests/dts/test_end_to_end.py:247: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 converter/dts/extractor.py:77: in extract
     self._extract_layers(keymap_node)
 converter/dts/extractor.py:300: in _extract_layers
-    layer = self._create_layer(child)
+    layer = self._create_layer(child, idx)
+converter/dts/extractor.py:319: in _create_layer
+    parsed_bindings = self._parse_bindings(bindings_prop.value)
+converter/dts/extractor.py:362: in _parse_bindings
+    bindings.append(self._create_binding([behavior_name] + params))
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <converter.dts.extractor.KeymapExtractor object at 0x103e876a0>
-node = DtsNode(name='default_layer', parent=DtsNode(name='keymap', parent=DtsNode(name='/', parent=None, children={'combos': ...='bindings', value=['&kp', 'A', '&kp', 'B', '&kp', 'C', '&kp', 'D', '&kp', 'E', '&kp', 'F'], type='array')}, labels={})
+self = <converter.dts.extractor.KeymapExtractor object at 0x103ab79a0>
+value = ['invalid_binding']
 
-    def _create_layer(self, node: DtsNode) -> Optional[Layer]:
-        """Create a layer instance from a node (called in Pass 3)."""
-        bindings_prop = node.properties.get("bindings")
-        if not bindings_prop or bindings_prop.type != "array":
-            print(f"Warning: Layer '{node.name}' missing valid bindings property.")
-            return None
+    def _create_binding(self, value: str | List[str]) -> Binding:
+        """Create a binding instance from a value."""
+        if isinstance(value, list):
+            # Handle list format [behavior_name, param1, ...]
+            if not value:
+                raise ValueError("Empty binding list value")
+            behavior_name = value[0]
+            params = value[1:]
     
-        # Parse bindings now, all behaviors should be available
-        parsed_bindings = self._parse_bindings(bindings_prop.value)
->       return Layer(name=node.name, bindings=parsed_bindings)
-E       TypeError: Layer.__init__() missing 1 required positional argument: 'index'
+            if behavior_name == "kp":
+                if len(params) != 1:
+                    raise ValueError(
+                        f"kp behavior expects 1 parameter, "
+                        f"got {len(params)}: {params}"
+                    )
+                # Ensure params is always a list
+                return Binding(behavior=None, params=[params[0]])  # Wrap param
+    
+            # Look up custom behavior - should exist now
+            behavior = self.behaviors.get(behavior_name)
+            if behavior:
+                # TODO: Validate params against behavior definition if needed
+                return Binding(behavior=behavior, params=params)
+            else:
+                # This shouldn't happen if pass logic is correct
+>               raise ValueError(
+                    f"Unknown behavior referenced during binding creation: "
+                    f"{behavior_name}"
+                )
+E               ValueError: Unknown behavior referenced during binding creation: invalid_binding
 
-converter/dts/extractor.py:320: TypeError
------------------------------ Captured stdout call -----------------------------
-Added combo combo_esc: Combo(name='combo_esc', timeout_ms=50, key_positions=[0, 1], binding=Binding(behavior=None, params=['ESC']))
-Added combo combo_tab: Combo(name='combo_tab', timeout_ms=50, key_positions=[1, 2], binding=Binding(behavior=None, params=['TAB']))
-_____________________ test_keymap_with_conditional_layers ______________________
+converter/dts/extractor.py:395: ValueError
 
-    def test_keymap_with_conditional_layers():
-        """Test parsing a keymap with conditional layers."""
-        content = """
-        / {
-            conditional_layers {
-                compatible = "zmk,conditional-layers";
-                tri_layer {
-                    if-layers = <1 2>;
-                    then-layer = <3>;
+During handling of the above exception, another exception occurred:
+
+    def test_error_handling():
+        """Test error handling with malformed input."""
+        # Test missing root node
+        with pytest.raises(DtsParseError, match="DTS must start with root node"):
+            parser = DtsParser()
+            parser.parse("keymap { };")
+    
+        # Test invalid property assignment
+        with pytest.raises(DtsParseError, match="Invalid property value: value"):
+            parser = DtsParser()
+            parser.parse(
+                """
+            / {
+                keymap {
+                    prop = value
                 };
             };
+            """
+            )
     
+        # Test invalid binding format
+        parser = DtsParser()
+        ast = parser.parse(
+            """
+        / {
             keymap {
-                compatible = "zmk,keymap";
-    
                 default_layer {
-                    bindings = <&kp A &kp B>;
-                };
-    
-                lower_layer {
-                    bindings = <&kp N1 &kp N2>;
-                };
-    
-                raise_layer {
-                    bindings = <&kp F1 &kp F2>;
-                };
-    
-                adjust_layer {
-                    bindings = <&reset &bootloader>;
+                    bindings = <&invalid_binding>;
                 };
             };
         };
         """
-    
-        # Parse and extract
-        parser = DtsParser()
-        ast = parser.parse(content)
-    
+        )
         extractor = KeymapExtractor()
->       config = extractor.extract(ast)
+>       with pytest.raises(ValueError, match="Invalid binding format: invalid_binding"):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'Invalid binding format: invalid_binding'
+E        Input: 'Unknown behavior referenced during binding creation: invalid_binding'
 
-tests/dts/test_end_to_end.py:340: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-converter/dts/extractor.py:77: in extract
-    self._extract_layers(keymap_node)
-converter/dts/extractor.py:300: in _extract_layers
-    layer = self._create_layer(child)
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <converter.dts.extractor.KeymapExtractor object at 0x1039cfb80>
-node = DtsNode(name='default_layer', parent=DtsNode(name='keymap', parent=DtsNode(name='/', parent=None, children={'condition...ren={}, properties={'bindings': DtsProperty(name='bindings', value=['&kp', 'A', '&kp', 'B'], type='array')}, labels={})
-
-    def _create_layer(self, node: DtsNode) -> Optional[Layer]:
-        """Create a layer instance from a node (called in Pass 3)."""
-        bindings_prop = node.properties.get("bindings")
-        if not bindings_prop or bindings_prop.type != "array":
-            print(f"Warning: Layer '{node.name}' missing valid bindings property.")
-            return None
-    
-        # Parse bindings now, all behaviors should be available
-        parsed_bindings = self._parse_bindings(bindings_prop.value)
->       return Layer(name=node.name, bindings=parsed_bindings)
-E       TypeError: Layer.__init__() missing 1 required positional argument: 'index'
-
-converter/dts/extractor.py:320: TypeError
------------------------------ Captured stdout call -----------------------------
-Added conditional layer tri_layer: ConditionalLayer(name='tri_layer', if_layers=[1, 2], then_layer=3)
-__________________________ test_extract_simple_keymap __________________________
-
-    def test_extract_simple_keymap():
-        """Test extracting a simple keymap."""
-        content = """
-        / {
-            keymap {
-                compatible = "zmk,keymap";
-                default_layer {
-                    bindings = <&kp A &kp B &kp C>;
-                };
-            };
-        };
-        """
-    
-        parser = DtsParser()
-        ast = parser.parse(content)
-        extractor = KeymapExtractor()
->       config = extractor.extract(ast)
-
-tests/dts/test_extractor.py:24: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-converter/dts/extractor.py:77: in extract
-    self._extract_layers(keymap_node)
-converter/dts/extractor.py:300: in _extract_layers
-    layer = self._create_layer(child)
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <converter.dts.extractor.KeymapExtractor object at 0x103ea3a30>
-node = DtsNode(name='default_layer', parent=DtsNode(name='keymap', parent=DtsNode(name='/', parent=None, children={'keymap': ...erties={'bindings': DtsProperty(name='bindings', value=['&kp', 'A', '&kp', 'B', '&kp', 'C'], type='array')}, labels={})
-
-    def _create_layer(self, node: DtsNode) -> Optional[Layer]:
-        """Create a layer instance from a node (called in Pass 3)."""
-        bindings_prop = node.properties.get("bindings")
-        if not bindings_prop or bindings_prop.type != "array":
-            print(f"Warning: Layer '{node.name}' missing valid bindings property.")
-            return None
-    
-        # Parse bindings now, all behaviors should be available
-        parsed_bindings = self._parse_bindings(bindings_prop.value)
->       return Layer(name=node.name, bindings=parsed_bindings)
-E       TypeError: Layer.__init__() missing 1 required positional argument: 'index'
-
-converter/dts/extractor.py:320: TypeError
-_________________________ test_extract_with_behaviors __________________________
-
-    def test_extract_with_behaviors():
-        """Test extracting keymap with behaviors."""
-        content = """
-        / {
-            behaviors {
-                mt: mod_tap {
-                    compatible = "zmk,behavior-hold-tap";
-                    tapping-term-ms = <200>;
-                };
-                macro: macro {
-                    compatible = "zmk,behavior-macro";
-                    bindings = <&kp A &kp B>;
-                };
-            };
-            keymap {
-                default_layer {
-                    bindings = <&mt LSHIFT A &macro>;
-                };
-            };
-        };
-        """
-    
-        parser = DtsParser()
-        ast = parser.parse(content)
-        extractor = KeymapExtractor()
->       config = extractor.extract(ast)
-
-tests/dts/test_extractor.py:58: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-converter/dts/extractor.py:77: in extract
-    self._extract_layers(keymap_node)
-converter/dts/extractor.py:300: in _extract_layers
-    layer = self._create_layer(child)
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <converter.dts.extractor.KeymapExtractor object at 0x103f8dae0>
-node = DtsNode(name='default_layer', parent=DtsNode(name='keymap', parent=DtsNode(name='/', parent=None, children={'behaviors...properties={'bindings': DtsProperty(name='bindings', value=['&mt', 'LSHIFT', 'A', '&macro'], type='array')}, labels={})
-
-    def _create_layer(self, node: DtsNode) -> Optional[Layer]:
-        """Create a layer instance from a node (called in Pass 3)."""
-        bindings_prop = node.properties.get("bindings")
-        if not bindings_prop or bindings_prop.type != "array":
-            print(f"Warning: Layer '{node.name}' missing valid bindings property.")
-            return None
-    
-        # Parse bindings now, all behaviors should be available
-        parsed_bindings = self._parse_bindings(bindings_prop.value)
->       return Layer(name=node.name, bindings=parsed_bindings)
-E       TypeError: Layer.__init__() missing 1 required positional argument: 'index'
-
-converter/dts/extractor.py:320: TypeError
-_________________________ test_extract_multiple_layers _________________________
-
-    def test_extract_multiple_layers():
-        """Test extracting keymap with multiple layers."""
-        content = """
-        / {
-            keymap {
-                default_layer {
-                    bindings = <&kp A &kp B>;
-                };
-                lower_layer {
-                    bindings = <&kp C &kp D>;
-                };
-                raise_layer {
-                    bindings = <&kp E &kp F>;
-                };
-            };
-        };
-        """
-    
-        parser = DtsParser()
-        ast = parser.parse(content)
-        extractor = KeymapExtractor()
->       config = extractor.extract(ast)
-
-tests/dts/test_extractor.py:92: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-converter/dts/extractor.py:77: in extract
-    self._extract_layers(keymap_node)
-converter/dts/extractor.py:300: in _extract_layers
-    layer = self._create_layer(child)
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <converter.dts.extractor.KeymapExtractor object at 0x103e858a0>
-node = DtsNode(name='default_layer', parent=DtsNode(name='keymap', parent=DtsNode(name='/', parent=None, children={'keymap': ...ren={}, properties={'bindings': DtsProperty(name='bindings', value=['&kp', 'A', '&kp', 'B'], type='array')}, labels={})
-
-    def _create_layer(self, node: DtsNode) -> Optional[Layer]:
-        """Create a layer instance from a node (called in Pass 3)."""
-        bindings_prop = node.properties.get("bindings")
-        if not bindings_prop or bindings_prop.type != "array":
-            print(f"Warning: Layer '{node.name}' missing valid bindings property.")
-            return None
-    
-        # Parse bindings now, all behaviors should be available
-        parsed_bindings = self._parse_bindings(bindings_prop.value)
->       return Layer(name=node.name, bindings=parsed_bindings)
-E       TypeError: Layer.__init__() missing 1 required positional argument: 'index'
-
-converter/dts/extractor.py:320: TypeError
-________________________ test_extract_complex_bindings _________________________
-
-    def test_extract_complex_bindings():
-        """Test extracting complex bindings."""
-        content = """
-        / {
-            behaviors {
-                mt: mod_tap {
-                    compatible = "zmk,behavior-hold-tap";
-                    tapping-term-ms = <200>;
-                };
-                lt: layer_tap {
-                    compatible = "zmk,behavior-hold-tap";
-                    tapping-term-ms = <200>;
-                };
-            };
-            keymap {
-                default_layer {
-                    bindings = <
-                        &mt LSHIFT A
-                        &lt 1 B
-                        &kp C
-                    >;
-                };
-            };
-        };
-        """
-    
-        parser = DtsParser()
-        ast = parser.parse(content)
-        extractor = KeymapExtractor()
->       config = extractor.extract(ast)
-
-tests/dts/test_extractor.py:132: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-converter/dts/extractor.py:77: in extract
-    self._extract_layers(keymap_node)
-converter/dts/extractor.py:300: in _extract_layers
-    layer = self._create_layer(child)
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <converter.dts.extractor.KeymapExtractor object at 0x103e94370>
-node = DtsNode(name='default_layer', parent=DtsNode(name='keymap', parent=DtsNode(name='/', parent=None, children={'behaviors...ings': DtsProperty(name='bindings', value=['&mt', 'LSHIFT', 'A', '&lt', 1, 'B', '&kp', 'C'], type='array')}, labels={})
-
-    def _create_layer(self, node: DtsNode) -> Optional[Layer]:
-        """Create a layer instance from a node (called in Pass 3)."""
-        bindings_prop = node.properties.get("bindings")
-        if not bindings_prop or bindings_prop.type != "array":
-            print(f"Warning: Layer '{node.name}' missing valid bindings property.")
-            return None
-    
-        # Parse bindings now, all behaviors should be available
-        parsed_bindings = self._parse_bindings(bindings_prop.value)
->       return Layer(name=node.name, bindings=parsed_bindings)
-E       TypeError: Layer.__init__() missing 1 required positional argument: 'index'
-
-converter/dts/extractor.py:320: TypeError
+tests/dts/test_end_to_end.py:246: AssertionError
 _________________________ test_extract_invalid_content _________________________
 
     def test_extract_invalid_content():
@@ -629,7 +298,7 @@ converter/dts/parser.py:567: in _parse_node_body
     self._parse_node_body(child)
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <converter.dts.parser.DtsParser object at 0x103f8f280>
+self = <converter.dts.parser.DtsParser object at 0x103aa6170>
 node = DtsNode(name='invalid_layer', parent=None, children={}, properties={}, labels={})
 
     def _parse_node_body(self, node: DtsNode) -> None:
@@ -807,221 +476,6 @@ E
 E               Help: Node definitions must be enclosed in curly braces and start with '{'.
 
 converter/dts/parser.py:558: DtsParseError
-_______________________ test_full_pipeline_simple_keymap _______________________
-
-    def test_full_pipeline_simple_keymap():
-        """Test the full pipeline with a simple keymap."""
-        content = """
-        / {
-            keymap {
-                compatible = "zmk,keymap";
-                default_layer {
-                    bindings = <&kp A &kp B &kp C>;
-                };
-            };
-        };
-        """
-    
-        # Parse DTS
-        parser = DtsParser()
-        ast = parser.parse(content)
-    
-        # Extract keymap
-        extractor = KeymapExtractor()
->       config = extractor.extract(ast)
-
-tests/dts/test_integration.py:28: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-converter/dts/extractor.py:77: in extract
-    self._extract_layers(keymap_node)
-converter/dts/extractor.py:300: in _extract_layers
-    layer = self._create_layer(child)
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <converter.dts.extractor.KeymapExtractor object at 0x103f10820>
-node = DtsNode(name='default_layer', parent=DtsNode(name='keymap', parent=DtsNode(name='/', parent=None, children={'keymap': ...erties={'bindings': DtsProperty(name='bindings', value=['&kp', 'A', '&kp', 'B', '&kp', 'C'], type='array')}, labels={})
-
-    def _create_layer(self, node: DtsNode) -> Optional[Layer]:
-        """Create a layer instance from a node (called in Pass 3)."""
-        bindings_prop = node.properties.get("bindings")
-        if not bindings_prop or bindings_prop.type != "array":
-            print(f"Warning: Layer '{node.name}' missing valid bindings property.")
-            return None
-    
-        # Parse bindings now, all behaviors should be available
-        parsed_bindings = self._parse_bindings(bindings_prop.value)
->       return Layer(name=node.name, bindings=parsed_bindings)
-E       TypeError: Layer.__init__() missing 1 required positional argument: 'index'
-
-converter/dts/extractor.py:320: TypeError
-______________________ test_full_pipeline_with_behaviors _______________________
-
-    def test_full_pipeline_with_behaviors():
-        """Test the full pipeline with behaviors."""
-        content = """
-        / {
-            behaviors {
-                mt: mod_tap {
-                    compatible = "zmk,behavior-hold-tap";
-                    tapping-term-ms = <200>;
-                };
-                macro: macro {
-                    compatible = "zmk,behavior-macro";
-                    bindings = <&kp A &kp B>;
-                };
-            };
-            keymap {
-                default_layer {
-                    bindings = <&mt LSHIFT A &macro>;
-                };
-            };
-        };
-        """
-    
-        # Parse DTS
-        parser = DtsParser()
-        ast = parser.parse(content)
-    
-        # Extract keymap
-        extractor = KeymapExtractor()
->       config = extractor.extract(ast)
-
-tests/dts/test_integration.py:72: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-converter/dts/extractor.py:77: in extract
-    self._extract_layers(keymap_node)
-converter/dts/extractor.py:300: in _extract_layers
-    layer = self._create_layer(child)
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <converter.dts.extractor.KeymapExtractor object at 0x103e9ac80>
-node = DtsNode(name='default_layer', parent=DtsNode(name='keymap', parent=DtsNode(name='/', parent=None, children={'behaviors...properties={'bindings': DtsProperty(name='bindings', value=['&mt', 'LSHIFT', 'A', '&macro'], type='array')}, labels={})
-
-    def _create_layer(self, node: DtsNode) -> Optional[Layer]:
-        """Create a layer instance from a node (called in Pass 3)."""
-        bindings_prop = node.properties.get("bindings")
-        if not bindings_prop or bindings_prop.type != "array":
-            print(f"Warning: Layer '{node.name}' missing valid bindings property.")
-            return None
-    
-        # Parse bindings now, all behaviors should be available
-        parsed_bindings = self._parse_bindings(bindings_prop.value)
->       return Layer(name=node.name, bindings=parsed_bindings)
-E       TypeError: Layer.__init__() missing 1 required positional argument: 'index'
-
-converter/dts/extractor.py:320: TypeError
-______________________ test_full_pipeline_multiple_layers ______________________
-
-    def test_full_pipeline_multiple_layers():
-        """Test the full pipeline with multiple layers."""
-        content = """
-        / {
-            keymap {
-                default_layer {
-                    bindings = <&kp A &kp B>;
-                };
-                lower_layer {
-                    bindings = <&kp C &kp D>;
-                };
-                raise_layer {
-                    bindings = <&kp E &kp F>;
-                };
-            };
-        };
-        """
-    
-        # Parse DTS
-        parser = DtsParser()
-        ast = parser.parse(content)
-    
-        # Extract keymap
-        extractor = KeymapExtractor()
->       config = extractor.extract(ast)
-
-tests/dts/test_integration.py:125: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-converter/dts/extractor.py:77: in extract
-    self._extract_layers(keymap_node)
-converter/dts/extractor.py:300: in _extract_layers
-    layer = self._create_layer(child)
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <converter.dts.extractor.KeymapExtractor object at 0x103e97730>
-node = DtsNode(name='default_layer', parent=DtsNode(name='keymap', parent=DtsNode(name='/', parent=None, children={'keymap': ...ren={}, properties={'bindings': DtsProperty(name='bindings', value=['&kp', 'A', '&kp', 'B'], type='array')}, labels={})
-
-    def _create_layer(self, node: DtsNode) -> Optional[Layer]:
-        """Create a layer instance from a node (called in Pass 3)."""
-        bindings_prop = node.properties.get("bindings")
-        if not bindings_prop or bindings_prop.type != "array":
-            print(f"Warning: Layer '{node.name}' missing valid bindings property.")
-            return None
-    
-        # Parse bindings now, all behaviors should be available
-        parsed_bindings = self._parse_bindings(bindings_prop.value)
->       return Layer(name=node.name, bindings=parsed_bindings)
-E       TypeError: Layer.__init__() missing 1 required positional argument: 'index'
-
-converter/dts/extractor.py:320: TypeError
-_____________________ test_full_pipeline_complex_bindings ______________________
-
-    def test_full_pipeline_complex_bindings():
-        """Test the full pipeline with complex bindings."""
-        content = """
-        / {
-            behaviors {
-                mt: mod_tap {
-                    compatible = "zmk,behavior-hold-tap";
-                    tapping-term-ms = <200>;
-                };
-                lt: layer_tap {
-                    compatible = "zmk,behavior-hold-tap";
-                    tapping-term-ms = <200>;
-                };
-            };
-            keymap {
-                default_layer {
-                    bindings = <
-                        &mt LSHIFT A
-                        &lt 1 B
-                        &kp C
-                    >;
-                };
-            };
-        };
-        """
-    
-        # Parse DTS
-        parser = DtsParser()
-        ast = parser.parse(content)
-    
-        # Extract keymap
-        extractor = KeymapExtractor()
->       config = extractor.extract(ast)
-
-tests/dts/test_integration.py:176: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-converter/dts/extractor.py:77: in extract
-    self._extract_layers(keymap_node)
-converter/dts/extractor.py:300: in _extract_layers
-    layer = self._create_layer(child)
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <converter.dts.extractor.KeymapExtractor object at 0x103e86500>
-node = DtsNode(name='default_layer', parent=DtsNode(name='keymap', parent=DtsNode(name='/', parent=None, children={'behaviors...ings': DtsProperty(name='bindings', value=['&mt', 'LSHIFT', 'A', '&lt', 1, 'B', '&kp', 'C'], type='array')}, labels={})
-
-    def _create_layer(self, node: DtsNode) -> Optional[Layer]:
-        """Create a layer instance from a node (called in Pass 3)."""
-        bindings_prop = node.properties.get("bindings")
-        if not bindings_prop or bindings_prop.type != "array":
-            print(f"Warning: Layer '{node.name}' missing valid bindings property.")
-            return None
-    
-        # Parse bindings now, all behaviors should be available
-        parsed_bindings = self._parse_bindings(bindings_prop.value)
->       return Layer(name=node.name, bindings=parsed_bindings)
-E       TypeError: Layer.__init__() missing 1 required positional argument: 'index'
-
-converter/dts/extractor.py:320: TypeError
 ______________________ test_full_pipeline_error_handling _______________________
 
     def test_full_pipeline_error_handling():
@@ -1032,10 +486,10 @@ ______________________ test_full_pipeline_error_handling _______________________
         with pytest.raises(ValueError, match="Expected root node"):
 >           parser.parse(content)
 
-tests/dts/test_integration.py:213: 
+tests/dts/test_integration.py:212: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <converter.dts.parser.DtsParser object at 0x103f13e80>
+self = <converter.dts.parser.DtsParser object at 0x103a53580>
 content = 'node1 { };', file = None
 
     def parse(self, content: str, file: Optional[str] = None) -> DtsRoot:
@@ -1096,11 +550,13 @@ __________________________ test_parse_error_handling ___________________________
         # Check that 'node1;' is correctly parsed as a boolean property
         # and does not raise an error expecting '{'
         parsed_node1_boolean = parser.parse("/ { node1; };")
->       assert "node1" in parsed_node1_boolean.children
-E       AssertionError: assert 'node1' in {}
-E        +  where {} = DtsRoot(name='/', parent=None, children={}, properties={'node1': DtsProperty(name='node1', value=True, type='boolean')}, labels={}, label_to_node={}).children
+        assert "node1" in parsed_node1_boolean.properties
+>       node1_child = parsed_node1_boolean.children[
+            "node1"
+        ]  # This actually won't work, 'node1' is a property of '/'
+E       KeyError: 'node1'
 
-tests/dts/test_parser.py:143: AssertionError
+tests/dts/test_parser.py:144: KeyError
 ______________________ test_parse_zmk_specific_constructs ______________________
 
     def test_parse_zmk_specific_constructs():
@@ -1151,12 +607,18 @@ ______________________ test_parse_zmk_specific_constructs ______________________
 E       AssertionError: assert ['&kp', 'A', ...', '&lt', ...] == ['&kp', 'A', ...', '&lt', ...]
 E         
 E         At index 6 diff: 1 != '1'
-E         Use -v to get more diff
+E         
+E         Full diff:
+E           [
+E               '&kp',
+E               'A',...
+E         
+E         ...Full output truncated (9 lines hidden), use '-vv' to show
 
 tests/dts/test_parser.py:377: AssertionError
 ________________________ test_preprocessor_performance _________________________
 
-self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103eb9e40>
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x1034f3eb0>
 input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/complex_keymap.zmk')
 matrix_size = None
 
@@ -1182,9 +644,8 @@ matrix_size = None
             raise PreprocessorError(
                 f"Input file does not exist: {input_path}",
                 help_text=(
-                    "Ensure the input file exists and has proper "
-                    "read permissions"
-                )
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
             )
     
         try:
@@ -1194,10 +655,7 @@ matrix_size = None
             raise PreprocessorError(
                 f"Failed to read input file: {str(e)}",
                 file=str(input_path),
-                help_text=(
-                    "Ensure the file exists and has proper "
-                    "read permissions"
-                )
+                help_text=("Ensure the file exists and has proper " "read permissions"),
             )
     
         # Create a temporary file for the preprocessor input
@@ -1216,7 +674,8 @@ matrix_size = None
             cpp_cmd = [
                 str(self.cpp_path),
                 "-E",
-                "-x", "c",
+                "-x",
+                "c",
             ]
             for path in self.include_paths:
                 cpp_cmd.extend(["-I", str(path)])
@@ -1235,11 +694,11 @@ matrix_size = None
                     shell=False,
                 )
 
-converter/dts/preprocessor.py:194: 
+converter/dts/preprocessor.py:189: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
 input = None, capture_output = True, timeout = None, check = True
-popenargs = (['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpkoor7foq.dts'],)
+popenargs = (['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpi6upvr4q.dts'],)
 kwargs = {'shell': False, 'stderr': -1, 'stdout': -1, 'text': True}
 process = <Popen: returncode: 1 args: ['/Applications/Xcode.app/Contents/Developer/Too...>
 stdout = '', stderr = 'cc: error: no input files\n', retcode = 1
@@ -1311,7 +770,7 @@ stdout = '', stderr = 'cc: error: no input files\n', retcode = 1
             if check and retcode:
 >               raise CalledProcessError(retcode, process.args,
                                          output=stdout, stderr=stderr)
-E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpkoor7foq.dts']' returned non-zero exit status 1.
+E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpi6upvr4q.dts']' returned non-zero exit status 1.
 
 /Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:526: CalledProcessError
 
@@ -1334,7 +793,7 @@ tests/dts/test_performance.py:16: in measure_time
     result = func(*args, **kwargs)
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103eb9e40>
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x1034f3eb0>
 input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/complex_keymap.zmk')
 matrix_size = None
 
@@ -1360,9 +819,8 @@ matrix_size = None
             raise PreprocessorError(
                 f"Input file does not exist: {input_path}",
                 help_text=(
-                    "Ensure the input file exists and has proper "
-                    "read permissions"
-                )
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
             )
     
         try:
@@ -1372,10 +830,7 @@ matrix_size = None
             raise PreprocessorError(
                 f"Failed to read input file: {str(e)}",
                 file=str(input_path),
-                help_text=(
-                    "Ensure the file exists and has proper "
-                    "read permissions"
-                )
+                help_text=("Ensure the file exists and has proper " "read permissions"),
             )
     
         # Create a temporary file for the preprocessor input
@@ -1394,7 +849,8 @@ matrix_size = None
             cpp_cmd = [
                 str(self.cpp_path),
                 "-E",
-                "-x", "c",
+                "-x",
+                "c",
             ]
             for path in self.include_paths:
                 cpp_cmd.extend(["-I", str(path)])
@@ -1417,19 +873,16 @@ matrix_size = None
                     "Failed to process DTS directives",
                     file=str(input_path),
                     context=str(e),
-                    help_text=(
-                        "Check for malformed DTS directives in "
-                        "input file"
-                    )
+                    help_text=("Check for malformed DTS directives in " "input file"),
                 )
 E               converter.dts.preprocessor.PreprocessorError: Failed to process DTS directives
 
-converter/dts/preprocessor.py:202: PreprocessorError
+converter/dts/preprocessor.py:197: PreprocessorError
 ----------------------------- Captured stdout call -----------------------------
-[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpkoor7foq.dts']
+[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpi6upvr4q.dts']
 ___________________________ test_parser_performance ____________________________
 
-self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103f12d10>
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103aa4160>
 input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/complex_keymap.zmk')
 matrix_size = None
 
@@ -1455,9 +908,8 @@ matrix_size = None
             raise PreprocessorError(
                 f"Input file does not exist: {input_path}",
                 help_text=(
-                    "Ensure the input file exists and has proper "
-                    "read permissions"
-                )
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
             )
     
         try:
@@ -1467,10 +919,7 @@ matrix_size = None
             raise PreprocessorError(
                 f"Failed to read input file: {str(e)}",
                 file=str(input_path),
-                help_text=(
-                    "Ensure the file exists and has proper "
-                    "read permissions"
-                )
+                help_text=("Ensure the file exists and has proper " "read permissions"),
             )
     
         # Create a temporary file for the preprocessor input
@@ -1489,7 +938,8 @@ matrix_size = None
             cpp_cmd = [
                 str(self.cpp_path),
                 "-E",
-                "-x", "c",
+                "-x",
+                "c",
             ]
             for path in self.include_paths:
                 cpp_cmd.extend(["-I", str(path)])
@@ -1508,11 +958,11 @@ matrix_size = None
                     shell=False,
                 )
 
-converter/dts/preprocessor.py:194: 
+converter/dts/preprocessor.py:189: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
 input = None, capture_output = True, timeout = None, check = True
-popenargs = (['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpw3xn4d2a.dts'],)
+popenargs = (['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp7bl2g18j.dts'],)
 kwargs = {'shell': False, 'stderr': -1, 'stdout': -1, 'text': True}
 process = <Popen: returncode: 1 args: ['/Applications/Xcode.app/Contents/Developer/Too...>
 stdout = '', stderr = 'cc: error: no input files\n', retcode = 1
@@ -1584,7 +1034,7 @@ stdout = '', stderr = 'cc: error: no input files\n', retcode = 1
             if check and retcode:
 >               raise CalledProcessError(retcode, process.args,
                                          output=stdout, stderr=stderr)
-E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpw3xn4d2a.dts']' returned non-zero exit status 1.
+E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp7bl2g18j.dts']' returned non-zero exit status 1.
 
 /Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:526: CalledProcessError
 
@@ -1603,7 +1053,7 @@ sample_keymap_path = '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtu
 tests/dts/test_performance.py:56: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103f12d10>
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103aa4160>
 input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/complex_keymap.zmk')
 matrix_size = None
 
@@ -1629,9 +1079,8 @@ matrix_size = None
             raise PreprocessorError(
                 f"Input file does not exist: {input_path}",
                 help_text=(
-                    "Ensure the input file exists and has proper "
-                    "read permissions"
-                )
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
             )
     
         try:
@@ -1641,10 +1090,7 @@ matrix_size = None
             raise PreprocessorError(
                 f"Failed to read input file: {str(e)}",
                 file=str(input_path),
-                help_text=(
-                    "Ensure the file exists and has proper "
-                    "read permissions"
-                )
+                help_text=("Ensure the file exists and has proper " "read permissions"),
             )
     
         # Create a temporary file for the preprocessor input
@@ -1663,7 +1109,8 @@ matrix_size = None
             cpp_cmd = [
                 str(self.cpp_path),
                 "-E",
-                "-x", "c",
+                "-x",
+                "c",
             ]
             for path in self.include_paths:
                 cpp_cmd.extend(["-I", str(path)])
@@ -1686,19 +1133,16 @@ matrix_size = None
                     "Failed to process DTS directives",
                     file=str(input_path),
                     context=str(e),
-                    help_text=(
-                        "Check for malformed DTS directives in "
-                        "input file"
-                    )
+                    help_text=("Check for malformed DTS directives in " "input file"),
                 )
 E               converter.dts.preprocessor.PreprocessorError: Failed to process DTS directives
 
-converter/dts/preprocessor.py:202: PreprocessorError
+converter/dts/preprocessor.py:197: PreprocessorError
 ----------------------------- Captured stdout call -----------------------------
-[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpw3xn4d2a.dts']
+[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp7bl2g18j.dts']
 __________________________ test_extractor_performance __________________________
 
-self = <converter.dts.preprocessor.DtsPreprocessor object at 0x104143730>
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x1039ba2f0>
 input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/complex_keymap.zmk')
 matrix_size = None
 
@@ -1724,9 +1168,8 @@ matrix_size = None
             raise PreprocessorError(
                 f"Input file does not exist: {input_path}",
                 help_text=(
-                    "Ensure the input file exists and has proper "
-                    "read permissions"
-                )
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
             )
     
         try:
@@ -1736,10 +1179,7 @@ matrix_size = None
             raise PreprocessorError(
                 f"Failed to read input file: {str(e)}",
                 file=str(input_path),
-                help_text=(
-                    "Ensure the file exists and has proper "
-                    "read permissions"
-                )
+                help_text=("Ensure the file exists and has proper " "read permissions"),
             )
     
         # Create a temporary file for the preprocessor input
@@ -1758,7 +1198,8 @@ matrix_size = None
             cpp_cmd = [
                 str(self.cpp_path),
                 "-E",
-                "-x", "c",
+                "-x",
+                "c",
             ]
             for path in self.include_paths:
                 cpp_cmd.extend(["-I", str(path)])
@@ -1777,11 +1218,11 @@ matrix_size = None
                     shell=False,
                 )
 
-converter/dts/preprocessor.py:194: 
+converter/dts/preprocessor.py:189: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
 input = None, capture_output = True, timeout = None, check = True
-popenargs = (['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpho1wfruf.dts'],)
+popenargs = (['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpb9jnyxe_.dts'],)
 kwargs = {'shell': False, 'stderr': -1, 'stdout': -1, 'text': True}
 process = <Popen: returncode: 1 args: ['/Applications/Xcode.app/Contents/Developer/Too...>
 stdout = '', stderr = 'cc: error: no input files\n', retcode = 1
@@ -1853,7 +1294,7 @@ stdout = '', stderr = 'cc: error: no input files\n', retcode = 1
             if check and retcode:
 >               raise CalledProcessError(retcode, process.args,
                                          output=stdout, stderr=stderr)
-E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpho1wfruf.dts']' returned non-zero exit status 1.
+E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpb9jnyxe_.dts']' returned non-zero exit status 1.
 
 /Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:526: CalledProcessError
 
@@ -1873,7 +1314,7 @@ sample_keymap_path = '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtu
 tests/dts/test_performance.py:84: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <converter.dts.preprocessor.DtsPreprocessor object at 0x104143730>
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x1039ba2f0>
 input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/complex_keymap.zmk')
 matrix_size = None
 
@@ -1899,9 +1340,8 @@ matrix_size = None
             raise PreprocessorError(
                 f"Input file does not exist: {input_path}",
                 help_text=(
-                    "Ensure the input file exists and has proper "
-                    "read permissions"
-                )
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
             )
     
         try:
@@ -1911,10 +1351,7 @@ matrix_size = None
             raise PreprocessorError(
                 f"Failed to read input file: {str(e)}",
                 file=str(input_path),
-                help_text=(
-                    "Ensure the file exists and has proper "
-                    "read permissions"
-                )
+                help_text=("Ensure the file exists and has proper " "read permissions"),
             )
     
         # Create a temporary file for the preprocessor input
@@ -1933,7 +1370,8 @@ matrix_size = None
             cpp_cmd = [
                 str(self.cpp_path),
                 "-E",
-                "-x", "c",
+                "-x",
+                "c",
             ]
             for path in self.include_paths:
                 cpp_cmd.extend(["-I", str(path)])
@@ -1956,19 +1394,16 @@ matrix_size = None
                     "Failed to process DTS directives",
                     file=str(input_path),
                     context=str(e),
-                    help_text=(
-                        "Check for malformed DTS directives in "
-                        "input file"
-                    )
+                    help_text=("Check for malformed DTS directives in " "input file"),
                 )
 E               converter.dts.preprocessor.PreprocessorError: Failed to process DTS directives
 
-converter/dts/preprocessor.py:202: PreprocessorError
+converter/dts/preprocessor.py:197: PreprocessorError
 ----------------------------- Captured stdout call -----------------------------
-[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpho1wfruf.dts']
+[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpb9jnyxe_.dts']
 ________________________ test_full_pipeline_performance ________________________
 
-self = <converter.dts.preprocessor.DtsPreprocessor object at 0x1041b36a0>
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103aab3a0>
 input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/complex_keymap.zmk')
 matrix_size = None
 
@@ -1994,9 +1429,8 @@ matrix_size = None
             raise PreprocessorError(
                 f"Input file does not exist: {input_path}",
                 help_text=(
-                    "Ensure the input file exists and has proper "
-                    "read permissions"
-                )
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
             )
     
         try:
@@ -2006,10 +1440,7 @@ matrix_size = None
             raise PreprocessorError(
                 f"Failed to read input file: {str(e)}",
                 file=str(input_path),
-                help_text=(
-                    "Ensure the file exists and has proper "
-                    "read permissions"
-                )
+                help_text=("Ensure the file exists and has proper " "read permissions"),
             )
     
         # Create a temporary file for the preprocessor input
@@ -2028,7 +1459,8 @@ matrix_size = None
             cpp_cmd = [
                 str(self.cpp_path),
                 "-E",
-                "-x", "c",
+                "-x",
+                "c",
             ]
             for path in self.include_paths:
                 cpp_cmd.extend(["-I", str(path)])
@@ -2047,11 +1479,11 @@ matrix_size = None
                     shell=False,
                 )
 
-converter/dts/preprocessor.py:194: 
+converter/dts/preprocessor.py:189: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
 input = None, capture_output = True, timeout = None, check = True
-popenargs = (['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpb21uxrjj.dts'],)
+popenargs = (['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp8f7vfgdk.dts'],)
 kwargs = {'shell': False, 'stderr': -1, 'stdout': -1, 'text': True}
 process = <Popen: returncode: 1 args: ['/Applications/Xcode.app/Contents/Developer/Too...>
 stdout = '', stderr = 'cc: error: no input files\n', retcode = 1
@@ -2123,7 +1555,7 @@ stdout = '', stderr = 'cc: error: no input files\n', retcode = 1
             if check and retcode:
 >               raise CalledProcessError(retcode, process.args,
                                          output=stdout, stderr=stderr)
-E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpb21uxrjj.dts']' returned non-zero exit status 1.
+E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp8f7vfgdk.dts']' returned non-zero exit status 1.
 
 /Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:526: CalledProcessError
 
@@ -2157,7 +1589,7 @@ tests/dts/test_performance.py:114: in run_pipeline
     content = preprocessor.preprocess(sample_keymap_path)
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <converter.dts.preprocessor.DtsPreprocessor object at 0x1041b36a0>
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103aab3a0>
 input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/complex_keymap.zmk')
 matrix_size = None
 
@@ -2183,9 +1615,8 @@ matrix_size = None
             raise PreprocessorError(
                 f"Input file does not exist: {input_path}",
                 help_text=(
-                    "Ensure the input file exists and has proper "
-                    "read permissions"
-                )
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
             )
     
         try:
@@ -2195,10 +1626,7 @@ matrix_size = None
             raise PreprocessorError(
                 f"Failed to read input file: {str(e)}",
                 file=str(input_path),
-                help_text=(
-                    "Ensure the file exists and has proper "
-                    "read permissions"
-                )
+                help_text=("Ensure the file exists and has proper " "read permissions"),
             )
     
         # Create a temporary file for the preprocessor input
@@ -2217,7 +1645,8 @@ matrix_size = None
             cpp_cmd = [
                 str(self.cpp_path),
                 "-E",
-                "-x", "c",
+                "-x",
+                "c",
             ]
             for path in self.include_paths:
                 cpp_cmd.extend(["-I", str(path)])
@@ -2240,16 +1669,13 @@ matrix_size = None
                     "Failed to process DTS directives",
                     file=str(input_path),
                     context=str(e),
-                    help_text=(
-                        "Check for malformed DTS directives in "
-                        "input file"
-                    )
+                    help_text=("Check for malformed DTS directives in " "input file"),
                 )
 E               converter.dts.preprocessor.PreprocessorError: Failed to process DTS directives
 
-converter/dts/preprocessor.py:202: PreprocessorError
+converter/dts/preprocessor.py:197: PreprocessorError
 ----------------------------- Captured stdout call -----------------------------
-[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpb21uxrjj.dts']
+[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp8f7vfgdk.dts']
 _______________________ test_preprocessor_initialization _______________________
 
     def test_preprocessor_initialization():
@@ -2261,11 +1687,11 @@ _______________________ test_preprocessor_initialization _______________________
         )
 E       AttributeError: 'PosixPath' object has no attribute 'endswith'
 
-tests/dts/test_preprocessor.py:93: AttributeError
+tests/dts/test_preprocessor.py:92: AttributeError
 _________________________ test_preprocess_simple_file __________________________
 
-self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103ea0550>
-input_path = PosixPath('/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmppxny4wnz/test.dts')
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103aa9c90>
+input_path = PosixPath('/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpjwbcjaks/test.dts')
 matrix_size = None
 
     def preprocess(
@@ -2290,9 +1716,8 @@ matrix_size = None
             raise PreprocessorError(
                 f"Input file does not exist: {input_path}",
                 help_text=(
-                    "Ensure the input file exists and has proper "
-                    "read permissions"
-                )
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
             )
     
         try:
@@ -2302,10 +1727,7 @@ matrix_size = None
             raise PreprocessorError(
                 f"Failed to read input file: {str(e)}",
                 file=str(input_path),
-                help_text=(
-                    "Ensure the file exists and has proper "
-                    "read permissions"
-                )
+                help_text=("Ensure the file exists and has proper " "read permissions"),
             )
     
         # Create a temporary file for the preprocessor input
@@ -2324,7 +1746,8 @@ matrix_size = None
             cpp_cmd = [
                 str(self.cpp_path),
                 "-E",
-                "-x", "c",
+                "-x",
+                "c",
             ]
             for path in self.include_paths:
                 cpp_cmd.extend(["-I", str(path)])
@@ -2343,11 +1766,11 @@ matrix_size = None
                     shell=False,
                 )
 
-converter/dts/preprocessor.py:194: 
+converter/dts/preprocessor.py:189: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
 input = None, capture_output = True, timeout = None, check = True
-popenargs = (['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmppxny4wnz/include', ...],)
+popenargs = (['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpjwbcjaks/include', ...],)
 kwargs = {'shell': False, 'stderr': -1, 'stdout': -1, 'text': True}
 process = <Popen: returncode: 1 args: ['/Applications/Xcode.app/Contents/Developer/Too...>
 stdout = '', stderr = 'cc: error: no input files\n', retcode = 1
@@ -2419,13 +1842,13 @@ stdout = '', stderr = 'cc: error: no input files\n', retcode = 1
             if check and retcode:
 >               raise CalledProcessError(retcode, process.args,
                                          output=stdout, stderr=stderr)
-E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmppxny4wnz/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpjj6gmr3z.dts']' returned non-zero exit status 1.
+E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpjwbcjaks/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmplgpj3kgv.dts']' returned non-zero exit status 1.
 
 /Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:526: CalledProcessError
 
 During handling of the above exception, another exception occurred:
 
-temp_dir = '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmppxny4wnz'
+temp_dir = '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpjwbcjaks'
 
     def test_preprocess_simple_file(temp_dir):
         """Test preprocessing a simple DTS file."""
@@ -2453,11 +1876,11 @@ temp_dir = '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmppxny4wnz'
         preprocessor = DtsPreprocessor(include_paths=[include_dir])
 >       result = preprocessor.preprocess(input_path)
 
-tests/dts/test_preprocessor.py:136: 
+tests/dts/test_preprocessor.py:135: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103ea0550>
-input_path = PosixPath('/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmppxny4wnz/test.dts')
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103aa9c90>
+input_path = PosixPath('/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpjwbcjaks/test.dts')
 matrix_size = None
 
     def preprocess(
@@ -2482,9 +1905,8 @@ matrix_size = None
             raise PreprocessorError(
                 f"Input file does not exist: {input_path}",
                 help_text=(
-                    "Ensure the input file exists and has proper "
-                    "read permissions"
-                )
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
             )
     
         try:
@@ -2494,10 +1916,7 @@ matrix_size = None
             raise PreprocessorError(
                 f"Failed to read input file: {str(e)}",
                 file=str(input_path),
-                help_text=(
-                    "Ensure the file exists and has proper "
-                    "read permissions"
-                )
+                help_text=("Ensure the file exists and has proper " "read permissions"),
             )
     
         # Create a temporary file for the preprocessor input
@@ -2516,7 +1935,8 @@ matrix_size = None
             cpp_cmd = [
                 str(self.cpp_path),
                 "-E",
-                "-x", "c",
+                "-x",
+                "c",
             ]
             for path in self.include_paths:
                 cpp_cmd.extend(["-I", str(path)])
@@ -2539,20 +1959,17 @@ matrix_size = None
                     "Failed to process DTS directives",
                     file=str(input_path),
                     context=str(e),
-                    help_text=(
-                        "Check for malformed DTS directives in "
-                        "input file"
-                    )
+                    help_text=("Check for malformed DTS directives in " "input file"),
                 )
 E               converter.dts.preprocessor.PreprocessorError: Failed to process DTS directives
 
-converter/dts/preprocessor.py:202: PreprocessorError
+converter/dts/preprocessor.py:197: PreprocessorError
 ----------------------------- Captured stdout call -----------------------------
-[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmppxny4wnz/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpjj6gmr3z.dts']
+[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpjwbcjaks/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmplgpj3kgv.dts']
 _________________________ test_preprocess_with_matrix __________________________
 
-self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103f8e470>
-input_path = PosixPath('/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmph0dhnd27/matrix.dts')
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103b134f0>
+input_path = PosixPath('/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp1h5l45x9/matrix.dts')
 matrix_size = None
 
     def preprocess(
@@ -2577,9 +1994,8 @@ matrix_size = None
             raise PreprocessorError(
                 f"Input file does not exist: {input_path}",
                 help_text=(
-                    "Ensure the input file exists and has proper "
-                    "read permissions"
-                )
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
             )
     
         try:
@@ -2589,10 +2005,7 @@ matrix_size = None
             raise PreprocessorError(
                 f"Failed to read input file: {str(e)}",
                 file=str(input_path),
-                help_text=(
-                    "Ensure the file exists and has proper "
-                    "read permissions"
-                )
+                help_text=("Ensure the file exists and has proper " "read permissions"),
             )
     
         # Create a temporary file for the preprocessor input
@@ -2611,7 +2024,8 @@ matrix_size = None
             cpp_cmd = [
                 str(self.cpp_path),
                 "-E",
-                "-x", "c",
+                "-x",
+                "c",
             ]
             for path in self.include_paths:
                 cpp_cmd.extend(["-I", str(path)])
@@ -2630,11 +2044,11 @@ matrix_size = None
                     shell=False,
                 )
 
-converter/dts/preprocessor.py:194: 
+converter/dts/preprocessor.py:189: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
 input = None, capture_output = True, timeout = None, check = True
-popenargs = (['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpyl22wg76.dts'],)
+popenargs = (['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp51scc3mh.dts'],)
 kwargs = {'shell': False, 'stderr': -1, 'stdout': -1, 'text': True}
 process = <Popen: returncode: 1 args: ['/Applications/Xcode.app/Contents/Developer/Too...>
 stdout = '', stderr = 'cc: error: no input files\n', retcode = 1
@@ -2706,13 +2120,13 @@ stdout = '', stderr = 'cc: error: no input files\n', retcode = 1
             if check and retcode:
 >               raise CalledProcessError(retcode, process.args,
                                          output=stdout, stderr=stderr)
-E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpyl22wg76.dts']' returned non-zero exit status 1.
+E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp51scc3mh.dts']' returned non-zero exit status 1.
 
 /Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:526: CalledProcessError
 
 During handling of the above exception, another exception occurred:
 
-temp_dir = '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmph0dhnd27'
+temp_dir = '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp1h5l45x9'
 
     def test_preprocess_with_matrix(temp_dir):
         """Test preprocessing a file with matrix transform."""
@@ -2733,11 +2147,11 @@ temp_dir = '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmph0dhnd27'
         preprocessor = DtsPreprocessor()
 >       result = preprocessor.preprocess(input_path)
 
-tests/dts/test_preprocessor.py:160: 
+tests/dts/test_preprocessor.py:159: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103f8e470>
-input_path = PosixPath('/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmph0dhnd27/matrix.dts')
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103b134f0>
+input_path = PosixPath('/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp1h5l45x9/matrix.dts')
 matrix_size = None
 
     def preprocess(
@@ -2762,9 +2176,8 @@ matrix_size = None
             raise PreprocessorError(
                 f"Input file does not exist: {input_path}",
                 help_text=(
-                    "Ensure the input file exists and has proper "
-                    "read permissions"
-                )
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
             )
     
         try:
@@ -2774,10 +2187,7 @@ matrix_size = None
             raise PreprocessorError(
                 f"Failed to read input file: {str(e)}",
                 file=str(input_path),
-                help_text=(
-                    "Ensure the file exists and has proper "
-                    "read permissions"
-                )
+                help_text=("Ensure the file exists and has proper " "read permissions"),
             )
     
         # Create a temporary file for the preprocessor input
@@ -2796,7 +2206,8 @@ matrix_size = None
             cpp_cmd = [
                 str(self.cpp_path),
                 "-E",
-                "-x", "c",
+                "-x",
+                "c",
             ]
             for path in self.include_paths:
                 cpp_cmd.extend(["-I", str(path)])
@@ -2819,20 +2230,17 @@ matrix_size = None
                     "Failed to process DTS directives",
                     file=str(input_path),
                     context=str(e),
-                    help_text=(
-                        "Check for malformed DTS directives in "
-                        "input file"
-                    )
+                    help_text=("Check for malformed DTS directives in " "input file"),
                 )
 E               converter.dts.preprocessor.PreprocessorError: Failed to process DTS directives
 
-converter/dts/preprocessor.py:202: PreprocessorError
+converter/dts/preprocessor.py:197: PreprocessorError
 ----------------------------- Captured stdout call -----------------------------
-[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpyl22wg76.dts']
+[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp51scc3mh.dts']
 ________________________ test_preprocess_with_includes _________________________
 
-self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103e94f40>
-input_path = PosixPath('/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp31wtxukh/main.dts')
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103b19e10>
+input_path = PosixPath('/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpfvpvj3pk/main.dts')
 matrix_size = None
 
     def preprocess(
@@ -2857,9 +2265,8 @@ matrix_size = None
             raise PreprocessorError(
                 f"Input file does not exist: {input_path}",
                 help_text=(
-                    "Ensure the input file exists and has proper "
-                    "read permissions"
-                )
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
             )
     
         try:
@@ -2869,10 +2276,7 @@ matrix_size = None
             raise PreprocessorError(
                 f"Failed to read input file: {str(e)}",
                 file=str(input_path),
-                help_text=(
-                    "Ensure the file exists and has proper "
-                    "read permissions"
-                )
+                help_text=("Ensure the file exists and has proper " "read permissions"),
             )
     
         # Create a temporary file for the preprocessor input
@@ -2891,7 +2295,8 @@ matrix_size = None
             cpp_cmd = [
                 str(self.cpp_path),
                 "-E",
-                "-x", "c",
+                "-x",
+                "c",
             ]
             for path in self.include_paths:
                 cpp_cmd.extend(["-I", str(path)])
@@ -2910,11 +2315,11 @@ matrix_size = None
                     shell=False,
                 )
 
-converter/dts/preprocessor.py:194: 
+converter/dts/preprocessor.py:189: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
 input = None, capture_output = True, timeout = None, check = True
-popenargs = (['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp31wtxukh/include', ...],)
+popenargs = (['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpfvpvj3pk/include', ...],)
 kwargs = {'shell': False, 'stderr': -1, 'stdout': -1, 'text': True}
 process = <Popen: returncode: 1 args: ['/Applications/Xcode.app/Contents/Developer/Too...>
 stdout = '', stderr = 'cc: error: no input files\n', retcode = 1
@@ -2986,13 +2391,13 @@ stdout = '', stderr = 'cc: error: no input files\n', retcode = 1
             if check and retcode:
 >               raise CalledProcessError(retcode, process.args,
                                          output=stdout, stderr=stderr)
-E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp31wtxukh/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpyjcnn9mc.dts']' returned non-zero exit status 1.
+E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpfvpvj3pk/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmph5iqnli0.dts']' returned non-zero exit status 1.
 
 /Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:526: CalledProcessError
 
 During handling of the above exception, another exception occurred:
 
-temp_dir = '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp31wtxukh'
+temp_dir = '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpfvpvj3pk'
 
     def test_preprocess_with_includes(temp_dir):
         """Test preprocessing with include files."""
@@ -3019,11 +2424,11 @@ temp_dir = '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp31wtxukh'
         preprocessor = DtsPreprocessor(include_paths=[include_dir])
 >       result = preprocessor.preprocess(input_path)
 
-tests/dts/test_preprocessor.py:191: 
+tests/dts/test_preprocessor.py:190: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103e94f40>
-input_path = PosixPath('/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp31wtxukh/main.dts')
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103b19e10>
+input_path = PosixPath('/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpfvpvj3pk/main.dts')
 matrix_size = None
 
     def preprocess(
@@ -3048,9 +2453,8 @@ matrix_size = None
             raise PreprocessorError(
                 f"Input file does not exist: {input_path}",
                 help_text=(
-                    "Ensure the input file exists and has proper "
-                    "read permissions"
-                )
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
             )
     
         try:
@@ -3060,10 +2464,7 @@ matrix_size = None
             raise PreprocessorError(
                 f"Failed to read input file: {str(e)}",
                 file=str(input_path),
-                help_text=(
-                    "Ensure the file exists and has proper "
-                    "read permissions"
-                )
+                help_text=("Ensure the file exists and has proper " "read permissions"),
             )
     
         # Create a temporary file for the preprocessor input
@@ -3082,7 +2483,8 @@ matrix_size = None
             cpp_cmd = [
                 str(self.cpp_path),
                 "-E",
-                "-x", "c",
+                "-x",
+                "c",
             ]
             for path in self.include_paths:
                 cpp_cmd.extend(["-I", str(path)])
@@ -3105,16 +2507,13 @@ matrix_size = None
                     "Failed to process DTS directives",
                     file=str(input_path),
                     context=str(e),
-                    help_text=(
-                        "Check for malformed DTS directives in "
-                        "input file"
-                    )
+                    help_text=("Check for malformed DTS directives in " "input file"),
                 )
 E               converter.dts.preprocessor.PreprocessorError: Failed to process DTS directives
 
-converter/dts/preprocessor.py:202: PreprocessorError
+converter/dts/preprocessor.py:197: PreprocessorError
 ----------------------------- Captured stdout call -----------------------------
-[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp31wtxukh/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpyjcnn9mc.dts']
+[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpfvpvj3pk/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmph5iqnli0.dts']
 _________________________ test_preprocess_invalid_file _________________________
 
     def test_preprocess_invalid_file():
@@ -3123,10 +2522,10 @@ _________________________ test_preprocess_invalid_file _________________________
         with pytest.raises(FileNotFoundError):
 >           preprocessor.preprocess("nonexistent.dts")
 
-tests/dts/test_preprocessor.py:202: 
+tests/dts/test_preprocessor.py:201: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103f10bb0>
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103c99690>
 input_path = PosixPath('nonexistent.dts'), matrix_size = None
 
     def preprocess(
@@ -3151,16 +2550,15 @@ input_path = PosixPath('nonexistent.dts'), matrix_size = None
 >           raise PreprocessorError(
                 f"Input file does not exist: {input_path}",
                 help_text=(
-                    "Ensure the input file exists and has proper "
-                    "read permissions"
-                )
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
             )
 E           converter.dts.preprocessor.PreprocessorError: Input file does not exist: nonexistent.dts
 
-converter/dts/preprocessor.py:146: PreprocessorError
+converter/dts/preprocessor.py:144: PreprocessorError
 _____________________ test_preprocess_invalid_cpp_command ______________________
 
-temp_dir = '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpb5kxejgo'
+temp_dir = '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpe2txd5_a'
 
     def test_preprocess_invalid_cpp_command(temp_dir):
         """Test preprocessing with invalid cpp command."""
@@ -3174,9 +2572,9 @@ temp_dir = '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpb5kxejgo'
         with pytest.raises(PreprocessorError):
 >           preprocessor.preprocess(input_path)
 
-tests/dts/test_preprocessor.py:215: 
+tests/dts/test_preprocessor.py:214: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-converter/dts/preprocessor.py:194: in preprocess
+converter/dts/preprocessor.py:189: in preprocess
     result = subprocess.run(
 /Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:503: in run
     with Popen(*popenargs, **kwargs) as process:
@@ -3185,7 +2583,7 @@ converter/dts/preprocessor.py:194: in preprocess
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
 self = <Popen: returncode: 255 args: ['invalid_cpp', '-E', '-x', 'c', '/var/folders...>
-args = ['invalid_cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpyiyvnd41.dts']
+args = ['invalid_cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp6xjlbn98.dts']
 executable = b'invalid_cpp', preexec_fn = None, close_fds = True, pass_fds = ()
 cwd = None, env = None, startupinfo = None, creationflags = 0, shell = False
 p2cread = -1, p2cwrite = -1, c2pread = 11, c2pwrite = 12, errread = 13
@@ -3357,10 +2755,10 @@ E               FileNotFoundError: [Errno 2] No such file or directory: 'invalid
 
 /Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:1863: FileNotFoundError
 ----------------------------- Captured stdout call -----------------------------
-[DtsPreprocessor] cpp command: ['invalid_cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpyiyvnd41.dts']
+[DtsPreprocessor] cpp command: ['invalid_cpp', '-E', '-x', 'c', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp6xjlbn98.dts']
 ________________________ test_preprocess_simple_keymap _________________________
 
-self = <converter.dts.preprocessor.DtsPreprocessor object at 0x1039cecb0>
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103ab0cd0>
 input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/simple_keymap.zmk')
 matrix_size = None
 
@@ -3386,9 +2784,8 @@ matrix_size = None
             raise PreprocessorError(
                 f"Input file does not exist: {input_path}",
                 help_text=(
-                    "Ensure the input file exists and has proper "
-                    "read permissions"
-                )
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
             )
     
         try:
@@ -3398,10 +2795,7 @@ matrix_size = None
             raise PreprocessorError(
                 f"Failed to read input file: {str(e)}",
                 file=str(input_path),
-                help_text=(
-                    "Ensure the file exists and has proper "
-                    "read permissions"
-                )
+                help_text=("Ensure the file exists and has proper " "read permissions"),
             )
     
         # Create a temporary file for the preprocessor input
@@ -3420,7 +2814,8 @@ matrix_size = None
             cpp_cmd = [
                 str(self.cpp_path),
                 "-E",
-                "-x", "c",
+                "-x",
+                "c",
             ]
             for path in self.include_paths:
                 cpp_cmd.extend(["-I", str(path)])
@@ -3439,7 +2834,7 @@ matrix_size = None
                     shell=False,
                 )
 
-converter/dts/preprocessor.py:194: 
+converter/dts/preprocessor.py:189: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
 input = None, capture_output = True, timeout = None, check = True
@@ -3515,23 +2910,23 @@ stdout = '', stderr = 'cc: error: no input files\n', retcode = 1
             if check and retcode:
 >               raise CalledProcessError(retcode, process.args,
                                          output=stdout, stderr=stderr)
-E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp73owvvv2.dts']' returned non-zero exit status 1.
+E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmph3qvutw6.dts']' returned non-zero exit status 1.
 
 /Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:526: CalledProcessError
 
 During handling of the above exception, another exception occurred:
 
-preprocessor = <converter.dts.preprocessor.DtsPreprocessor object at 0x1039cecb0>
+preprocessor = <converter.dts.preprocessor.DtsPreprocessor object at 0x103ab0cd0>
 simple_keymap_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/simple_keymap.zmk')
 
     def test_preprocess_simple_keymap(preprocessor, simple_keymap_path):
         """Test preprocessing a simple keymap."""
 >       result = preprocessor.preprocess(str(simple_keymap_path))
 
-tests/dts/test_preprocessor.py:246: 
+tests/dts/test_preprocessor.py:245: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <converter.dts.preprocessor.DtsPreprocessor object at 0x1039cecb0>
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103ab0cd0>
 input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/simple_keymap.zmk')
 matrix_size = None
 
@@ -3557,9 +2952,8 @@ matrix_size = None
             raise PreprocessorError(
                 f"Input file does not exist: {input_path}",
                 help_text=(
-                    "Ensure the input file exists and has proper "
-                    "read permissions"
-                )
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
             )
     
         try:
@@ -3569,10 +2963,7 @@ matrix_size = None
             raise PreprocessorError(
                 f"Failed to read input file: {str(e)}",
                 file=str(input_path),
-                help_text=(
-                    "Ensure the file exists and has proper "
-                    "read permissions"
-                )
+                help_text=("Ensure the file exists and has proper " "read permissions"),
             )
     
         # Create a temporary file for the preprocessor input
@@ -3591,7 +2982,8 @@ matrix_size = None
             cpp_cmd = [
                 str(self.cpp_path),
                 "-E",
-                "-x", "c",
+                "-x",
+                "c",
             ]
             for path in self.include_paths:
                 cpp_cmd.extend(["-I", str(path)])
@@ -3614,19 +3006,16 @@ matrix_size = None
                     "Failed to process DTS directives",
                     file=str(input_path),
                     context=str(e),
-                    help_text=(
-                        "Check for malformed DTS directives in "
-                        "input file"
-                    )
+                    help_text=("Check for malformed DTS directives in " "input file"),
                 )
 E               converter.dts.preprocessor.PreprocessorError: Failed to process DTS directives
 
-converter/dts/preprocessor.py:202: PreprocessorError
+converter/dts/preprocessor.py:197: PreprocessorError
 ----------------------------- Captured stdout call -----------------------------
-[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp73owvvv2.dts']
+[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmph3qvutw6.dts']
 ___________________________ test_parse_simple_keymap ___________________________
 
-self = <converter.dts.preprocessor.DtsPreprocessor object at 0x104141f00>
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x1034f2e60>
 input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/simple_keymap.zmk')
 matrix_size = None
 
@@ -3652,9 +3041,8 @@ matrix_size = None
             raise PreprocessorError(
                 f"Input file does not exist: {input_path}",
                 help_text=(
-                    "Ensure the input file exists and has proper "
-                    "read permissions"
-                )
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
             )
     
         try:
@@ -3664,10 +3052,7 @@ matrix_size = None
             raise PreprocessorError(
                 f"Failed to read input file: {str(e)}",
                 file=str(input_path),
-                help_text=(
-                    "Ensure the file exists and has proper "
-                    "read permissions"
-                )
+                help_text=("Ensure the file exists and has proper " "read permissions"),
             )
     
         # Create a temporary file for the preprocessor input
@@ -3686,7 +3071,8 @@ matrix_size = None
             cpp_cmd = [
                 str(self.cpp_path),
                 "-E",
-                "-x", "c",
+                "-x",
+                "c",
             ]
             for path in self.include_paths:
                 cpp_cmd.extend(["-I", str(path)])
@@ -3705,7 +3091,7 @@ matrix_size = None
                     shell=False,
                 )
 
-converter/dts/preprocessor.py:194: 
+converter/dts/preprocessor.py:189: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
 input = None, capture_output = True, timeout = None, check = True
@@ -3781,7 +3167,7 @@ stdout = '', stderr = 'cc: error: no input files\n', retcode = 1
             if check and retcode:
 >               raise CalledProcessError(retcode, process.args,
                                          output=stdout, stderr=stderr)
-E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmph4v1nrwl.dts']' returned non-zero exit status 1.
+E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp6uiot4tq.dts']' returned non-zero exit status 1.
 
 /Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:526: CalledProcessError
 
@@ -3802,7 +3188,7 @@ During handling of the above exception, another exception occurred:
 tests/test_dts_parser.py:20: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <converter.dts.preprocessor.DtsPreprocessor object at 0x104141f00>
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x1034f2e60>
 input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/simple_keymap.zmk')
 matrix_size = None
 
@@ -3828,9 +3214,8 @@ matrix_size = None
             raise PreprocessorError(
                 f"Input file does not exist: {input_path}",
                 help_text=(
-                    "Ensure the input file exists and has proper "
-                    "read permissions"
-                )
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
             )
     
         try:
@@ -3840,10 +3225,7 @@ matrix_size = None
             raise PreprocessorError(
                 f"Failed to read input file: {str(e)}",
                 file=str(input_path),
-                help_text=(
-                    "Ensure the file exists and has proper "
-                    "read permissions"
-                )
+                help_text=("Ensure the file exists and has proper " "read permissions"),
             )
     
         # Create a temporary file for the preprocessor input
@@ -3862,7 +3244,8 @@ matrix_size = None
             cpp_cmd = [
                 str(self.cpp_path),
                 "-E",
-                "-x", "c",
+                "-x",
+                "c",
             ]
             for path in self.include_paths:
                 cpp_cmd.extend(["-I", str(path)])
@@ -3885,19 +3268,16 @@ matrix_size = None
                     "Failed to process DTS directives",
                     file=str(input_path),
                     context=str(e),
-                    help_text=(
-                        "Check for malformed DTS directives in "
-                        "input file"
-                    )
+                    help_text=("Check for malformed DTS directives in " "input file"),
                 )
 E               converter.dts.preprocessor.PreprocessorError: Failed to process DTS directives
 
-converter/dts/preprocessor.py:202: PreprocessorError
+converter/dts/preprocessor.py:197: PreprocessorError
 ----------------------------- Captured stdout call -----------------------------
-[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmph4v1nrwl.dts']
+[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp6uiot4tq.dts']
 ___________________________ test_parse_large_keymap ____________________________
 
-self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103e86ec0>
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103b1a920>
 input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/large_keymap.zmk')
 matrix_size = None
 
@@ -3923,9 +3303,8 @@ matrix_size = None
             raise PreprocessorError(
                 f"Input file does not exist: {input_path}",
                 help_text=(
-                    "Ensure the input file exists and has proper "
-                    "read permissions"
-                )
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
             )
     
         try:
@@ -3935,10 +3314,7 @@ matrix_size = None
             raise PreprocessorError(
                 f"Failed to read input file: {str(e)}",
                 file=str(input_path),
-                help_text=(
-                    "Ensure the file exists and has proper "
-                    "read permissions"
-                )
+                help_text=("Ensure the file exists and has proper " "read permissions"),
             )
     
         # Create a temporary file for the preprocessor input
@@ -3957,7 +3333,8 @@ matrix_size = None
             cpp_cmd = [
                 str(self.cpp_path),
                 "-E",
-                "-x", "c",
+                "-x",
+                "c",
             ]
             for path in self.include_paths:
                 cpp_cmd.extend(["-I", str(path)])
@@ -3976,7 +3353,7 @@ matrix_size = None
                     shell=False,
                 )
 
-converter/dts/preprocessor.py:194: 
+converter/dts/preprocessor.py:189: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
 input = None, capture_output = True, timeout = None, check = True
@@ -4052,7 +3429,7 @@ stdout = '', stderr = 'cc: error: no input files\n', retcode = 1
             if check and retcode:
 >               raise CalledProcessError(retcode, process.args,
                                          output=stdout, stderr=stderr)
-E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp99j_o3gv.dts']' returned non-zero exit status 1.
+E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp6647g_tj.dts']' returned non-zero exit status 1.
 
 /Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:526: CalledProcessError
 
@@ -4073,7 +3450,7 @@ During handling of the above exception, another exception occurred:
 tests/test_dts_parser.py:54: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103e86ec0>
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103b1a920>
 input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/large_keymap.zmk')
 matrix_size = None
 
@@ -4099,9 +3476,8 @@ matrix_size = None
             raise PreprocessorError(
                 f"Input file does not exist: {input_path}",
                 help_text=(
-                    "Ensure the input file exists and has proper "
-                    "read permissions"
-                )
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
             )
     
         try:
@@ -4111,10 +3487,7 @@ matrix_size = None
             raise PreprocessorError(
                 f"Failed to read input file: {str(e)}",
                 file=str(input_path),
-                help_text=(
-                    "Ensure the file exists and has proper "
-                    "read permissions"
-                )
+                help_text=("Ensure the file exists and has proper " "read permissions"),
             )
     
         # Create a temporary file for the preprocessor input
@@ -4133,7 +3506,8 @@ matrix_size = None
             cpp_cmd = [
                 str(self.cpp_path),
                 "-E",
-                "-x", "c",
+                "-x",
+                "c",
             ]
             for path in self.include_paths:
                 cpp_cmd.extend(["-I", str(path)])
@@ -4156,19 +3530,16 @@ matrix_size = None
                     "Failed to process DTS directives",
                     file=str(input_path),
                     context=str(e),
-                    help_text=(
-                        "Check for malformed DTS directives in "
-                        "input file"
-                    )
+                    help_text=("Check for malformed DTS directives in " "input file"),
                 )
 E               converter.dts.preprocessor.PreprocessorError: Failed to process DTS directives
 
-converter/dts/preprocessor.py:202: PreprocessorError
+converter/dts/preprocessor.py:197: PreprocessorError
 ----------------------------- Captured stdout call -----------------------------
-[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp99j_o3gv.dts']
+[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp6647g_tj.dts']
 ______________________________ test_preprocessor _______________________________
 
-self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103f10460>
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103b123e0>
 input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/simple_keymap.zmk')
 matrix_size = None
 
@@ -4194,9 +3565,8 @@ matrix_size = None
             raise PreprocessorError(
                 f"Input file does not exist: {input_path}",
                 help_text=(
-                    "Ensure the input file exists and has proper "
-                    "read permissions"
-                )
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
             )
     
         try:
@@ -4206,10 +3576,7 @@ matrix_size = None
             raise PreprocessorError(
                 f"Failed to read input file: {str(e)}",
                 file=str(input_path),
-                help_text=(
-                    "Ensure the file exists and has proper "
-                    "read permissions"
-                )
+                help_text=("Ensure the file exists and has proper " "read permissions"),
             )
     
         # Create a temporary file for the preprocessor input
@@ -4228,7 +3595,8 @@ matrix_size = None
             cpp_cmd = [
                 str(self.cpp_path),
                 "-E",
-                "-x", "c",
+                "-x",
+                "c",
             ]
             for path in self.include_paths:
                 cpp_cmd.extend(["-I", str(path)])
@@ -4247,7 +3615,7 @@ matrix_size = None
                     shell=False,
                 )
 
-converter/dts/preprocessor.py:194: 
+converter/dts/preprocessor.py:189: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
 input = None, capture_output = True, timeout = None, check = True
@@ -4323,7 +3691,7 @@ stdout = '', stderr = 'cc: error: no input files\n', retcode = 1
             if check and retcode:
 >               raise CalledProcessError(retcode, process.args,
                                          output=stdout, stderr=stderr)
-E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp4yrd_mmn.dts']' returned non-zero exit status 1.
+E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpt_bwkksv.dts']' returned non-zero exit status 1.
 
 /Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:526: CalledProcessError
 
@@ -4344,7 +3712,7 @@ During handling of the above exception, another exception occurred:
 tests/test_dts_preprocessor.py:18: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103f10460>
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103b123e0>
 input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/simple_keymap.zmk')
 matrix_size = None
 
@@ -4370,9 +3738,8 @@ matrix_size = None
             raise PreprocessorError(
                 f"Input file does not exist: {input_path}",
                 help_text=(
-                    "Ensure the input file exists and has proper "
-                    "read permissions"
-                )
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
             )
     
         try:
@@ -4382,10 +3749,7 @@ matrix_size = None
             raise PreprocessorError(
                 f"Failed to read input file: {str(e)}",
                 file=str(input_path),
-                help_text=(
-                    "Ensure the file exists and has proper "
-                    "read permissions"
-                )
+                help_text=("Ensure the file exists and has proper " "read permissions"),
             )
     
         # Create a temporary file for the preprocessor input
@@ -4404,7 +3768,8 @@ matrix_size = None
             cpp_cmd = [
                 str(self.cpp_path),
                 "-E",
-                "-x", "c",
+                "-x",
+                "c",
             ]
             for path in self.include_paths:
                 cpp_cmd.extend(["-I", str(path)])
@@ -4427,19 +3792,16 @@ matrix_size = None
                     "Failed to process DTS directives",
                     file=str(input_path),
                     context=str(e),
-                    help_text=(
-                        "Check for malformed DTS directives in "
-                        "input file"
-                    )
+                    help_text=("Check for malformed DTS directives in " "input file"),
                 )
 E               converter.dts.preprocessor.PreprocessorError: Failed to process DTS directives
 
-converter/dts/preprocessor.py:202: PreprocessorError
+converter/dts/preprocessor.py:197: PreprocessorError
 ----------------------------- Captured stdout call -----------------------------
-[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp4yrd_mmn.dts']
+[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpt_bwkksv.dts']
 ________________________ test_preprocessor_large_matrix ________________________
 
-self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103e9a110>
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103b07eb0>
 input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/large_keymap.zmk')
 matrix_size = None
 
@@ -4465,9 +3827,8 @@ matrix_size = None
             raise PreprocessorError(
                 f"Input file does not exist: {input_path}",
                 help_text=(
-                    "Ensure the input file exists and has proper "
-                    "read permissions"
-                )
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
             )
     
         try:
@@ -4477,10 +3838,7 @@ matrix_size = None
             raise PreprocessorError(
                 f"Failed to read input file: {str(e)}",
                 file=str(input_path),
-                help_text=(
-                    "Ensure the file exists and has proper "
-                    "read permissions"
-                )
+                help_text=("Ensure the file exists and has proper " "read permissions"),
             )
     
         # Create a temporary file for the preprocessor input
@@ -4499,7 +3857,8 @@ matrix_size = None
             cpp_cmd = [
                 str(self.cpp_path),
                 "-E",
-                "-x", "c",
+                "-x",
+                "c",
             ]
             for path in self.include_paths:
                 cpp_cmd.extend(["-I", str(path)])
@@ -4518,7 +3877,7 @@ matrix_size = None
                     shell=False,
                 )
 
-converter/dts/preprocessor.py:194: 
+converter/dts/preprocessor.py:189: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
 input = None, capture_output = True, timeout = None, check = True
@@ -4594,7 +3953,7 @@ stdout = '', stderr = 'cc: error: no input files\n', retcode = 1
             if check and retcode:
 >               raise CalledProcessError(retcode, process.args,
                                          output=stdout, stderr=stderr)
-E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpz31frbjb.dts']' returned non-zero exit status 1.
+E               subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp5nxcpmi4.dts']' returned non-zero exit status 1.
 
 /Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:526: CalledProcessError
 
@@ -4615,7 +3974,7 @@ During handling of the above exception, another exception occurred:
 tests/test_dts_preprocessor.py:45: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103e9a110>
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103b07eb0>
 input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/large_keymap.zmk')
 matrix_size = None
 
@@ -4641,9 +4000,8 @@ matrix_size = None
             raise PreprocessorError(
                 f"Input file does not exist: {input_path}",
                 help_text=(
-                    "Ensure the input file exists and has proper "
-                    "read permissions"
-                )
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
             )
     
         try:
@@ -4653,10 +4011,7 @@ matrix_size = None
             raise PreprocessorError(
                 f"Failed to read input file: {str(e)}",
                 file=str(input_path),
-                help_text=(
-                    "Ensure the file exists and has proper "
-                    "read permissions"
-                )
+                help_text=("Ensure the file exists and has proper " "read permissions"),
             )
     
         # Create a temporary file for the preprocessor input
@@ -4675,7 +4030,8 @@ matrix_size = None
             cpp_cmd = [
                 str(self.cpp_path),
                 "-E",
-                "-x", "c",
+                "-x",
+                "c",
             ]
             for path in self.include_paths:
                 cpp_cmd.extend(["-I", str(path)])
@@ -4698,16 +4054,13 @@ matrix_size = None
                     "Failed to process DTS directives",
                     file=str(input_path),
                     context=str(e),
-                    help_text=(
-                        "Check for malformed DTS directives in "
-                        "input file"
-                    )
+                    help_text=("Check for malformed DTS directives in " "input file"),
                 )
 E               converter.dts.preprocessor.PreprocessorError: Failed to process DTS directives
 
-converter/dts/preprocessor.py:202: PreprocessorError
+converter/dts/preprocessor.py:197: PreprocessorError
 ----------------------------- Captured stdout call -----------------------------
-[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpz31frbjb.dts']
+[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp5nxcpmi4.dts']
 _______________________ test_preprocessor_error_handling _______________________
 
     def test_preprocessor_error_handling():
@@ -4717,7 +4070,7 @@ _______________________ test_preprocessor_error_handling _______________________
 tests/test_dts_preprocessor.py:60: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <converter.dts.preprocessor.DtsPreprocessor object at 0x104017100>
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103a502b0>
 cpp_path = '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp'
 include_paths = ['/nonexistent/path']
 
@@ -4741,7 +4094,7 @@ include_paths = ['/nonexistent/path']
         if not cpp_path.endswith("cpp"):
             raise PreprocessorError(
                 "Invalid cpp path",
-                help_text="The cpp path must point to a cpp executable"
+                help_text="The cpp path must point to a cpp executable",
             )
         self.cpp_path = Path(cpp_path)
     
@@ -4751,16 +4104,14 @@ include_paths = ['/nonexistent/path']
                 path_obj = Path(path)
                 if not path_obj.exists():
                     msg = f"Include path does not exist: {path}"
-                    help_text = (
-                        "Ensure all include paths exist and are accessible"
-                    )
+                    help_text = "Ensure all include paths exist and are accessible"
 >                   raise PreprocessorError(msg, help_text=help_text)
 E                   converter.dts.preprocessor.PreprocessorError: Include path does not exist: /nonexistent/path
 
-converter/dts/preprocessor.py:82: PreprocessorError
+converter/dts/preprocessor.py:80: PreprocessorError
 ______________________ test_main_simple_conversion_stdout ______________________
 
-simple_dts_file = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-75/test_main_simple_conversion_st0/simple.keymap')
+simple_dts_file = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-76/test_main_simple_conversion_st0/simple.keymap')
 
     def test_main_simple_conversion_stdout(simple_dts_file: Path):
         """Test converting a simple file and printing to stdout."""
@@ -4768,13 +4119,13 @@ simple_dts_file = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr000
     
 >       assert result.returncode == 0
 E       assert 1 == 0
-E        +  where 1 = CompletedProcess(args=['python', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/main.py', '/private/var/fol...1cdnx0vrvyr0000gn/T/tmpk34ftnor.dts']\n", stderr='Error: Failed to convert keymap: Failed to process DTS directives\n').returncode
+E        +  where 1 = CompletedProcess(args=['python', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/main.py', '/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-76/test_main_simple_conversion_st0/simple.keymap'], returncode=1, stdout="[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpr4_b4xrv.dts']\n", stderr='Error: Failed to convert keymap: Failed to process DTS directives\n').returncode
 
 tests/test_main.py:93: AssertionError
 _____________________ test_main_simple_conversion_outfile ______________________
 
-simple_dts_file = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-75/test_main_simple_conversion_ou0/simple.keymap')
-tmp_path = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-75/test_main_simple_conversion_ou0')
+simple_dts_file = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-76/test_main_simple_conversion_ou0/simple.keymap')
+tmp_path = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-76/test_main_simple_conversion_ou0')
 
     def test_main_simple_conversion_outfile(simple_dts_file: Path, tmp_path: Path):
         """Test converting a simple file and writing to an output file."""
@@ -4783,13 +4134,13 @@ tmp_path = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/p
     
 >       assert result.returncode == 0
 E       assert 1 == 0
-E        +  where 1 = CompletedProcess(args=['python', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/main.py', '/private/var/fol...1cdnx0vrvyr0000gn/T/tmpr40fh880.dts']\n", stderr='Error: Failed to convert keymap: Failed to process DTS directives\n').returncode
+E        +  where 1 = CompletedProcess(args=['python', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/main.py', '/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-76/test_main_simple_conversion_ou0/simple.keymap', '-o', '/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-76/test_main_simple_conversion_ou0/output.kanata'], returncode=1, stdout="[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpftw9q_tc.dts']\n", stderr='Error: Failed to convert keymap: Failed to process DTS directives\n').returncode
 
 tests/test_main.py:106: AssertionError
 ____________________________ test_main_with_include ____________________________
 
-dts_with_include_files = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-75/test_main_with_include0/with_include.keymap')
-tmp_path = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-75/test_main_with_include0')
+dts_with_include_files = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-76/test_main_with_include0/with_include.keymap')
+tmp_path = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-76/test_main_with_include0')
 
     def test_main_with_include(dts_with_include_files: Path, tmp_path: Path):
         """Test conversion with an include path."""
@@ -4798,12 +4149,12 @@ tmp_path = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/p
     
 >       assert result.returncode == 0
 E       assert 1 == 0
-E        +  where 1 = CompletedProcess(args=['python', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/main.py', '/private/var/fol...1cdnx0vrvyr0000gn/T/tmpk5511zil.dts']\n", stderr='Error: Failed to convert keymap: Failed to process DTS directives\n').returncode
+E        +  where 1 = CompletedProcess(args=['python', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/main.py', '/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-76/test_main_with_include0/with_include.keymap', '-I', '/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-76/test_main_with_include0/include'], returncode=1, stdout="[DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/dts/include', '-I', '/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-76/test_main_with_include0/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmptaa46uia.dts']\n", stderr='Error: Failed to convert keymap: Failed to process DTS directives\n').returncode
 
 tests/test_main.py:123: AssertionError
 ________________________ test_main_input_file_not_found ________________________
 
-tmp_path = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-75/test_main_input_file_not_found0')
+tmp_path = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-76/test_main_input_file_not_found0')
 
     def test_main_input_file_not_found(tmp_path: Path):
         """Test error handling for non-existent input file."""
@@ -4812,13 +4163,13 @@ tmp_path = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/p
     
         assert result.returncode != 0
 >       assert "Error: Input file not found" in result.stderr
-E       AssertionError: assert 'Error: Input file not found' in 'Error: Failed to convert keymap: Input file does not exist: /private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-75/test_main_input_file_not_found0/does_not_exist.keymap\n'
-E        +  where 'Error: Failed to convert keymap: Input file does not exist: /private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-75/test_main_input_file_not_found0/does_not_exist.keymap\n' = CompletedProcess(args=['python', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/main.py', '/private/var/fol.../42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-75/test_main_input_file_not_found0/does_not_exist.keymap\n').stderr
+E       AssertionError: assert 'Error: Input file not found' in 'Error: Failed to convert keymap: Input file does not exist: /private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-76/test_main_input_file_not_found0/does_not_exist.keymap\n'
+E        +  where 'Error: Failed to convert keymap: Input file does not exist: /private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-76/test_main_input_file_not_found0/does_not_exist.keymap\n' = CompletedProcess(args=['python', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/main.py', '/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-76/test_main_input_file_not_found0/does_not_exist.keymap'], returncode=1, stdout='', stderr='Error: Failed to convert keymap: Input file does not exist: /private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-76/test_main_input_file_not_found0/does_not_exist.keymap\n').stderr
 
 tests/test_main.py:136: AssertionError
 ____________________________ test_main_invalid_dts _____________________________
 
-invalid_dts_file = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-75/test_main_invalid_dts0/invalid.keymap')
+invalid_dts_file = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-76/test_main_invalid_dts0/invalid.keymap')
 
     def test_main_invalid_dts(invalid_dts_file: Path):
         """Test error handling for invalid DTS content."""
@@ -4829,29 +4180,17 @@ invalid_dts_file = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr00
         # as the exact parser error might change
         assert "Error: Failed to convert keymap" in result.stderr
 >       assert result.stdout == ""
-E       assert "[DtsPreproce...b51on.dts']\n" == ''
+E       assert "[DtsPreproce...v6dae.dts']\n" == ''
 E         
-E         + [DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp2xjb51on.dts']
+E         + [DtsPreprocessor] cpp command: ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cpp', '-E', '-x', 'c', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp0u7v6dae.dts']
 
 tests/test_main.py:148: AssertionError
 =========================== short test summary info ============================
-FAILED tests/dts/test_end_to_end.py::test_simple_keymap - TypeError: Layer.__...
-FAILED tests/dts/test_end_to_end.py::test_complex_keymap_with_behaviors - Typ...
-FAILED tests/dts/test_end_to_end.py::test_keymap_with_unicode - TypeError: La...
-FAILED tests/dts/test_end_to_end.py::test_error_handling - converter.dts.erro...
-FAILED tests/dts/test_end_to_end.py::test_keymap_with_combos - TypeError: Lay...
-FAILED tests/dts/test_end_to_end.py::test_keymap_with_conditional_layers - Ty...
-FAILED tests/dts/test_extractor.py::test_extract_simple_keymap - TypeError: L...
-FAILED tests/dts/test_extractor.py::test_extract_with_behaviors - TypeError: ...
-FAILED tests/dts/test_extractor.py::test_extract_multiple_layers - TypeError:...
-FAILED tests/dts/test_extractor.py::test_extract_complex_bindings - TypeError...
+FAILED tests/dts/test_end_to_end.py::test_keymap_with_unicode - AssertionErro...
+FAILED tests/dts/test_end_to_end.py::test_error_handling - AssertionError: Re...
 FAILED tests/dts/test_extractor.py::test_extract_invalid_content - converter....
-FAILED tests/dts/test_integration.py::test_full_pipeline_simple_keymap - Type...
-FAILED tests/dts/test_integration.py::test_full_pipeline_with_behaviors - Typ...
-FAILED tests/dts/test_integration.py::test_full_pipeline_multiple_layers - Ty...
-FAILED tests/dts/test_integration.py::test_full_pipeline_complex_bindings - T...
 FAILED tests/dts/test_integration.py::test_full_pipeline_error_handling - con...
-FAILED tests/dts/test_parser.py::test_parse_error_handling - AssertionError: ...
+FAILED tests/dts/test_parser.py::test_parse_error_handling - KeyError: 'node1'
 FAILED tests/dts/test_parser.py::test_parse_zmk_specific_constructs - Asserti...
 FAILED tests/dts/test_performance.py::test_preprocessor_performance - convert...
 FAILED tests/dts/test_performance.py::test_parser_performance - converter.dts...
@@ -4873,5 +4212,5 @@ FAILED tests/test_main.py::test_main_simple_conversion_stdout - assert 1 == 0
 FAILED tests/test_main.py::test_main_simple_conversion_outfile - assert 1 == 0
 FAILED tests/test_main.py::test_main_with_include - assert 1 == 0
 FAILED tests/test_main.py::test_main_input_file_not_found - AssertionError: a...
-FAILED tests/test_main.py::test_main_invalid_dts - assert "[DtsPreproce...b51...
-======================== 39 failed, 33 passed in 1.11s =========================
+FAILED tests/test_main.py::test_main_invalid_dts - assert "[DtsPreproce...v6d...
+======================== 27 failed, 45 passed in 0.94s =========================

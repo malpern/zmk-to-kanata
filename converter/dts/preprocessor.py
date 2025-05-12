@@ -58,10 +58,7 @@ class DtsPreprocessor:
             include_paths: List of paths to search for include files
         """
         if cpp_path is None:
-            cpp_path = (
-                "/Applications/Xcode.app/Contents/Developer/Toolchains/"
-                "XcodeDefault.xctoolchain/usr/bin/cpp"
-            )
+            cpp_path = "/usr/bin/cpp"
         cpp_path = str(cpp_path)
         if not cpp_path.endswith("cpp"):
             raise PreprocessorError(
@@ -76,7 +73,7 @@ class DtsPreprocessor:
                 path_obj = Path(path)
                 if not path_obj.exists():
                     msg = f"Include path does not exist: {path}"
-                    help_text = "Ensure all include paths exist and are accessible"
+                    help_text = "Ensure all include paths exist and are " "accessible"
                     raise PreprocessorError(msg, help_text=help_text)
                 self.include_paths.append(str(path_obj))
 
@@ -169,17 +166,45 @@ class DtsPreprocessor:
         tmp_input.close()
         tmp_input_file = Path(tmp_input.name)
 
+        # Debug: print environment and temp file contents
+        print("[DtsPreprocessor] ENVIRONMENT:")
+        for k, v in os.environ.items():
+            if len(v) > 40:
+                print(f"  {k}={v[:20]}...{v[-20:]}")
+            else:
+                print(f"  {k}={v}")
+        if len(str(tmp_input_file)) > 70:
+            print(f"[DtsPreprocessor] Temp file: " f"{str(tmp_input_file)[:70]}...")
+        else:
+            print(f"[DtsPreprocessor] Temp file: {tmp_input_file}")
+        with open(tmp_input_file, "r") as f:
+            print("[DtsPreprocessor] Temp file contents:")
+            print(f.read())
+
         try:
-            # Build cpp command as a list for shell=False
-            cpp_cmd = [
-                str(self.cpp_path),
-                "-E",
-                "-x",
-                "c",
-            ]
-            for path in self.include_paths:
-                cpp_cmd.extend(["-I", str(path)])
-            cpp_cmd.append(str(tmp_input_file))
+            # Build preprocessor command as a list for shell=False
+            if os.uname().sysname == "Darwin":
+                # Use clang with assembler-with-cpp for .dts files on macOS
+                clang_path = "/usr/bin/clang"
+                cpp_cmd = [
+                    clang_path,
+                    "-E",
+                    "-nostdinc",
+                    "-undef",
+                    "-x",
+                    "assembler-with-cpp",
+                ]
+                for path in self.include_paths:
+                    cpp_cmd.extend(["-I", str(path)])
+                cpp_cmd.append(str(tmp_input_file))
+            else:
+                cpp_cmd = [
+                    str(self.cpp_path),
+                    "-E",
+                ]
+                for path in self.include_paths:
+                    cpp_cmd.extend(["-I", str(path)])
+                cpp_cmd.extend(["-x", "c", str(tmp_input_file)])
 
             # Debug: print the constructed command list
             print("[DtsPreprocessor] cpp command:", cpp_cmd)
