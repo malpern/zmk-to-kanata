@@ -74,61 +74,104 @@ Kanata Output Generation (.kbd)
     *   Takes the extracted and transformed keymap data.
     *   Generates the final Kanata configuration file content.
 
-## 3. Current Development Status (as of commit `45a3499`)
+## 3. Current Development Status (Post-Initial DtsRoot/AST Fixes)
 
-The project has undergone a significant refactor to a DTS-based parsing system. While documentation (`RefactorDTS.md`, `IMPLEMENTATION.md`) from that period indicated many components as "complete" and tests as "passing," the current test suite at commit `45a3499` reveals significant issues, primarily related to the initialization of `DtsRoot` and preprocessor behavior.
+The project has undergone a significant refactor to a DTS-based parsing system. Initial efforts focused on fixing fundamental issues with `DtsRoot` instantiation and AST API usage across the parser, extractor, and test suites. Many structural `TypeError` and `AttributeError` issues related to `DtsRoot` have been resolved.
 
-**Component Status (Reconciled View):**
+**Component Status (Updated View):**
 
-*   **Models (`converter/models.py`):** Believed to be largely stable as per `RefactorDTS.md`.
+*   **Models (`converter/models.py`):** Believed to be largely stable.
 *   **DTS Parser (`converter/dts/parser.py`):**
-    *   Structure implemented for node/property parsing.
-    *   **Known Issue:** Likely instantiates `DtsRoot` incorrectly, causing widespread test failures.
+    *   The primary focus of ongoing debugging.
+    *   Correctly instantiates `DtsRoot` by first building a `DtsNode` tree.
+    *   **Known Issue:** The logic within `_parse_node_body` for handling child node definitions (both direct and labeled) and property parsing appears to have several remaining bugs. This leads to `TypeError: DtsNode.__init__() missing 1 required positional argument: 'name'` when child nodes are created, and various `DtsParseError`s (e.g., "Expected '{' after node...") indicating the parser is losing its place or misinterpreting tokens.
 *   **AST Definition (`converter/dts/ast.py`):**
-    *   `DtsNode`, `DtsProperty` defined.
-    *   `DtsRoot` defined but its `__init__` signature (requiring a `root: DtsNode` argument) is not correctly used by the parser or tests.
-*   **AST Extractor (`converter/dts/extractor.py`):** Functionality is likely impacted by parser/AST issues.
+    *   `DtsNode`, `DtsProperty`, and `DtsRoot` definitions are largely stable. `DtsRoot` now correctly initializes `label_to_node`.
+*   **AST Extractor (`converter/dts/extractor.py`):**
+    *   Updated to use the correct AST API (e.g., `ast.children` instead of `ast.root.children`). Its correctness heavily depends on a well-formed AST from the parser.
 *   **DTS Preprocessor (`converter/dts/preprocessor.py`):**
     *   Integrates with `cpp`.
-    *   **Known Issues:**
+    *   **Known Issues (Carryover):**
         *   Incorrect default include path initialization.
-        *   Potential mis-handling of non-standard C preprocessor directives found in ZMK files.
-        *   Error handling for `cpp` failures needs review (e.g., `FileNotFoundError` vs. `PreprocessorError`).
-*   **Behavior Transformers:** Functionality is likely impacted by upstream parser/extractor issues.
-*   **Kanata Transformer:** Functionality is likely impacted by upstream issues.
-*   **Main & CLI Scripts:** Likely impacted by underlying library errors.
+        *   Potential mis-handling of non-standard C preprocessor directives.
+        *   Error handling for `cpp` failures.
+*   **Behavior Transformers & Kanata Transformer:** Functionality depends on a correct AST from the parser and extractor.
+*   **Main & CLI Scripts:** Stability depends on the underlying library components.
+*   **Test Suite:** Many tests updated to reflect `DtsRoot` API changes. Remaining failures are now more indicative of parser logic errors.
 
-## 4. Known Issues and Current Test Failures (at commit `45a3499`)
+## 4. Known Issues and Current Test Failures (Post-Initial DtsRoot/AST Fixes)
 
-The test suite (`pytest`) currently shows **49 failed tests and 23 passed tests**.
+The test suite (`pytest`) currently shows **38 failed tests and 34 passed tests**. (Previously 49 failed, 23 passed before `DtsRoot` and AST access fixes).
 
-*   **Critical:** `TypeError: DtsRoot.__init__() missing 1 required positional argument: 'root'`: This is the most widespread error, affecting most parsing and integration tests. It indicates that `DtsRoot` is being instantiated without the required `DtsNode` argument, likely in `DtsParser.py` and numerous test files.
-*   **Preprocessor Errors:**
-    *   `PreprocessorError: ... invalid preprocessing directive ...`: Suggests issues with how the C preprocessor is invoked or how it handles certain ZMK syntax.
-    *   `AssertionError: assert ['/Volumes/Fl.../dts/include'] == []` in `test_preprocessor_initialization`: `DtsPreprocessor` has an unexpected default include path.
-    *   `FileNotFoundError: [Errno 2] No such file or directory: 'invalid_cpp'` when `PreprocessorError` is expected: Incorrect error wrapping in `DtsPreprocessor`.
-    *   Test `test_preprocessor_error_handling` fails to raise an expected `PreprocessorError`.
-*   **AST Issues:**
-    *   `AttributeError: 'DtsRoot' object has no attribute 'label_to_node'` (`tests/dts/test_ast.py`): Potentially a side effect of incorrect `DtsRoot` initialization or a separate API mismatch in tests.
-*   **Main Script Failures:** Numerous `tests/test_main.py` failures (return code 1 instead of 0, incorrect stderr) are likely symptoms of the `DtsRoot` initialization error.
+*   **Dominant Parser Logic Errors:**
+    *   `TypeError: DtsNode.__init__() missing 1 required positional argument: 'name'`: This error occurs in multiple tests and points to `DtsParser._parse_node_body` failing to correctly extract or pass the `name` when attempting to instantiate a child `DtsNode`.
+    *   `converter.dts.error_handler.DtsParseError: Expected '{ ' after node ... Found ... instead.`: Various instances of this error (e.g., `Expected '{ ' after node 'default_layer'. Found 'bindings' instead.`) indicate the parser is not correctly identifying the start of a child node's body, likely due to issues in token consumption or state management within `_parse_node_body` when processing node labels, names, or properties.
+*   **Preprocessor Errors (Carryover):**
+    *   `PreprocessorError: ... invalid preprocessing directive ...`
+    *   `AssertionError: assert ['/Volumes/Fl.../dts/include'] == []` in `test_preprocessor_initialization`.
+    *   `FileNotFoundError` when `PreprocessorError` is expected in `test_preprocessor_error_handling_invalid_cpp_command`.
+*   **Main Script Failures (Carryover, likely symptoms of parser errors):** Some `tests/test_main.py` failures persist.
+*   **Assertion Errors in specific tests (e.g., `tests/dts/test_parser.py`):** Some assertion values in tests might still be based on previous incorrect parsing behavior and may need adjustment once the parser is more stable. For example, `assert default_layer.properties["bindings"].value == ['&kp A', '&kp B', '&kp C']` might be failing if the parser isn't extracting bindings correctly.
 
-## 5. Immediate Next Steps (Action Plan)
+## 5. Immediate Next Steps (Action Plan Refined)
 
-1.  **Verify and Fix `DtsParser` Instantiation of `DtsRoot`:**
-    *   Read `converter/dts/parser.py` (at commit `45a3499`).
-    *   Confirm how `DtsRoot` is instantiated in `DtsParser.parse`.
-    *   If incorrect (e.g., `DtsRoot()`), modify the parser:
-        1.  Create a base `DtsNode` (e.g., `root_node = DtsNode(name="/")`).
-        2.  Parse the DTS body content into this `root_node` (filling its children, properties).
-        3.  Then, create the `DtsRoot` instance using this populated node: `ast_root = DtsRoot(root=root_node)`.
-2.  **Update Test Suite for `DtsRoot` Instantiation:**
-    *   After fixing the parser (if necessary), systematically review and fix test failures related to `DtsRoot.__init__()`.
-    *   Update test setups to correctly instantiate `DtsRoot`, either by passing a mock/simple `DtsNode` or by using the (fixed) `DtsParser`.
-3.  **Re-run Tests and Assess:** Identify remaining failures to guide subsequent steps.
-4.  **Address Preprocessor Issues:**
-    *   Fix the `DtsPreprocessor` initialization bug related to `include_paths`.
+The primary goal is to stabilize the `DtsParser._parse_node_body` method.
+
+1.  **Deep Dive into `DtsParser._parse_node_body`:**
+    *   **Focus on `TypeError: DtsNode.__init__() missing 'name'`:**
+        *   Trace execution for a failing test case (e.g., one that triggers this TypeError).
+        *   Examine how `actual_node_name` is derived before `child = DtsNode(name=actual_node_name)` is called.
+        *   Verify token consumption leading up to child node instantiation.
+    *   **Focus on `DtsParseError: Expected '{ ' after node ...`:**
+        *   Trace execution for a test case triggering this.
+        *   Examine the conditions under which the parser expects a `{` and what token it's actually encountering.
+        *   Pay close attention to the logic handling properties vs. child nodes, and how labels are processed before expecting a node name and then `{`.
+2.  **Incremental Test-Driven Refinement:**
+    *   For each specific parsing bug identified, create the smallest possible DTS snippet that reproduces it in a new, focused unit test if one doesn't already exist.
+    *   Fix the parser logic to make that specific test pass, ensuring no regressions in already passing tests.
+3.  **Address Assertion Discrepancies in `tests/dts/test_parser.py`:**
+    *   Once the parser is more reliably constructing the AST, re-evaluate the assertions in `tests/dts/test_parser.py` (and other test files if necessary) that compare parsed values. Some expected values might need updating to reflect the *correct* parsing behavior.
+4.  **Re-run Full Test Suite and Assess:** After addressing the core parser logic, run all tests to identify the next layer of issues (likely preprocessor errors or more subtle extractor/transformer bugs).
+5.  **Address Preprocessor Issues (Carryover):**
+    *   Fix `DtsPreprocessor` initialization for `include_paths`.
     *   Investigate and improve handling of non-standard C directives and `cpp` errors.
-5.  **Address `label_to_node` AttributeError:** If still present after `DtsRoot` fixes, investigate the specific test usages.
+
+### 5.1. Detailed Steps for Stabilizing `DtsParser._parse_node_body`
+
+This approach focuses on isolating issues, meticulous debugging, and incremental fixes:
+
+1.  **Isolate Failing Test Cases Systematically:**
+    *   **Target `TypeError: DtsNode.__init__() missing 'name'`:**
+        *   Run `pytest -k "test_name_that_fails_with_TypeError_DtsNode_name"` (replace with an actual failing test name, e.g., from `tests/dts/test_parser.py` or `tests/test_dts_parser.py`).
+        *   If the existing test is complex, simplify its DTS input or create a new, minimal test case in `tests/dts/test_parser.py` that reproduces *only* this error with the simplest possible DTS structure (e.g., a root with one child node that triggers the error).
+    *   **Target `DtsParseError: Expected '{' after node ...`:**
+        *   Similarly, identify and isolate a simple test case that triggers this specific `DtsParseError`.
+        *   Create a minimal reproduction if necessary.
+    *   Prioritize the simplest failing test cases first.
+
+2.  **Focused Debugging Workflow (Iterate per Isolated Test Case):**
+    *   **Understand Expected vs. Actual Token Sequence:** For the failing minimal DTS input, manually list the expected sequence of tokens and compare it with `self.tokens` generated by `_tokenize`.
+    *   **Trace `self.pos` meticulously:** Before `_parse_node_body` is called for the problematic segment, and at each step within it, log or inspect `self.pos` and `self.tokens[self.pos]`.
+        *   Verify `self.pos` advances exactly as expected after consuming each part of the syntax (labels, node names, property names, `=`, values, `;`, `{`, `}`).
+    *   **Verify Variable States at Critical Points:**
+        *   When `potential_node_name_or_label` is assigned.
+        *   When `actual_node_name` is determined (check logic for handling `label: node_name` vs. `node_name`).
+        *   Immediately before `child = DtsNode(name=actual_node_name)`, confirm `actual_node_name` holds the correct string.
+        *   When an error like "Expected '{'" occurs, what is `self.tokens[self.pos]` *actually* pointing to?
+    *   **Use Print Debugging Liberally (if not using a step-debugger):** Add temporary print statements to show the current token, `self.pos`, and key variable values at different stages of `_parse_node_body`.
+
+3.  **Implement and Test Fixes Incrementally:**
+    *   Make the smallest possible change to address the identified discrepancy in token handling or state logic.
+    *   After the change, run *only the specific isolated test case* to see if it passes.
+    *   If it passes, run `black .` and `ruff check . --fix`.
+    *   Then, run the full `pytest` suite to check for regressions or newly unmasked errors. If new errors appear, decide if they are related or a separate issue to be tackled next.
+
+4.  **Refine Parser Error Context (If Needed):**
+    *   If, during debugging, you find that a `DtsParseError` could be more specific or provide better context for that particular failure mode, consider improving its message or `help_text` once the underlying bug is fixed.
+
+5.  **Iterate and Document:**
+    *   Repeat this process for each distinct type of error originating from `_parse_node_body`.
+    *   Briefly note in `CONSOLIDATED_PLAN.md` (perhaps as sub-bullets under the fixed error type) the nature of the fix if it clarifies a pattern.
 
 ## 6. Broader Remaining Tasks and Future Improvements
 
