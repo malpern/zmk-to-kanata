@@ -103,6 +103,7 @@ class DtsRoot(DtsNode):
             properties=root.properties,
             labels=root.labels,
         )
+        self.label_to_node = dict()  # Explicitly initialize the field
         self._build_label_map(self)
 
     def _build_label_map(self, node: DtsNode) -> None:

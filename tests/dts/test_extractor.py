@@ -58,13 +58,13 @@ def test_extract_with_behaviors():
     config = extractor.extract(ast)
 
     assert len(config.behaviors) == 2
-    assert any(isinstance(b, HoldTap) for b in config.behaviors)
-    assert any(isinstance(b, MacroBehavior) for b in config.behaviors)
+    assert any(isinstance(b, HoldTap) for b in config.behaviors.values())
+    assert any(isinstance(b, MacroBehavior) for b in config.behaviors.values())
 
-    mt = next(b for b in config.behaviors if isinstance(b, HoldTap))
+    mt = next(b for b in config.behaviors.values() if isinstance(b, HoldTap))
     assert mt.tapping_term_ms == 200
 
-    macro = next(b for b in config.behaviors if isinstance(b, MacroBehavior))
+    macro = next(b for b in config.behaviors.values() if isinstance(b, MacroBehavior))
     assert len(macro.bindings) == 2
 
 

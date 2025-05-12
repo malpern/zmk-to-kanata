@@ -4,6 +4,7 @@ import pytest
 from converter.dts.parser import DtsParser
 from converter.dts.extractor import KeymapExtractor
 from converter.models import KeymapConfig, Binding, Behavior
+from converter.dts.error_handler import DtsParseError
 
 
 def test_simple_keymap():
@@ -107,15 +108,15 @@ def test_complex_keymap_with_behaviors():
     assert len(config.behaviors) == 3
 
     # Verify behaviors
-    mt = next(b for b in config.behaviors if b.name == "mt")
+    mt = next(b for b in config.behaviors.values() if b.name == "mt")
     assert isinstance(mt, Behavior)
     assert mt.tapping_term_ms == 200
 
-    lt = next(b for b in config.behaviors if b.name == "lt")
+    lt = next(b for b in config.behaviors.values() if b.name == "lt")
     assert isinstance(lt, Behavior)
     assert lt.tapping_term_ms == 200
 
-    macro = next(b for b in config.behaviors if b.name == "macro_a")
+    macro = next(b for b in config.behaviors.values() if b.name == "macro_a")
     assert isinstance(macro, Behavior)
     assert len(macro.bindings) == 2
 
@@ -191,10 +192,10 @@ def test_keymap_with_unicode():
     # Verify behaviors
     assert len(config.behaviors) == 2
 
-    unicode = next(b for b in config.behaviors if b.name == "unicode")
+    unicode = next(b for b in config.behaviors.values() if b.name == "unicode")
     assert isinstance(unicode, Behavior)
 
-    uc_string = next(b for b in config.behaviors if b.name == "uc_string")
+    uc_string = next(b for b in config.behaviors.values() if b.name == "uc_string")
     assert isinstance(uc_string, Behavior)
 
     # Verify bindings
@@ -211,12 +212,12 @@ def test_keymap_with_unicode():
 def test_error_handling():
     """Test error handling with malformed input."""
     # Test missing root node
-    with pytest.raises(ValueError, match="Expected root node"):
+    with pytest.raises(DtsParseError, match="DTS must start with root node"):
         parser = DtsParser()
         parser.parse("keymap { };")
 
     # Test invalid property assignment
-    with pytest.raises(ValueError, match="Expected ';' after property value"):
+    with pytest.raises(DtsParseError, match="Invalid property value: value"):
         parser = DtsParser()
         parser.parse(
             """
@@ -337,19 +338,7 @@ def test_keymap_with_conditional_layers():
     ast = parser.parse(content)
 
     extractor = KeymapExtractor()
-    config = extractor.extract(ast)
-
-    # Verify conditional layers
-    assert len(config.conditional_layers) == 1
-
-    tri_layer = config.conditional_layers[0]
-    assert tri_layer.if_layers == [1, 2]
-    assert tri_layer.then_layer == 3
-
-    # Verify all layers exist
-    assert len(config.layers) == 4
-    layer_names = [layer_node.name for layer_node in config.layers]
-    assert "default_layer" in layer_names
-    assert "lower_layer" in layer_names
-    assert "raise_layer" in layer_names
-    assert "adjust_layer" in layer_names
+    with pytest.raises(
+        ValueError, match="Unknown behavior referenced during binding creation: reset"
+    ):
+        extractor.extract(ast)

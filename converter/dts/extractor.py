@@ -42,16 +42,18 @@ class KeymapExtractor:
         self.conditional_layers = []
         self._behavior_nodes_to_process = []
 
-        # Find top-level nodes first
-        root_node = ast.root.children.get("/")
-        if not root_node:
-            print("Warning: No root node '/' found in AST.")
-            return KeymapConfig(layers=[], behaviors={})
+        # The 'ast' (DtsRoot) object itself represents the root '/' node.
+        # Its children are directly ast.children.
+        # root_node = ast.root.children.get("/") # Old incorrect access
+        # if not root_node: # This check is now on 'ast' itself
+        #     print("Warning: No root node '/' found in AST or ast.children is empty.")
+        #     return KeymapConfig(layers=[], behaviors={})
 
-        behaviors_node = root_node.children.get("behaviors")
-        combos_node = root_node.children.get("combos")
-        conditional_layers_node = root_node.children.get("conditional_layers")
-        keymap_node = root_node.children.get("keymap")
+        # Directly access children of the DtsRoot object (ast)
+        behaviors_node = ast.children.get("behaviors")
+        combos_node = ast.children.get("combos")
+        conditional_layers_node = ast.children.get("conditional_layers")
+        keymap_node = ast.children.get("keymap")
 
         # Pass 1: Extract behaviors, combos, conditional layers
         # (deferring nested parsing for behaviors)
@@ -290,12 +292,12 @@ class KeymapExtractor:
     def _extract_layers(self, keymap_node: DtsNode) -> None:
         """Extract layer definitions from the 'keymap' node (Pass 3)."""
         # Skip compatible property if present
-        for name, child in keymap_node.children.items():
+        for idx, (name, child) in enumerate(keymap_node.children.items()):
             if name == "compatible" and "compatible" in child.properties:
                 continue
 
             # Assume direct children of keymap are layers
-            layer = self._create_layer(child)
+            layer = self._create_layer(child, idx)
             if layer:
                 if layer.name in self.layers:
                     print(
@@ -306,7 +308,7 @@ class KeymapExtractor:
             else:
                 print(f"Warning: Could not create layer from node '{name}'.")
 
-    def _create_layer(self, node: DtsNode) -> Optional[Layer]:
+    def _create_layer(self, node: DtsNode, index: int) -> Optional[Layer]:
         """Create a layer instance from a node (called in Pass 3)."""
         bindings_prop = node.properties.get("bindings")
         if not bindings_prop or bindings_prop.type != "array":
@@ -315,7 +317,7 @@ class KeymapExtractor:
 
         # Parse bindings now, all behaviors should be available
         parsed_bindings = self._parse_bindings(bindings_prop.value)
-        return Layer(name=node.name, bindings=parsed_bindings)
+        return Layer(name=node.name, index=index, bindings=parsed_bindings)
 
     def _parse_bindings(self, value: List[Any]) -> List[Binding]:
         """Parse bindings from a list value provided by the parser."""

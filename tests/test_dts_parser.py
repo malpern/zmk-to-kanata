@@ -4,6 +4,7 @@ import os
 import pytest
 from converter.dts.parser import DtsParser
 from converter.dts.preprocessor import DtsPreprocessor
+from converter.dts.error_handler import DtsParseError
 
 
 def test_parse_simple_keymap():
@@ -24,18 +25,20 @@ def test_parse_simple_keymap():
     assert root is not None
     assert root.name == "/"
 
-    transform = parser.find_node("/default_transform")
-    assert transform is not None
-    assert transform.properties["rows"].value == "<2>"
-    assert transform.properties["columns"].value == "<3>"
+    # First find the matrix_transform node directly
+    matrix_transform = root.children.get("matrix_transform")
+    assert matrix_transform is not None
+    assert matrix_transform.properties["rows"].value == [2]
+    assert matrix_transform.properties["columns"].value == [3]
 
-    keymap = parser.find_node("/keymap")
+    keymap = root.find_node("/keymap")
     assert keymap is not None
-    assert keymap.properties["compatible"].value == '"zmk,keymap"'
+    assert keymap.properties["compatible"].value == "zmk,keymap"
 
-    default_layer = parser.find_node("/keymap/default_layer")
+    default_layer = root.find_node("/keymap/default_layer")
     assert default_layer is not None
-    assert "&kp A" in default_layer.properties["bindings"].value
+    assert "&kp" in default_layer.properties["bindings"].value
+    assert "A" in default_layer.properties["bindings"].value
 
 
 def test_parse_large_keymap():
@@ -56,18 +59,20 @@ def test_parse_large_keymap():
     assert root is not None
     assert root.name == "/"
 
-    transform = parser.find_node("/default_transform")
-    assert transform is not None
-    assert transform.properties["rows"].value == "<4>"
-    assert transform.properties["columns"].value == "<5>"
+    # First find the matrix_transform node directly
+    matrix_transform = root.children.get("matrix_transform")
+    assert matrix_transform is not None
+    assert matrix_transform.properties["rows"].value == [4]
+    assert matrix_transform.properties["columns"].value == [5]
 
-    keymap = parser.find_node("/keymap")
+    keymap = root.find_node("/keymap")
     assert keymap is not None
-    assert keymap.properties["compatible"].value == '"zmk,keymap"'
+    assert keymap.properties["compatible"].value == "zmk,keymap"
 
-    default_layer = parser.find_node("/keymap/default_layer")
+    default_layer = root.find_node("/keymap/default_layer")
     assert default_layer is not None
-    assert "&kp A" in default_layer.properties["bindings"].value
+    assert "&kp" in default_layer.properties["bindings"].value
+    assert "A" in default_layer.properties["bindings"].value
 
 
 def test_parse_simple_dts():
@@ -87,8 +92,8 @@ def test_parse_simple_dts():
     root = parser.parse(content)
 
     assert root is not None
-    assert root.root.name == "/"
-    assert "keymap" in root.root.children
+    assert root.name == "/"
+    assert "keymap" in root.children
 
 
 def test_parse_with_labels():
@@ -108,7 +113,7 @@ def test_parse_with_labels():
     parser = DtsParser()
     root = parser.parse(content)
 
-    key_press = root.root.children["key_press"]
+    key_press = root.children["key_press"]
     assert key_press is not None
     assert "compatible" in key_press.properties
 
@@ -131,7 +136,7 @@ def test_parse_complex_bindings():
     parser = DtsParser()
     root = parser.parse(content)
 
-    default_layer = root.root.children["keymap"].children["default_layer"]
+    default_layer = root.children["keymap"].children["default_layer"]
     assert default_layer is not None
     assert "bindings" in default_layer.properties
 
@@ -140,10 +145,13 @@ def test_parse_error_handling():
     """Test error handling in parser."""
     parser = DtsParser()
 
-    with pytest.raises(ValueError, match="DTS must start with root node '/'"):
+    with pytest.raises(DtsParseError, match="DTS must start with root node '/'"):
         parser.parse("node {")
 
-    with pytest.raises(ValueError, match="Expected node definition '{'"):
+    with pytest.raises(
+        DtsParseError,
+        match="Expected '{' after root node '/'",
+    ):
         parser.parse("/ invalid")
 
 
@@ -151,7 +159,7 @@ def test_parse_invalid_content():
     """Test parsing invalid content."""
     parser = DtsParser()
 
-    with pytest.raises(ValueError, match="DTS must start with root node '/'"):
+    with pytest.raises(DtsParseError, match="DTS must start with root node '/'"):
         parser.parse("")
 
 

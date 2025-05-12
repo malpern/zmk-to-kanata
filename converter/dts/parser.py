@@ -34,7 +34,7 @@ class DtsParser:
         self._tokenize(content)
         self.pos = 0
 
-        # Parse root node
+        # Check for root node token '/'
         if not self.tokens or self.tokens[0] != "/":
             raise DtsParseError(
                 "DTS must start with root node '/'",
@@ -44,30 +44,38 @@ class DtsParser:
                 context=format_error_context(content, 1, 1),
             )
 
-        root = DtsRoot()
-        self.pos += 1  # Skip root node
+        # The DtsParser will build up the tree starting from a DtsNode.
+        # This node will represent the root of the DTS structure (e.g., '/').
+        parsed_root_node = DtsNode(name="/")
+        self.pos += 1  # Consume the '/' token
 
-        # Parse root node body
+        # Expect '{' after root node '/'
         if self.pos >= len(self.tokens) or self.tokens[self.pos] != "{":
             line, col = self._get_pos_info(self.pos)
             raise DtsParseError(
-                "Expected '{' after root node",
+                "Expected '{' after root node '/'",
                 file=file,
                 line=line,
                 column=col,
                 context=format_error_context(content, line, col),
             )
-        self.pos += 1
+        self.pos += 1  # Consume '{'
 
         try:
-            self._parse_node_body(root)
-            root._build_label_map()
+            # Parse the body of the DTS, populating the parsed_root_node
+            self._parse_node_body(parsed_root_node)
+
+            # Once the DtsNode tree is built, create the DtsRoot wrapper.
+            # DtsRoot's __init__ will handle copying necessary fields and
+            # building the label map.
+            ast_root = DtsRoot(root=parsed_root_node)
+
         except DtsParseError as e:
             if not e.file:
-                e.file = file
+                e.file = file  # Ensure file is set on error
             raise
 
-        return root
+        return ast_root
 
     def _tokenize(self, content: str) -> None:
         """Tokenize DTS content and build line/column map.
@@ -182,6 +190,7 @@ class DtsParser:
             self.tokens.extend(tokens)
             for _ in tokens:
                 self.line_map.append((line, column - len(current)))
+        # print(f"Generated tokens: {self.tokens}") # Temporary debug print (Reverted)
 
     def _get_pos_info(self, pos: int) -> Tuple[int, int]:
         """Get line and column information for a token position."""
@@ -378,6 +387,8 @@ class DtsParser:
             return DtsProperty(name=name, value=True, type="boolean")
         elif value == "false":
             return DtsProperty(name=name, value=False, type="boolean")
+        elif value.startswith("&"):
+            return DtsProperty(name=name, value=value, type="reference")
         else:
             line, col = self._get_pos_info(self.pos)
             raise DtsParseError(
@@ -413,34 +424,88 @@ class DtsParser:
                     help_text="Node definitions must have a label or reference",
                 )
 
-            # Handle labels (node_name: or &node_name)
-            label = None
-            if self.pos + 1 < len(self.tokens) and self.tokens[self.pos + 1] == ":":
-                label = token
-                self.pos += 2
-                if self.pos >= len(self.tokens):
-                    line, col = self._get_pos_info(self.pos - 1)
-                    raise DtsParseError(
-                        "Unexpected end of file after label",
-                        line=line,
-                        column=col,
-                        context=format_error_context(self.content, line, col),
-                        help_text="Node labels must be followed by a node definition",
-                    )
-                token = self.tokens[self.pos]
+            if token == ";":  # Handle empty statements
+                self.pos += 1
+                continue
 
-            # Handle properties
+            # Handle boolean properties (e.g., "prop_name;")
+            if self.pos + 1 < len(self.tokens) and self.tokens[self.pos + 1] == ";":
+                name = token
+                # Basic check for valid property name (alphanumeric, _, -)
+                # This helps distinguish from stray semicolons or other constructs.
+                # The tokenizer should ideally guarantee 'token' is a potential identifier here.
+                if (
+                    name
+                    and all(c.isalnum() or c in ("_", "-") for c in name)
+                    and name[0] != "-"
+                ):  # Ensure it's a valid C-style identifier
+                    prop = DtsProperty(name=name, value=True, type="boolean")
+                    node.add_property(prop)
+                    self.pos += 2  # Consume name and ';'
+                    continue
+
+            # Handle properties with assignment (e.g. "prop_name = value;")
             if self.pos + 2 < len(self.tokens) and self.tokens[self.pos + 1] == "=":
                 name = token
-                value = self.tokens[self.pos + 2]
+                value_token = self.tokens[self.pos + 2]
                 try:
-                    prop = self._parse_property_value(name, value)
+                    prop = self._parse_property_value(name, value_token)
                     node.add_property(prop)
+                    self.pos += 3
+
+                    # Check for additional comma-separated array cells
+                    if prop.type == "array":
+                        while (
+                            self.pos < len(self.tokens) and self.tokens[self.pos] == ","
+                        ):
+                            self.pos += 1
+                            if self.pos >= len(self.tokens):
+                                line, col = self._get_pos_info(self.pos - 1)
+                                raise DtsParseError(
+                                    "Unexpected end of file after ',' in property value",
+                                    line=line,
+                                    column=col,
+                                    context=format_error_context(
+                                        self.content, line, col
+                                    ),
+                                )
+                            next_value_token = self.tokens[self.pos]
+                            # Parse the next array cell. We expect it to be an array itself.
+                            # _parse_property_value will return a DtsProperty, we need its value.
+                            additional_prop_part = self._parse_property_value(
+                                "_{temp}", next_value_token
+                            )
+                            if additional_prop_part.type == "array":
+                                if isinstance(prop.value, list) and isinstance(
+                                    additional_prop_part.value, list
+                                ):
+                                    prop.value.extend(additional_prop_part.value)
+                                else:
+                                    # This case should ideally not happen if tokens are well-formed <...>
+                                    line, col = self._get_pos_info(self.pos)
+                                    raise DtsParseError(
+                                        f"Expected array type for subsequent part of property '{name}'",
+                                        line=line,
+                                        column=col,
+                                        context=format_error_context(
+                                            self.content, line, col
+                                        ),
+                                    )
+                            else:
+                                line, col = self._get_pos_info(self.pos)
+                                raise DtsParseError(
+                                    f"Expected array for subsequent part of property '{name}', got {additional_prop_part.type}",
+                                    line=line,
+                                    column=col,
+                                    context=format_error_context(
+                                        self.content, line, col
+                                    ),
+                                )
+                            self.pos += 1
                 except DtsParseError as e:
                     if not e.help_text:
                         e.help_text = f"Invalid value for property '{name}'"
                     raise
-                self.pos += 3
                 if self.pos >= len(self.tokens) or self.tokens[self.pos] != ";":
                     line, col = self._get_pos_info(self.pos)
                     raise DtsParseError(
@@ -453,36 +518,51 @@ class DtsParser:
                 self.pos += 1
                 continue
 
-            # Handle child nodes
-            child = DtsNode()
-            if label:
-                child.label = label
+            # Handle child nodes. At this point, 'token' is either a node name or a label.
+            current_labels_for_node: List[str] = []
+            current_token = token  # Start with the first token we haven't processed as property/etc.
 
-            if token.startswith("&"):
-                child.reference = token[1:]
-                self.pos += 1
-            elif token == "{":
-                self.pos += 1
-            else:
-                line, col = self._get_pos_info(self.pos)
-                raise DtsParseError(
-                    f"Unexpected token in node body: {token}",
-                    line=line,
-                    column=col,
-                    context=format_error_context(self.content, line, col),
-                    help_text="Expected property assignment, node reference, or node definition",
-                )
+            # Loop to gather all labels: label1: label2: ... node_name
+            while self.pos + 1 < len(self.tokens) and self.tokens[self.pos + 1] == ":":
+                # Current token is a label
+                current_labels_for_node.append(current_token)
+                self.pos += 2  # Consume label and ':'
+                if self.pos >= len(self.tokens):
+                    line, col = self._get_pos_info(self.pos - 1)
+                    raise DtsParseError(
+                        "Unexpected end of file after label expecting node name or another label",
+                        line=line,
+                        column=col,
+                        context=format_error_context(self.content, line, col),
+                    )
+                current_token = self.tokens[
+                    self.pos
+                ]  # This is the next potential label or the actual node name
+
+            # After the loop, current_token is the actual node name
+            actual_node_name = current_token
+            self.pos += 1  # Consume the actual_node_name token
+
+            child = DtsNode(name=actual_node_name)
+            for lbl in current_labels_for_node:
+                child.add_label(lbl)
 
             if self.pos >= len(self.tokens) or self.tokens[self.pos] != "{":
                 line, col = self._get_pos_info(self.pos)
+                # Provide more context in error: what token did we actually find?
+                found_token_msg = (
+                    f"Found '{self.tokens[self.pos]}' instead."
+                    if self.pos < len(self.tokens)
+                    else "Found end of input."
+                )
                 raise DtsParseError(
-                    "Expected '{' after node label or reference",
+                    f"Expected '{{ ' after node '{actual_node_name}'. {found_token_msg}",
                     line=line,
                     column=col,
                     context=format_error_context(self.content, line, col),
-                    help_text="Node definitions must be enclosed in curly braces",
+                    help_text="Node definitions must be enclosed in curly braces and start with '{'.",
                 )
-            self.pos += 1
+            self.pos += 1  # Consume '{'
 
             self._parse_node_body(child)
             node.add_child(child)

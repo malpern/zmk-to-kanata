@@ -77,10 +77,9 @@ def test_full_pipeline_with_behaviors():
     assert len(config.behaviors) == 2
 
     # Check behaviors
-    mt = next(b for b in config.behaviors if b.name == "mt")
+    mt = next(b for b in config.behaviors.values() if b.name == "mt")
+    macro = next(b for b in config.behaviors.values() if b.name == "macro")
     assert mt.tapping_term_ms == 200
-
-    macro = next(b for b in config.behaviors if b.name == "macro")
     assert len(macro.bindings) == 2
 
     # Check layer bindings
@@ -181,8 +180,8 @@ def test_full_pipeline_complex_bindings():
     assert len(config.behaviors) == 2
 
     # Check behaviors
-    mt = next(b for b in config.behaviors if b.name == "mt")
-    lt = next(b for b in config.behaviors if b.name == "lt")
+    mt = next(b for b in config.behaviors.values() if b.name == "mt")
+    lt = next(b for b in config.behaviors.values() if b.name == "lt")
 
     # Check layer bindings
     layer = config.layers[0]
