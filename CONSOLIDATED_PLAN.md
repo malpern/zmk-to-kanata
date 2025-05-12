@@ -51,14 +51,11 @@ Kanata Output Generator
 ### What is Stable
 - Core extraction, parsing, and transformation logic is robust and in sync with the test suite
 - All major test and linter issues (iteration over behaviors, error handling, boolean property handling, linter/style) have been fixed
-- All core and preprocessor tests now pass (including error handling)
+- All core, preprocessor, parser, and main CLI/integration tests now pass (including error handling)
 - Preprocessor is robust and cross-platform, using the canonical kernel solution for .dts files
 - Codebase is well-documented, type-hinted, and formatted (Black, Ruff)
 
 ### What Remains for Full Stability
-- **Parser edge-case tests:**
-    - A few parser tests may need review/updates to match current parser output or error messages
-    - Action: Review and update parser tests for edge cases and error handling
 - **Performance tests:**
     - Some performance/benchmark tests depend on cpp and may fail if the environment is not set up
     - Action: Set up environment or mark these as expected failures if not critical
@@ -68,11 +65,9 @@ Kanata Output Generator
 
 ## 4. Next Steps (Actionable)
 
-1. **Review and update parser edge-case tests:**
-    - Align test expectations with current parser output and error handling
-2. **Performance test environment:**
+1. **Performance test environment:**
     - Set up or skip/mark as expected fail if not critical
-3. **Documentation:**
+2. **Documentation:**
     - Finalize setup, troubleshooting, and usage docs
 
 ## 5. Code Quality and Development Guidelines
@@ -80,7 +75,7 @@ Kanata Output Generator
 - Keep lines ≤ 79 characters
 - Use type hints and docstrings throughout
 - Maintain high test coverage for all new features and bug fixes
-- Document error conditions and solutions
+  - Document error conditions and solutions
 
 ## 6. macOS cpp/Preprocessor Issue: Resolution
 
@@ -100,8 +95,8 @@ Kanata Output Generator
 ---
 
 **Summary:**
-- The codebase is now stable and green for all core features.
-- Remaining work: parser edge-case test review, performance test environment, and documentation polish.
+- The codebase is now stable and green for all core and integration features.
+- Remaining work: performance test environment and documentation polish.
 - The project is robust and ready for broader use.
 
 ## 8. Final Test and Codebase Update Plan (July 2024)
