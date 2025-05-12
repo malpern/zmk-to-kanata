@@ -28,6 +28,16 @@ class DtsParser:
         Raises:
             DtsParseError: If the content is not valid DTS
         """
+        # Remove preprocessor line markers (lines starting with '# <digit>')
+        content = "\n".join(
+            line
+            for line in content.splitlines()
+            if not (
+                line.lstrip().startswith("#")
+                and line.lstrip()[1:2] == " "
+                and line.lstrip()[2:3].isdigit()
+            )
+        )
         self.content = content
         self.tokens = []
         self.line_map = []
@@ -190,7 +200,6 @@ class DtsParser:
             self.tokens.extend(tokens)
             for _ in tokens:
                 self.line_map.append((line, column - len(current)))
-        # print(f"Generated tokens: {self.tokens}") # Temporary debug print (Reverted)
 
     def _get_pos_info(self, pos: int) -> Tuple[int, int]:
         """Get line and column information for a token position."""
@@ -436,9 +445,9 @@ class DtsParser:
                 # The tokenizer should ideally guarantee 'token' is a potential identifier here.
                 if (
                     name
-                    and all(c.isalnum() or c in ("_", "-") for c in name)
-                    and name[0] != "-"
-                ):  # Ensure it's a valid C-style identifier
+                    and all(c.isalnum() or c in ("_", "-", "#") for c in name)
+                    and (name[0].isalpha() or name[0] == "#" or name[0] == "_")
+                ):
                     prop = DtsProperty(name=name, value=True, type="boolean")
                     node.add_property(prop)
                     self.pos += 2  # Consume name and ';'

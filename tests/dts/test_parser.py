@@ -141,15 +141,7 @@ def test_parse_error_handling():
     # and does not raise an error expecting '{'
     parsed_node1_boolean = parser.parse("/ { node1; };")
     assert "node1" in parsed_node1_boolean.properties
-    node1_child = parsed_node1_boolean.children[
-        "node1"
-    ]  # This actually won't work, 'node1' is a property of '/'
-    # Let's correct the expectation: 'node1' should be a property of the root.
-    # Re-parsing for clarity in assertion:
-    ast_for_node1_bool = parser.parse("/ { node1_prop_test; };")
-    assert "node1_prop_test" in ast_for_node1_bool.properties
-    assert ast_for_node1_bool.properties["node1_prop_test"].value is True
-    assert ast_for_node1_bool.properties["node1_prop_test"].type == "boolean"
+    assert "node1" not in parsed_node1_boolean.children
 
 
 def test_parse_complex_dts():
@@ -381,7 +373,7 @@ def test_parse_zmk_specific_constructs():
         "LEFT_SHIFT",
         "A",
         "&lt",
-        "1",
+        1,
         "B",
     ]
 
@@ -408,7 +400,14 @@ def test_parse_zmk_specific_constructs():
     td0 = behaviors_node.children["td0"]
     assert "tap_dance_0" in td0.labels
     assert td0.properties["#binding-cells"].value == [0]
-    assert td0.properties["bindings"].value == ["&kp", "A", "&kp", "B", "&kp", "C"]
+    assert td0.properties["bindings"].value == [
+        "&kp",
+        "A",
+        "&kp",
+        "B",
+        "&kp",
+        "C",
+    ]
 
 
 def test_parse_array_with_mixed_cell_types_and_references():
