@@ -3,7 +3,7 @@
 import argparse
 import os
 import sys
-from typing import List
+from typing import List, Optional
 import logging
 import json
 import yaml
@@ -14,7 +14,9 @@ from converter.dts.parser import DtsParser
 from converter.dts.extractor import KeymapExtractor
 
 
-def convert_zmk_to_kanata(zmk_file: str, include_paths: List[str] = None) -> str:
+def convert_zmk_to_kanata(
+    zmk_file: str, include_paths: Optional[List[str]] = None
+) -> str:
     """Convert a ZMK keymap file to Kanata configuration.
 
     Args:
@@ -30,7 +32,9 @@ def convert_zmk_to_kanata(zmk_file: str, include_paths: List[str] = None) -> str
     """
     # Get the default include path from the package
     default_include_path = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "dts", "include"
+        os.path.dirname(os.path.abspath(__file__)),
+        "dts",
+        "include",
     )
 
     # Combine user-provided include paths with the default one
@@ -61,18 +65,22 @@ def convert_zmk_to_kanata(zmk_file: str, include_paths: List[str] = None) -> str
     except FileNotFoundError as e:
         raise FileNotFoundError(f"Input file not found: {zmk_file}") from e
     except Exception as e:
-        # Consider more specific error handling/logging here
         raise ValueError(f"Failed to convert keymap: {str(e)}") from e
 
 
 def main(args=None):
-    """Main entry point for the converter."""
+    """Run the main entry point for the converter."""
     parser = argparse.ArgumentParser(
         description="Convert ZMK keymap files to Kanata configuration"
     )
-    parser.add_argument("input_file", help="Path to the ZMK keymap file")
     parser.add_argument(
-        "-o", "--output", help="Path to the output file (default: stdout)"
+        "input_file",
+        help="Path to the ZMK keymap file",
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        help="Path to the output file (default: stdout)",
     )
     parser.add_argument(
         "-I",
@@ -86,7 +94,7 @@ def main(args=None):
         nargs="?",
         const="-",
         metavar="FILE",
-        help="Dump preprocessed DTS to FILE (or stdout if not specified)",
+        help=("Dump preprocessed DTS to FILE (or stdout if not specified)"),
     )
     parser.add_argument(
         "--dump-ast",
@@ -100,7 +108,10 @@ def main(args=None):
         nargs="?",
         const="-",
         metavar="FILE",
-        help="Dump extracted keymap model as JSON to FILE (or stdout if not specified)",
+        help=(
+            "Dump extracted keymap model as JSON to FILE "
+            "(or stdout if not specified)"
+        ),
     )
     parser.add_argument(
         "--debug",
@@ -140,7 +151,9 @@ def main(args=None):
     try:
         # Get the default include path from the package
         default_include_path = os.path.join(
-            os.path.dirname(os.path.abspath(__file__)), "dts", "include"
+            os.path.dirname(os.path.abspath(__file__)),
+            "dts",
+            "include",
         )
         all_include_paths = [default_include_path]
         if parsed_args.include:
@@ -227,7 +240,10 @@ def main(args=None):
 
     except Exception as e:
         logging.error("Error: %s", str(e))
-        print(f"Error: {str(e)}", file=sys.stderr)
+        print(
+            f"Error: Failed to convert keymap: {str(e)}",
+            file=sys.stderr,
+        )
         return 1  # Return error code
 
 

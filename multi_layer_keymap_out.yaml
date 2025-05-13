@@ -1,0 +1,16 @@
+(defcfg
+  input (kb () () )
+  output (kbd ())
+)
+
+(deflayer default_layer
+  esc 20 */ 26 */ 8 */ 21 */ 23 */ 28 */ 24 */ 12 */ 18 */ 19 */ bspc tab 4 */ 22 */ 7 */ 9 */ 10 */ 11 */ 13 */ 14 */ 15 */ semi sqt lshft 29 */ 27 */ 6 */ 25 */ 5 */ 17 */ 16 */ comma dot fslh rshft lctl lmet lalt (layer 30) spc spc (layer 31) ralt rmet rctl
+)
+
+(deflayer lower_layer
+  grv 1 2 3 4 5 6 7 8 9 0 del _ _ _ _ _ _ left down up right _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+)
+
+(deflayer raise_layer
+  f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+)

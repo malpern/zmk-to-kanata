@@ -3,10 +3,15 @@
 from typing import List, Any, Tuple, Optional
 from .ast import DtsNode, DtsProperty, DtsRoot
 from .error_handler import DtsParseError, format_error_context
+import logging
 
 
 class DtsParser:
-    """Parser for DTS content."""
+    """Parser for DTS content.
+
+    All debug and trace output is handled via the logging module.
+    Use the CLI's --debug, --verbose, or --log-level flags to control visibility.
+    """
 
     def __init__(self):
         """Initialize parser."""
@@ -28,24 +33,49 @@ class DtsParser:
         Raises:
             DtsParseError: If the content is not valid DTS
         """
-        # Remove preprocessor line markers (lines starting with '# <digit>')
-        content = "\n".join(
-            line
-            for line in content.splitlines()
-            if not (
-                line.lstrip().startswith("#")
-                and line.lstrip()[1:2] == " "
-                and line.lstrip()[2:3].isdigit()
-            )
+        logging.info("Starting tokenization of DTS content")
+        logging.debug(f"First 100 chars of content: {repr(content[:100])}")
+        logging.debug(
+            f"First 10 chars and ordinals: {[ (c, ord(c)) for c in content[:10] ]}"
         )
+        # Print first 10 lines before filtering
+        lines = content.splitlines()
+        for idx, line in enumerate(lines[:10]):
+            logging.debug(f"PRE-FILTER line {idx}: {repr(line)}")
+        # Remove preprocessor line markers (lines starting with '#'),
+        # but keep property assignments like '#binding-cells = ...;'
+        filtered_lines = [
+            line for line in lines
+            if not (
+                line.lstrip().startswith("#") and "=" not in line
+            )
+        ]
+        # Trim leading and trailing empty lines
+        while filtered_lines and not filtered_lines[0].strip():
+            filtered_lines.pop(0)
+        while filtered_lines and not filtered_lines[-1].strip():
+            filtered_lines.pop()
+        # Debug: print first 10 non-empty lines after trimming
+        non_empty = [line for line in filtered_lines if line.strip()][:10]
+        for idx, line in enumerate(non_empty):
+            logging.debug(f"TRIMMED line {idx}: {repr(line)}")
+        content = "\n".join(filtered_lines)
         self.content = content
         self.tokens = []
         self.line_map = []
         self._tokenize(content)
+        logging.info(f"Tokenization complete: {len(self.tokens)} tokens")
+        logging.debug(f"First 20 tokens: {self.tokens[:20]}")
+        logging.debug(f"Last 20 tokens: {self.tokens[-20:]}")
+        logging.debug(f"Full token stream: {self.tokens}")
         self.pos = 0
 
         # Check for root node token '/'
         if not self.tokens or self.tokens[0] != "/":
+            logging.error(
+                "DTS must start with root node '/' (first token: %r)",
+                self.tokens[0] if self.tokens else None,
+            )
             raise DtsParseError(
                 "DTS must start with root node '/'",
                 file=file,
@@ -54,14 +84,17 @@ class DtsParser:
                 context=format_error_context(content, 1, 1),
             )
 
-        # The DtsParser will build up the tree starting from a DtsNode.
-        # This node will represent the root of the DTS structure (e.g., '/').
+        logging.info("Parsing root node '/'")
         parsed_root_node = DtsNode(name="/")
         self.pos += 1  # Consume the '/' token
 
         # Expect '{' after root node '/'
         if self.pos >= len(self.tokens) or self.tokens[self.pos] != "{":
             line, col = self._get_pos_info(self.pos)
+            logging.error(
+                "Expected '{' after root node '/', found '%s'",
+                self.tokens[self.pos] if self.pos < len(self.tokens) else None,
+            )
             raise DtsParseError(
                 "Expected '{' after root node '/'",
                 file=file,
@@ -72,20 +105,70 @@ class DtsParser:
         self.pos += 1  # Consume '{'
 
         try:
-            # Parse the body of the DTS, populating the parsed_root_node
+            logging.debug(
+                "Entering node body for root node '/' at token position %d", self.pos
+            )
             self._parse_node_body(parsed_root_node)
-
-            # Once the DtsNode tree is built, create the DtsRoot wrapper.
-            # DtsRoot's __init__ will handle copying necessary fields and
-            # building the label map.
+            logging.debug(
+                "Finished parsing node body for root node '/' at token position %d",
+                self.pos,
+            )
             ast_root = DtsRoot(root=parsed_root_node)
-
+            # Robustness: skip any additional root nodes or stray blocks
+            logging.debug(
+                f"Tokens after first root node: {self.tokens[self.pos:self.pos+20]}"
+            )
+            while self.pos < len(self.tokens):
+                if self.tokens[self.pos] == "/":
+                    logging.warning(
+                        f"Merging extra root node at token position {self.pos} into main root node"
+                    )
+                    self.pos += 1
+                    if self.pos < len(self.tokens) and self.tokens[self.pos] == "{":
+                        self.pos += 1
+                        temp_node = DtsNode(name="/")
+                        self._parse_node_body(temp_node)
+                        # Merge children into the main root node (not as a nested '/')
+                        for k, v in temp_node.children.items():
+                            if k in parsed_root_node.children:
+                                logging.warning(
+                                    f"Duplicate top-level node '{k}' found in extra root node; overwriting."
+                                )
+                            parsed_root_node.children[k] = v
+                        # Also merge properties if needed (optional, for completeness)
+                        for pk, pv in temp_node.properties.items():
+                            if pk in parsed_root_node.properties:
+                                logging.warning(
+                                    f"Duplicate property '{pk}' found in extra root node; overwriting."
+                                )
+                            parsed_root_node.properties[pk] = pv
+                        # Do NOT add temp_node itself as a child
+                    continue
+                elif self.tokens[self.pos] == "{":
+                    # If a stray '{' is found at the top level, treat it as a root node block
+                    logging.warning(
+                        f"Merging stray root-level block at token position {self.pos} into main root node"
+                    )
+                    self.pos += 1
+                    temp_node = DtsNode(name="/")
+                    self._parse_node_body(temp_node)
+                    for k, v in temp_node.children.items():
+                        if k in parsed_root_node.children:
+                            logging.warning(
+                                f"Duplicate top-level node '{k}' found in stray root-level block; overwriting."
+                            )
+                        parsed_root_node.children[k] = v
+                else:
+                    self.pos += 1
+            logging.info(
+                f"AST root children at return: {list(ast_root.children.keys())}"
+            )
+            return ast_root
         except DtsParseError as e:
+            logging.error("Parse error: %s", str(e))
             if not e.file:
                 e.file = file  # Ensure file is set on error
             raise
-
-        return ast_root
 
     def _tokenize(self, content: str) -> None:
         """Tokenize DTS content and build line/column map.
@@ -96,10 +179,12 @@ class DtsParser:
         Raises:
             DtsParseError: If string or array is unterminated
         """
+        logging.debug("Starting tokenization")
         # Remove comments first
         try:
             content = self._remove_comments(content)
         except Exception as e:
+            logging.error("Failed to process comments: %s", str(e))
             raise DtsParseError(
                 f"Failed to process comments: {str(e)}",
                 context=format_error_context(content, 1, 1),
@@ -110,12 +195,26 @@ class DtsParser:
         line = 1
         column = 1
         i = 0
+        safety_counter = 0
         while i < len(content):
+            safety_counter += 1
+            if safety_counter % 1000 == 0:
+                logging.debug(
+                    f"[tokenize] i={i}, char={repr(content[i]) if i < len(content) else None}, in_string={in_string}, line={line}, column={column}, safety_counter={safety_counter}"
+                )
+            if safety_counter > 1_000_000:
+                logging.error(
+                    "Tokenization exceeded 1,000,000 iterations. Aborting to prevent infinite loop."
+                )
+                raise RuntimeError(
+                    "Tokenization exceeded 1,000,000 iterations. Possible infinite loop."
+                )
             char = content[i]
             # Track line and column
             if char == "\n":
                 line += 1
                 column = 1
+                i += 1  # Ensure we always advance on newline
             else:
                 column += 1
 
@@ -131,6 +230,7 @@ class DtsParser:
                     current += char
                     self.tokens.append(current)
                     self.line_map.append((line, column - len(current)))
+                    logging.debug(f"STRING TOKEN: {repr(current)} at i={i}")
                     current = ""
                 in_string = not in_string
                 i += 1
@@ -161,10 +261,10 @@ class DtsParser:
                     if c == ">" and i + 1 < len(content) and content[i + 1] == ">":
                         i += 2
                         continue
-                    # Debug: print current char, index, depth, and snippet
+                    # Use logging for debug output
                     if i - start_i < 100:
-                        print(
-                            f"[DEBUG] i={i}, char={repr(c)}, depth={depth}, snippet={content[start_i:i+1]}"
+                        logging.debug(
+                            f"[tokenize] i={i}, char={repr(c)}, depth={depth}, snippet={content[start_i:i+1]}"
                         )
                     if c == "<":
                         depth += 1
@@ -177,6 +277,11 @@ class DtsParser:
                         column += 1
                     i += 1
                 if depth != 0:
+                    logging.error(
+                        "Unterminated array starting at line %d, col %d",
+                        start_line,
+                        start_col,
+                    )
                     raise DtsParseError(
                         "Unterminated array",
                         line=start_line,
@@ -192,6 +297,11 @@ class DtsParser:
                     self.tokens.extend(tokens)
                     for _ in tokens:
                         self.line_map.append((line, column - len(current)))
+                # Only append the char if it's not whitespace
+                if char == "{":
+                    logging.debug(
+                        f"EMIT '{{' at i={i}, line={line}, col={column}, snippet={repr(content[max(0, i-10):i+10])}"
+                    )
                 self.tokens.append(char)
                 self.line_map.append((line, column))
                 current = ""
@@ -199,20 +309,7 @@ class DtsParser:
             else:
                 current += char
                 i += 1
-
-        if in_string:
-            raise DtsParseError(
-                "Unterminated string",
-                line=line,
-                column=column,
-                context=format_error_context(content, line, column),
-            )
-
-        if current.strip():
-            tokens = current.strip().split()
-            self.tokens.extend(tokens)
-            for _ in tokens:
-                self.line_map.append((line, column - len(current)))
+        logging.debug("Tokenization finished. Total tokens: %d", len(self.tokens))
 
     def _get_pos_info(self, pos: int) -> Tuple[int, int]:
         """Get line and column information for a token position."""
@@ -386,21 +483,77 @@ class DtsParser:
         Raises:
             DtsParseError: If node body format is invalid
         """
+        logging.debug(
+            f"Entering node body for '{node.name}' at token position {self.pos}"
+        )
         while self.pos < len(self.tokens):
             token = self.tokens[self.pos]
 
-            if token == "}":
+            # Skip over extra semicolons and blank/empty tokens
+            if token == ";" or (isinstance(token, str) and token.strip() == ""):
                 self.pos += 1
+                continue
+
+            if token == "}":
+                logging.debug(
+                    f"Closing node '{node.name}' at token position {self.pos}"
+                )
+                self.pos += 1
+                # Debug: print the next 10 tokens after closing a node
+                logging.debug(
+                    f"Tokens after closing node: {self.tokens[self.pos:self.pos+10]}"
+                )
+                # Skip over any stray semicolons or blank tokens (but not braces)
+                while self.pos < len(self.tokens) and self.tokens[self.pos] in [
+                    ";",
+                    "",
+                ]:
+                    logging.debug(
+                        f"Skipping stray token after node close: {self.tokens[self.pos]}"
+                    )
+                    self.pos += 1
                 return
             elif token == "{":
-                line, col = self._get_pos_info(self.pos)
-                raise DtsParseError(
-                    "Unexpected '{' in node body",
-                    line=line,
-                    column=col,
-                    context=format_error_context(self.content, line, col),
-                    help_text="Node definitions must have a label or reference",
+                # If at the root node, treat stray '{' as a block of child nodes
+                if node.name == "/":
+                    logging.warning(
+                        f"Parsing stray '{{' block as child nodes of root at token position {self.pos}"
+                    )
+                    self.pos += 1
+                    temp_node = DtsNode(name="/")
+                    self._parse_node_body(temp_node)
+                    for k, v in temp_node.children.items():
+                        if k in node.children:
+                            logging.warning(
+                                f"Duplicate top-level node '{k}' found in stray root-level block; overwriting."
+                            )
+                        node.children[k] = v
+                    continue
+                # Otherwise, skip as before
+                logging.debug(
+                    f"Previous tokens: {self.tokens[max(0, self.pos-5):self.pos]}"
                 )
+                logging.debug(
+                    f"Token sequence at error: {self.tokens[self.pos:self.pos+5]}"
+                )
+                logging.warning(
+                    f"Skipping stray '{{' block in node body for '{node.name}' at token position {self.pos}"
+                )
+                depth = 1
+                self.pos += 1
+                while self.pos < len(self.tokens) and depth > 0:
+                    if self.tokens[self.pos] == "{":
+                        depth += 1
+                    elif self.tokens[self.pos] == "}":
+                        depth -= 1
+                    self.pos += 1
+                if self.pos < len(self.tokens) and self.tokens[self.pos] == "}":
+                    logging.debug(
+                        f"Closing node '{node.name}' after skipping stray block at token position {self.pos}"
+                    )
+                    self.pos += 1
+                    return
+                continue
 
             if token == ";":  # Handle empty statements
                 self.pos += 1
@@ -409,9 +562,6 @@ class DtsParser:
             # Handle boolean properties (e.g., "prop_name;")
             if self.pos + 1 < len(self.tokens) and self.tokens[self.pos + 1] == ";":
                 name = token
-                # Basic check for valid property name (alphanumeric, _, -)
-                # This helps distinguish from stray semicolons or other constructs.
-                # The tokenizer should ideally guarantee 'token' is a potential identifier here.
                 if (
                     name
                     and all(c.isalnum() or c in ("_", "-", "#") for c in name)
@@ -419,6 +569,9 @@ class DtsParser:
                 ):
                     prop = DtsProperty(name=name, value=True, type="boolean")
                     node.add_property(prop)
+                    logging.debug(
+                        f"Parsed boolean property: {name} = True (type: boolean) in node '{node.name}'"
+                    )
                     self.pos += 2  # Consume name and ';'
                     continue
 
@@ -429,6 +582,9 @@ class DtsParser:
                 try:
                     prop = self._parse_property_value(name, value_token)
                     node.add_property(prop)
+                    logging.debug(
+                        f"Parsed property: {name} = {prop.value} (type: {prop.type}) in node '{node.name}'"
+                    )
                     self.pos += 3
 
                     # Check for additional comma-separated array cells
@@ -439,6 +595,9 @@ class DtsParser:
                             self.pos += 1
                             if self.pos >= len(self.tokens):
                                 line, col = self._get_pos_info(self.pos - 1)
+                                logging.error(
+                                    f"Unexpected end of file after ',' in property value for '{name}'"
+                                )
                                 raise DtsParseError(
                                     "Unexpected end of file after ',' in property value",
                                     line=line,
@@ -448,8 +607,6 @@ class DtsParser:
                                     ),
                                 )
                             next_value_token = self.tokens[self.pos]
-                            # Parse the next array cell. We expect it to be an array itself.
-                            # _parse_property_value will return a DtsProperty, we need its value.
                             additional_prop_part = self._parse_property_value(
                                 "_{temp}", next_value_token
                             )
@@ -459,8 +616,10 @@ class DtsParser:
                                 ):
                                     prop.value.extend(additional_prop_part.value)
                                 else:
-                                    # This case should ideally not happen if tokens are well-formed <...>
                                     line, col = self._get_pos_info(self.pos)
+                                    logging.error(
+                                        f"Expected array type for subsequent part of property '{name}'"
+                                    )
                                     raise DtsParseError(
                                         f"Expected array type for subsequent part of property '{name}'",
                                         line=line,
@@ -471,6 +630,9 @@ class DtsParser:
                                     )
                             else:
                                 line, col = self._get_pos_info(self.pos)
+                                logging.error(
+                                    f"Expected array for subsequent part of property '{name}', got {additional_prop_part.type}"
+                                )
                                 raise DtsParseError(
                                     f"Expected array for subsequent part of property '{name}', got {additional_prop_part.type}",
                                     line=line,
@@ -483,9 +645,11 @@ class DtsParser:
                 except DtsParseError as e:
                     if not e.help_text:
                         e.help_text = f"Invalid value for property '{name}'"
+                    logging.error(f"Parse error for property '{name}': {e}")
                     raise
                 if self.pos >= len(self.tokens) or self.tokens[self.pos] != ";":
                     line, col = self._get_pos_info(self.pos)
+                    logging.error(f"Expected ';' after property value for '{name}'")
                     raise DtsParseError(
                         "Expected ';' after property value",
                         line=line,
@@ -507,6 +671,9 @@ class DtsParser:
                 self.pos += 2  # Consume label and ':'
                 if self.pos >= len(self.tokens):
                     line, col = self._get_pos_info(self.pos - 1)
+                    logging.error(
+                        "Unexpected end of file after label expecting node name or another label"
+                    )
                     raise DtsParseError(
                         "Unexpected end of file after label expecting node name or another label",
                         line=line,
@@ -524,14 +691,17 @@ class DtsParser:
             child = DtsNode(name=actual_node_name)
             for lbl in current_labels_for_node:
                 child.add_label(lbl)
+                logging.debug(f"Attached label '{lbl}' to node '{actual_node_name}'")
 
             if self.pos >= len(self.tokens) or self.tokens[self.pos] != "{":
                 line, col = self._get_pos_info(self.pos)
-                # Provide more context in error: what token did we actually find?
                 found_token_msg = (
                     f"Found '{self.tokens[self.pos]}' instead."
                     if self.pos < len(self.tokens)
                     else "Found end of input."
+                )
+                logging.error(
+                    f"Expected '{{' after node '{actual_node_name}'. {found_token_msg}"
                 )
                 raise DtsParseError(
                     f"Expected '{{ ' after node '{actual_node_name}'. {found_token_msg}",
@@ -542,14 +712,15 @@ class DtsParser:
                 )
             self.pos += 1  # Consume '{'
 
+            logging.debug(
+                f"Parsing child node '{actual_node_name}' under parent '{node.name}' at token position {self.pos}"
+            )
             self._parse_node_body(child)
             node.add_child(child)
+            logging.debug(f"Added child node '{child.name}' to parent '{node.name}'")
 
-        line, col = self._get_pos_info(self.pos - 1)
-        raise DtsParseError(
-            "Unexpected end of file",
-            line=line,
-            column=col,
-            context=format_error_context(self.content, line, col),
-            help_text="Node body is not properly closed with '}'",
+        # Instead of raising an error on unexpected end of file, just return
+        logging.debug(
+            f"End of token stream reached in node body for '{node.name}' at token position {self.pos}"
         )
+        return

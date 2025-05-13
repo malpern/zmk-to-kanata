@@ -68,7 +68,15 @@ def test_transform_binding_optional_params():
 
 def test_transform_behavior_happy_path():
     t = HoldTapTransformer()
-    ht = HoldTap(name="mt", hold_key="LSHIFT", tap_key="A", tapping_term_ms=200, hold_time_ms=250, quick_tap_ms=None, flavor="hold-preferred")
+    ht = HoldTap(
+        name="mt",
+        hold_key="LSHIFT",
+        tap_key="A",
+        tapping_term_ms=200,
+        hold_time_ms=250,
+        quick_tap_ms=None,
+        flavor="hold-preferred",
+    )
     setattr(ht, "tap_hold_wait_ms", None)
     setattr(ht, "require_prior_idle_ms", None)
     alias_def, alias_name = t.transform_behavior(ht, "LSHIFT", "A")
@@ -81,11 +89,19 @@ def test_transform_behavior_happy_path():
 def test_transform_behavior_flavors():
     t = HoldTapTransformer()
     for flavor, kanata in t.flavor_map.items():
-        ht = HoldTap(name="mt", hold_key="LSHIFT", tap_key="A", tapping_term_ms=200, hold_time_ms=250, quick_tap_ms=None, flavor=flavor)
+        ht = HoldTap(
+            name="mt",
+            hold_key="LSHIFT",
+            tap_key="A",
+            tapping_term_ms=200,
+            hold_time_ms=250,
+            quick_tap_ms=None,
+            flavor=flavor,
+        )
         setattr(ht, "tap_hold_wait_ms", None)
         setattr(ht, "require_prior_idle_ms", None)
         alias_def, _ = t.transform_behavior(ht, "LSHIFT", "A")
-        assert alias_def.startswith(f"(defalias ")
+        assert alias_def.startswith("(defalias ")
         assert kanata in alias_def
 
 
@@ -113,7 +129,9 @@ def test_transform_binding_error_no_hold_tap():
     t = HoldTapTransformer()
     b = make_binding()
     # Patch to remove hold_tap
-    b = HoldTapBinding(key=b.key, hold_tap=None, tap=b.tap, hold=b.hold, params=b.params)
+    b = HoldTapBinding(
+        key=b.key, hold_tap=None, tap=b.tap, hold=b.hold, params=b.params
+    )
     with pytest.raises(ValueError):
         t.transform_binding(b)
 
@@ -121,7 +139,9 @@ def test_transform_binding_error_no_hold_tap():
 def test_transform_binding_error_no_hold():
     t = HoldTapTransformer()
     b = make_binding()
-    b = HoldTapBinding(key=b.key, hold_tap=b.hold_tap, tap=b.tap, hold=None, params=b.params)
+    b = HoldTapBinding(
+        key=b.key, hold_tap=b.hold_tap, tap=b.tap, hold=None, params=b.params
+    )
     with pytest.raises(ValueError):
         t.transform_binding(b)
 
@@ -129,6 +149,8 @@ def test_transform_binding_error_no_hold():
 def test_transform_binding_error_no_tap():
     t = HoldTapTransformer()
     b = make_binding()
-    b = HoldTapBinding(key=b.key, hold_tap=b.hold_tap, tap=None, hold=b.hold, params=b.params)
+    b = HoldTapBinding(
+        key=b.key, hold_tap=b.hold_tap, tap=None, hold=b.hold, params=b.params
+    )
     with pytest.raises(ValueError):
         t.transform_binding(b)

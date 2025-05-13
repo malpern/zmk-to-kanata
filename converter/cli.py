@@ -30,41 +30,6 @@ def create_parser() -> argparse.ArgumentParser:
     )
 
     parser.add_argument(
-        "--dump-preprocessed",
-        nargs="?",
-        const=True,
-        help="Output preprocessed DTS to stdout or to the specified file.",
-    )
-    parser.add_argument(
-        "--dump-ast",
-        nargs="?",
-        const=True,
-        help="Output parsed AST (as JSON) to stdout or to the specified file.",
-    )
-    parser.add_argument(
-        "--dump-extracted",
-        nargs="?",
-        const=True,
-        help="Output extracted keymap model (as JSON) to stdout or to the specified file.",
-    )
-    parser.add_argument(
-        "--debug",
-        action="store_true",
-        help="Enable debug logging.",
-    )
-    parser.add_argument(
-        "-v",
-        "--verbose",
-        action="count",
-        default=0,
-        help="Increase verbosity (can be used multiple times)",
-    )
-    parser.add_argument(
-        "--log-level",
-        default=None,
-        help="Set logging level (e.g., info, debug, warning)",
-    )
-    parser.add_argument(
         "--version",
         action="version",
         version=f"%(prog)s {__version__}",
@@ -86,35 +51,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     parser = create_parser()
     args = parser.parse_args(argv)
 
-    # Convert args to a list for the main function, including all flags
-    main_args = []
-    main_args.append(str(args.input_file))
-    main_args.append(str(args.output_file))
-    if args.dump_preprocessed is not None:
-        main_args.append(
-            "--dump-preprocessed"
-            + (
-                f"={args.dump_preprocessed}"
-                if args.dump_preprocessed is not True
-                else ""
-            )
-        )
-    if args.dump_ast is not None:
-        main_args.append(
-            "--dump-ast" + (f"={args.dump_ast}" if args.dump_ast is not True else "")
-        )
-    if args.dump_extracted is not None:
-        main_args.append(
-            "--dump-extracted"
-            + (f"={args.dump_extracted}" if args.dump_extracted is not True else "")
-        )
-    if args.debug:
-        main_args.append("--debug")
-    if args.verbose:
-        main_args.extend(["-v"] * args.verbose)
-    if args.log_level:
-        main_args.append(f"--log-level={args.log_level}")
-
+    # Convert the args to a list for the main function
+    main_args = [str(args.input_file), str(args.output_file)]
     return convert_main(main_args)
 
 

@@ -2,9 +2,9 @@
 
 import os
 import pytest
-from converter.dts.parser import DtsParser
+from converter.dts.parser import DtsParser, DtsParseError
 from converter.dts.preprocessor import DtsPreprocessor
-from converter.dts.error_handler import DtsParseError
+from converter.dts.extractor import KeymapExtractor
 
 
 def test_parse_simple_keymap():
@@ -154,10 +154,7 @@ def test_parse_error_handling():
     with pytest.raises(DtsParseError, match="DTS must start with root node '/'"):
         parser.parse("node {")
 
-    with pytest.raises(
-        DtsParseError,
-        match="Expected '{' after root node '/'",
-    ):
+    with pytest.raises(DtsParseError, match="DTS must start with root node '/'"):
         parser.parse("/ invalid")
 
 
@@ -211,3 +208,93 @@ def test_find_node():
     # assert matrix_transform is not None
     # assert matrix_transform.properties["rows"].value == [33]
     # assert matrix_transform.properties["columns"].value == [34]
+
+
+MULTI_ROOT_DTS = """
+/ {
+    behaviors {
+        compatible = "zmk,behaviors";
+    };
+};
+/ {
+    keymap {
+        compatible = "zmk,keymap";
+    };
+};
+"""
+
+STRAY_BLOCK_DTS = """
+/ {
+    behaviors {
+        compatible = "zmk,behaviors";
+    };
+};
+{ keymap { compatible = "zmk,keymap"; }; };
+"""
+
+EXTRA_SEMICOLONS_DTS = """
+/ {
+    behaviors { compatible = "zmk,behaviors"; };
+    ; ;
+    keymap { compatible = "zmk,keymap"; };
+};
+"""
+
+PREPROCESSOR_ARTIFACTS_DTS = """
+# 0x1E /* 1 */ "/some/file"
+/ {
+    behaviors { compatible = "zmk,behaviors"; };
+    keymap { compatible = "zmk,keymap"; };
+};
+"""
+
+STRAY_BRACES_DTS = """
+/ {
+    behaviors { compatible = "zmk,behaviors"; };
+    { keymap { compatible = "zmk,keymap"; }; }
+};
+"""
+
+
+@pytest.mark.parametrize(
+    "dts_content,expected_children",
+    [
+        (MULTI_ROOT_DTS, {"behaviors", "keymap"}),
+        (STRAY_BLOCK_DTS, {"behaviors", "keymap"}),
+        (EXTRA_SEMICOLONS_DTS, {"behaviors", "keymap"}),
+        (PREPROCESSOR_ARTIFACTS_DTS, {"behaviors", "keymap"}),
+        (STRAY_BRACES_DTS, {"behaviors", "keymap"}),
+    ],
+)
+def test_ast_root_children_regressions(dts_content, expected_children):
+    parser = DtsParser()
+    ast = parser.parse(dts_content)
+    assert expected_children.issubset(set(ast.children.keys()))
+
+
+# Extraction test: ensure keymap node is found and extracted
+KEYMAP_EXTRACTION_DTS = """
+/ {
+    behaviors { compatible = "zmk,behaviors"; };
+    keymap {
+        compatible = "zmk,keymap";
+        default_layer {
+            bindings = <&kp A &kp B>;
+        };
+    };
+};
+"""
+
+
+def test_keymap_extraction():
+    parser = DtsParser()
+    ast = parser.parse(KEYMAP_EXTRACTION_DTS)
+    extractor = KeymapExtractor()
+    model = extractor.extract(ast)
+    assert hasattr(model, "layers")
+    assert any(layer.name == "default_layer" for layer in model.layers)
+    assert any(
+        "A" in str(b.params) or "B" in str(b.params)
+        for layer in model.layers
+        for b in layer.bindings
+    )

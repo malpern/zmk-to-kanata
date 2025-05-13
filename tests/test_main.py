@@ -3,6 +3,7 @@
 import pytest
 import subprocess
 from pathlib import Path
+import os
 
 # Define sample DTS content
 SIMPLE_DTS = """
@@ -76,11 +77,10 @@ def invalid_dts_file(tmp_path: Path) -> Path:
 
 def run_main_script(args: list[str]) -> subprocess.CompletedProcess:
     """Helper function to run the main script via subprocess."""
-    script_path = Path("converter/main.py").resolve()
-    # Ensure the script path is correct relative to the project root
-    # Adjust if necessary based on where pytest is run from
-    command = ["python", str(script_path)] + args
-    return subprocess.run(command, capture_output=True, text=True, check=False)
+    command = ["python", "-m", "converter.main"] + args
+    env = os.environ.copy()
+    env["PYTHONPATH"] = os.getcwd()
+    return subprocess.run(command, capture_output=True, text=True, check=False, env=env)
 
 
 # --- Test Cases ---

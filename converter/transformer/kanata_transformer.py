@@ -112,16 +112,32 @@ class KanataTransformer:
         Returns:
             The Kanata format string for the binding
         """
-        if isinstance(binding, HoldTapBinding):
-            # Get the global tap-hold configuration parameters
-            tap_time = self.config["tapping_term_ms"]
-            hold_time = self.config["quick_tap_ms"]
-            quick_tap_ms = self.config.get("quick_tap_ms")
-            tap_hold_wait_ms = self.config.get("tap_hold_wait_ms")
-            require_prior_idle_ms = self.config.get("require_prior_idle_ms")
-            flavor = self.config.get("tap_hold_flavor")
+        # Map ZMK built-in compatible types to Kanata actions
+        BUILTIN_TYPE_MAP = {
+            "zmk,behavior-transparent": "trans",
+            "zmk,behavior-momentary-layer": "mo",
+            "zmk,behavior-toggle-layer": "to",
+            "zmk,behavior-sticky-layer": "sl",
+            # Add more as needed
+        }
+        # If the behavior type is a known compatible string, map to short type
+        behavior_type = None
+        if binding.behavior:
+            btype = binding.behavior.type
+            if btype in BUILTIN_TYPE_MAP:
+                behavior_type = BUILTIN_TYPE_MAP[btype]
+            else:
+                behavior_type = btype
+        # Get the global tap-hold configuration parameters
+        tap_time = self.config["tapping_term_ms"]
+        hold_time = self.config["quick_tap_ms"]
+        quick_tap_ms = self.config.get("quick_tap_ms")
+        tap_hold_wait_ms = self.config.get("tap_hold_wait_ms")
+        require_prior_idle_ms = self.config.get("require_prior_idle_ms")
+        flavor = self.config.get("tap_hold_flavor")
 
-            # Transform the hold-tap binding with all configuration parameters
+        # Transform the hold-tap binding with all configuration parameters
+        if isinstance(binding, HoldTapBinding):
             return self.holdtap_transformer.transform_binding(
                 binding,
                 tap_time=tap_time,
@@ -131,26 +147,40 @@ class KanataTransformer:
                 require_prior_idle_ms=require_prior_idle_ms,
                 flavor=flavor,
             )
-        elif binding.behavior and binding.behavior.type == "trans":
+        elif behavior_type == "trans":
             return "_"
         elif binding.behavior is None:
+            if not binding.params or len(binding.params) < 1:
+                err_msg = "Binding with no parameters."
+                self.error_manager.add_error(err_msg, context={"binding": str(binding)})
+                return "<missing_param>"
             zmk_key = binding.params[0]
             return self.macro_transformer._convert_key(zmk_key)
-        elif binding.behavior.type == "kp":
+        elif behavior_type == "kp":
+            if not binding.params or len(binding.params) < 1:
+                err_msg = "KP binding with no parameters."
+                self.error_manager.add_error(err_msg, context={"binding": str(binding)})
+                return "<missing_param>"
             zmk_key = binding.params[0]
             return self.macro_transformer._convert_key(zmk_key)
-        elif binding.behavior.type == "trans":
-            return "_"
-        elif binding.behavior.type in ["mo", "to", "tog"]:
+        elif behavior_type in ["mo", "to", "tog"]:
+            if not binding.params or len(binding.params) < 1:
+                err_msg = f"{behavior_type} binding with no layer parameter."
+                self.error_manager.add_error(err_msg, context={"binding": str(binding)})
+                return f"<{behavior_type}_missing_layer>"
             layer_index_or_name = binding.params[0]
             layer_ref = layer_index_or_name
-            if binding.behavior.type == "mo":
+            if behavior_type == "mo":
                 return f"(layer {layer_ref})"
-            elif binding.behavior.type == "to":
+            elif behavior_type == "to":
                 return f"(layer-switch {layer_ref})"
-            elif binding.behavior.type == "tog":
+            elif behavior_type == "tog":
                 return f"(layer-toggle {layer_ref})"
-        elif binding.behavior.type == "mt":
+        elif behavior_type == "mt":
+            if not binding.params or len(binding.params) < 2:
+                err_msg = "MT binding with missing mod/key parameters."
+                self.error_manager.add_error(err_msg, context={"binding": str(binding)})
+                return "<mt_missing_param>"
             mod = self.macro_transformer._convert_key(binding.params[0])
             key = self.macro_transformer._convert_key(binding.params[1])
             alias_name = f"ht_{mod}_{key}"
@@ -160,7 +190,11 @@ class KanataTransformer:
                 err_msg = f"Mod-tap alias '{alias_name}' not defined."
                 self.error_manager.add_error(err_msg, context={"binding": str(binding)})
                 return f"(mt ??? {mod} {key})"
-        elif binding.behavior.type == "lt":
+        elif behavior_type == "lt":
+            if not binding.params or len(binding.params) < 2:
+                err_msg = "LT binding with missing layer/key parameters."
+                self.error_manager.add_error(err_msg, context={"binding": str(binding)})
+                return "<lt_missing_param>"
             layer_index_or_name = binding.params[0]
             key = self.macro_transformer._convert_key(binding.params[1])
             layer_ref = layer_index_or_name
@@ -171,11 +205,13 @@ class KanataTransformer:
                 err_msg = f"Layer-tap alias '{alias_name}' not defined."
                 self.error_manager.add_error(err_msg, context={"binding": str(binding)})
                 return f"(lt ??? {layer_ref} {key})"
-        elif binding.behavior.type == "hold-tap":
-            # Get the hold and tap parameters
+        elif behavior_type == "hold-tap":
+            if not binding.params or len(binding.params) < 2:
+                err_msg = "Hold-tap binding with missing hold/tap parameters."
+                self.error_manager.add_error(err_msg, context={"binding": str(binding)})
+                return "<holdtap_missing_param>"
             hold_param = binding.params[0]
             tap_param = binding.params[1]
-            # Generate alias name based on whether it's layer-tap or mod-tap
             if hold_param.isdigit():
                 alias_name = f"lt_{hold_param}_{tap_param.lower()}"
             else:
@@ -183,28 +219,22 @@ class KanataTransformer:
                     hold_param, hold_param.lower()
                 )
                 alias_name = f"ht_{mod_key}_{tap_param.lower()}"
-            # Return the alias reference
             if alias_name in self.hold_tap_definitions:
                 return f"@{alias_name}"
             else:
                 err_msg = f"Hold-tap alias '{alias_name}' not defined."
                 self.error_manager.add_error(err_msg, context={"binding": str(binding)})
                 return f"<undef_holdtap:{alias_name}>"
-        elif binding.behavior.type == "macro":
+        elif behavior_type == "macro":
             macro_name = binding.behavior.name
-            if macro_name in self.macro_definitions:
-                if len(binding.params) > 0:
-                    macro_params = " ".join(
-                        self.macro_transformer._convert_key(p) for p in binding.params
-                    )
-                    return f"(macro {macro_name} {macro_params})"
-                else:
-                    return f"(macro {macro_name})"
+            if len(binding.params) > 0:
+                macro_params = " ".join(
+                    self.macro_transformer._convert_key(p) for p in binding.params
+                )
+                return f"(macro {macro_name} {macro_params})"
             else:
-                err_msg = f"Macro '{macro_name}' not defined."
-                self.error_manager.add_error(err_msg, context={"binding": str(binding)})
-                return f"<undef_macro:{macro_name}>"
+                return f"(macro {macro_name})"
         else:
-            err_msg = f"Unknown binding type: {binding.behavior.type}"
+            err_msg = f"Unknown binding type: {behavior_type}"
             self.error_manager.add_error(err_msg, context={"binding": str(binding)})
-            return f"<unknown:{binding.behavior.type}>"
+            return f"<unknown:{behavior_type}>"

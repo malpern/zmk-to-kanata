@@ -36,7 +36,7 @@ Kanata Output Generator
 **Key Components:**
 - **DTS Preprocessor:** Integrates with cpp, manages includes, matrix size, error handling
 - **AST Implementation:** DtsNode, DtsProperty, DtsRoot
-- **DTS Parser:** Tokenizes and parses DTS to AST
+- **DTS Parser:** Tokenizes and parses DTS to AST (supports all ZMK property names, including #binding-cells)
 - **Keymap Extractor:** Extracts layers, behaviors, bindings from AST
 - **Behavior Transformers:** Converts ZMK behaviors to Kanata equivalents
 - **Kanata Output Generator:** Produces final Kanata config
@@ -44,7 +44,7 @@ Kanata Output Generator
 ## 3. Current Status (July 2024)
 
 - Codebase is fully green: all tests pass, all linter/style checks pass
-- Robust, cross-platform preprocessor and parser
+- Robust, cross-platform preprocessor and parser (including #binding-cells and all ZMK property names)
 - All core, preprocessor, parser, and main CLI/integration tests pass
 - Error handling and macro expansion are consistent and well-tested
 - Codebase is well-documented, type-hinted, and formatted
@@ -64,47 +64,13 @@ Kanata Output Generator
 
 ## 6. Test Coverage Improvement Plan
 
-To achieve 90%+ test coverage, focus on the following files in order of priority (lowest coverage first):
-
-1. `converter/model/keymap_model.py` (**91% covered, fully tested as of July 2024**)
-   - All model logic, methods, and edge cases are now exercised by unit tests.
-2. `converter/behaviors/hold_tap.py` (**100% covered, fully tested as of July 2024**)
-   - All logic, error handling, and conversion methods are now exercised by unit tests.
-3. `converter/behaviors/unicode.py` (**100% covered, fully tested as of July 2024**)
-   - All logic and conversion methods are now exercised by unit tests.
-4. `converter/transformer/holdtap_transformer.py` (**92% covered, fully tested as of July 2024**)
-   - All main logic, branches, and error cases are now exercised by unit tests.
-5. `converter/transformer/macro_transformer.py` (**48% covered**)
-   - Add tests for macro transformation logic, including edge cases and error handling.
-6. `converter/behaviors/sticky_key.py` (**54% covered**)
-   - Add tests for sticky key behavior logic and error handling.
-7. `converter/models.py` (**51% covered**)
-   - Add tests for all data models and their methods.
-8. `converter/behaviors/macro.py` (**63% covered**)
-   - Add tests for macro behavior logic and conversion.
-9. `converter/transformer/kanata_transformer.py` (**66% covered**)
-   - Add tests for Kanata transformation logic, especially for less common behaviors.
-10. `converter/kanata_converter.py` (**71% covered**)
-    - Add tests for Kanata output generation and error handling.
-11. `converter/error_handling/error_manager.py` (**68% covered**)
-    - Add tests for error manager logic, including all error types and logging.
-12. `converter/dts/error_handler.py` (**73% covered**)
-    - Add tests for DTS error handling, especially for edge cases.
-13. `converter/dts/preprocessor.py` (**77% covered**)
-    - Add tests for preprocessor logic, including all code paths and error handling.
-14. `converter/dts/extractor.py` (**77% covered**)
-    - Add tests for extractor logic, especially for complex keymap structures.
-15. `converter/dts/parser.py` (**83% covered**)
-    - Add tests for parser edge cases and error handling.
-16. `converter/dts/ast.py` (**91% covered**)
-    - Add tests for AST node methods and edge cases.
+To maintain 90%+ test coverage, periodically review coverage reports and add targeted tests for any new or changed code, especially for edge cases and error handling.
 
 **Step-by-step approach:**
-1. Start with `converter/model/keymap_model.py` and work down the list.
-2. For each file, identify untested functions, methods, and branches (see coverage report for missing lines).
-3. Write targeted unit tests to cover missing logic, edge cases, and error handling.
-4. Rerun coverage after each batch of tests to track progress.
-5. Continue until all files are at or above 90% coverage.
+1. For each file, identify untested functions, methods, and branches (see coverage report for missing lines).
+2. Write targeted unit tests to cover missing logic, edge cases, and error handling.
+3. Rerun coverage after each batch of tests to track progress.
+4. Continue until all files are at or above 90% coverage.
 
 ---
 
@@ -114,7 +80,7 @@ To achieve 90%+ test coverage, focus on the following files in order of priority
 
 ## 7. Debugging and Output Flags (Implemented)
 
-Robust debugging and output flags are now fully implemented in the CLI and documented in the README. These provide visibility at each important stage of the conversion pipeline:
+Robust debugging and output flags are fully implemented in the CLI and documented in the README. These provide visibility at each important stage of the conversion pipeline:
 
 ### Key Processing Stages
 - **Preprocessing:** Raw DTS → Preprocessed DTS
@@ -155,3 +121,34 @@ zmk-to-kanata input.dtsi --debug --dump-preprocessed --dump-ast --dump-extracted
 - Use `--debug` or `-v`/`--verbose` for more detailed logs.
 
 ---
+
+## 8. Parser Logging and Visibility
+
+- All parser debug and trace output uses the logging module, controlled by CLI flags.
+- Key parsing steps, errors, and edge cases are logged at appropriate levels.
+- No ad hoc print statements remain; all output is structured and suppressible unless requested.
+- See README for details on enabling debug output.
+
+---
+
+## 9. Real-World ZMK File Coverage
+
+The following real-world ZMK files have been collected and tested:
+
+| File Location                          | Status                |
+|----------------------------------------|-----------------------|
+| examples/basic_keymap.dtsi             | ✅ Successfully tested |
+| examples/advanced_features.dtsi        | ⏳ Collected, not yet tested |
+| examples/multi_layer_keymap.dtsi       | ✅ Successfully tested |
+| examples/complex_keymap.dtsi           | ⏳ Collected, not yet tested |
+| examples/ben_vallack_test.dtsi         | ⏳ Collected, not yet tested |
+| tests/fixtures/real_world/card.keymap  | ⏳ Collected, not yet tested |
+| tests/fixtures/real_world/piano.keymap | ⏳ Collected, not yet tested |
+| tests/fixtures/dts/simple_keymap.zmk   | ⏳ Collected, not yet tested |
+| tests/fixtures/dts/large_keymap.zmk    | ⏳ Collected, not yet tested |
+| tests/fixtures/dts/complex_keymap.zmk  | ⏳ Collected, not yet tested |
+
+- ✅ = Successfully tested end-to-end (parse, extract, convert)
+- ⏳ = Collected, but not yet fully tested
+
+Update this table as more files are tested or added.

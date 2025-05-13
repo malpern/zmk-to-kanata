@@ -12,6 +12,7 @@ from ..models import (
     Combo,
     ConditionalLayer,
 )
+import logging
 
 
 class KeymapExtractor:
@@ -35,6 +36,9 @@ class KeymapExtractor:
         Returns:
             KeymapConfig instance with extracted information
         """
+        logging.info(
+            f"[extract] ast.children.keys() at start: {list(ast.children.keys())}"
+        )
         # Reset state for potentially multiple calls
         self.behaviors = {}
         self.layers = {}
@@ -54,20 +58,89 @@ class KeymapExtractor:
         combos_node = ast.children.get("combos")
         conditional_layers_node = ast.children.get("conditional_layers")
         keymap_node = ast.children.get("keymap")
+        # If not found, check for nested '/' child and look for keymap, behaviors, combos, conditional_layers there
+        if "/" in ast.children:
+            nested_root = ast.children["/"]
+            if isinstance(nested_root, DtsNode):
+                if not keymap_node:
+                    keymap_node = nested_root.children.get("keymap")
+                    if keymap_node:
+                        logging.info(
+                            "Found keymap node under nested '/' child of root."
+                        )
+                if not behaviors_node:
+                    behaviors_node = nested_root.children.get("behaviors")
+                    if behaviors_node:
+                        logging.info(
+                            "Found behaviors node under nested '/' child of root."
+                        )
+                if not combos_node:
+                    combos_node = nested_root.children.get("combos")
+                    if combos_node:
+                        logging.info(
+                            "Found combos node under nested '/' child of root."
+                        )
+                if not conditional_layers_node:
+                    conditional_layers_node = nested_root.children.get(
+                        "conditional_layers"
+                    )
+                    if conditional_layers_node:
+                        logging.info(
+                            "Found conditional_layers node under nested '/' child of root."
+                        )
+        else:
+            if keymap_node:
+                logging.info("Found keymap node directly under root.")
+            if behaviors_node:
+                logging.info("Found behaviors node directly under root.")
+            if combos_node:
+                logging.info("Found combos node directly under root.")
+            if conditional_layers_node:
+                logging.info("Found conditional_layers node directly under root.")
 
-        # Pass 1: Extract behaviors, combos, conditional layers
-        # (deferring nested parsing for behaviors)
+        # Merge behaviors, combos, and conditional_layers from both root and nested '/' if both exist
+        behaviors_nodes = []
+        combos_nodes = []
+        conditional_layers_nodes = []
         if behaviors_node:
-            self._extract_behaviors_pass1(behaviors_node)
-
+            behaviors_nodes.append(behaviors_node)
+        if "/" in ast.children:
+            nested_root = ast.children["/"]
+            if isinstance(nested_root, DtsNode):
+                nested_behaviors = nested_root.children.get("behaviors")
+                if nested_behaviors and nested_behaviors is not behaviors_node:
+                    behaviors_nodes.append(nested_behaviors)
         if combos_node:
-            # Combos might reference behaviors, but definition is simple.
-            # Parse them after pass 1.
-            self._extract_combos(combos_node)
-
+            combos_nodes.append(combos_node)
+        if "/" in ast.children:
+            nested_root = ast.children["/"]
+            if isinstance(nested_root, DtsNode):
+                nested_combos = nested_root.children.get("combos")
+                if nested_combos and nested_combos is not combos_node:
+                    combos_nodes.append(nested_combos)
         if conditional_layers_node:
-            # Simple definitions, parse after pass 1.
-            self._extract_conditional_layers(conditional_layers_node)
+            conditional_layers_nodes.append(conditional_layers_node)
+        if "/" in ast.children:
+            nested_root = ast.children["/"]
+            if isinstance(nested_root, DtsNode):
+                nested_conditional_layers = nested_root.children.get(
+                    "conditional_layers"
+                )
+                if (
+                    nested_conditional_layers
+                    and nested_conditional_layers is not conditional_layers_node
+                ):
+                    conditional_layers_nodes.append(nested_conditional_layers)
+        # Extract all behaviors, combos, conditional_layers, with nested '/' taking precedence
+        for node in behaviors_nodes:
+            self._extract_behaviors_pass1(node)
+        logging.debug(
+            f"[extract] behaviors keys after extraction: {list(self.behaviors.keys())}"
+        )
+        for node in combos_nodes:
+            self._extract_combos(node)
+        for node in conditional_layers_nodes:
+            self._extract_conditional_layers(node)
 
         # Pass 2: Process deferred behavior details (like macro bindings)
         self._extract_behaviors_pass2()
@@ -78,6 +151,9 @@ class KeymapExtractor:
         else:
             print("Warning: No 'keymap' node found under root '/'.")
 
+        logging.info(
+            f"[extract] ast.children.keys() before layers: {list(ast.children.keys())}"
+        )
         # Create and return keymap config
         return KeymapConfig(
             layers=list(self.layers.values()),
@@ -115,7 +191,10 @@ class KeymapExtractor:
                 elif compatible == "zmk,behavior-unicode-string":
                     behavior_object = Behavior(name="", type="unicode_string")
                     behavior_type = "unicode_string"
-                # Add other behavior types here...
+                else:
+                    # Register all other behaviors as generic
+                    behavior_object = Behavior(name="", type=compatible)
+                    behavior_type = compatible
 
                 if behavior_object:
                     # Use the first label found as the primary key
@@ -325,6 +404,12 @@ class KeymapExtractor:
         if not isinstance(value, list):
             raise ValueError("Invalid binding value type, expected list")
 
+        # Built-in ZMK behaviors that may not be defined in user config
+        BUILTIN_BEHAVIORS = {
+            "trans": "zmk,behavior-transparent",
+            "none": "zmk,behavior-none",
+        }
+
         bindings = []
         i = 0
         while i < len(value):
@@ -336,16 +421,24 @@ class KeymapExtractor:
                 num_params_expected = 0
 
                 # Determine expected parameters
-                if behavior_name == "kp":
+                if behavior_name in ("kp", "mo", "to", "sl"):
                     num_params_expected = 1
                 elif behavior_name in self.behaviors:
                     b_type = getattr(self.behaviors[behavior_name], "type", None)
                     if b_type == "hold-tap":
                         num_params_expected = 2
                     elif b_type == "macro":
-                        # Macros take 0 params directly in binding list
                         num_params_expected = 0
-                    # Add other known behaviors here...
+                # Add other known behaviors here...
+
+                # If not found, check for built-in and register if needed
+                if (
+                    behavior_name not in self.behaviors
+                    and behavior_name in BUILTIN_BEHAVIORS
+                ):
+                    self.behaviors[behavior_name] = Behavior(
+                        name=behavior_name, type=BUILTIN_BEHAVIORS[behavior_name]
+                    )
 
                 # Consume expected parameters
                 param_start_index = i + 1
@@ -354,22 +447,24 @@ class KeymapExtractor:
                 for j in range(param_start_index, param_end_index):
                     next_token = value[j]
                     if isinstance(next_token, str) and next_token.startswith("&"):
-                        # Found start of next behavior, stop consuming params
                         break
                     params.append(str(next_token))
                     actual_params_consumed += 1
 
-                # Create binding
                 bindings.append(self._create_binding([behavior_name] + params))
                 i += 1 + actual_params_consumed
             else:
-                # Treat as simple key binding (e.g., 'A')
                 bindings.append(self._create_binding(str(token)))
                 i += 1
         return bindings
 
     def _create_binding(self, value: str | List[str]) -> Binding:
         """Create a binding instance from a value."""
+        # NOTE: Parameterless 'mo' (and similar) is valid only in the context of a behavior
+        # definition (e.g., in a behavior's 'bindings' property), not in a keymap binding.
+        # If a parameterless 'mo' is created in a keymap binding, this likely indicates a
+        # malformed keymap or a bug in the extractor. All real-world keymap bindings should
+        # provide a parameter for 'mo' (e.g., '&mo 1').
         if isinstance(value, list):
             # Handle list format [behavior_name, param1, ...]
             if not value:
