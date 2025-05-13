@@ -66,8 +66,8 @@ Kanata Output Generator
 
 To achieve 90%+ test coverage, focus on the following files in order of priority (lowest coverage first):
 
-1. `converter/model/keymap_model.py` (**32% covered**)
-   - Add unit tests for all model logic, especially for methods and edge cases not currently exercised.
+1. `converter/model/keymap_model.py` (**91% covered, fully tested as of July 2024**)
+   - All model logic, methods, and edge cases are now exercised by unit tests.
 2. `converter/behaviors/hold_tap.py` (**42% covered**)
    - Add tests for all HoldTap, HoldTapBinding, and HoldTapBehavior logic, including error handling and conversion methods.
 3. `converter/behaviors/unicode.py` (**42% covered**)

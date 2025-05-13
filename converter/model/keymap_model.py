@@ -143,10 +143,22 @@ class KeyMapping:
     def to_kanata(self) -> str:
         """Convert the key mapping to Kanata format."""
         if self.hold_tap:
-            # Use the alias we created for this hold-tap binding
+            # Generate alias for HoldTapBinding or HoldTap
             if hasattr(self.hold_tap, "name"):
                 binding_id = (
                     f"{self.hold_tap.name}_"
+                    f"{self.hold_tap.hold}_"
+                    f"{self.hold_tap.tap}"
+                )
+                return f"@{binding_id}"
+            elif (
+                hasattr(self.hold_tap, "hold_tap")
+                and hasattr(self.hold_tap.hold_tap, "name")
+                and hasattr(self.hold_tap, "hold")
+                and hasattr(self.hold_tap, "tap")
+            ):
+                binding_id = (
+                    f"{self.hold_tap.hold_tap.name}_"
                     f"{self.hold_tap.hold}_"
                     f"{self.hold_tap.tap}"
                 )
