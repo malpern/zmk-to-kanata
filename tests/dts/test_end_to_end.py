@@ -105,7 +105,9 @@ def test_complex_keymap_with_behaviors():
     # Verify basic structure
     assert isinstance(config, KeymapConfig)
     assert len(config.layers) == 2
-    assert len(config.behaviors) == 3
+    assert "mt" in config.behaviors
+    assert "macro_a" in config.behaviors
+    assert "lt" in config.behaviors
 
     # Verify behaviors
     mt = next(b for b in config.behaviors.values() if b.name == "mt")
@@ -118,8 +120,7 @@ def test_complex_keymap_with_behaviors():
 
     macro = next(b for b in config.behaviors.values() if b.name == "macro_a")
     assert isinstance(macro, Behavior)
-    assert isinstance(macro.bindings, list)
-    assert all(isinstance(b, str) for b in macro.bindings)
+    assert all(isinstance(b, Binding) for b in macro.bindings)
 
     # Verify default layer
     default_layer_node = next(
@@ -191,7 +192,8 @@ def test_keymap_with_unicode():
     config = extractor.extract(ast)
 
     # Verify behaviors
-    assert len(config.behaviors) == 2
+    assert "unicode" in config.behaviors
+    assert "uc_string" in config.behaviors
 
     unicode = next(b for b in config.behaviors.values() if b.name == "unicode")
     assert isinstance(unicode, Behavior)
@@ -327,35 +329,29 @@ def test_keymap_with_conditional_layers():
                 then-layer = <3>;
             };
         };
-        
         keymap {
             compatible = "zmk,keymap";
-            
             default_layer {
                 bindings = <&kp A &kp B>;
             };
-            
             lower_layer {
                 bindings = <&kp N1 &kp N2>;
             };
-            
             raise_layer {
                 bindings = <&kp F1 &kp F2>;
             };
-            
             adjust_layer {
                 bindings = <&reset &bootloader>;
             };
         };
     };
     """
-
     # Parse and extract
     parser = DtsParser()
     ast = parser.parse(content)
-
     extractor = KeymapExtractor()
-    with pytest.raises(
-        ValueError, match="Unknown behavior referenced during binding creation"
-    ):
-        extractor.extract(ast)
+    config = extractor.extract(ast)
+    # Assert that 'reset' and 'bootloader' behaviors are present
+    behavior_names = [b.name for b in config.behaviors.values()]
+    assert "reset" in behavior_names
+    assert "bootloader" in behavior_names

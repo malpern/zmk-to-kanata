@@ -224,9 +224,8 @@ class KeymapExtractor:
             if isinstance(behavior, MacroBehavior):
                 bindings_prop = node.properties.get("bindings")
                 if bindings_prop and bindings_prop.type == "array":
-                    # For macro behaviors, store the raw string tokens (not Binding objects)
-                    # and ensure all are strings for macro transformer compatibility.
-                    behavior.bindings = [str(x) for x in bindings_prop.value]
+                    # For macro behaviors, parse as Bindings, not just strings
+                    behavior.bindings = self._parse_bindings(bindings_prop.value)
                 else:
                     print(
                         f"Warning: Macro behavior '{behavior_key}' missing "
@@ -406,8 +405,24 @@ class KeymapExtractor:
 
         # Built-in ZMK behaviors that may not be defined in user config
         BUILTIN_BEHAVIORS = {
+            # Key behaviors
+            "kp": "zmk,behavior-key-press",
+            "mt": "zmk,behavior-mod-tap",
+            "lt": "zmk,behavior-layer-tap",
+            "mo": "zmk,behavior-momentary-layer",
+            "to": "zmk,behavior-toggle-layer",
+            "sl": "zmk,behavior-sticky-layer",
+            "sk": "zmk,behavior-sticky-key",
+            "td": "zmk,behavior-tap-dance",
+            "bt": "zmk,behavior-bluetooth",
+            "mkp": "zmk,behavior-mouse-key-press",
             "trans": "zmk,behavior-transparent",
             "none": "zmk,behavior-none",
+            "reset": "zmk,behavior-reset",
+            "bootloader": "zmk,behavior-bootloader",
+            "unicode": "zmk,behavior-unicode",
+            "unicode_string": "zmk,behavior-unicode-string",
+            # Add more as needed
         }
 
         bindings = []
@@ -421,7 +436,7 @@ class KeymapExtractor:
                 num_params_expected = 0
 
                 # Determine expected parameters
-                if behavior_name in ("kp", "mo", "to", "sl"):
+                if behavior_name in ("kp", "mo", "to", "sl", "sk", "td", "bt", "mkp"):
                     num_params_expected = 1
                 elif behavior_name in self.behaviors:
                     b_type = getattr(self.behaviors[behavior_name], "type", None)
@@ -431,13 +446,16 @@ class KeymapExtractor:
                         num_params_expected = 0
                 # Add other known behaviors here...
 
-                # If not found, check for built-in and register if needed
-                if (
-                    behavior_name not in self.behaviors
-                    and behavior_name in BUILTIN_BEHAVIORS
-                ):
-                    self.behaviors[behavior_name] = Behavior(
-                        name=behavior_name, type=BUILTIN_BEHAVIORS[behavior_name]
+                # When resolving a binding, only allow behaviors explicitly defined by the user
+                def get_or_create_behavior(name, type_str):
+                    if name in self.behaviors:
+                        return self.behaviors[name]
+                    if name in BUILTIN_BEHAVIORS:
+                        b = Behavior(name=name, type=BUILTIN_BEHAVIORS[name])
+                        self.behaviors[name] = b
+                        return b
+                    raise ValueError(
+                        f"Unknown behavior referenced during binding creation: {name}"
                     )
 
                 # Consume expected parameters
@@ -451,7 +469,9 @@ class KeymapExtractor:
                     params.append(str(next_token))
                     actual_params_consumed += 1
 
-                bindings.append(self._create_binding([behavior_name] + params))
+                behavior = get_or_create_behavior(behavior_name, behavior_name)
+                if behavior:
+                    bindings.append(self._create_binding([behavior_name] + params))
                 i += 1 + actual_params_consumed
             else:
                 bindings.append(self._create_binding(str(token)))

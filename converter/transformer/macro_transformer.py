@@ -133,56 +133,61 @@ class MacroTransformer:
         while i < len(behavior.bindings):
             binding = behavior.bindings[i]
 
-            # Handle mode changes
-            if binding == "&macro_tap":
-                current_mode = MacroActivationMode.TAP
-                i += 1
-                continue
-            elif binding == "&macro_press":
-                current_mode = MacroActivationMode.PRESS
-                i += 1
-                continue
-            elif binding == "&macro_release":
-                current_mode = MacroActivationMode.RELEASE
-                i += 1
-                continue
-
-            # Handle wait times
-            elif binding.startswith("&macro_wait_time "):
-                wait_time = binding.split(" ")[1]
-                macro_def += f"  delay {wait_time}\n"
-                i += 1
-                continue
-
-            # Extract the key from the binding string
-            if binding.startswith("&kp "):
-                key = binding[4:]
-                kanata_key = self._convert_key(key)
-
-                # Special case for the first key after &macro_press
-                # In ZMK, this is the modifier key that should be pressed
-                if current_mode == MacroActivationMode.PRESS and key in [
-                    "LSHIFT",
-                    "RSHIFT",
-                    "LCTRL",
-                    "RCTRL",
-                    "LALT",
-                    "RALT",
-                    "LGUI",
-                    "RGUI",
-                ]:
-                    pressed_keys.add(kanata_key)
-                    macro_def += f"  press {kanata_key}\n"
-                # For other keys in PRESS mode, we tap them
-                elif current_mode == MacroActivationMode.PRESS:
-                    macro_def += f"  tap {kanata_key}\n"
-                elif current_mode == MacroActivationMode.TAP:
-                    macro_def += f"  tap {kanata_key}\n"
-                elif current_mode == MacroActivationMode.RELEASE:
-                    if kanata_key in pressed_keys:
-                        pressed_keys.remove(kanata_key)
-                    macro_def += f"  release {kanata_key}\n"
-
+            # Handle macro control actions
+            if isinstance(binding, str):
+                if binding == "&macro_tap":
+                    current_mode = MacroActivationMode.TAP
+                    i += 1
+                    continue
+                elif binding == "&macro_press":
+                    current_mode = MacroActivationMode.PRESS
+                    i += 1
+                    continue
+                elif binding == "&macro_release":
+                    current_mode = MacroActivationMode.RELEASE
+                    i += 1
+                    continue
+                elif binding.startswith("&macro_wait_time "):
+                    # Extract wait time
+                    wait_time = binding.split(" ", 1)[1]
+                    macro_def += f"  (wait {wait_time})\n"
+                    i += 1
+                    continue
+                # Extract the key from the binding string
+                if binding.startswith("&kp "):
+                    key = binding.split(" ", 1)[1]
+                    macro_def += f"  ({current_mode.value} {key})\n"
+                    i += 1
+                    continue
+            elif hasattr(binding, "behavior") and binding.behavior:
+                bname = binding.behavior.name
+                if bname == "macro_tap":
+                    current_mode = MacroActivationMode.TAP
+                    i += 1
+                    continue
+                elif bname == "macro_press":
+                    current_mode = MacroActivationMode.PRESS
+                    i += 1
+                    continue
+                elif bname == "macro_release":
+                    current_mode = MacroActivationMode.RELEASE
+                    i += 1
+                    continue
+                elif bname == "macro_wait_time":
+                    # Wait time is in params[0]
+                    if binding.params and len(binding.params) > 0:
+                        wait_time = binding.params[0]
+                        macro_def += f"  (wait {wait_time})\n"
+                    i += 1
+                    continue
+                elif bname == "kp":
+                    # Key press
+                    if binding.params and len(binding.params) > 0:
+                        key = binding.params[0]
+                        macro_def += f"  ({current_mode.value} {key})\n"
+                    i += 1
+                    continue
+            # If binding is not recognized, skip
             i += 1
 
         # Make sure all pressed keys are released at the end of the macro

@@ -12,6 +12,7 @@ from converter.transformer.kanata_transformer import KanataTransformer
 from converter.dts.preprocessor import DtsPreprocessor
 from converter.dts.parser import DtsParser
 from converter.dts.extractor import KeymapExtractor
+from converter.models import KeymapConfig
 
 
 def convert_zmk_to_kanata(
@@ -57,6 +58,14 @@ def convert_zmk_to_kanata(
 
         # Extract keymap configuration
         keymap_config = extractor.extract(ast)
+
+        # Debug: Assert type
+        if not isinstance(keymap_config, KeymapConfig):
+            print(
+                f"[ERROR] Extractor returned type: {type(keymap_config)} value: {repr(keymap_config)}",
+                file=sys.stderr,
+            )
+            raise TypeError("extractor.extract(ast) did not return KeymapConfig")
 
         # Transform to Kanata format
         # Directly return the transformed output
@@ -194,8 +203,16 @@ def main(args=None):
         # Extract keymap configuration
         logging.info("Extracting keymap configuration from AST")
         keymap_config = extractor.extract(ast)
+        # Debug: Assert type
+        if not isinstance(keymap_config, KeymapConfig):
+            print(
+                f"[ERROR] Extractor returned type: {type(keymap_config)} value: {repr(keymap_config)}",
+                file=sys.stderr,
+            )
+            raise TypeError("extractor.extract(ast) did not return KeymapConfig")
         if parsed_args.dump_extracted is not None:
             out = parsed_args.dump_extracted
+            extracted_dict = None
             # Try YAML, fallback to JSON
             try:
                 extracted_dict = (
@@ -212,13 +229,18 @@ def main(args=None):
                 logging.info("Extracted keymap model dumped to %s (YAML)", out)
             except Exception as e:
                 logging.warning("Failed to dump extracted model as YAML: %s", e)
-                extracted_json = json.dumps(extracted_dict, indent=2)
-                if out == "-":
-                    print(extracted_json)
+                if extracted_dict is not None:
+                    extracted_json = json.dumps(extracted_dict, indent=2)
+                    if out == "-":
+                        print(extracted_json)
+                    else:
+                        with open(out, "w") as f:
+                            f.write(extracted_json)
+                    logging.info("Extracted keymap model dumped to %s (JSON)", out)
                 else:
-                    with open(out, "w") as f:
-                        f.write(extracted_json)
-                logging.info("Extracted keymap model dumped to %s (JSON)", out)
+                    print(
+                        f"Error: Could not dump extracted model: {e}", file=sys.stderr
+                    )
 
         # Transform to Kanata format
         logging.info("Transforming keymap to Kanata format")

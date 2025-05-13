@@ -144,7 +144,7 @@ The following real-world ZMK files have been collected and tested:
 | examples/ben_vallack_test.dtsi         | ⏳ Collected, not yet tested |
 | tests/fixtures/real_world/card.keymap  | ⏳ Collected, not yet tested |
 | tests/fixtures/real_world/piano.keymap | ⏳ Collected, not yet tested |
-| tests/fixtures/dts/simple_keymap.zmk   | ⏳ Collected, not yet tested |
+| tests/fixtures/dts/simple_keymap.zmk   | ✅ Successfully tested |
 | tests/fixtures/dts/large_keymap.zmk    | ⏳ Collected, not yet tested |
 | tests/fixtures/dts/complex_keymap.zmk  | ⏳ Collected, not yet tested |
 

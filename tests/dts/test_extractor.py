@@ -57,7 +57,8 @@ def test_extract_with_behaviors():
     extractor = KeymapExtractor()
     config = extractor.extract(ast)
 
-    assert len(config.behaviors) == 2
+    assert "mt" in config.behaviors
+    assert "macro" in config.behaviors
     assert any(isinstance(b, HoldTap) for b in config.behaviors.values())
     assert any(isinstance(b, MacroBehavior) for b in config.behaviors.values())
 
@@ -65,12 +66,13 @@ def test_extract_with_behaviors():
     assert mt.tapping_term_ms == 200
 
     macro = next(b for b in config.behaviors.values() if isinstance(b, MacroBehavior))
-    assert macro.bindings == ["&kp", "A", "&kp", "B"]
+    assert all(isinstance(b, Binding) for b in macro.bindings)
+    assert [b.params for b in macro.bindings] == [["A"], ["B"]]
 
-    # Macro behavior should have a list of string bindings
+    # Macro behavior should have a list of Binding objects
     macro = next(b for b in config.behaviors.values() if b.name == "macro")
     assert isinstance(macro.bindings, list)
-    assert all(isinstance(b, str) for b in macro.bindings)
+    assert all(isinstance(b, Binding) for b in macro.bindings)
 
 
 def test_extract_multiple_layers():

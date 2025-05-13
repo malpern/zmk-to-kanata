@@ -12,6 +12,8 @@ from converter.dts.extractor import KeymapExtractor
 from .holdtap_transformer import HoldTapTransformer
 from .macro_transformer import MacroTransformer
 
+import logging
+
 
 class KanataTransformer:
     """Transforms ZMK keymap configurations to Kanata format."""
@@ -64,12 +66,13 @@ class KanataTransformer:
                             if binding and binding.behavior == behavior:
                                 hold_param = binding.params[0]
                                 tap_param = binding.params[1]
-                                alias_def, alias_name = (
-                                    self.holdtap_transformer.transform_behavior(
-                                        behavior,
-                                        hold_param,
-                                        tap_param,
-                                    )
+                                (
+                                    alias_def,
+                                    alias_name,
+                                ) = self.holdtap_transformer.transform_behavior(
+                                    behavior,
+                                    hold_param,
+                                    tap_param,
                                 )
                                 if alias_name not in self.hold_tap_definitions:
                                     self.hold_tap_definitions[alias_name] = alias_def
@@ -93,8 +96,14 @@ class KanataTransformer:
         """Transform a single layer into Kanata format."""
         layer_name = layer.name if layer.name else f"layer{layer.index}"
         self.current_layer_name = layer_name
+        logging.debug(
+            f"[KanataTransformer] Transforming layer: {layer_name} "
+            f"with {len(layer.bindings)} bindings"
+        )
         self.output.append(f"(deflayer {layer_name}")
 
+        for idx, binding in enumerate(layer.bindings):
+            logging.debug(f"[KanataTransformer]   Binding {idx}: {binding}")
         bindings_str = " ".join(
             self._transform_binding(binding) if binding else "_"
             for binding in layer.bindings
@@ -112,6 +121,7 @@ class KanataTransformer:
         Returns:
             The Kanata format string for the binding
         """
+        logging.debug(f"[KanataTransformer]     Transforming binding: {binding}")
         # Map ZMK built-in compatible types to Kanata actions
         BUILTIN_TYPE_MAP = {
             "zmk,behavior-transparent": "trans",

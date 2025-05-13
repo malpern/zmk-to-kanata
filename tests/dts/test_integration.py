@@ -75,14 +75,16 @@ def test_full_pipeline_with_behaviors():
     # Verify results
     assert isinstance(config, KeymapConfig)
     assert len(config.layers) == 1
-    assert len(config.behaviors) == 2
+    assert "mt" in config.behaviors
+    assert "macro" in config.behaviors
 
     # Check behaviors
     mt = next(b for b in config.behaviors.values() if b.name == "mt")
     macro = next(b for b in config.behaviors.values() if b.name == "macro")
     assert mt.tapping_term_ms == 200
     assert isinstance(macro.bindings, list)
-    assert all(isinstance(b, str) for b in macro.bindings)
+    assert all(isinstance(b, Binding) for b in macro.bindings)
+    assert [b.params for b in macro.bindings] == [["A"], ["B"]]
 
     # Check layer bindings
     layer = config.layers[0]
@@ -179,7 +181,8 @@ def test_full_pipeline_complex_bindings():
     # Verify results
     assert isinstance(config, KeymapConfig)
     assert len(config.layers) == 1
-    assert len(config.behaviors) == 2
+    assert "mt" in config.behaviors
+    assert "lt" in config.behaviors
 
     # Check behaviors
     mt = next(b for b in config.behaviors.values() if b.name == "mt")

@@ -28,6 +28,12 @@ class Binding:
 
     def to_dict(self) -> dict:
         """Return a serializable dictionary representation of this binding."""
+        # Debug: Assert behavior is None or Behavior
+        if self.behavior is not None and not hasattr(self.behavior, "to_dict"):
+            print(
+                f"[ERROR] Binding.behavior is not a Behavior: {type(self.behavior)} value: {repr(self.behavior)}"
+            )
+            assert False, "Binding.behavior must be None or Behavior"
         return {
             "behavior": self.behavior.to_dict() if self.behavior else None,
             "params": list(self.params),
@@ -310,6 +316,13 @@ class MacroBehavior(Behavior):
 
     def to_dict(self) -> dict:
         """Return a serializable dictionary representation of this macro behavior."""
+        # Debug: Assert all bindings are Binding
+        for b in self.bindings:
+            if not hasattr(b, "to_dict"):
+                print(
+                    f"[ERROR] MacroBehavior.bindings contains non-Binding: {type(b)} value: {repr(b)}"
+                )
+                assert False, "MacroBehavior.bindings must be Binding instances"
         return {
             "name": self.name,
             "type": self.type,
@@ -327,6 +340,13 @@ class Layer:
 
     def to_dict(self) -> dict:
         """Return a serializable dictionary representation of this layer."""
+        # Debug: Assert all bindings are Binding
+        for b in self.bindings:
+            if not hasattr(b, "to_dict"):
+                print(
+                    f"[ERROR] Layer.bindings contains non-Binding: {type(b)} value: {repr(b)}"
+                )
+                assert False, "Layer.bindings must be Binding instances"
         return {
             "name": self.name,
             "bindings": [b.to_dict() for b in self.bindings],
@@ -345,6 +365,12 @@ class Combo:
 
     def to_dict(self) -> dict:
         """Return a serializable dictionary representation of this combo."""
+        # Debug: Assert binding is Binding
+        if not hasattr(self.binding, "to_dict"):
+            print(
+                f"[ERROR] Combo.binding is not a Binding: {type(self.binding)} value: {repr(self.binding)}"
+            )
+            assert False, "Combo.binding must be a Binding instance"
         return {
             "name": self.name,
             "timeout_ms": self.timeout_ms,
@@ -363,6 +389,18 @@ class ConditionalLayer:
 
     def to_dict(self) -> dict:
         """Return a serializable dictionary representation of this conditional layer."""
+        # Debug: Assert all if_layers are int, then_layer is int
+        for if_layer in self.if_layers:
+            if not isinstance(if_layer, int):
+                print(
+                    f"[ERROR] ConditionalLayer.if_layers contains non-int: {type(if_layer)} value: {repr(if_layer)}"
+                )
+                assert False, "ConditionalLayer.if_layers must be int"
+        if not isinstance(self.then_layer, int):
+            print(
+                f"[ERROR] ConditionalLayer.then_layer is not int: {type(self.then_layer)} value: {repr(self.then_layer)}"
+            )
+            assert False, "ConditionalLayer.then_layer must be int"
         return {
             "name": self.name,
             "if_layers": list(self.if_layers),
@@ -381,6 +419,33 @@ class KeymapConfig:
 
     def to_dict(self) -> dict:
         """Return a serializable dictionary representation of the keymap config."""
+        # Debug: Assert all layers are Layer, behaviors are Behavior, combos are Combo, conditional_layers are ConditionalLayer
+        for layer in self.layers:
+            if not hasattr(layer, "to_dict"):
+                print(
+                    f"[ERROR] KeymapConfig.layers contains non-Layer: {type(layer)} value: {repr(layer)}"
+                )
+                assert False, "KeymapConfig.layers must be Layer"
+        for k, v in self.behaviors.items():
+            if not hasattr(v, "to_dict"):
+                print(
+                    f"[ERROR] KeymapConfig.behaviors['{k}'] is not a Behavior: {type(v)} value: {repr(v)}"
+                )
+                assert False, "KeymapConfig.behaviors values must be Behavior instances"
+        for c in self.combos:
+            if not hasattr(c, "to_dict"):
+                print(
+                    f"[ERROR] KeymapConfig.combos contains non-Combo: {type(c)} value: {repr(c)}"
+                )
+                assert False, "KeymapConfig.combos must be Combo instances"
+        for cl in self.conditional_layers:
+            if not hasattr(cl, "to_dict"):
+                print(
+                    f"[ERROR] KeymapConfig.conditional_layers contains non-ConditionalLayer: {type(cl)} value: {repr(cl)}"
+                )
+                assert (
+                    False
+                ), "KeymapConfig.conditional_layers must be ConditionalLayer instances"
         return {
             "layers": [layer.to_dict() for layer in self.layers],
             "behaviors": {k: v.to_dict() for k, v in self.behaviors.items()},

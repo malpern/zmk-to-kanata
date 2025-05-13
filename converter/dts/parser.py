@@ -45,10 +45,9 @@ class DtsParser:
         # Remove preprocessor line markers (lines starting with '#'),
         # but keep property assignments like '#binding-cells = ...;'
         filtered_lines = [
-            line for line in lines
-            if not (
-                line.lstrip().startswith("#") and "=" not in line
-            )
+            line
+            for line in lines
+            if not (line.lstrip().startswith("#") and "=" not in line)
         ]
         # Trim leading and trailing empty lines
         while filtered_lines and not filtered_lines[0].strip():
