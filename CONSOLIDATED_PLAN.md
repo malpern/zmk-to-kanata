@@ -72,8 +72,8 @@ To achieve 90%+ test coverage, focus on the following files in order of priority
    - All logic, error handling, and conversion methods are now exercised by unit tests.
 3. `converter/behaviors/unicode.py` (**100% covered, fully tested as of July 2024**)
    - All logic and conversion methods are now exercised by unit tests.
-4. `converter/transformer/holdtap_transformer.py` (**38% covered**)
-   - Add tests for hold-tap transformation logic, including all branches and error cases.
+4. `converter/transformer/holdtap_transformer.py` (**92% covered, fully tested as of July 2024**)
+   - All main logic, branches, and error cases are now exercised by unit tests.
 5. `converter/transformer/macro_transformer.py` (**48% covered**)
    - Add tests for macro transformation logic, including edge cases and error handling.
 6. `converter/behaviors/sticky_key.py` (**54% covered**)
