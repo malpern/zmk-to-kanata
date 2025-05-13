@@ -19,6 +19,14 @@ class DtsProperty:
     value: Union[str, List[str], int, List[int], bool]
     type: str  # "string", "integer", "reference", "boolean", "array"
 
+    def to_dict(self) -> dict:
+        """Return a serializable dictionary representation of this property."""
+        return {
+            "name": self.name,
+            "type": self.type,
+            "value": self.value,
+        }
+
 
 @dataclass
 class DtsNode:
@@ -79,6 +87,18 @@ class DtsNode:
 
         return current
 
+    def to_dict(self) -> dict:
+        """Return a serializable dictionary representation of this node and its subtree.
+
+        The parent reference is omitted to avoid recursion cycles.
+        """
+        return {
+            "name": self.name,
+            "properties": {k: v.to_dict() for k, v in self.properties.items()},
+            "children": {k: v.to_dict() for k, v in self.children.items()},
+            "labels": dict(self.labels),
+        }
+
 
 @dataclass
 class DtsRoot(DtsNode):
@@ -126,3 +146,11 @@ class DtsRoot(DtsNode):
             return None
         label = ref[1:]  # Remove the & prefix
         return self.label_to_node.get(label)
+
+    def to_dict(self) -> dict:
+        """Return a serializable dictionary representation of the root node and its subtree.
+
+        The label_to_node mapping is omitted by default to avoid redundancy and cycles.
+        """
+        # Use DtsNode's to_dict for the main tree structure
+        return super().to_dict()
