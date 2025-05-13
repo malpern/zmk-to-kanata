@@ -48,6 +48,12 @@ zmk-to-kanata input.zmk -o output.kbd
 
 # With custom include paths (optional)
 zmk-to-kanata input.zmk -o output.kbd -I /path/to/includes
+
+# Debugging: dump preprocessed DTS to stdout
+zmk-to-kanata input.zmk --dump-preprocessed
+
+# Dump AST to a file and enable debug logging
+zmk-to-kanata input.zmk --dump-ast ast.json --debug
 ```
 
 ### Python API
@@ -65,6 +71,39 @@ kanata_config = convert_zmk_to_kanata(
 with open("output.kbd", "w") as f:
     f.write(kanata_config)
 ```
+
+## Debugging and Output Flags
+
+The converter provides robust debugging and output flags to aid in troubleshooting and development. These allow you to inspect intermediate representations at each stage of the conversion pipeline.
+
+| Flag                        | Description                                                      |
+|-----------------------------|------------------------------------------------------------------|
+| `--dump-preprocessed [FILE]`| Output preprocessed DTS to stdout or FILE                         |
+| `--dump-ast [FILE]`         | Output parsed AST (as JSON) to stdout or FILE                     |
+| `--dump-extracted [FILE]`   | Output extracted keymap model (as YAML/JSON) to stdout or FILE    |
+| `--debug`                   | Print debug logs at all stages (uses logging)                    |
+| `-v`, `--verbose`           | Increase verbosity (can be used multiple times)                   |
+| `--log-level LEVEL`         | Set logging level (`info`, `debug`, `warning`, etc.)              |
+
+**Examples:**
+
+```bash
+# See preprocessed DTS
+zmk-to-kanata input.zmk --dump-preprocessed
+
+# Save AST to a file
+zmk-to-kanata input.zmk --dump-ast ast.json
+
+# See extracted model in YAML
+zmk-to-kanata input.zmk --dump-extracted
+
+# Full debug logs and all intermediate outputs
+zmk-to-kanata input.zmk --debug --dump-preprocessed --dump-ast --dump-extracted
+```
+
+- If a FILE is not specified, output is sent to stdout.
+- You can combine multiple dump flags to inspect all stages.
+- Use `--debug` or `-v`/`--verbose` for more detailed logs.
 
 ## Supported Features
 

@@ -112,9 +112,9 @@ To achieve 90%+ test coverage, focus on the following files in order of priority
 - The codebase is stable, robust, and fully green (v1.0.0)
 - Ready for broader use and future development
 
-## 7. Debugging and Output Flags Plan
+## 7. Debugging and Output Flags (Implemented)
 
-To aid in diagnosing parsing and processing bugs, the following plan will be implemented to provide robust visibility at each important stage of the conversion pipeline:
+Robust debugging and output flags are now fully implemented in the CLI and documented in the README. These provide visibility at each important stage of the conversion pipeline:
 
 ### Key Processing Stages
 - **Preprocessing:** Raw DTS → Preprocessed DTS
@@ -122,52 +122,36 @@ To aid in diagnosing parsing and processing bugs, the following plan will be imp
 - **Extraction:** AST → Keymap Model (Python dataclasses)
 - **Transformation/Output:** Keymap Model → Kanata YAML
 
-### Proposed CLI Flags
+### Available CLI Flags
 | Flag                        | Description                                                      |
 |-----------------------------|------------------------------------------------------------------|
 | `--dump-preprocessed [FILE]`| Output preprocessed DTS to stdout or FILE                         |
-| `--dump-ast [FILE]`         | Output parsed AST (as JSON/YAML) to stdout or FILE               |
-| `--dump-extracted [FILE]`   | Output extracted keymap model (as JSON/YAML) to stdout or FILE   |
-| `--debug`                   | Print debug logs at all stages (uses logging, not just print)    |
-| `-v`, `--verbose`           | Increase verbosity (can be cumulative: `-vv` for more detail)    |
-| `--log-level LEVEL`         | Set logging level (`info`, `debug`, `warning`, etc.)             |
-
-### Implementation Steps
-1. **CLI Argument Parsing:**
-   - Add the above flags using `argparse` or `click`.
-   - Allow optional file arguments for dump flags (default to stdout).
-2. **Logging:**
-   - Replace ad hoc `print` statements with Python's `logging` module.
-   - Set log level based on `--debug`, `--verbose`, or `--log-level`.
-3. **Dumping Intermediate Outputs:**
-   - After each stage, if the corresponding flag is set, output the result.
-   - Support both stdout and file output.
-4. **Error Handling:**
-   - On failure, print/log a clear error and, if possible, dump the last successful intermediate result.
-5. **Documentation:**
-   - Update `README.md` and `CONTRIBUTING.md` to document the new flags and their usage.
+| `--dump-ast [FILE]`         | Output parsed AST (as JSON) to stdout or FILE                     |
+| `--dump-extracted [FILE]`   | Output extracted keymap model (as YAML/JSON) to stdout or FILE    |
+| `--debug`                   | Print debug logs at all stages (uses logging)                    |
+| `-v`, `--verbose`           | Increase verbosity (can be used multiple times)                   |
+| `--log-level LEVEL`         | Set logging level (`info`, `debug`, `warning`, etc.)              |
 
 ### Example CLI Usage
 ```
 # Just convert, no extra output
-python3 -m converter.main input.dtsi -o output.yaml
+zmk-to-kanata input.dtsi -o output.yaml
 
 # See preprocessed DTS
-python3 -m converter.main input.dtsi -o output.yaml --dump-preprocessed
+zmk-to-kanata input.dtsi --dump-preprocessed
 
 # Save AST to a file
-python3 -m converter.main input.dtsi -o output.yaml --dump-ast ast.json
+zmk-to-kanata input.dtsi --dump-ast ast.json
 
 # See extracted model in YAML
-python3 -m converter.main input.dtsi -o output.yaml --dump-extracted
+zmk-to-kanata input.dtsi --dump-extracted
 
 # Full debug logs and all intermediate outputs
-python3 -m converter.main input.dtsi -o output.yaml --debug --dump-preprocessed --dump-ast --dump-extracted
+zmk-to-kanata input.dtsi --debug --dump-preprocessed --dump-ast --dump-extracted
 ```
 
-### Optional Advanced Features
-- Allow multiple dump flags at once.
-- Support output formats: `--dump-ast-format json|yaml`.
-- Allow logging to a file: `--log-file debug.log`.
+- If a FILE is not specified, output is sent to stdout.
+- You can combine multiple dump flags to inspect all stages.
+- Use `--debug` or `-v`/`--verbose` for more detailed logs.
 
 ---
