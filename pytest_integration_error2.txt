@@ -1,0 +1,49 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.10.16, pytest-8.3.4, pluggy-1.5.0 -- /Users/malpern/.pyenv/versions/3.10.16/bin/python3.10
+cachedir: .pytest_cache
+rootdir: /Volumes/FlashGordon/Dropbox/code/nicktokatana
+configfile: pyproject.toml
+plugins: anyio-4.7.0
+collecting ... collected 5 items
+
+tests/dts/test_integration.py::test_full_pipeline_simple_keymap PASSED   [ 20%]
+tests/dts/test_integration.py::test_full_pipeline_with_behaviors PASSED  [ 40%]
+tests/dts/test_integration.py::test_full_pipeline_multiple_layers PASSED [ 60%]
+tests/dts/test_integration.py::test_full_pipeline_complex_bindings PASSED [ 80%]
+tests/dts/test_integration.py::test_full_pipeline_error_handling FAILED  [100%]
+
+=================================== FAILURES ===================================
+______________________ test_full_pipeline_error_handling _______________________
+
+    def test_full_pipeline_error_handling():
+        """Test error handling in the full pipeline."""
+        # Test missing root node
+        content = "node1 { };"
+        parser = DtsParser()
+        with pytest.raises(DtsParseError, match="DTS must start with root node"):
+            parser.parse(content)
+    
+        # Test invalid property assignment
+        content = """
+        / {
+            node1 {
+                prop1 = value1
+            };
+        };
+        """
+        with pytest.raises(DtsParseError, match="Invalid property value"):
+            parser.parse(content)
+    
+        # Test invalid node
+        content = """
+        / {
+            node1;
+        };
+        """
+>       with pytest.raises(DtsParseError, match="Invalid node declaration"):
+E       Failed: DID NOT RAISE <class 'converter.dts.error_handler.DtsParseError'>
+
+tests/dts/test_integration.py:232: Failed
+=========================== short test summary info ============================
+FAILED tests/dts/test_integration.py::test_full_pipeline_error_handling - Fai...
+========================= 1 failed, 4 passed in 0.02s ==========================

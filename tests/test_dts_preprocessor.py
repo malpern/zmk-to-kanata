@@ -56,13 +56,13 @@ def test_preprocessor_large_matrix():
 
 
 def test_preprocessor_error_handling():
-    # Test with non-existent file
-    preprocessor = DtsPreprocessor(include_paths=["/nonexistent/path"])
+    # Test with non-existent include path (should raise on creation)
+    with pytest.raises(PreprocessorError):
+        DtsPreprocessor(include_paths=["/nonexistent/path"])
+
+    # Test with non-existent file (should raise on preprocess)
+    fixtures_dir = os.path.join(os.path.dirname(__file__), "fixtures", "dts")
+    include_path = os.path.join(fixtures_dir, "include")
+    preprocessor = DtsPreprocessor(include_paths=[include_path])
     with pytest.raises(PreprocessorError):
         preprocessor.preprocess("nonexistent_file.zmk")
-
-    # Test with invalid include path
-    with pytest.raises(PreprocessorError):
-        DtsPreprocessor(include_paths=["/nonexistent/path"]).preprocess(
-            "tests/fixtures/dts/simple_keymap.zmk"
-        )

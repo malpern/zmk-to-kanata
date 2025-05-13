@@ -1,0 +1,22 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.10.16, pytest-8.3.4, pluggy-1.5.0 -- /Users/malpern/.pyenv/versions/3.10.16/bin/python3.10
+cachedir: .pytest_cache
+rootdir: /Volumes/FlashGordon/Dropbox/code/nicktokatana
+configfile: pyproject.toml
+plugins: anyio-4.7.0
+collecting ... collected 0 items / 1 error
+
+==================================== ERRORS ====================================
+________________ ERROR collecting tests/dts/test_integration.py ________________
+ImportError while importing test module '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/dts/test_integration.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+tests/dts/test_integration.py:4: in <module>
+    from converter.dts.parser import DtsParser
+E   ModuleNotFoundError: No module named 'converter'
+=========================== short test summary info ============================
+ERROR tests/dts/test_integration.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+=============================== 1 error in 0.05s ===============================

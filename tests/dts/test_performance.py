@@ -26,7 +26,11 @@ def sample_keymap_path():
 
 def test_preprocessor_performance(sample_keymap_path):
     """Test the performance of the preprocessor."""
-    preprocessor = DtsPreprocessor()
+    preprocessor = DtsPreprocessor(
+        include_paths=[
+            str(Path(__file__).parent.parent / "fixtures" / "dts" / "include")
+        ]
+    )
 
     # Run multiple times to get stable measurements
     times = []
@@ -49,7 +53,11 @@ def test_preprocessor_performance(sample_keymap_path):
 
 def test_parser_performance(sample_keymap_path):
     """Test the performance of the parser."""
-    preprocessor = DtsPreprocessor()
+    preprocessor = DtsPreprocessor(
+        include_paths=[
+            str(Path(__file__).parent.parent / "fixtures" / "dts" / "include")
+        ]
+    )
     parser = DtsParser()
 
     # Preprocess once
@@ -76,7 +84,11 @@ def test_parser_performance(sample_keymap_path):
 
 def test_extractor_performance(sample_keymap_path):
     """Test the performance of the extractor."""
-    preprocessor = DtsPreprocessor()
+    preprocessor = DtsPreprocessor(
+        include_paths=[
+            str(Path(__file__).parent.parent / "fixtures" / "dts" / "include")
+        ]
+    )
     parser = DtsParser()
     extractor = KeymapExtractor()
 
@@ -105,7 +117,11 @@ def test_extractor_performance(sample_keymap_path):
 
 def test_full_pipeline_performance(sample_keymap_path):
     """Test the performance of the full conversion pipeline."""
-    preprocessor = DtsPreprocessor()
+    preprocessor = DtsPreprocessor(
+        include_paths=[
+            str(Path(__file__).parent.parent / "fixtures" / "dts" / "include")
+        ]
+    )
     parser = DtsParser()
     extractor = KeymapExtractor()
     transformer = KanataTransformer()

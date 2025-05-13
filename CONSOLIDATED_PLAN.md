@@ -2,22 +2,17 @@
 
 ## 1. Overview and Goals
 
-The ZMK to Kanata Converter is a tool designed to convert ZMK keymap files (using DTS - Device Tree Source) into the Kanata configuration format.
+The ZMK to Kanata Converter is a tool to convert ZMK keymap files (DTS) into Kanata configuration format.
 
 **Key Goals:**
-- Robust parsing of ZMK keymap files, including complex DTS structures.
-- Support for a comprehensive set of ZMK features:
-    - Basic keymap structures and layers
-    - Advanced behaviors: Hold-tap, layer switching, sticky keys, macros
-    - Transparent keys
+- Robust parsing of ZMK keymap files, including complex DTS structures
+- Support for a comprehensive set of ZMK features (layers, advanced behaviors, macros, transparent keys)
 - Matrix layout handling, including automatic size detection
 - Minimal external dependencies
 - Clean, readable Kanata output
 - CLI and Python API
 
 ## 2. Architecture
-
-The pipeline:
 
 ```
 Input ZMK File (.zmk/.dts)
@@ -48,34 +43,33 @@ Kanata Output Generator
 
 ## 3. Current Status (July 2024)
 
-### What is Stable
 - Core extraction, parsing, and transformation logic is robust and in sync with the test suite
-- All major test and linter issues (iteration over behaviors, error handling, boolean property handling, linter/style) have been fixed
-- All core, preprocessor, parser, and main CLI/integration tests now pass (including error handling)
+- All major linter and style issues are fixed (Black, Ruff, line length)
 - Preprocessor is robust and cross-platform, using the canonical kernel solution for .dts files
-- Codebase is well-documented, type-hinted, and formatted (Black, Ruff)
+- All core, preprocessor, parser, and main CLI/integration tests pass
+- Error handling and macro expansion are consistent and well-tested
+- Codebase is well-documented, type-hinted, and formatted
 
-### What Remains for Full Stability
+## 4. Remaining Work
+
 - **Performance tests:**
-    - Some performance/benchmark tests depend on cpp and may fail if the environment is not set up
+    - Some performance/benchmark tests depend on cpp and may require environment setup
     - Action: Set up environment or mark these as expected failures if not critical
 - **Documentation:**
-    - Update and complete documentation for preprocessor configuration, troubleshooting, and platform-specific setup
-    - Action: Add/expand docs as needed
+    - Finalize and polish documentation for preprocessor configuration, troubleshooting, and platform-specific setup
 
-## 4. Next Steps (Actionable)
+## 5. Next Steps
 
-1. **Performance test environment:**
-    - Set up or skip/mark as expected fail if not critical
-2. **Documentation:**
-    - Finalize setup, troubleshooting, and usage docs
+1. Set up or skip/mark as expected fail any performance/benchmark tests that depend on environment quirks
+2. Finalize and polish documentation (setup, troubleshooting, usage)
+3. Rerun the full test suite after any changes
 
-## 5. Code Quality and Development Guidelines
-- Use Black and Ruff for formatting/linting (enforced)
-- Keep lines ≤ 79 characters
-- Use type hints and docstrings throughout
-- Maintain high test coverage for all new features and bug fixes
-  - Document error conditions and solutions
+---
+
+**Summary:**
+- The codebase is stable and green for all core and integration features
+- Remaining work: performance test environment (optional) and documentation polish
+- The project is robust and ready for broader use
 
 ## 6. macOS cpp/Preprocessor Issue: Resolution
 
@@ -91,13 +85,6 @@ Kanata Output Generator
 - [x] Align error handling tests to expect PreprocessorError where appropriate.
 - [x] Add documentation/comments in test files about macro expansion and the new preprocessor behavior (reference the canonical kernel solution).
 - [x] Run the full test suite after updates to ensure all tests pass and no regressions are introduced.
-
----
-
-**Summary:**
-- The codebase is now stable and green for all core and integration features.
-- Remaining work: performance test environment and documentation polish.
-- The project is robust and ready for broader use.
 
 ## 8. Final Test and Codebase Update Plan (July 2024)
 

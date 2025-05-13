@@ -194,21 +194,32 @@ class HoldTap(Behavior):
         self,
         name: str,
         tapping_term_ms: int,
+        hold_time_ms: Optional[int] = None,
         quick_tap_ms: Optional[int] = None,
         flavor: Optional[str] = None,
+        tap_hold_wait_ms: Optional[int] = None,
+        require_prior_idle_ms: Optional[int] = None,
     ):
         """Initialize a hold-tap behavior.
 
         Args:
             name: Name of the behavior
             tapping_term_ms: Tap timeout in milliseconds
+            hold_time_ms: Hold timeout in milliseconds (defaults to tapping_term_ms)
             quick_tap_ms: Optional quick tap timeout in milliseconds
             flavor: Optional hold-tap flavor (e.g. 'tap-preferred')
+            tap_hold_wait_ms: Optional tap-hold wait time in ms
+            require_prior_idle_ms: Optional prior idle time in ms
         """
         super().__init__(name=name, type="hold-tap")
         self.tapping_term_ms = tapping_term_ms
+        self.hold_time_ms = (
+            hold_time_ms if hold_time_ms is not None else tapping_term_ms
+        )
         self.quick_tap_ms = quick_tap_ms
         self.flavor = flavor
+        self.tap_hold_wait_ms = tap_hold_wait_ms
+        self.require_prior_idle_ms = require_prior_idle_ms
 
 
 @dataclass

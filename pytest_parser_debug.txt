@@ -1,0 +1,101 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.10.16, pytest-8.3.4, pluggy-1.5.0 -- /Users/malpern/.pyenv/versions/3.10.16/bin/python3.10
+cachedir: .pytest_cache
+rootdir: /Volumes/FlashGordon/Dropbox/code/nicktokatana
+configfile: pyproject.toml
+plugins: anyio-4.7.0
+collecting ... collected 13 items
+
+tests/dts/test_parser.py::test_parse_simple_dts PASSED                   [  7%]
+tests/dts/test_parser.py::test_parse_with_labels PASSED                  [ 15%]
+tests/dts/test_parser.py::test_parse_with_references PASSED              [ 23%]
+tests/dts/test_parser.py::test_parse_error_handling PASSED               [ 30%]
+tests/dts/test_parser.py::test_parse_complex_dts PASSED                  [ 38%]
+tests/dts/test_parser.py::test_parse_nested_nodes PASSED                 [ 46%]
+tests/dts/test_parser.py::test_parse_multiple_labels PASSED              [ 53%]
+tests/dts/test_parser.py::test_parse_complex_arrays PASSED               [ 61%]
+tests/dts/test_parser.py::test_parse_boolean_properties PASSED           [ 69%]
+tests/dts/test_parser.py::test_parse_empty_nodes_and_properties PASSED   [ 76%]
+tests/dts/test_parser.py::test_parse_comments PASSED                     [ 84%]
+tests/dts/test_parser.py::test_parse_zmk_specific_constructs FAILED      [ 92%]
+tests/dts/test_parser.py::test_parse_array_with_mixed_cell_types_and_references PASSED [100%]
+
+=================================== FAILURES ===================================
+______________________ test_parse_zmk_specific_constructs ______________________
+
+    def test_parse_zmk_specific_constructs():
+        """Test parsing ZMK-specific DTS constructs."""
+        content = """
+        / {
+            layer_0 { // Node names can have underscores
+                bindings = <&kp A &mt LEFT_SHIFT A &lt 1 B>;
+            };
+            keymap {
+                 compatible = "zmk,keymap";
+                 layer-1 { // Node names can have hyphens
+                     bindings = <&kp C>;
+                     sensor-bindings = <&scroll_up &scroll_down>;
+                 };
+            };
+            behaviors {
+                hm: hold_mod {
+                    compatible = "zmk,behavior-hold-tap";
+                    #binding-cells = <2>; // Special property
+                    tapping-term-ms = <200>;
+                    bindings = <&kp>, <&kp>; // Array of cells
+                };
+                tap_dance_0: td0 {
+                     compatible = "zmk,behavior-tap-dance";
+                     #binding-cells = <0>;
+                     tapping-term-ms = <200>;
+                     bindings = <&kp A>, <&kp B>, <&kp C>;
+                };
+            };
+        };
+        """
+        parser = DtsParser()
+        ast = parser.parse(content)
+    
+        # Check layer_0
+        layer_0 = ast.children["layer_0"]
+        assert layer_0.properties["bindings"].value == [
+            "&kp",
+            "A",
+            "&mt",
+            "LEFT_SHIFT",
+            "A",
+            "&lt",
+            1,
+            "B",
+        ]
+    
+        # Check keymap and layer-1
+        keymap_node = ast.children["keymap"]
+        layer_1 = keymap_node.children["layer-1"]
+        assert layer_1.properties["bindings"].value == ["&kp", "C"]
+        assert layer_1.properties["sensor-bindings"].value == ["&scroll_up", "&scroll_down"]
+    
+        # Check behaviors
+        behaviors_node = ast.children["behaviors"]
+        hm = behaviors_node.children["hold_mod"]
+        assert "hm" in hm.labels
+        assert hm.properties["compatible"].value == "zmk,behavior-hold-tap"
+>       assert hm.properties["#binding-cells"].value == [2]  # Parsed as array
+E       KeyError: '#binding-cells'
+
+tests/dts/test_parser.py:391: KeyError
+----------------------------- Captured stdout call -----------------------------
+DEBUG TOKENS: ['/', '{', 'layer_0', '{', 'bindings', '=', '<&kp A &mt LEFT_SHIFT A &lt 1 B>', ';', '}', ';', 'keymap', '{', 'compatible', '=', '"zmk,keymap"', ';', 'layer-1', '{', 'bindings', '=', '<&kp C>', ';', 'sensor-bindings', '=', '<&scroll_up &scroll_down>', ';', '}', ';', '}', ';', 'behaviors', '{', 'hm', ':', 'hold_mod', '{', 'compatible', '=', '"zmk,behavior-hold-tap"', ';', 'tapping-term-ms', '=', '<200>', ';', 'bindings', '=', '<&kp>', ',', '<&kp>', ';', '}', ';', 'tap_dance_0', ':', 'td0', '{', 'compatible', '=', '"zmk,behavior-tap-dance"', ';', 'tapping-term-ms', '=', '<200>', ';', 'bindings', '=', '<&kp A>', ',', '<&kp B>', ',', '<&kp C>', ';', '}', ';', '}', ';', '}', ';']
+DEBUG: Adding property: bindings = ['&kp', 'A', '&mt', 'LEFT_SHIFT', 'A', '&lt', 1, 'B'] (type=array)
+DEBUG: Adding property: compatible = zmk,keymap (type=string)
+DEBUG: Adding property: bindings = ['&kp', 'C'] (type=array)
+DEBUG: Adding property: sensor-bindings = ['&scroll_up', '&scroll_down'] (type=array)
+DEBUG: Adding property: compatible = zmk,behavior-hold-tap (type=string)
+DEBUG: Adding property: tapping-term-ms = [200] (type=array)
+DEBUG: Adding property: bindings = ['&kp'] (type=array)
+DEBUG: Adding property: compatible = zmk,behavior-tap-dance (type=string)
+DEBUG: Adding property: tapping-term-ms = [200] (type=array)
+DEBUG: Adding property: bindings = ['&kp', 'A'] (type=array)
+=========================== short test summary info ============================
+FAILED tests/dts/test_parser.py::test_parse_zmk_specific_constructs - KeyErro...
+========================= 1 failed, 12 passed in 0.02s =========================

@@ -1,0 +1,99 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.10.16, pytest-8.3.4, pluggy-1.5.0 -- /Users/malpern/.pyenv/versions/3.10.16/bin/python3.10
+cachedir: .pytest_cache
+rootdir: /Volumes/FlashGordon/Dropbox/code/nicktokatana
+configfile: pyproject.toml
+plugins: anyio-4.7.0
+collecting ... collected 5 items
+
+tests/dts/test_extractor.py::test_extract_simple_keymap PASSED           [ 20%]
+tests/dts/test_extractor.py::test_extract_with_behaviors FAILED          [ 40%]
+tests/dts/test_extractor.py::test_extract_multiple_layers PASSED         [ 60%]
+tests/dts/test_extractor.py::test_extract_complex_bindings PASSED        [ 80%]
+tests/dts/test_extractor.py::test_extract_invalid_content PASSED         [100%]
+
+=================================== FAILURES ===================================
+_________________________ test_extract_with_behaviors __________________________
+
+    def test_extract_with_behaviors():
+        """Test extracting keymap with behaviors."""
+        content = """
+        / {
+            behaviors {
+                mt: mod_tap {
+                    compatible = "zmk,behavior-hold-tap";
+                    tapping-term-ms = <200>;
+                };
+                macro: macro {
+                    compatible = "zmk,behavior-macro";
+                    bindings = <&kp A &kp B>;
+                };
+            };
+            keymap {
+                default_layer {
+                    bindings = <&mt LSHIFT A &macro>;
+                };
+            };
+        };
+        """
+    
+        parser = DtsParser()
+        ast = parser.parse(content)
+        extractor = KeymapExtractor()
+        config = extractor.extract(ast)
+    
+        assert len(config.behaviors) == 2
+        assert any(isinstance(b, HoldTap) for b in config.behaviors.values())
+        assert any(isinstance(b, MacroBehavior) for b in config.behaviors.values())
+    
+        mt = next(b for b in config.behaviors.values() if isinstance(b, HoldTap))
+        assert mt.tapping_term_ms == 200
+    
+        macro = next(b for b in config.behaviors.values() if isinstance(b, MacroBehavior))
+>       assert len(macro.bindings) == 2
+E       AssertionError: assert 4 == 2
+E        +  where 4 = len(['&kp', 'A', '&kp', 'B'])
+E        +    where ['&kp', 'A', '&kp', 'B'] = MacroBehavior(name='macro', type='macro').bindings
+
+tests/dts/test_extractor.py:68: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[DEBUG] i=144, char='2', depth=1, snippet=<2
+[DEBUG] i=145, char='0', depth=1, snippet=<20
+[DEBUG] i=146, char='0', depth=1, snippet=<200
+[DEBUG] i=147, char='>', depth=1, snippet=<200>
+[DEBUG] i=271, char='&', depth=1, snippet=<&
+[DEBUG] i=272, char='k', depth=1, snippet=<&k
+[DEBUG] i=273, char='p', depth=1, snippet=<&kp
+[DEBUG] i=274, char=' ', depth=1, snippet=<&kp 
+[DEBUG] i=275, char='A', depth=1, snippet=<&kp A
+[DEBUG] i=276, char=' ', depth=1, snippet=<&kp A 
+[DEBUG] i=277, char='&', depth=1, snippet=<&kp A &
+[DEBUG] i=278, char='k', depth=1, snippet=<&kp A &k
+[DEBUG] i=279, char='p', depth=1, snippet=<&kp A &kp
+[DEBUG] i=280, char=' ', depth=1, snippet=<&kp A &kp 
+[DEBUG] i=281, char='B', depth=1, snippet=<&kp A &kp B
+[DEBUG] i=282, char='>', depth=1, snippet=<&kp A &kp B>
+[DEBUG] i=384, char='&', depth=1, snippet=<&
+[DEBUG] i=385, char='m', depth=1, snippet=<&m
+[DEBUG] i=386, char='t', depth=1, snippet=<&mt
+[DEBUG] i=387, char=' ', depth=1, snippet=<&mt 
+[DEBUG] i=388, char='L', depth=1, snippet=<&mt L
+[DEBUG] i=389, char='S', depth=1, snippet=<&mt LS
+[DEBUG] i=390, char='H', depth=1, snippet=<&mt LSH
+[DEBUG] i=391, char='I', depth=1, snippet=<&mt LSHI
+[DEBUG] i=392, char='F', depth=1, snippet=<&mt LSHIF
+[DEBUG] i=393, char='T', depth=1, snippet=<&mt LSHIFT
+[DEBUG] i=394, char=' ', depth=1, snippet=<&mt LSHIFT 
+[DEBUG] i=395, char='A', depth=1, snippet=<&mt LSHIFT A
+[DEBUG] i=396, char=' ', depth=1, snippet=<&mt LSHIFT A 
+[DEBUG] i=397, char='&', depth=1, snippet=<&mt LSHIFT A &
+[DEBUG] i=398, char='m', depth=1, snippet=<&mt LSHIFT A &m
+[DEBUG] i=399, char='a', depth=1, snippet=<&mt LSHIFT A &ma
+[DEBUG] i=400, char='c', depth=1, snippet=<&mt LSHIFT A &mac
+[DEBUG] i=401, char='r', depth=1, snippet=<&mt LSHIFT A &macr
+[DEBUG] i=402, char='o', depth=1, snippet=<&mt LSHIFT A &macro
+[DEBUG] i=403, char='>', depth=1, snippet=<&mt LSHIFT A &macro>
+Added layer default_layer: Layer(name='default_layer', bindings=[Binding(behavior=HoldTap(name='mt', type='hold-tap'), params=['LSHIFT', 'A']), Binding(behavior=MacroBehavior(name='macro', type='macro'), params=[])], index=0)
+=========================== short test summary info ============================
+FAILED tests/dts/test_extractor.py::test_extract_with_behaviors - AssertionEr...
+========================= 1 failed, 4 passed in 0.03s ==========================

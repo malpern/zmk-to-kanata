@@ -8,8 +8,8 @@ def test_convert_simple_keymap():
     dts_data = {
         "matrix_size": (2, 3),
         "matrix_map": [
-            ["RC(0,0)", "RC(0,1)", "RC(0,2)"],
-            ["RC(1,0)", "RC(1,1)", "RC(1,2)"],
+            ["((0) << 8 | (0))", "((0) << 8 | (1))", "((0) << 8 | (2))"],
+            ["((1) << 8 | (0))", "((1) << 8 | (1))", "((1) << 8 | (2))"],
         ],
         "keymap": {
             "default": [
@@ -40,10 +40,34 @@ def test_convert_large_keymap():
     dts_data = {
         "matrix_size": (4, 5),
         "matrix_map": [
-            ["RC(0,0)", "RC(0,1)", "RC(0,2)", "RC(0,3)", "RC(0,4)"],
-            ["RC(1,0)", "RC(1,1)", "RC(1,2)", "RC(1,3)", "RC(1,4)"],
-            ["RC(2,0)", "RC(2,1)", "RC(2,2)", "RC(2,3)", "RC(2,4)"],
-            ["RC(3,0)", "RC(3,1)", "RC(3,2)", "RC(3,3)", "RC(3,4)"],
+            [
+                "((0) << 8 | (0))",
+                "((0) << 8 | (1))",
+                "((0) << 8 | (2))",
+                "((0) << 8 | (3))",
+                "((0) << 8 | (4))",
+            ],
+            [
+                "((1) << 8 | (0))",
+                "((1) << 8 | (1))",
+                "((1) << 8 | (2))",
+                "((1) << 8 | (3))",
+                "((1) << 8 | (4))",
+            ],
+            [
+                "((2) << 8 | (0))",
+                "((2) << 8 | (1))",
+                "((2) << 8 | (2))",
+                "((2) << 8 | (3))",
+                "((2) << 8 | (4))",
+            ],
+            [
+                "((3) << 8 | (0))",
+                "((3) << 8 | (1))",
+                "((3) << 8 | (2))",
+                "((3) << 8 | (3))",
+                "((3) << 8 | (4))",
+            ],
         ],
         "keymap": {
             "default": [
@@ -78,8 +102,8 @@ def test_convert_multiple_layers():
     dts_data = {
         "matrix_size": (2, 2),
         "matrix_map": [
-            ["RC(0,0)", "RC(0,1)"],
-            ["RC(1,0)", "RC(1,1)"],
+            ["((0) << 8 | (0))", "((0) << 8 | (1))"],
+            ["((1) << 8 | (0))", "((1) << 8 | (1))"],
         ],
         "keymap": {
             "default": [
@@ -125,7 +149,7 @@ def test_convert_invalid_key_code():
     # Create test data with an invalid key code
     dts_data = {
         "matrix_size": (1, 1),
-        "matrix_map": [["RC(0,0)"]],
+        "matrix_map": [["((0) << 8 | (0))"]],
         "keymap": {
             "default": [["&kp INVALID"]],
         },
@@ -142,7 +166,7 @@ def test_convert_invalid_key_type():
     # Create test data with an invalid key type
     dts_data = {
         "matrix_size": (1, 1),
-        "matrix_map": [["RC(0,0)"]],
+        "matrix_map": [["((0) << 8 | (0))"]],
         "keymap": {
             "default": [["&invalid A"]],
         },

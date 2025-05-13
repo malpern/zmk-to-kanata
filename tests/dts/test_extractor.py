@@ -65,7 +65,12 @@ def test_extract_with_behaviors():
     assert mt.tapping_term_ms == 200
 
     macro = next(b for b in config.behaviors.values() if isinstance(b, MacroBehavior))
-    assert len(macro.bindings) == 2
+    assert macro.bindings == ["&kp", "A", "&kp", "B"]
+
+    # Macro behavior should have a list of string bindings
+    macro = next(b for b in config.behaviors.values() if b.name == "macro")
+    assert isinstance(macro.bindings, list)
+    assert all(isinstance(b, str) for b in macro.bindings)
 
 
 def test_extract_multiple_layers():
@@ -156,7 +161,6 @@ def test_extract_invalid_content():
     / {
         keymap {
             invalid_layer {
-                # Missing bindings
             };
         };
     };

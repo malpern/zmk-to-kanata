@@ -1,0 +1,3825 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.10.16, pytest-8.3.4, pluggy-1.5.0 -- /Users/malpern/.pyenv/versions/3.10.16/bin/python3.10
+cachedir: .pytest_cache
+rootdir: /Volumes/FlashGordon/Dropbox/code/nicktokatana
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.7.0
+collecting ... collected 72 items
+
+tests/dts/test_ast.py::test_dts_property_creation PASSED                 [  1%]
+tests/dts/test_ast.py::test_dts_node_creation PASSED                     [  2%]
+tests/dts/test_ast.py::test_dts_node_find PASSED                         [  4%]
+tests/dts/test_ast.py::test_dts_root_creation PASSED                     [  5%]
+tests/dts/test_ast.py::test_dts_root_label_map PASSED                    [  6%]
+tests/dts/test_end_to_end.py::test_simple_keymap PASSED                  [  8%]
+tests/dts/test_end_to_end.py::test_complex_keymap_with_behaviors PASSED  [  9%]
+tests/dts/test_end_to_end.py::test_keymap_with_unicode FAILED            [ 11%]
+tests/dts/test_end_to_end.py::test_error_handling FAILED                 [ 12%]
+tests/dts/test_end_to_end.py::test_keymap_with_combos PASSED             [ 13%]
+tests/dts/test_end_to_end.py::test_keymap_with_conditional_layers PASSED [ 15%]
+tests/dts/test_extractor.py::test_extract_simple_keymap PASSED           [ 16%]
+tests/dts/test_extractor.py::test_extract_with_behaviors PASSED          [ 18%]
+tests/dts/test_extractor.py::test_extract_multiple_layers PASSED         [ 19%]
+tests/dts/test_extractor.py::test_extract_complex_bindings PASSED        [ 20%]
+tests/dts/test_extractor.py::test_extract_invalid_content FAILED         [ 22%]
+tests/dts/test_integration.py::test_full_pipeline_simple_keymap PASSED   [ 23%]
+tests/dts/test_integration.py::test_full_pipeline_with_behaviors PASSED  [ 25%]
+tests/dts/test_integration.py::test_full_pipeline_multiple_layers PASSED [ 26%]
+tests/dts/test_integration.py::test_full_pipeline_complex_bindings PASSED [ 27%]
+tests/dts/test_integration.py::test_full_pipeline_error_handling FAILED  [ 29%]
+tests/dts/test_parser.py::test_parse_simple_dts PASSED                   [ 30%]
+tests/dts/test_parser.py::test_parse_with_labels PASSED                  [ 31%]
+tests/dts/test_parser.py::test_parse_with_references PASSED              [ 33%]
+tests/dts/test_parser.py::test_parse_error_handling FAILED               [ 34%]
+tests/dts/test_parser.py::test_parse_complex_dts PASSED                  [ 36%]
+tests/dts/test_parser.py::test_parse_nested_nodes PASSED                 [ 37%]
+tests/dts/test_parser.py::test_parse_multiple_labels PASSED              [ 38%]
+tests/dts/test_parser.py::test_parse_complex_arrays PASSED               [ 40%]
+tests/dts/test_parser.py::test_parse_boolean_properties PASSED           [ 41%]
+tests/dts/test_parser.py::test_parse_empty_nodes_and_properties PASSED   [ 43%]
+tests/dts/test_parser.py::test_parse_comments PASSED                     [ 44%]
+tests/dts/test_parser.py::test_parse_zmk_specific_constructs FAILED      [ 45%]
+tests/dts/test_parser.py::test_parse_array_with_mixed_cell_types_and_references PASSED [ 47%]
+tests/dts/test_performance.py::test_preprocessor_performance FAILED      [ 48%]
+tests/dts/test_performance.py::test_parser_performance FAILED            [ 50%]
+tests/dts/test_performance.py::test_extractor_performance FAILED         [ 51%]
+tests/dts/test_performance.py::test_full_pipeline_performance FAILED     [ 52%]
+tests/dts/test_preprocessor.py::test_preprocessor_initialization FAILED  [ 54%]
+tests/dts/test_preprocessor.py::test_preprocess_simple_file PASSED       [ 55%]
+tests/dts/test_preprocessor.py::test_preprocess_with_matrix PASSED       [ 56%]
+tests/dts/test_preprocessor.py::test_preprocess_with_includes PASSED     [ 58%]
+tests/dts/test_preprocessor.py::test_preprocess_invalid_file FAILED      [ 59%]
+tests/dts/test_preprocessor.py::test_preprocess_invalid_cpp_command FAILED [ 61%]
+tests/dts/test_preprocessor.py::test_matrix_size_extraction PASSED       [ 62%]
+tests/dts/test_preprocessor.py::test_preprocess_simple_keymap FAILED     [ 63%]
+tests/dts/test_preprocessor.py::test_preprocess_with_include_paths PASSED [ 65%]
+tests/dts/test_preprocessor.py::test_matrix_size_detection PASSED        [ 66%]
+tests/dts/test_preprocessor.py::test_matrix_size_detection_no_matrix PASSED [ 68%]
+tests/test_dts_parser.py::test_parse_simple_keymap FAILED                [ 69%]
+tests/test_dts_parser.py::test_parse_large_keymap FAILED                 [ 70%]
+tests/test_dts_parser.py::test_parse_simple_dts PASSED                   [ 72%]
+tests/test_dts_parser.py::test_parse_with_labels PASSED                  [ 73%]
+tests/test_dts_parser.py::test_parse_complex_bindings PASSED             [ 75%]
+tests/test_dts_parser.py::test_parse_error_handling PASSED               [ 76%]
+tests/test_dts_parser.py::test_parse_invalid_content PASSED              [ 77%]
+tests/test_dts_parser.py::test_find_node PASSED                          [ 79%]
+tests/test_dts_preprocessor.py::test_preprocessor PASSED                 [ 80%]
+tests/test_dts_preprocessor.py::test_preprocessor_large_matrix FAILED    [ 81%]
+tests/test_dts_preprocessor.py::test_preprocessor_error_handling FAILED  [ 83%]
+tests/test_kanata_converter.py::test_convert_simple_keymap PASSED        [ 84%]
+tests/test_kanata_converter.py::test_convert_large_keymap PASSED         [ 86%]
+tests/test_kanata_converter.py::test_convert_multiple_layers PASSED      [ 87%]
+tests/test_kanata_converter.py::test_convert_invalid_key_code PASSED     [ 88%]
+tests/test_kanata_converter.py::test_convert_invalid_key_type PASSED     [ 90%]
+tests/test_main.py::test_main_simple_conversion_stdout FAILED            [ 91%]
+tests/test_main.py::test_main_simple_conversion_outfile FAILED           [ 93%]
+tests/test_main.py::test_main_with_include FAILED                        [ 94%]
+tests/test_main.py::test_main_input_file_not_found FAILED                [ 95%]
+tests/test_main.py::test_main_invalid_dts FAILED                         [ 97%]
+tests/test_main.py::test_main_no_args PASSED                             [ 98%]
+tests/test_main.py::test_main_help PASSED                                [100%]
+
+=================================== FAILURES ===================================
+___________________________ test_keymap_with_unicode ___________________________
+
+    def test_keymap_with_unicode():
+        """Test parsing a keymap with unicode behaviors."""
+        content = """
+        / {
+            behaviors {
+                unicode: unicode {
+                    compatible = "zmk,behavior-unicode";
+                    #binding-cells = <1>;
+                };
+    
+                uc_string: unicode_string {
+                    compatible = "zmk,behavior-unicode-string";
+                    #binding-cells = <1>;
+                    strings = <
+                        "smile" "😊"
+                        "heart" "❤️"
+                    >;
+                };
+            };
+    
+            keymap {
+                compatible = "zmk,keymap";
+    
+                default_layer {
+                    bindings = <
+                        &unicode U0001F600  &uc_string smile  &kp A
+                        &unicode U2764      &uc_string heart  &kp B
+                    >;
+                };
+            };
+        };
+        """
+    
+        # Parse and extract
+        parser = DtsParser()
+        ast = parser.parse(content)
+    
+        extractor = KeymapExtractor()
+        config = extractor.extract(ast)
+    
+        # Verify behaviors
+        assert len(config.behaviors) == 2
+    
+        unicode = next(b for b in config.behaviors.values() if b.name == "unicode")
+        assert isinstance(unicode, Behavior)
+    
+        uc_string = next(b for b in config.behaviors.values() if b.name == "uc_string")
+        assert isinstance(uc_string, Behavior)
+    
+        # Verify bindings
+        layer_node = config.layers[0]
+>       assert len(layer_node.bindings) == 6
+E       AssertionError: assert 10 == 6
+E        +  where 10 = len([Binding(behavior=Behavior(name='unicode', type='unicode'), params=[]), Binding(behavior=None, params=['U0001F600']), Binding(behavior=Behavior(name='uc_string', type='unicode_string'), params=[]), Binding(behavior=None, params=['smile']), Binding(behavior=None, params=['A']), Binding(behavior=Behavior(name='unicode', type='unicode'), params=[]), ...])
+E        +    where [Binding(behavior=Behavior(name='unicode', type='unicode'), params=[]), Binding(behavior=None, params=['U0001F600']), Binding(behavior=Behavior(name='uc_string', type='unicode_string'), params=[]), Binding(behavior=None, params=['smile']), Binding(behavior=None, params=['A']), Binding(behavior=Behavior(name='unicode', type='unicode'), params=[]), ...] = Layer(name='default_layer', bindings=[Binding(behavior=Behavior(name='unicode', type='unicode'), params=[]), Binding(behavior=None, params=['U0001F600']), Binding(behavior=Behavior(name='uc_string', type='unicode_string'), params=[]), Binding(behavior=None, params=['smile']), Binding(behavior=None, params=['A']), Binding(behavior=Behavior(name='unicode', type='unicode'), params=[]), Binding(behavior=None, params=['U2764']), Binding(behavior=Behavior(name='uc_string', type='unicode_string'), params=[]), Binding(behavior=None, params=['heart']), Binding(behavior=None, params=['B'])], index=0).bindings
+
+tests/dts/test_end_to_end.py:203: AssertionError
+----------------------------- Captured stdout call -----------------------------
+Added layer default_layer: Layer(name='default_layer', bindings=[Binding(behavior=Behavior(name='unicode', type='unicode'), params=[]), Binding(behavior=None, params=['U0001F600']), Binding(behavior=Behavior(name='uc_string', type='unicode_string'), params=[]), Binding(behavior=None, params=['smile']), Binding(behavior=None, params=['A']), Binding(behavior=Behavior(name='unicode', type='unicode'), params=[]), Binding(behavior=None, params=['U2764']), Binding(behavior=Behavior(name='uc_string', type='unicode_string'), params=[]), Binding(behavior=None, params=['heart']), Binding(behavior=None, params=['B'])], index=0)
+_____________________________ test_error_handling ______________________________
+
+    def test_error_handling():
+        """Test error handling with malformed input."""
+        # Test missing root node
+        with pytest.raises(DtsParseError, match="DTS must start with root node"):
+            parser = DtsParser()
+            parser.parse("keymap { };")
+    
+        # Test invalid property assignment
+        with pytest.raises(DtsParseError, match="Invalid property value: value"):
+            parser = DtsParser()
+            parser.parse(
+                """
+            / {
+                keymap {
+                    prop = value
+                };
+            };
+            """
+            )
+    
+        # Test invalid binding format
+        parser = DtsParser()
+        ast = parser.parse(
+            """
+        / {
+            keymap {
+                default_layer {
+                    bindings = <&invalid_binding>;
+                };
+            };
+        };
+        """
+        )
+        extractor = KeymapExtractor()
+        with pytest.raises(ValueError, match="Invalid binding format: invalid_binding"):
+>           extractor.extract(ast)
+
+tests/dts/test_end_to_end.py:247: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+converter/dts/extractor.py:77: in extract
+    self._extract_layers(keymap_node)
+converter/dts/extractor.py:300: in _extract_layers
+    layer = self._create_layer(child, idx)
+converter/dts/extractor.py:319: in _create_layer
+    parsed_bindings = self._parse_bindings(bindings_prop.value)
+converter/dts/extractor.py:362: in _parse_bindings
+    bindings.append(self._create_binding([behavior_name] + params))
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <converter.dts.extractor.KeymapExtractor object at 0x103c5d600>
+value = ['invalid_binding']
+
+    def _create_binding(self, value: str | List[str]) -> Binding:
+        """Create a binding instance from a value."""
+        if isinstance(value, list):
+            # Handle list format [behavior_name, param1, ...]
+            if not value:
+                raise ValueError("Empty binding list value")
+            behavior_name = value[0]
+            params = value[1:]
+    
+            if behavior_name == "kp":
+                if len(params) != 1:
+                    raise ValueError(
+                        f"kp behavior expects 1 parameter, "
+                        f"got {len(params)}: {params}"
+                    )
+                # Ensure params is always a list
+                return Binding(behavior=None, params=[params[0]])  # Wrap param
+    
+            # Look up custom behavior - should exist now
+            behavior = self.behaviors.get(behavior_name)
+            if behavior:
+                # TODO: Validate params against behavior definition if needed
+                return Binding(behavior=behavior, params=params)
+            else:
+                # This shouldn't happen if pass logic is correct
+>               raise ValueError(
+                    f"Unknown behavior referenced during binding creation: "
+                    f"{behavior_name}"
+                )
+E               ValueError: Unknown behavior referenced during binding creation: invalid_binding
+
+converter/dts/extractor.py:395: ValueError
+
+During handling of the above exception, another exception occurred:
+
+    def test_error_handling():
+        """Test error handling with malformed input."""
+        # Test missing root node
+        with pytest.raises(DtsParseError, match="DTS must start with root node"):
+            parser = DtsParser()
+            parser.parse("keymap { };")
+    
+        # Test invalid property assignment
+        with pytest.raises(DtsParseError, match="Invalid property value: value"):
+            parser = DtsParser()
+            parser.parse(
+                """
+            / {
+                keymap {
+                    prop = value
+                };
+            };
+            """
+            )
+    
+        # Test invalid binding format
+        parser = DtsParser()
+        ast = parser.parse(
+            """
+        / {
+            keymap {
+                default_layer {
+                    bindings = <&invalid_binding>;
+                };
+            };
+        };
+        """
+        )
+        extractor = KeymapExtractor()
+>       with pytest.raises(ValueError, match="Invalid binding format: invalid_binding"):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'Invalid binding format: invalid_binding'
+E        Input: 'Unknown behavior referenced during binding creation: invalid_binding'
+
+tests/dts/test_end_to_end.py:246: AssertionError
+_________________________ test_extract_invalid_content _________________________
+
+    def test_extract_invalid_content():
+        """Test extracting invalid content."""
+        content = """
+        / {
+            keymap {
+                invalid_layer {
+                    # Missing bindings
+                };
+            };
+        };
+        """
+    
+        parser = DtsParser()
+>       ast = parser.parse(content)
+
+tests/dts/test_extractor.py:166: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+converter/dts/parser.py:66: in parse
+    self._parse_node_body(parsed_root_node)
+converter/dts/parser.py:567: in _parse_node_body
+    self._parse_node_body(child)
+converter/dts/parser.py:567: in _parse_node_body
+    self._parse_node_body(child)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <converter.dts.parser.DtsParser object at 0x103c22530>
+node = DtsNode(name='invalid_layer', parent=None, children={}, properties={}, labels={})
+
+    def _parse_node_body(self, node: DtsNode) -> None:
+        """Parse the body of a DTS node.
+    
+        Args:
+            node: DtsNode to parse body into
+    
+        Raises:
+            DtsParseError: If node body format is invalid
+        """
+        while self.pos < len(self.tokens):
+            token = self.tokens[self.pos]
+    
+            if token == "}":
+                self.pos += 1
+                return
+            elif token == "{":
+                line, col = self._get_pos_info(self.pos)
+                raise DtsParseError(
+                    "Unexpected '{' in node body",
+                    line=line,
+                    column=col,
+                    context=format_error_context(self.content, line, col),
+                    help_text="Node definitions must have a label or reference",
+                )
+    
+            if token == ";":  # Handle empty statements
+                self.pos += 1
+                continue
+    
+            # Handle boolean properties (e.g., "prop_name;")
+            if self.pos + 1 < len(self.tokens) and self.tokens[self.pos + 1] == ";":
+                name = token
+                # Basic check for valid property name (alphanumeric, _, -)
+                # This helps distinguish from stray semicolons or other constructs.
+                # The tokenizer should ideally guarantee 'token' is a potential identifier here.
+                if (
+                    name
+                    and all(c.isalnum() or c in ("_", "-") for c in name)
+                    and name[0] != "-"
+                ):  # Ensure it's a valid C-style identifier
+                    prop = DtsProperty(name=name, value=True, type="boolean")
+                    node.add_property(prop)
+                    self.pos += 2  # Consume name and ';'
+                    continue
+    
+            # Handle properties with assignment (e.g. "prop_name = value;")
+            if self.pos + 2 < len(self.tokens) and self.tokens[self.pos + 1] == "=":
+                name = token
+                value_token = self.tokens[self.pos + 2]
+                try:
+                    prop = self._parse_property_value(name, value_token)
+                    node.add_property(prop)
+                    self.pos += 3
+    
+                    # Check for additional comma-separated array cells
+                    if prop.type == "array":
+                        while (
+                            self.pos < len(self.tokens) and self.tokens[self.pos] == ","
+                        ):
+                            self.pos += 1
+                            if self.pos >= len(self.tokens):
+                                line, col = self._get_pos_info(self.pos - 1)
+                                raise DtsParseError(
+                                    "Unexpected end of file after ',' in property value",
+                                    line=line,
+                                    column=col,
+                                    context=format_error_context(
+                                        self.content, line, col
+                                    ),
+                                )
+                            next_value_token = self.tokens[self.pos]
+                            # Parse the next array cell. We expect it to be an array itself.
+                            # _parse_property_value will return a DtsProperty, we need its value.
+                            additional_prop_part = self._parse_property_value(
+                                "_{temp}", next_value_token
+                            )
+                            if additional_prop_part.type == "array":
+                                if isinstance(prop.value, list) and isinstance(
+                                    additional_prop_part.value, list
+                                ):
+                                    prop.value.extend(additional_prop_part.value)
+                                else:
+                                    # This case should ideally not happen if tokens are well-formed <...>
+                                    line, col = self._get_pos_info(self.pos)
+                                    raise DtsParseError(
+                                        f"Expected array type for subsequent part of property '{name}'",
+                                        line=line,
+                                        column=col,
+                                        context=format_error_context(
+                                            self.content, line, col
+                                        ),
+                                    )
+                            else:
+                                line, col = self._get_pos_info(self.pos)
+                                raise DtsParseError(
+                                    f"Expected array for subsequent part of property '{name}', got {additional_prop_part.type}",
+                                    line=line,
+                                    column=col,
+                                    context=format_error_context(
+                                        self.content, line, col
+                                    ),
+                                )
+                            self.pos += 1
+                except DtsParseError as e:
+                    if not e.help_text:
+                        e.help_text = f"Invalid value for property '{name}'"
+                    raise
+                if self.pos >= len(self.tokens) or self.tokens[self.pos] != ";":
+                    line, col = self._get_pos_info(self.pos)
+                    raise DtsParseError(
+                        "Expected ';' after property value",
+                        line=line,
+                        column=col,
+                        context=format_error_context(self.content, line, col),
+                        help_text="Property definitions must end with a semicolon",
+                    )
+                self.pos += 1
+                continue
+    
+            # Handle child nodes. At this point, 'token' is either a node name or a label.
+            current_labels_for_node: List[str] = []
+            current_token = token  # Start with the first token we haven't processed as property/etc.
+    
+            # Loop to gather all labels: label1: label2: ... node_name
+            while self.pos + 1 < len(self.tokens) and self.tokens[self.pos + 1] == ":":
+                # Current token is a label
+                current_labels_for_node.append(current_token)
+                self.pos += 2  # Consume label and ':'
+                if self.pos >= len(self.tokens):
+                    line, col = self._get_pos_info(self.pos - 1)
+                    raise DtsParseError(
+                        "Unexpected end of file after label expecting node name or another label",
+                        line=line,
+                        column=col,
+                        context=format_error_context(self.content, line, col),
+                    )
+                current_token = self.tokens[
+                    self.pos
+                ]  # This is the next potential label or the actual node name
+    
+            # After the loop, current_token is the actual node name
+            actual_node_name = current_token
+            self.pos += 1  # Consume the actual_node_name token
+    
+            child = DtsNode(name=actual_node_name)
+            for lbl in current_labels_for_node:
+                child.add_label(lbl)
+    
+            if self.pos >= len(self.tokens) or self.tokens[self.pos] != "{":
+                line, col = self._get_pos_info(self.pos)
+                # Provide more context in error: what token did we actually find?
+                found_token_msg = (
+                    f"Found '{self.tokens[self.pos]}' instead."
+                    if self.pos < len(self.tokens)
+                    else "Found end of input."
+                )
+>               raise DtsParseError(
+                    f"Expected '{{ ' after node '{actual_node_name}'. {found_token_msg}",
+                    line=line,
+                    column=col,
+                    context=format_error_context(self.content, line, col),
+                    help_text="Node definitions must be enclosed in curly braces and start with '{'.",
+                )
+E               converter.dts.error_handler.DtsParseError: Expected '{ ' after node '#'. Found 'Missing' instead. at line 6, column -34
+E               
+E               4 |             invalid_layer {
+E               5 |                 # Missing bindings
+E               6 |             };
+E                 | ^
+E               7 |         };
+E               8 |     };
+E               
+E               Help: Node definitions must be enclosed in curly braces and start with '{'.
+
+converter/dts/parser.py:558: DtsParseError
+______________________ test_full_pipeline_error_handling _______________________
+
+    def test_full_pipeline_error_handling():
+        """Test error handling in the full pipeline."""
+        # Test missing root node
+        content = "node1 { };"
+        parser = DtsParser()
+        with pytest.raises(ValueError, match="Expected root node"):
+>           parser.parse(content)
+
+tests/dts/test_integration.py:212: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <converter.dts.parser.DtsParser object at 0x103c37370>
+content = 'node1 { };', file = None
+
+    def parse(self, content: str, file: Optional[str] = None) -> DtsRoot:
+        """Parse DTS content into an AST.
+    
+        Args:
+            content: DTS content string
+            file: Optional file path for error reporting
+    
+        Returns:
+            DtsRoot object representing the parsed AST
+    
+        Raises:
+            DtsParseError: If the content is not valid DTS
+        """
+        self.content = content
+        self.tokens = []
+        self.line_map = []
+        self._tokenize(content)
+        self.pos = 0
+    
+        # Check for root node token '/'
+        if not self.tokens or self.tokens[0] != "/":
+>           raise DtsParseError(
+                "DTS must start with root node '/'",
+                file=file,
+                line=1,
+                column=1,
+                context=format_error_context(content, 1, 1),
+            )
+E           converter.dts.error_handler.DtsParseError: DTS must start with root node '/' at line 1, column 1
+E           
+E           1 | node1 { };
+E             | ^
+E           
+E           Help: Check the DTS syntax and ensure it follows the specification.
+
+converter/dts/parser.py:39: DtsParseError
+__________________________ test_parse_error_handling ___________________________
+
+    def test_parse_error_handling():
+        """Test error handling in DTS parsing."""
+        parser = DtsParser()
+    
+        with pytest.raises(DtsParseError, match="DTS must start with root node '/'"):
+            parser.parse("node1 { };")
+    
+        with pytest.raises(DtsParseError, match="Unterminated string"):
+            parser.parse('/ { prop1 = "value1; };')
+    
+        with pytest.raises(DtsParseError, match="Unterminated array"):
+            parser.parse("/ { prop1 = <1 2 3; };")
+    
+        # This error message comes from _parse_property_value
+        with pytest.raises(DtsParseError, match="Invalid property value: value1"):
+            parser.parse("/ { prop1 = value1 };")
+    
+        # Check that 'node1;' is correctly parsed as a boolean property
+        # and does not raise an error expecting '{'
+        parsed_node1_boolean = parser.parse("/ { node1; };")
+        assert "node1" in parsed_node1_boolean.properties
+>       node1_child = parsed_node1_boolean.children[
+            "node1"
+        ]  # This actually won't work, 'node1' is a property of '/'
+E       KeyError: 'node1'
+
+tests/dts/test_parser.py:144: KeyError
+______________________ test_parse_zmk_specific_constructs ______________________
+
+    def test_parse_zmk_specific_constructs():
+        """Test parsing ZMK-specific DTS constructs."""
+        content = """
+        / {
+            layer_0 { // Node names can have underscores
+                bindings = <&kp A &mt LEFT_SHIFT A &lt 1 B>;
+            };
+            keymap {
+                 compatible = "zmk,keymap";
+                 layer-1 { // Node names can have hyphens
+                     bindings = <&kp C>;
+                     sensor-bindings = <&scroll_up &scroll_down>;
+                 };
+            };
+            behaviors {
+                hm: hold_mod {
+                    compatible = "zmk,behavior-hold-tap";
+                    #binding-cells = <2>; // Special property
+                    tapping-term-ms = <200>;
+                    bindings = <&kp>, <&kp>; // Array of cells
+                };
+                tap_dance_0: td0 {
+                     compatible = "zmk,behavior-tap-dance";
+                     #binding-cells = <0>;
+                     tapping-term-ms = <200>;
+                     bindings = <&kp A>, <&kp B>, <&kp C>;
+                };
+            };
+        };
+        """
+        parser = DtsParser()
+        ast = parser.parse(content)
+    
+        # Check layer_0
+        layer_0 = ast.children["layer_0"]
+>       assert layer_0.properties["bindings"].value == [
+            "&kp",
+            "A",
+            "&mt",
+            "LEFT_SHIFT",
+            "A",
+            "&lt",
+            "1",
+            "B",
+        ]
+E       AssertionError: assert ['&kp', 'A', ...', '&lt', ...] == ['&kp', 'A', ...', '&lt', ...]
+E         
+E         At index 6 diff: 1 != '1'
+E         
+E         Full diff:
+E           [
+E               '&kp',
+E               'A',...
+E         
+E         ...Full output truncated (9 lines hidden), use '-vv' to show
+
+tests/dts/test_parser.py:377: AssertionError
+________________________ test_preprocessor_performance _________________________
+
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x1036979d0>
+input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/complex_keymap.zmk')
+matrix_size = None
+
+    def preprocess(
+        self,
+        input_path: str,
+        matrix_size: Optional[Tuple[int, int]] = None,
+    ) -> str:
+        """Preprocess a DTS file.
+    
+        Args:
+            input_path: Path to the input file
+            matrix_size: Optional tuple of (rows, cols) for matrix transform
+    
+        Returns:
+            The preprocessed content as a string
+    
+        Raises:
+            PreprocessorError: If preprocessing fails
+        """
+        input_path = Path(input_path)
+        if not input_path.exists():
+            raise PreprocessorError(
+                f"Input file does not exist: {input_path}",
+                help_text=(
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
+            )
+    
+        try:
+            with open(input_path, "r") as f:
+                content_for_cpp = f.read()
+        except Exception as e:
+            raise PreprocessorError(
+                f"Failed to read input file: {str(e)}",
+                file=str(input_path),
+                help_text=("Ensure the file exists and has proper " "read permissions"),
+            )
+    
+        # Create a temporary file for the preprocessor input
+        tmp_input = tempfile.NamedTemporaryFile(
+            mode="w",
+            delete=False,
+            suffix=".dts",
+            dir=None,  # Use system default temp dir (usually /tmp)
+        )
+        tmp_input.write(content_for_cpp)
+        tmp_input.close()
+        tmp_input_file = Path(tmp_input.name)
+    
+        # Debug: print environment and temp file contents
+        print("[DtsPreprocessor] ENVIRONMENT:")
+        for k, v in os.environ.items():
+            if len(v) > 40:
+                print(f"  {k}={v[:20]}...{v[-20:]}")
+            else:
+                print(f"  {k}={v}")
+        if len(str(tmp_input_file)) > 70:
+            print(f"[DtsPreprocessor] Temp file: " f"{str(tmp_input_file)[:70]}...")
+        else:
+            print(f"[DtsPreprocessor] Temp file: {tmp_input_file}")
+        with open(tmp_input_file, "r") as f:
+            print("[DtsPreprocessor] Temp file contents:")
+            print(f.read())
+    
+        try:
+            # Build preprocessor command as a list for shell=False
+            if os.uname().sysname == "Darwin":
+                # Use clang with assembler-with-cpp for .dts files on macOS
+                clang_path = "/usr/bin/clang"
+                cpp_cmd = [
+                    clang_path,
+                    "-E",
+                    "-nostdinc",
+                    "-undef",
+                    "-x",
+                    "assembler-with-cpp",
+                ]
+                for path in self.include_paths:
+                    cpp_cmd.extend(["-I", str(path)])
+                cpp_cmd.append(str(tmp_input_file))
+            else:
+                cpp_cmd = [
+                    str(self.cpp_path),
+                    "-E",
+                ]
+                for path in self.include_paths:
+                    cpp_cmd.extend(["-I", str(path)])
+                cpp_cmd.extend(["-x", "c", str(tmp_input_file)])
+    
+            # Debug: print the constructed command list
+            print("[DtsPreprocessor] cpp command:", cpp_cmd)
+    
+            # Run preprocessor with shell=False
+            try:
+>               result = subprocess.run(
+                    cpp_cmd,
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                    shell=False,
+                )
+
+converter/dts/preprocessor.py:214: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = True, timeout = None, check = True
+popenargs = (['/usr/bin/clang', '-E', '-nostdinc', '-undef', '-x', 'assembler-with-cpp', ...],)
+kwargs = {'shell': False, 'stderr': -1, 'stdout': -1, 'text': True}
+process = <Popen: returncode: 1 args: ['/usr/bin/clang', '-E', '-nostdinc', '-undef', ...>
+stdout = '# 1 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp6yq8znhv.dts"\n# 1 "<built-in>" 1\n# 1 "<built-in>" 3\n\n\n\...yers";\n\n        tri_layer {\n            if-layers = <1 2>;\n            then-layer = <3>;\n        };\n    };\n};\n'
+stderr = "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp6yq8znhv.dts:1:10: fatal error: 'dt-bindings/zmk/matrix_transform...lude <dt-bindings/zmk/matrix_transform.h>\n      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+retcode = 1
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['/usr/bin/clang', '-E', '-nostdinc', '-undef', '-x', 'assembler-with-cpp', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp6yq8znhv.dts']' returned non-zero exit status 1.
+
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:526: CalledProcessError
+
+During handling of the above exception, another exception occurred:
+
+sample_keymap_path = '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/complex_keymap.zmk'
+
+    def test_preprocessor_performance(sample_keymap_path):
+        """Test the performance of the preprocessor."""
+        preprocessor = DtsPreprocessor()
+    
+        # Run multiple times to get stable measurements
+        times = []
+        for _ in range(10):
+>           _, duration = measure_time(preprocessor.preprocess, sample_keymap_path)
+
+tests/dts/test_performance.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/dts/test_performance.py:16: in measure_time
+    result = func(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x1036979d0>
+input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/complex_keymap.zmk')
+matrix_size = None
+
+    def preprocess(
+        self,
+        input_path: str,
+        matrix_size: Optional[Tuple[int, int]] = None,
+    ) -> str:
+        """Preprocess a DTS file.
+    
+        Args:
+            input_path: Path to the input file
+            matrix_size: Optional tuple of (rows, cols) for matrix transform
+    
+        Returns:
+            The preprocessed content as a string
+    
+        Raises:
+            PreprocessorError: If preprocessing fails
+        """
+        input_path = Path(input_path)
+        if not input_path.exists():
+            raise PreprocessorError(
+                f"Input file does not exist: {input_path}",
+                help_text=(
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
+            )
+    
+        try:
+            with open(input_path, "r") as f:
+                content_for_cpp = f.read()
+        except Exception as e:
+            raise PreprocessorError(
+                f"Failed to read input file: {str(e)}",
+                file=str(input_path),
+                help_text=("Ensure the file exists and has proper " "read permissions"),
+            )
+    
+        # Create a temporary file for the preprocessor input
+        tmp_input = tempfile.NamedTemporaryFile(
+            mode="w",
+            delete=False,
+            suffix=".dts",
+            dir=None,  # Use system default temp dir (usually /tmp)
+        )
+        tmp_input.write(content_for_cpp)
+        tmp_input.close()
+        tmp_input_file = Path(tmp_input.name)
+    
+        # Debug: print environment and temp file contents
+        print("[DtsPreprocessor] ENVIRONMENT:")
+        for k, v in os.environ.items():
+            if len(v) > 40:
+                print(f"  {k}={v[:20]}...{v[-20:]}")
+            else:
+                print(f"  {k}={v}")
+        if len(str(tmp_input_file)) > 70:
+            print(f"[DtsPreprocessor] Temp file: " f"{str(tmp_input_file)[:70]}...")
+        else:
+            print(f"[DtsPreprocessor] Temp file: {tmp_input_file}")
+        with open(tmp_input_file, "r") as f:
+            print("[DtsPreprocessor] Temp file contents:")
+            print(f.read())
+    
+        try:
+            # Build preprocessor command as a list for shell=False
+            if os.uname().sysname == "Darwin":
+                # Use clang with assembler-with-cpp for .dts files on macOS
+                clang_path = "/usr/bin/clang"
+                cpp_cmd = [
+                    clang_path,
+                    "-E",
+                    "-nostdinc",
+                    "-undef",
+                    "-x",
+                    "assembler-with-cpp",
+                ]
+                for path in self.include_paths:
+                    cpp_cmd.extend(["-I", str(path)])
+                cpp_cmd.append(str(tmp_input_file))
+            else:
+                cpp_cmd = [
+                    str(self.cpp_path),
+                    "-E",
+                ]
+                for path in self.include_paths:
+                    cpp_cmd.extend(["-I", str(path)])
+                cpp_cmd.extend(["-x", "c", str(tmp_input_file)])
+    
+            # Debug: print the constructed command list
+            print("[DtsPreprocessor] cpp command:", cpp_cmd)
+    
+            # Run preprocessor with shell=False
+            try:
+                result = subprocess.run(
+                    cpp_cmd,
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                    shell=False,
+                )
+            except subprocess.CalledProcessError as e:
+>               raise PreprocessorError(
+                    "Failed to process DTS directives",
+                    file=str(input_path),
+                    context=str(e),
+                    help_text=("Check for malformed DTS directives in " "input file"),
+                )
+E               converter.dts.preprocessor.PreprocessorError: Failed to process DTS directives
+
+converter/dts/preprocessor.py:222: PreprocessorError
+----------------------------- Captured stdout call -----------------------------
+[DtsPreprocessor] ENVIRONMENT:
+  MallocNanoZone=0
+  USER=malpern
+  SECURITYSESSIONID=186a3
+  COMMAND_MODE=unix2003
+  __CFBundleIdentifier=com.todesktop.230313mzl4w4u92
+  PATH=/Users/malpern/.curs....cache/lm-studio/bin
+  LOGNAME=malpern
+  SSH_AUTH_SOCK=/private/tmp/com.app...x1qskoux7b/Listeners
+  HOME=/Users/malpern
+  SHELL=/bin/zsh
+  TMPDIR=/var/folders/0s/42v7...1cdnx0vrvyr0000gn/T/
+  LaunchInstanceID=BFD4BF06-15BD-4F76-8D8A-1AEC50E6795A
+  __CF_USER_TEXT_ENCODING=0x1F5:0x0:0x0
+  XPC_SERVICE_NAME=0
+  XPC_FLAGS=0x0
+  ORIGINAL_XDG_CURRENT_DESKTOP=undefined
+  CURSOR_TRACE_ID=f5e099fd466543c5a0d391e03a641e89
+  SHLVL=1
+  PWD=/Volumes/FlashGordon...ox/code/nicktokatana
+  OLDPWD=/Volumes/FlashGordon...ox/code/nicktokatana
+  HOMEBREW_PREFIX=/opt/homebrew
+  HOMEBREW_CELLAR=/opt/homebrew/Cellar
+  HOMEBREW_REPOSITORY=/opt/homebrew
+  INFOPATH=/opt/homebrew/share/...homebrew/share/info:
+  YOUR_CONSUMER_KEY=ah6HAffNJRCv4xNrV4OZcVIrQ
+  YOUR_CONSUMER_SECRET=EXM9IzH9IEdE2yJf0t5F...DPuFXLk55DwB8pLRswR5
+  YOUR_ACCESS_TOKEN=1483-5UbadNrxZUkJpAp...JSXPVSxtsPwJyrUrZvcO
+  YOUR_ACCESS_TOKEN_SECRET=jeyyEWPHAgoS0ebKus4t...0jH2T3gRCIz3dsYXQwqS
+  YOUR_BEARER_TOKEN=AAAAAAAAAAAAAAAAAAAA...8YVAWCOQu6Pyu4yhuY0a
+  OPENAI_API_KEY=sk-qVQDNdwpfPhrAvFr9...ob362AQbhWVa3p95yD28
+  ANTHROPIC_API_KEY=sk-ant-api03-Tq7nYRm...SCuUoAfwIQg-NWFWuAAA
+  TAVILY_API_KEY=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
+  BING_SUBSCRIPTION_KEY=bec8ded0f34a421ba60cc3bd4626825e
+  EDITOR=vi
+  ZSH=/Users/malpern/.oh-my-zsh
+  PAGER=head -n 10000 | cat
+  LESS=-R
+  LSCOLORS=Gxfxcxdxbxegedabagacad
+  LS_COLORS=di=1;36:ln=35:so=32:...46:tw=30;42:ow=30;43
+  PYENV_ROOT=/Users/malpern/.pyenv
+  PYENV_SHELL=zsh
+  DISABLE_AUTO_UPDATE=true
+  TERM_PROGRAM=vscode
+  TERM_PROGRAM_VERSION=0.50.1
+  LANG=en_US.UTF-8
+  COLORTERM=truecolor
+  GIT_ASKPASS=/Applications/Cursor.../git/dist/askpass.sh
+  VSCODE_GIT_ASKPASS_NODE=/Applications/Cursor...rsor Helper (Plugin)
+  VSCODE_GIT_ASKPASS_EXTRA_ARGS=
+  VSCODE_GIT_ASKPASS_MAIN=/Applications/Cursor...dist/askpass-main.js
+  VSCODE_GIT_IPC_HANDLE=/var/folders/0s/42v7...-git-14a5ce3e7f.sock
+  PYENV_VERSION=3.10.16
+  PYENV_DIR=/
+  VIRTUAL_ENV=/Volumes/Flash Gordo...e/nicktokatana/.venv
+  PYENV_HOOK_PATH=/Users/malpern/.pyen.../usr/lib/pyenv/hooks
+  VIRTUAL_ENV_PROMPT=.venv
+  VSCODE_INJECTION=1
+  ZDOTDIR=/Users/malpern
+  USER_ZDOTDIR=/Users/malpern
+  TERM=xterm-256color
+  PS1=.venv%(?:%{[01;32m%...} $(git_prompt_info)
+  PYTHONPATH=.
+  _=/Users/malpern/.pyen...s/3.10.16/bin/pytest
+  PYTEST_VERSION=8.3.4
+  PYTEST_CURRENT_TEST=tests/dts/test_perfo...r_performance (call)
+[DtsPreprocessor] Temp file: /var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp6yq8znhv.dts
+[DtsPreprocessor] Temp file contents:
+#include <dt-bindings/zmk/matrix_transform.h>
+
+/ {
+    chosen {
+        zmk,matrix_transform = &default_transform;
+    };
+
+    default_transform: matrix_transform {
+        compatible = "zmk,matrix-transform";
+        rows = <4>;
+        columns = <12>;
+        map = <
+            RC(0,0)  RC(0,1)  RC(0,2)  RC(0,3)  RC(0,4)  RC(0,5)  RC(0,6)  RC(0,7)  RC(0,8)  RC(0,9)  RC(0,10) RC(0,11)
+            RC(1,0)  RC(1,1)  RC(1,2)  RC(1,3)  RC(1,4)  RC(1,5)  RC(1,6)  RC(1,7)  RC(1,8)  RC(1,9)  RC(1,10) RC(1,11)
+            RC(2,0)  RC(2,1)  RC(2,2)  RC(2,3)  RC(2,4)  RC(2,5)  RC(2,6)  RC(2,7)  RC(2,8)  RC(2,9)  RC(2,10) RC(2,11)
+            RC(3,0)  RC(3,1)  RC(3,2)  RC(3,3)  RC(3,4)  RC(3,5)  RC(3,6)  RC(3,7)  RC(3,8)  RC(3,9)  RC(3,10) RC(3,11)
+        >;
+    };
+
+    behaviors {
+        mt: mod_tap {
+            compatible = "zmk,behavior-hold-tap";
+            tapping-term-ms = <200>;
+            #binding-cells = <2>;
+        };
+        
+        lt: layer_tap {
+            compatible = "zmk,behavior-hold-tap";
+            tapping-term-ms = <200>;
+            #binding-cells = <2>;
+        };
+        
+        macro_a: macro_a {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp A &kp B>;
+        };
+        
+        macro_b: macro_b {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp C &kp D>;
+        };
+        
+        unicode: unicode {
+            compatible = "zmk,behavior-unicode";
+            #binding-cells = <1>;
+        };
+        
+        uc_string: unicode_string {
+            compatible = "zmk,behavior-unicode-string";
+            #binding-cells = <1>;
+            strings = <
+                "smile" "😊"
+                "heart" "❤️"
+            >;
+        };
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+        
+        default_layer {
+            bindings = <
+                &mt LSHIFT A  &kp B        &macro_a     &kp D         &lt 1 E      &kp F
+                &kp G         &kp H        &kp I        &kp J         &kp K        &kp L
+                &kp M         &kp N        &kp O        &kp P         &kp Q        &kp R
+                &kp S         &kp T        &kp U        &kp V         &kp W        &kp X
+            >;
+        };
+        
+        lower_layer {
+            bindings = <
+                &kp N1        &kp N2       &kp N3       &kp N4        &kp N5       &kp N6
+                &kp N7        &kp N8       &kp N9       &kp N0        &kp MINUS    &kp EQUAL
+                &kp F1        &kp F2       &kp F3       &kp F4        &kp F5       &kp F6
+                &kp F7        &kp F8       &kp F9       &kp F10       &kp F11      &kp F12
+            >;
+        };
+        
+        raise_layer {
+            bindings = <
+                &kp EXCLAMATION &kp AT     &kp HASH     &kp DOLLAR    &kp PERCENT  &kp CARET
+                &kp AMPERSAND   &kp STAR   &kp LPAR     &kp RPAR      &kp UNDER    &kp PLUS
+                &kp F1          &kp F2     &kp F3       &kp F4        &kp F5       &kp F6
+                &kp F7          &kp F8     &kp F9       &kp F10       &kp F11      &kp F12
+            >;
+        };
+        
+        adjust_layer {
+            bindings = <
+                &kp RESET      &kp BOOTLOADER &kp NONE  &kp NONE      &kp NONE     &kp NONE
+                &kp NONE       &kp NONE       &kp NONE  &kp NONE      &kp NONE     &kp NONE
+                &kp NONE       &kp NONE       &kp NONE  &kp NONE      &kp NONE     &kp NONE
+                &kp NONE       &kp NONE       &kp NONE  &kp NONE      &kp NONE     &kp NONE
+            >;
+        };
+    };
+
+    combos {
+        compatible = "zmk,combos";
+        
+        combo_esc {
+            timeout-ms = <50>;
+            key-positions = <0 1>;
+            bindings = <&kp ESC>;
+        };
+        
+        combo_tab {
+            timeout-ms = <50>;
+            key-positions = <1 2>;
+            bindings = <&kp TAB>;
+        };
+        
+        combo_enter {
+            timeout-ms = <50>;
+            key-positions = <2 3>;
+            bindings = <&kp ENTER>;
+        };
+    };
+
+    conditional_layers {
+        compatible = "zmk,conditional-layers";
+        
+        tri_layer {
+            if-layers = <1 2>;
+            then-layer = <3>;
+        };
+    };
+}; 
+[DtsPreprocessor] cpp command: ['/usr/bin/clang', '-E', '-nostdinc', '-undef', '-x', 'assembler-with-cpp', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp6yq8znhv.dts']
+___________________________ test_parser_performance ____________________________
+
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103b62b60>
+input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/complex_keymap.zmk')
+matrix_size = None
+
+    def preprocess(
+        self,
+        input_path: str,
+        matrix_size: Optional[Tuple[int, int]] = None,
+    ) -> str:
+        """Preprocess a DTS file.
+    
+        Args:
+            input_path: Path to the input file
+            matrix_size: Optional tuple of (rows, cols) for matrix transform
+    
+        Returns:
+            The preprocessed content as a string
+    
+        Raises:
+            PreprocessorError: If preprocessing fails
+        """
+        input_path = Path(input_path)
+        if not input_path.exists():
+            raise PreprocessorError(
+                f"Input file does not exist: {input_path}",
+                help_text=(
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
+            )
+    
+        try:
+            with open(input_path, "r") as f:
+                content_for_cpp = f.read()
+        except Exception as e:
+            raise PreprocessorError(
+                f"Failed to read input file: {str(e)}",
+                file=str(input_path),
+                help_text=("Ensure the file exists and has proper " "read permissions"),
+            )
+    
+        # Create a temporary file for the preprocessor input
+        tmp_input = tempfile.NamedTemporaryFile(
+            mode="w",
+            delete=False,
+            suffix=".dts",
+            dir=None,  # Use system default temp dir (usually /tmp)
+        )
+        tmp_input.write(content_for_cpp)
+        tmp_input.close()
+        tmp_input_file = Path(tmp_input.name)
+    
+        # Debug: print environment and temp file contents
+        print("[DtsPreprocessor] ENVIRONMENT:")
+        for k, v in os.environ.items():
+            if len(v) > 40:
+                print(f"  {k}={v[:20]}...{v[-20:]}")
+            else:
+                print(f"  {k}={v}")
+        if len(str(tmp_input_file)) > 70:
+            print(f"[DtsPreprocessor] Temp file: " f"{str(tmp_input_file)[:70]}...")
+        else:
+            print(f"[DtsPreprocessor] Temp file: {tmp_input_file}")
+        with open(tmp_input_file, "r") as f:
+            print("[DtsPreprocessor] Temp file contents:")
+            print(f.read())
+    
+        try:
+            # Build preprocessor command as a list for shell=False
+            if os.uname().sysname == "Darwin":
+                # Use clang with assembler-with-cpp for .dts files on macOS
+                clang_path = "/usr/bin/clang"
+                cpp_cmd = [
+                    clang_path,
+                    "-E",
+                    "-nostdinc",
+                    "-undef",
+                    "-x",
+                    "assembler-with-cpp",
+                ]
+                for path in self.include_paths:
+                    cpp_cmd.extend(["-I", str(path)])
+                cpp_cmd.append(str(tmp_input_file))
+            else:
+                cpp_cmd = [
+                    str(self.cpp_path),
+                    "-E",
+                ]
+                for path in self.include_paths:
+                    cpp_cmd.extend(["-I", str(path)])
+                cpp_cmd.extend(["-x", "c", str(tmp_input_file)])
+    
+            # Debug: print the constructed command list
+            print("[DtsPreprocessor] cpp command:", cpp_cmd)
+    
+            # Run preprocessor with shell=False
+            try:
+>               result = subprocess.run(
+                    cpp_cmd,
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                    shell=False,
+                )
+
+converter/dts/preprocessor.py:214: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = True, timeout = None, check = True
+popenargs = (['/usr/bin/clang', '-E', '-nostdinc', '-undef', '-x', 'assembler-with-cpp', ...],)
+kwargs = {'shell': False, 'stderr': -1, 'stdout': -1, 'text': True}
+process = <Popen: returncode: 1 args: ['/usr/bin/clang', '-E', '-nostdinc', '-undef', ...>
+stdout = '# 1 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp6_qwvat4.dts"\n# 1 "<built-in>" 1\n# 1 "<built-in>" 3\n\n\n\...yers";\n\n        tri_layer {\n            if-layers = <1 2>;\n            then-layer = <3>;\n        };\n    };\n};\n'
+stderr = "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp6_qwvat4.dts:1:10: fatal error: 'dt-bindings/zmk/matrix_transform...lude <dt-bindings/zmk/matrix_transform.h>\n      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+retcode = 1
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['/usr/bin/clang', '-E', '-nostdinc', '-undef', '-x', 'assembler-with-cpp', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp6_qwvat4.dts']' returned non-zero exit status 1.
+
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:526: CalledProcessError
+
+During handling of the above exception, another exception occurred:
+
+sample_keymap_path = '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/complex_keymap.zmk'
+
+    def test_parser_performance(sample_keymap_path):
+        """Test the performance of the parser."""
+        preprocessor = DtsPreprocessor()
+        parser = DtsParser()
+    
+        # Preprocess once
+>       content = preprocessor.preprocess(sample_keymap_path)
+
+tests/dts/test_performance.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103b62b60>
+input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/complex_keymap.zmk')
+matrix_size = None
+
+    def preprocess(
+        self,
+        input_path: str,
+        matrix_size: Optional[Tuple[int, int]] = None,
+    ) -> str:
+        """Preprocess a DTS file.
+    
+        Args:
+            input_path: Path to the input file
+            matrix_size: Optional tuple of (rows, cols) for matrix transform
+    
+        Returns:
+            The preprocessed content as a string
+    
+        Raises:
+            PreprocessorError: If preprocessing fails
+        """
+        input_path = Path(input_path)
+        if not input_path.exists():
+            raise PreprocessorError(
+                f"Input file does not exist: {input_path}",
+                help_text=(
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
+            )
+    
+        try:
+            with open(input_path, "r") as f:
+                content_for_cpp = f.read()
+        except Exception as e:
+            raise PreprocessorError(
+                f"Failed to read input file: {str(e)}",
+                file=str(input_path),
+                help_text=("Ensure the file exists and has proper " "read permissions"),
+            )
+    
+        # Create a temporary file for the preprocessor input
+        tmp_input = tempfile.NamedTemporaryFile(
+            mode="w",
+            delete=False,
+            suffix=".dts",
+            dir=None,  # Use system default temp dir (usually /tmp)
+        )
+        tmp_input.write(content_for_cpp)
+        tmp_input.close()
+        tmp_input_file = Path(tmp_input.name)
+    
+        # Debug: print environment and temp file contents
+        print("[DtsPreprocessor] ENVIRONMENT:")
+        for k, v in os.environ.items():
+            if len(v) > 40:
+                print(f"  {k}={v[:20]}...{v[-20:]}")
+            else:
+                print(f"  {k}={v}")
+        if len(str(tmp_input_file)) > 70:
+            print(f"[DtsPreprocessor] Temp file: " f"{str(tmp_input_file)[:70]}...")
+        else:
+            print(f"[DtsPreprocessor] Temp file: {tmp_input_file}")
+        with open(tmp_input_file, "r") as f:
+            print("[DtsPreprocessor] Temp file contents:")
+            print(f.read())
+    
+        try:
+            # Build preprocessor command as a list for shell=False
+            if os.uname().sysname == "Darwin":
+                # Use clang with assembler-with-cpp for .dts files on macOS
+                clang_path = "/usr/bin/clang"
+                cpp_cmd = [
+                    clang_path,
+                    "-E",
+                    "-nostdinc",
+                    "-undef",
+                    "-x",
+                    "assembler-with-cpp",
+                ]
+                for path in self.include_paths:
+                    cpp_cmd.extend(["-I", str(path)])
+                cpp_cmd.append(str(tmp_input_file))
+            else:
+                cpp_cmd = [
+                    str(self.cpp_path),
+                    "-E",
+                ]
+                for path in self.include_paths:
+                    cpp_cmd.extend(["-I", str(path)])
+                cpp_cmd.extend(["-x", "c", str(tmp_input_file)])
+    
+            # Debug: print the constructed command list
+            print("[DtsPreprocessor] cpp command:", cpp_cmd)
+    
+            # Run preprocessor with shell=False
+            try:
+                result = subprocess.run(
+                    cpp_cmd,
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                    shell=False,
+                )
+            except subprocess.CalledProcessError as e:
+>               raise PreprocessorError(
+                    "Failed to process DTS directives",
+                    file=str(input_path),
+                    context=str(e),
+                    help_text=("Check for malformed DTS directives in " "input file"),
+                )
+E               converter.dts.preprocessor.PreprocessorError: Failed to process DTS directives
+
+converter/dts/preprocessor.py:222: PreprocessorError
+----------------------------- Captured stdout call -----------------------------
+[DtsPreprocessor] ENVIRONMENT:
+  MallocNanoZone=0
+  USER=malpern
+  SECURITYSESSIONID=186a3
+  COMMAND_MODE=unix2003
+  __CFBundleIdentifier=com.todesktop.230313mzl4w4u92
+  PATH=/Users/malpern/.curs....cache/lm-studio/bin
+  LOGNAME=malpern
+  SSH_AUTH_SOCK=/private/tmp/com.app...x1qskoux7b/Listeners
+  HOME=/Users/malpern
+  SHELL=/bin/zsh
+  TMPDIR=/var/folders/0s/42v7...1cdnx0vrvyr0000gn/T/
+  LaunchInstanceID=BFD4BF06-15BD-4F76-8D8A-1AEC50E6795A
+  __CF_USER_TEXT_ENCODING=0x1F5:0x0:0x0
+  XPC_SERVICE_NAME=0
+  XPC_FLAGS=0x0
+  ORIGINAL_XDG_CURRENT_DESKTOP=undefined
+  CURSOR_TRACE_ID=f5e099fd466543c5a0d391e03a641e89
+  SHLVL=1
+  PWD=/Volumes/FlashGordon...ox/code/nicktokatana
+  OLDPWD=/Volumes/FlashGordon...ox/code/nicktokatana
+  HOMEBREW_PREFIX=/opt/homebrew
+  HOMEBREW_CELLAR=/opt/homebrew/Cellar
+  HOMEBREW_REPOSITORY=/opt/homebrew
+  INFOPATH=/opt/homebrew/share/...homebrew/share/info:
+  YOUR_CONSUMER_KEY=ah6HAffNJRCv4xNrV4OZcVIrQ
+  YOUR_CONSUMER_SECRET=EXM9IzH9IEdE2yJf0t5F...DPuFXLk55DwB8pLRswR5
+  YOUR_ACCESS_TOKEN=1483-5UbadNrxZUkJpAp...JSXPVSxtsPwJyrUrZvcO
+  YOUR_ACCESS_TOKEN_SECRET=jeyyEWPHAgoS0ebKus4t...0jH2T3gRCIz3dsYXQwqS
+  YOUR_BEARER_TOKEN=AAAAAAAAAAAAAAAAAAAA...8YVAWCOQu6Pyu4yhuY0a
+  OPENAI_API_KEY=sk-qVQDNdwpfPhrAvFr9...ob362AQbhWVa3p95yD28
+  ANTHROPIC_API_KEY=sk-ant-api03-Tq7nYRm...SCuUoAfwIQg-NWFWuAAA
+  TAVILY_API_KEY=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
+  BING_SUBSCRIPTION_KEY=bec8ded0f34a421ba60cc3bd4626825e
+  EDITOR=vi
+  ZSH=/Users/malpern/.oh-my-zsh
+  PAGER=head -n 10000 | cat
+  LESS=-R
+  LSCOLORS=Gxfxcxdxbxegedabagacad
+  LS_COLORS=di=1;36:ln=35:so=32:...46:tw=30;42:ow=30;43
+  PYENV_ROOT=/Users/malpern/.pyenv
+  PYENV_SHELL=zsh
+  DISABLE_AUTO_UPDATE=true
+  TERM_PROGRAM=vscode
+  TERM_PROGRAM_VERSION=0.50.1
+  LANG=en_US.UTF-8
+  COLORTERM=truecolor
+  GIT_ASKPASS=/Applications/Cursor.../git/dist/askpass.sh
+  VSCODE_GIT_ASKPASS_NODE=/Applications/Cursor...rsor Helper (Plugin)
+  VSCODE_GIT_ASKPASS_EXTRA_ARGS=
+  VSCODE_GIT_ASKPASS_MAIN=/Applications/Cursor...dist/askpass-main.js
+  VSCODE_GIT_IPC_HANDLE=/var/folders/0s/42v7...-git-14a5ce3e7f.sock
+  PYENV_VERSION=3.10.16
+  PYENV_DIR=/
+  VIRTUAL_ENV=/Volumes/Flash Gordo...e/nicktokatana/.venv
+  PYENV_HOOK_PATH=/Users/malpern/.pyen.../usr/lib/pyenv/hooks
+  VIRTUAL_ENV_PROMPT=.venv
+  VSCODE_INJECTION=1
+  ZDOTDIR=/Users/malpern
+  USER_ZDOTDIR=/Users/malpern
+  TERM=xterm-256color
+  PS1=.venv%(?:%{[01;32m%...} $(git_prompt_info)
+  PYTHONPATH=.
+  _=/Users/malpern/.pyen...s/3.10.16/bin/pytest
+  PYTEST_VERSION=8.3.4
+  PYTEST_CURRENT_TEST=tests/dts/test_perfo...r_performance (call)
+[DtsPreprocessor] Temp file: /var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp6_qwvat4.dts
+[DtsPreprocessor] Temp file contents:
+#include <dt-bindings/zmk/matrix_transform.h>
+
+/ {
+    chosen {
+        zmk,matrix_transform = &default_transform;
+    };
+
+    default_transform: matrix_transform {
+        compatible = "zmk,matrix-transform";
+        rows = <4>;
+        columns = <12>;
+        map = <
+            RC(0,0)  RC(0,1)  RC(0,2)  RC(0,3)  RC(0,4)  RC(0,5)  RC(0,6)  RC(0,7)  RC(0,8)  RC(0,9)  RC(0,10) RC(0,11)
+            RC(1,0)  RC(1,1)  RC(1,2)  RC(1,3)  RC(1,4)  RC(1,5)  RC(1,6)  RC(1,7)  RC(1,8)  RC(1,9)  RC(1,10) RC(1,11)
+            RC(2,0)  RC(2,1)  RC(2,2)  RC(2,3)  RC(2,4)  RC(2,5)  RC(2,6)  RC(2,7)  RC(2,8)  RC(2,9)  RC(2,10) RC(2,11)
+            RC(3,0)  RC(3,1)  RC(3,2)  RC(3,3)  RC(3,4)  RC(3,5)  RC(3,6)  RC(3,7)  RC(3,8)  RC(3,9)  RC(3,10) RC(3,11)
+        >;
+    };
+
+    behaviors {
+        mt: mod_tap {
+            compatible = "zmk,behavior-hold-tap";
+            tapping-term-ms = <200>;
+            #binding-cells = <2>;
+        };
+        
+        lt: layer_tap {
+            compatible = "zmk,behavior-hold-tap";
+            tapping-term-ms = <200>;
+            #binding-cells = <2>;
+        };
+        
+        macro_a: macro_a {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp A &kp B>;
+        };
+        
+        macro_b: macro_b {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp C &kp D>;
+        };
+        
+        unicode: unicode {
+            compatible = "zmk,behavior-unicode";
+            #binding-cells = <1>;
+        };
+        
+        uc_string: unicode_string {
+            compatible = "zmk,behavior-unicode-string";
+            #binding-cells = <1>;
+            strings = <
+                "smile" "😊"
+                "heart" "❤️"
+            >;
+        };
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+        
+        default_layer {
+            bindings = <
+                &mt LSHIFT A  &kp B        &macro_a     &kp D         &lt 1 E      &kp F
+                &kp G         &kp H        &kp I        &kp J         &kp K        &kp L
+                &kp M         &kp N        &kp O        &kp P         &kp Q        &kp R
+                &kp S         &kp T        &kp U        &kp V         &kp W        &kp X
+            >;
+        };
+        
+        lower_layer {
+            bindings = <
+                &kp N1        &kp N2       &kp N3       &kp N4        &kp N5       &kp N6
+                &kp N7        &kp N8       &kp N9       &kp N0        &kp MINUS    &kp EQUAL
+                &kp F1        &kp F2       &kp F3       &kp F4        &kp F5       &kp F6
+                &kp F7        &kp F8       &kp F9       &kp F10       &kp F11      &kp F12
+            >;
+        };
+        
+        raise_layer {
+            bindings = <
+                &kp EXCLAMATION &kp AT     &kp HASH     &kp DOLLAR    &kp PERCENT  &kp CARET
+                &kp AMPERSAND   &kp STAR   &kp LPAR     &kp RPAR      &kp UNDER    &kp PLUS
+                &kp F1          &kp F2     &kp F3       &kp F4        &kp F5       &kp F6
+                &kp F7          &kp F8     &kp F9       &kp F10       &kp F11      &kp F12
+            >;
+        };
+        
+        adjust_layer {
+            bindings = <
+                &kp RESET      &kp BOOTLOADER &kp NONE  &kp NONE      &kp NONE     &kp NONE
+                &kp NONE       &kp NONE       &kp NONE  &kp NONE      &kp NONE     &kp NONE
+                &kp NONE       &kp NONE       &kp NONE  &kp NONE      &kp NONE     &kp NONE
+                &kp NONE       &kp NONE       &kp NONE  &kp NONE      &kp NONE     &kp NONE
+            >;
+        };
+    };
+
+    combos {
+        compatible = "zmk,combos";
+        
+        combo_esc {
+            timeout-ms = <50>;
+            key-positions = <0 1>;
+            bindings = <&kp ESC>;
+        };
+        
+        combo_tab {
+            timeout-ms = <50>;
+            key-positions = <1 2>;
+            bindings = <&kp TAB>;
+        };
+        
+        combo_enter {
+            timeout-ms = <50>;
+            key-positions = <2 3>;
+            bindings = <&kp ENTER>;
+        };
+    };
+
+    conditional_layers {
+        compatible = "zmk,conditional-layers";
+        
+        tri_layer {
+            if-layers = <1 2>;
+            then-layer = <3>;
+        };
+    };
+}; 
+[DtsPreprocessor] cpp command: ['/usr/bin/clang', '-E', '-nostdinc', '-undef', '-x', 'assembler-with-cpp', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp6_qwvat4.dts']
+__________________________ test_extractor_performance __________________________
+
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103df3c10>
+input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/complex_keymap.zmk')
+matrix_size = None
+
+    def preprocess(
+        self,
+        input_path: str,
+        matrix_size: Optional[Tuple[int, int]] = None,
+    ) -> str:
+        """Preprocess a DTS file.
+    
+        Args:
+            input_path: Path to the input file
+            matrix_size: Optional tuple of (rows, cols) for matrix transform
+    
+        Returns:
+            The preprocessed content as a string
+    
+        Raises:
+            PreprocessorError: If preprocessing fails
+        """
+        input_path = Path(input_path)
+        if not input_path.exists():
+            raise PreprocessorError(
+                f"Input file does not exist: {input_path}",
+                help_text=(
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
+            )
+    
+        try:
+            with open(input_path, "r") as f:
+                content_for_cpp = f.read()
+        except Exception as e:
+            raise PreprocessorError(
+                f"Failed to read input file: {str(e)}",
+                file=str(input_path),
+                help_text=("Ensure the file exists and has proper " "read permissions"),
+            )
+    
+        # Create a temporary file for the preprocessor input
+        tmp_input = tempfile.NamedTemporaryFile(
+            mode="w",
+            delete=False,
+            suffix=".dts",
+            dir=None,  # Use system default temp dir (usually /tmp)
+        )
+        tmp_input.write(content_for_cpp)
+        tmp_input.close()
+        tmp_input_file = Path(tmp_input.name)
+    
+        # Debug: print environment and temp file contents
+        print("[DtsPreprocessor] ENVIRONMENT:")
+        for k, v in os.environ.items():
+            if len(v) > 40:
+                print(f"  {k}={v[:20]}...{v[-20:]}")
+            else:
+                print(f"  {k}={v}")
+        if len(str(tmp_input_file)) > 70:
+            print(f"[DtsPreprocessor] Temp file: " f"{str(tmp_input_file)[:70]}...")
+        else:
+            print(f"[DtsPreprocessor] Temp file: {tmp_input_file}")
+        with open(tmp_input_file, "r") as f:
+            print("[DtsPreprocessor] Temp file contents:")
+            print(f.read())
+    
+        try:
+            # Build preprocessor command as a list for shell=False
+            if os.uname().sysname == "Darwin":
+                # Use clang with assembler-with-cpp for .dts files on macOS
+                clang_path = "/usr/bin/clang"
+                cpp_cmd = [
+                    clang_path,
+                    "-E",
+                    "-nostdinc",
+                    "-undef",
+                    "-x",
+                    "assembler-with-cpp",
+                ]
+                for path in self.include_paths:
+                    cpp_cmd.extend(["-I", str(path)])
+                cpp_cmd.append(str(tmp_input_file))
+            else:
+                cpp_cmd = [
+                    str(self.cpp_path),
+                    "-E",
+                ]
+                for path in self.include_paths:
+                    cpp_cmd.extend(["-I", str(path)])
+                cpp_cmd.extend(["-x", "c", str(tmp_input_file)])
+    
+            # Debug: print the constructed command list
+            print("[DtsPreprocessor] cpp command:", cpp_cmd)
+    
+            # Run preprocessor with shell=False
+            try:
+>               result = subprocess.run(
+                    cpp_cmd,
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                    shell=False,
+                )
+
+converter/dts/preprocessor.py:214: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = True, timeout = None, check = True
+popenargs = (['/usr/bin/clang', '-E', '-nostdinc', '-undef', '-x', 'assembler-with-cpp', ...],)
+kwargs = {'shell': False, 'stderr': -1, 'stdout': -1, 'text': True}
+process = <Popen: returncode: 1 args: ['/usr/bin/clang', '-E', '-nostdinc', '-undef', ...>
+stdout = '# 1 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpm55cgbzd.dts"\n# 1 "<built-in>" 1\n# 1 "<built-in>" 3\n\n\n\...yers";\n\n        tri_layer {\n            if-layers = <1 2>;\n            then-layer = <3>;\n        };\n    };\n};\n'
+stderr = "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpm55cgbzd.dts:1:10: fatal error: 'dt-bindings/zmk/matrix_transform...lude <dt-bindings/zmk/matrix_transform.h>\n      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+retcode = 1
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['/usr/bin/clang', '-E', '-nostdinc', '-undef', '-x', 'assembler-with-cpp', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpm55cgbzd.dts']' returned non-zero exit status 1.
+
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:526: CalledProcessError
+
+During handling of the above exception, another exception occurred:
+
+sample_keymap_path = '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/complex_keymap.zmk'
+
+    def test_extractor_performance(sample_keymap_path):
+        """Test the performance of the extractor."""
+        preprocessor = DtsPreprocessor()
+        parser = DtsParser()
+        extractor = KeymapExtractor()
+    
+        # Preprocess and parse once
+>       content = preprocessor.preprocess(sample_keymap_path)
+
+tests/dts/test_performance.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103df3c10>
+input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/complex_keymap.zmk')
+matrix_size = None
+
+    def preprocess(
+        self,
+        input_path: str,
+        matrix_size: Optional[Tuple[int, int]] = None,
+    ) -> str:
+        """Preprocess a DTS file.
+    
+        Args:
+            input_path: Path to the input file
+            matrix_size: Optional tuple of (rows, cols) for matrix transform
+    
+        Returns:
+            The preprocessed content as a string
+    
+        Raises:
+            PreprocessorError: If preprocessing fails
+        """
+        input_path = Path(input_path)
+        if not input_path.exists():
+            raise PreprocessorError(
+                f"Input file does not exist: {input_path}",
+                help_text=(
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
+            )
+    
+        try:
+            with open(input_path, "r") as f:
+                content_for_cpp = f.read()
+        except Exception as e:
+            raise PreprocessorError(
+                f"Failed to read input file: {str(e)}",
+                file=str(input_path),
+                help_text=("Ensure the file exists and has proper " "read permissions"),
+            )
+    
+        # Create a temporary file for the preprocessor input
+        tmp_input = tempfile.NamedTemporaryFile(
+            mode="w",
+            delete=False,
+            suffix=".dts",
+            dir=None,  # Use system default temp dir (usually /tmp)
+        )
+        tmp_input.write(content_for_cpp)
+        tmp_input.close()
+        tmp_input_file = Path(tmp_input.name)
+    
+        # Debug: print environment and temp file contents
+        print("[DtsPreprocessor] ENVIRONMENT:")
+        for k, v in os.environ.items():
+            if len(v) > 40:
+                print(f"  {k}={v[:20]}...{v[-20:]}")
+            else:
+                print(f"  {k}={v}")
+        if len(str(tmp_input_file)) > 70:
+            print(f"[DtsPreprocessor] Temp file: " f"{str(tmp_input_file)[:70]}...")
+        else:
+            print(f"[DtsPreprocessor] Temp file: {tmp_input_file}")
+        with open(tmp_input_file, "r") as f:
+            print("[DtsPreprocessor] Temp file contents:")
+            print(f.read())
+    
+        try:
+            # Build preprocessor command as a list for shell=False
+            if os.uname().sysname == "Darwin":
+                # Use clang with assembler-with-cpp for .dts files on macOS
+                clang_path = "/usr/bin/clang"
+                cpp_cmd = [
+                    clang_path,
+                    "-E",
+                    "-nostdinc",
+                    "-undef",
+                    "-x",
+                    "assembler-with-cpp",
+                ]
+                for path in self.include_paths:
+                    cpp_cmd.extend(["-I", str(path)])
+                cpp_cmd.append(str(tmp_input_file))
+            else:
+                cpp_cmd = [
+                    str(self.cpp_path),
+                    "-E",
+                ]
+                for path in self.include_paths:
+                    cpp_cmd.extend(["-I", str(path)])
+                cpp_cmd.extend(["-x", "c", str(tmp_input_file)])
+    
+            # Debug: print the constructed command list
+            print("[DtsPreprocessor] cpp command:", cpp_cmd)
+    
+            # Run preprocessor with shell=False
+            try:
+                result = subprocess.run(
+                    cpp_cmd,
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                    shell=False,
+                )
+            except subprocess.CalledProcessError as e:
+>               raise PreprocessorError(
+                    "Failed to process DTS directives",
+                    file=str(input_path),
+                    context=str(e),
+                    help_text=("Check for malformed DTS directives in " "input file"),
+                )
+E               converter.dts.preprocessor.PreprocessorError: Failed to process DTS directives
+
+converter/dts/preprocessor.py:222: PreprocessorError
+----------------------------- Captured stdout call -----------------------------
+[DtsPreprocessor] ENVIRONMENT:
+  MallocNanoZone=0
+  USER=malpern
+  SECURITYSESSIONID=186a3
+  COMMAND_MODE=unix2003
+  __CFBundleIdentifier=com.todesktop.230313mzl4w4u92
+  PATH=/Users/malpern/.curs....cache/lm-studio/bin
+  LOGNAME=malpern
+  SSH_AUTH_SOCK=/private/tmp/com.app...x1qskoux7b/Listeners
+  HOME=/Users/malpern
+  SHELL=/bin/zsh
+  TMPDIR=/var/folders/0s/42v7...1cdnx0vrvyr0000gn/T/
+  LaunchInstanceID=BFD4BF06-15BD-4F76-8D8A-1AEC50E6795A
+  __CF_USER_TEXT_ENCODING=0x1F5:0x0:0x0
+  XPC_SERVICE_NAME=0
+  XPC_FLAGS=0x0
+  ORIGINAL_XDG_CURRENT_DESKTOP=undefined
+  CURSOR_TRACE_ID=f5e099fd466543c5a0d391e03a641e89
+  SHLVL=1
+  PWD=/Volumes/FlashGordon...ox/code/nicktokatana
+  OLDPWD=/Volumes/FlashGordon...ox/code/nicktokatana
+  HOMEBREW_PREFIX=/opt/homebrew
+  HOMEBREW_CELLAR=/opt/homebrew/Cellar
+  HOMEBREW_REPOSITORY=/opt/homebrew
+  INFOPATH=/opt/homebrew/share/...homebrew/share/info:
+  YOUR_CONSUMER_KEY=ah6HAffNJRCv4xNrV4OZcVIrQ
+  YOUR_CONSUMER_SECRET=EXM9IzH9IEdE2yJf0t5F...DPuFXLk55DwB8pLRswR5
+  YOUR_ACCESS_TOKEN=1483-5UbadNrxZUkJpAp...JSXPVSxtsPwJyrUrZvcO
+  YOUR_ACCESS_TOKEN_SECRET=jeyyEWPHAgoS0ebKus4t...0jH2T3gRCIz3dsYXQwqS
+  YOUR_BEARER_TOKEN=AAAAAAAAAAAAAAAAAAAA...8YVAWCOQu6Pyu4yhuY0a
+  OPENAI_API_KEY=sk-qVQDNdwpfPhrAvFr9...ob362AQbhWVa3p95yD28
+  ANTHROPIC_API_KEY=sk-ant-api03-Tq7nYRm...SCuUoAfwIQg-NWFWuAAA
+  TAVILY_API_KEY=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
+  BING_SUBSCRIPTION_KEY=bec8ded0f34a421ba60cc3bd4626825e
+  EDITOR=vi
+  ZSH=/Users/malpern/.oh-my-zsh
+  PAGER=head -n 10000 | cat
+  LESS=-R
+  LSCOLORS=Gxfxcxdxbxegedabagacad
+  LS_COLORS=di=1;36:ln=35:so=32:...46:tw=30;42:ow=30;43
+  PYENV_ROOT=/Users/malpern/.pyenv
+  PYENV_SHELL=zsh
+  DISABLE_AUTO_UPDATE=true
+  TERM_PROGRAM=vscode
+  TERM_PROGRAM_VERSION=0.50.1
+  LANG=en_US.UTF-8
+  COLORTERM=truecolor
+  GIT_ASKPASS=/Applications/Cursor.../git/dist/askpass.sh
+  VSCODE_GIT_ASKPASS_NODE=/Applications/Cursor...rsor Helper (Plugin)
+  VSCODE_GIT_ASKPASS_EXTRA_ARGS=
+  VSCODE_GIT_ASKPASS_MAIN=/Applications/Cursor...dist/askpass-main.js
+  VSCODE_GIT_IPC_HANDLE=/var/folders/0s/42v7...-git-14a5ce3e7f.sock
+  PYENV_VERSION=3.10.16
+  PYENV_DIR=/
+  VIRTUAL_ENV=/Volumes/Flash Gordo...e/nicktokatana/.venv
+  PYENV_HOOK_PATH=/Users/malpern/.pyen.../usr/lib/pyenv/hooks
+  VIRTUAL_ENV_PROMPT=.venv
+  VSCODE_INJECTION=1
+  ZDOTDIR=/Users/malpern
+  USER_ZDOTDIR=/Users/malpern
+  TERM=xterm-256color
+  PS1=.venv%(?:%{[01;32m%...} $(git_prompt_info)
+  PYTHONPATH=.
+  _=/Users/malpern/.pyen...s/3.10.16/bin/pytest
+  PYTEST_VERSION=8.3.4
+  PYTEST_CURRENT_TEST=tests/dts/test_perfo...r_performance (call)
+[DtsPreprocessor] Temp file: /var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpm55cgbzd.dts
+[DtsPreprocessor] Temp file contents:
+#include <dt-bindings/zmk/matrix_transform.h>
+
+/ {
+    chosen {
+        zmk,matrix_transform = &default_transform;
+    };
+
+    default_transform: matrix_transform {
+        compatible = "zmk,matrix-transform";
+        rows = <4>;
+        columns = <12>;
+        map = <
+            RC(0,0)  RC(0,1)  RC(0,2)  RC(0,3)  RC(0,4)  RC(0,5)  RC(0,6)  RC(0,7)  RC(0,8)  RC(0,9)  RC(0,10) RC(0,11)
+            RC(1,0)  RC(1,1)  RC(1,2)  RC(1,3)  RC(1,4)  RC(1,5)  RC(1,6)  RC(1,7)  RC(1,8)  RC(1,9)  RC(1,10) RC(1,11)
+            RC(2,0)  RC(2,1)  RC(2,2)  RC(2,3)  RC(2,4)  RC(2,5)  RC(2,6)  RC(2,7)  RC(2,8)  RC(2,9)  RC(2,10) RC(2,11)
+            RC(3,0)  RC(3,1)  RC(3,2)  RC(3,3)  RC(3,4)  RC(3,5)  RC(3,6)  RC(3,7)  RC(3,8)  RC(3,9)  RC(3,10) RC(3,11)
+        >;
+    };
+
+    behaviors {
+        mt: mod_tap {
+            compatible = "zmk,behavior-hold-tap";
+            tapping-term-ms = <200>;
+            #binding-cells = <2>;
+        };
+        
+        lt: layer_tap {
+            compatible = "zmk,behavior-hold-tap";
+            tapping-term-ms = <200>;
+            #binding-cells = <2>;
+        };
+        
+        macro_a: macro_a {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp A &kp B>;
+        };
+        
+        macro_b: macro_b {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp C &kp D>;
+        };
+        
+        unicode: unicode {
+            compatible = "zmk,behavior-unicode";
+            #binding-cells = <1>;
+        };
+        
+        uc_string: unicode_string {
+            compatible = "zmk,behavior-unicode-string";
+            #binding-cells = <1>;
+            strings = <
+                "smile" "😊"
+                "heart" "❤️"
+            >;
+        };
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+        
+        default_layer {
+            bindings = <
+                &mt LSHIFT A  &kp B        &macro_a     &kp D         &lt 1 E      &kp F
+                &kp G         &kp H        &kp I        &kp J         &kp K        &kp L
+                &kp M         &kp N        &kp O        &kp P         &kp Q        &kp R
+                &kp S         &kp T        &kp U        &kp V         &kp W        &kp X
+            >;
+        };
+        
+        lower_layer {
+            bindings = <
+                &kp N1        &kp N2       &kp N3       &kp N4        &kp N5       &kp N6
+                &kp N7        &kp N8       &kp N9       &kp N0        &kp MINUS    &kp EQUAL
+                &kp F1        &kp F2       &kp F3       &kp F4        &kp F5       &kp F6
+                &kp F7        &kp F8       &kp F9       &kp F10       &kp F11      &kp F12
+            >;
+        };
+        
+        raise_layer {
+            bindings = <
+                &kp EXCLAMATION &kp AT     &kp HASH     &kp DOLLAR    &kp PERCENT  &kp CARET
+                &kp AMPERSAND   &kp STAR   &kp LPAR     &kp RPAR      &kp UNDER    &kp PLUS
+                &kp F1          &kp F2     &kp F3       &kp F4        &kp F5       &kp F6
+                &kp F7          &kp F8     &kp F9       &kp F10       &kp F11      &kp F12
+            >;
+        };
+        
+        adjust_layer {
+            bindings = <
+                &kp RESET      &kp BOOTLOADER &kp NONE  &kp NONE      &kp NONE     &kp NONE
+                &kp NONE       &kp NONE       &kp NONE  &kp NONE      &kp NONE     &kp NONE
+                &kp NONE       &kp NONE       &kp NONE  &kp NONE      &kp NONE     &kp NONE
+                &kp NONE       &kp NONE       &kp NONE  &kp NONE      &kp NONE     &kp NONE
+            >;
+        };
+    };
+
+    combos {
+        compatible = "zmk,combos";
+        
+        combo_esc {
+            timeout-ms = <50>;
+            key-positions = <0 1>;
+            bindings = <&kp ESC>;
+        };
+        
+        combo_tab {
+            timeout-ms = <50>;
+            key-positions = <1 2>;
+            bindings = <&kp TAB>;
+        };
+        
+        combo_enter {
+            timeout-ms = <50>;
+            key-positions = <2 3>;
+            bindings = <&kp ENTER>;
+        };
+    };
+
+    conditional_layers {
+        compatible = "zmk,conditional-layers";
+        
+        tri_layer {
+            if-layers = <1 2>;
+            then-layer = <3>;
+        };
+    };
+}; 
+[DtsPreprocessor] cpp command: ['/usr/bin/clang', '-E', '-nostdinc', '-undef', '-x', 'assembler-with-cpp', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpm55cgbzd.dts']
+________________________ test_full_pipeline_performance ________________________
+
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103bcc7c0>
+input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/complex_keymap.zmk')
+matrix_size = None
+
+    def preprocess(
+        self,
+        input_path: str,
+        matrix_size: Optional[Tuple[int, int]] = None,
+    ) -> str:
+        """Preprocess a DTS file.
+    
+        Args:
+            input_path: Path to the input file
+            matrix_size: Optional tuple of (rows, cols) for matrix transform
+    
+        Returns:
+            The preprocessed content as a string
+    
+        Raises:
+            PreprocessorError: If preprocessing fails
+        """
+        input_path = Path(input_path)
+        if not input_path.exists():
+            raise PreprocessorError(
+                f"Input file does not exist: {input_path}",
+                help_text=(
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
+            )
+    
+        try:
+            with open(input_path, "r") as f:
+                content_for_cpp = f.read()
+        except Exception as e:
+            raise PreprocessorError(
+                f"Failed to read input file: {str(e)}",
+                file=str(input_path),
+                help_text=("Ensure the file exists and has proper " "read permissions"),
+            )
+    
+        # Create a temporary file for the preprocessor input
+        tmp_input = tempfile.NamedTemporaryFile(
+            mode="w",
+            delete=False,
+            suffix=".dts",
+            dir=None,  # Use system default temp dir (usually /tmp)
+        )
+        tmp_input.write(content_for_cpp)
+        tmp_input.close()
+        tmp_input_file = Path(tmp_input.name)
+    
+        # Debug: print environment and temp file contents
+        print("[DtsPreprocessor] ENVIRONMENT:")
+        for k, v in os.environ.items():
+            if len(v) > 40:
+                print(f"  {k}={v[:20]}...{v[-20:]}")
+            else:
+                print(f"  {k}={v}")
+        if len(str(tmp_input_file)) > 70:
+            print(f"[DtsPreprocessor] Temp file: " f"{str(tmp_input_file)[:70]}...")
+        else:
+            print(f"[DtsPreprocessor] Temp file: {tmp_input_file}")
+        with open(tmp_input_file, "r") as f:
+            print("[DtsPreprocessor] Temp file contents:")
+            print(f.read())
+    
+        try:
+            # Build preprocessor command as a list for shell=False
+            if os.uname().sysname == "Darwin":
+                # Use clang with assembler-with-cpp for .dts files on macOS
+                clang_path = "/usr/bin/clang"
+                cpp_cmd = [
+                    clang_path,
+                    "-E",
+                    "-nostdinc",
+                    "-undef",
+                    "-x",
+                    "assembler-with-cpp",
+                ]
+                for path in self.include_paths:
+                    cpp_cmd.extend(["-I", str(path)])
+                cpp_cmd.append(str(tmp_input_file))
+            else:
+                cpp_cmd = [
+                    str(self.cpp_path),
+                    "-E",
+                ]
+                for path in self.include_paths:
+                    cpp_cmd.extend(["-I", str(path)])
+                cpp_cmd.extend(["-x", "c", str(tmp_input_file)])
+    
+            # Debug: print the constructed command list
+            print("[DtsPreprocessor] cpp command:", cpp_cmd)
+    
+            # Run preprocessor with shell=False
+            try:
+>               result = subprocess.run(
+                    cpp_cmd,
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                    shell=False,
+                )
+
+converter/dts/preprocessor.py:214: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = True, timeout = None, check = True
+popenargs = (['/usr/bin/clang', '-E', '-nostdinc', '-undef', '-x', 'assembler-with-cpp', ...],)
+kwargs = {'shell': False, 'stderr': -1, 'stdout': -1, 'text': True}
+process = <Popen: returncode: 1 args: ['/usr/bin/clang', '-E', '-nostdinc', '-undef', ...>
+stdout = '# 1 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpu2s9v7mn.dts"\n# 1 "<built-in>" 1\n# 1 "<built-in>" 3\n\n\n\...yers";\n\n        tri_layer {\n            if-layers = <1 2>;\n            then-layer = <3>;\n        };\n    };\n};\n'
+stderr = "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpu2s9v7mn.dts:1:10: fatal error: 'dt-bindings/zmk/matrix_transform...lude <dt-bindings/zmk/matrix_transform.h>\n      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+retcode = 1
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['/usr/bin/clang', '-E', '-nostdinc', '-undef', '-x', 'assembler-with-cpp', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpu2s9v7mn.dts']' returned non-zero exit status 1.
+
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:526: CalledProcessError
+
+During handling of the above exception, another exception occurred:
+
+sample_keymap_path = '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/complex_keymap.zmk'
+
+    def test_full_pipeline_performance(sample_keymap_path):
+        """Test the performance of the full conversion pipeline."""
+        preprocessor = DtsPreprocessor()
+        parser = DtsParser()
+        extractor = KeymapExtractor()
+        transformer = KanataTransformer()
+    
+        def run_pipeline():
+            content = preprocessor.preprocess(sample_keymap_path)
+            ast = parser.parse(content)
+            config = extractor.extract(ast)
+            return transformer.transform(config)
+    
+        # Run multiple times to get stable measurements
+        times = []
+        for _ in range(10):
+>           _, duration = measure_time(run_pipeline)
+
+tests/dts/test_performance.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/dts/test_performance.py:16: in measure_time
+    result = func(*args, **kwargs)
+tests/dts/test_performance.py:114: in run_pipeline
+    content = preprocessor.preprocess(sample_keymap_path)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103bcc7c0>
+input_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/complex_keymap.zmk')
+matrix_size = None
+
+    def preprocess(
+        self,
+        input_path: str,
+        matrix_size: Optional[Tuple[int, int]] = None,
+    ) -> str:
+        """Preprocess a DTS file.
+    
+        Args:
+            input_path: Path to the input file
+            matrix_size: Optional tuple of (rows, cols) for matrix transform
+    
+        Returns:
+            The preprocessed content as a string
+    
+        Raises:
+            PreprocessorError: If preprocessing fails
+        """
+        input_path = Path(input_path)
+        if not input_path.exists():
+            raise PreprocessorError(
+                f"Input file does not exist: {input_path}",
+                help_text=(
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
+            )
+    
+        try:
+            with open(input_path, "r") as f:
+                content_for_cpp = f.read()
+        except Exception as e:
+            raise PreprocessorError(
+                f"Failed to read input file: {str(e)}",
+                file=str(input_path),
+                help_text=("Ensure the file exists and has proper " "read permissions"),
+            )
+    
+        # Create a temporary file for the preprocessor input
+        tmp_input = tempfile.NamedTemporaryFile(
+            mode="w",
+            delete=False,
+            suffix=".dts",
+            dir=None,  # Use system default temp dir (usually /tmp)
+        )
+        tmp_input.write(content_for_cpp)
+        tmp_input.close()
+        tmp_input_file = Path(tmp_input.name)
+    
+        # Debug: print environment and temp file contents
+        print("[DtsPreprocessor] ENVIRONMENT:")
+        for k, v in os.environ.items():
+            if len(v) > 40:
+                print(f"  {k}={v[:20]}...{v[-20:]}")
+            else:
+                print(f"  {k}={v}")
+        if len(str(tmp_input_file)) > 70:
+            print(f"[DtsPreprocessor] Temp file: " f"{str(tmp_input_file)[:70]}...")
+        else:
+            print(f"[DtsPreprocessor] Temp file: {tmp_input_file}")
+        with open(tmp_input_file, "r") as f:
+            print("[DtsPreprocessor] Temp file contents:")
+            print(f.read())
+    
+        try:
+            # Build preprocessor command as a list for shell=False
+            if os.uname().sysname == "Darwin":
+                # Use clang with assembler-with-cpp for .dts files on macOS
+                clang_path = "/usr/bin/clang"
+                cpp_cmd = [
+                    clang_path,
+                    "-E",
+                    "-nostdinc",
+                    "-undef",
+                    "-x",
+                    "assembler-with-cpp",
+                ]
+                for path in self.include_paths:
+                    cpp_cmd.extend(["-I", str(path)])
+                cpp_cmd.append(str(tmp_input_file))
+            else:
+                cpp_cmd = [
+                    str(self.cpp_path),
+                    "-E",
+                ]
+                for path in self.include_paths:
+                    cpp_cmd.extend(["-I", str(path)])
+                cpp_cmd.extend(["-x", "c", str(tmp_input_file)])
+    
+            # Debug: print the constructed command list
+            print("[DtsPreprocessor] cpp command:", cpp_cmd)
+    
+            # Run preprocessor with shell=False
+            try:
+                result = subprocess.run(
+                    cpp_cmd,
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                    shell=False,
+                )
+            except subprocess.CalledProcessError as e:
+>               raise PreprocessorError(
+                    "Failed to process DTS directives",
+                    file=str(input_path),
+                    context=str(e),
+                    help_text=("Check for malformed DTS directives in " "input file"),
+                )
+E               converter.dts.preprocessor.PreprocessorError: Failed to process DTS directives
+
+converter/dts/preprocessor.py:222: PreprocessorError
+----------------------------- Captured stdout call -----------------------------
+[DtsPreprocessor] ENVIRONMENT:
+  MallocNanoZone=0
+  USER=malpern
+  SECURITYSESSIONID=186a3
+  COMMAND_MODE=unix2003
+  __CFBundleIdentifier=com.todesktop.230313mzl4w4u92
+  PATH=/Users/malpern/.curs....cache/lm-studio/bin
+  LOGNAME=malpern
+  SSH_AUTH_SOCK=/private/tmp/com.app...x1qskoux7b/Listeners
+  HOME=/Users/malpern
+  SHELL=/bin/zsh
+  TMPDIR=/var/folders/0s/42v7...1cdnx0vrvyr0000gn/T/
+  LaunchInstanceID=BFD4BF06-15BD-4F76-8D8A-1AEC50E6795A
+  __CF_USER_TEXT_ENCODING=0x1F5:0x0:0x0
+  XPC_SERVICE_NAME=0
+  XPC_FLAGS=0x0
+  ORIGINAL_XDG_CURRENT_DESKTOP=undefined
+  CURSOR_TRACE_ID=f5e099fd466543c5a0d391e03a641e89
+  SHLVL=1
+  PWD=/Volumes/FlashGordon...ox/code/nicktokatana
+  OLDPWD=/Volumes/FlashGordon...ox/code/nicktokatana
+  HOMEBREW_PREFIX=/opt/homebrew
+  HOMEBREW_CELLAR=/opt/homebrew/Cellar
+  HOMEBREW_REPOSITORY=/opt/homebrew
+  INFOPATH=/opt/homebrew/share/...homebrew/share/info:
+  YOUR_CONSUMER_KEY=ah6HAffNJRCv4xNrV4OZcVIrQ
+  YOUR_CONSUMER_SECRET=EXM9IzH9IEdE2yJf0t5F...DPuFXLk55DwB8pLRswR5
+  YOUR_ACCESS_TOKEN=1483-5UbadNrxZUkJpAp...JSXPVSxtsPwJyrUrZvcO
+  YOUR_ACCESS_TOKEN_SECRET=jeyyEWPHAgoS0ebKus4t...0jH2T3gRCIz3dsYXQwqS
+  YOUR_BEARER_TOKEN=AAAAAAAAAAAAAAAAAAAA...8YVAWCOQu6Pyu4yhuY0a
+  OPENAI_API_KEY=sk-qVQDNdwpfPhrAvFr9...ob362AQbhWVa3p95yD28
+  ANTHROPIC_API_KEY=sk-ant-api03-Tq7nYRm...SCuUoAfwIQg-NWFWuAAA
+  TAVILY_API_KEY=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
+  BING_SUBSCRIPTION_KEY=bec8ded0f34a421ba60cc3bd4626825e
+  EDITOR=vi
+  ZSH=/Users/malpern/.oh-my-zsh
+  PAGER=head -n 10000 | cat
+  LESS=-R
+  LSCOLORS=Gxfxcxdxbxegedabagacad
+  LS_COLORS=di=1;36:ln=35:so=32:...46:tw=30;42:ow=30;43
+  PYENV_ROOT=/Users/malpern/.pyenv
+  PYENV_SHELL=zsh
+  DISABLE_AUTO_UPDATE=true
+  TERM_PROGRAM=vscode
+  TERM_PROGRAM_VERSION=0.50.1
+  LANG=en_US.UTF-8
+  COLORTERM=truecolor
+  GIT_ASKPASS=/Applications/Cursor.../git/dist/askpass.sh
+  VSCODE_GIT_ASKPASS_NODE=/Applications/Cursor...rsor Helper (Plugin)
+  VSCODE_GIT_ASKPASS_EXTRA_ARGS=
+  VSCODE_GIT_ASKPASS_MAIN=/Applications/Cursor...dist/askpass-main.js
+  VSCODE_GIT_IPC_HANDLE=/var/folders/0s/42v7...-git-14a5ce3e7f.sock
+  PYENV_VERSION=3.10.16
+  PYENV_DIR=/
+  VIRTUAL_ENV=/Volumes/Flash Gordo...e/nicktokatana/.venv
+  PYENV_HOOK_PATH=/Users/malpern/.pyen.../usr/lib/pyenv/hooks
+  VIRTUAL_ENV_PROMPT=.venv
+  VSCODE_INJECTION=1
+  ZDOTDIR=/Users/malpern
+  USER_ZDOTDIR=/Users/malpern
+  TERM=xterm-256color
+  PS1=.venv%(?:%{[01;32m%...} $(git_prompt_info)
+  PYTHONPATH=.
+  _=/Users/malpern/.pyen...s/3.10.16/bin/pytest
+  PYTEST_VERSION=8.3.4
+  PYTEST_CURRENT_TEST=tests/dts/test_perfo...e_performance (call)
+[DtsPreprocessor] Temp file: /var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpu2s9v7mn.dts
+[DtsPreprocessor] Temp file contents:
+#include <dt-bindings/zmk/matrix_transform.h>
+
+/ {
+    chosen {
+        zmk,matrix_transform = &default_transform;
+    };
+
+    default_transform: matrix_transform {
+        compatible = "zmk,matrix-transform";
+        rows = <4>;
+        columns = <12>;
+        map = <
+            RC(0,0)  RC(0,1)  RC(0,2)  RC(0,3)  RC(0,4)  RC(0,5)  RC(0,6)  RC(0,7)  RC(0,8)  RC(0,9)  RC(0,10) RC(0,11)
+            RC(1,0)  RC(1,1)  RC(1,2)  RC(1,3)  RC(1,4)  RC(1,5)  RC(1,6)  RC(1,7)  RC(1,8)  RC(1,9)  RC(1,10) RC(1,11)
+            RC(2,0)  RC(2,1)  RC(2,2)  RC(2,3)  RC(2,4)  RC(2,5)  RC(2,6)  RC(2,7)  RC(2,8)  RC(2,9)  RC(2,10) RC(2,11)
+            RC(3,0)  RC(3,1)  RC(3,2)  RC(3,3)  RC(3,4)  RC(3,5)  RC(3,6)  RC(3,7)  RC(3,8)  RC(3,9)  RC(3,10) RC(3,11)
+        >;
+    };
+
+    behaviors {
+        mt: mod_tap {
+            compatible = "zmk,behavior-hold-tap";
+            tapping-term-ms = <200>;
+            #binding-cells = <2>;
+        };
+        
+        lt: layer_tap {
+            compatible = "zmk,behavior-hold-tap";
+            tapping-term-ms = <200>;
+            #binding-cells = <2>;
+        };
+        
+        macro_a: macro_a {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp A &kp B>;
+        };
+        
+        macro_b: macro_b {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp C &kp D>;
+        };
+        
+        unicode: unicode {
+            compatible = "zmk,behavior-unicode";
+            #binding-cells = <1>;
+        };
+        
+        uc_string: unicode_string {
+            compatible = "zmk,behavior-unicode-string";
+            #binding-cells = <1>;
+            strings = <
+                "smile" "😊"
+                "heart" "❤️"
+            >;
+        };
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+        
+        default_layer {
+            bindings = <
+                &mt LSHIFT A  &kp B        &macro_a     &kp D         &lt 1 E      &kp F
+                &kp G         &kp H        &kp I        &kp J         &kp K        &kp L
+                &kp M         &kp N        &kp O        &kp P         &kp Q        &kp R
+                &kp S         &kp T        &kp U        &kp V         &kp W        &kp X
+            >;
+        };
+        
+        lower_layer {
+            bindings = <
+                &kp N1        &kp N2       &kp N3       &kp N4        &kp N5       &kp N6
+                &kp N7        &kp N8       &kp N9       &kp N0        &kp MINUS    &kp EQUAL
+                &kp F1        &kp F2       &kp F3       &kp F4        &kp F5       &kp F6
+                &kp F7        &kp F8       &kp F9       &kp F10       &kp F11      &kp F12
+            >;
+        };
+        
+        raise_layer {
+            bindings = <
+                &kp EXCLAMATION &kp AT     &kp HASH     &kp DOLLAR    &kp PERCENT  &kp CARET
+                &kp AMPERSAND   &kp STAR   &kp LPAR     &kp RPAR      &kp UNDER    &kp PLUS
+                &kp F1          &kp F2     &kp F3       &kp F4        &kp F5       &kp F6
+                &kp F7          &kp F8     &kp F9       &kp F10       &kp F11      &kp F12
+            >;
+        };
+        
+        adjust_layer {
+            bindings = <
+                &kp RESET      &kp BOOTLOADER &kp NONE  &kp NONE      &kp NONE     &kp NONE
+                &kp NONE       &kp NONE       &kp NONE  &kp NONE      &kp NONE     &kp NONE
+                &kp NONE       &kp NONE       &kp NONE  &kp NONE      &kp NONE     &kp NONE
+                &kp NONE       &kp NONE       &kp NONE  &kp NONE      &kp NONE     &kp NONE
+            >;
+        };
+    };
+
+    combos {
+        compatible = "zmk,combos";
+        
+        combo_esc {
+            timeout-ms = <50>;
+            key-positions = <0 1>;
+            bindings = <&kp ESC>;
+        };
+        
+        combo_tab {
+            timeout-ms = <50>;
+            key-positions = <1 2>;
+            bindings = <&kp TAB>;
+        };
+        
+        combo_enter {
+            timeout-ms = <50>;
+            key-positions = <2 3>;
+            bindings = <&kp ENTER>;
+        };
+    };
+
+    conditional_layers {
+        compatible = "zmk,conditional-layers";
+        
+        tri_layer {
+            if-layers = <1 2>;
+            then-layer = <3>;
+        };
+    };
+}; 
+[DtsPreprocessor] cpp command: ['/usr/bin/clang', '-E', '-nostdinc', '-undef', '-x', 'assembler-with-cpp', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpu2s9v7mn.dts']
+_______________________ test_preprocessor_initialization _______________________
+
+    def test_preprocessor_initialization():
+        """Test preprocessor initialization with different options."""
+        # Test default initialization
+        preprocessor = DtsPreprocessor()
+>       assert preprocessor.cpp_path.endswith("cpp") or preprocessor.cpp_path.endswith(
+            "clang"
+        )
+E       AttributeError: 'PosixPath' object has no attribute 'endswith'
+
+tests/dts/test_preprocessor.py:92: AttributeError
+_________________________ test_preprocess_invalid_file _________________________
+
+    def test_preprocess_invalid_file():
+        """Test preprocessing a non-existent file."""
+        preprocessor = DtsPreprocessor()
+        with pytest.raises(FileNotFoundError):
+>           preprocessor.preprocess("nonexistent.dts")
+
+tests/dts/test_preprocessor.py:201: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103c5ff70>
+input_path = PosixPath('nonexistent.dts'), matrix_size = None
+
+    def preprocess(
+        self,
+        input_path: str,
+        matrix_size: Optional[Tuple[int, int]] = None,
+    ) -> str:
+        """Preprocess a DTS file.
+    
+        Args:
+            input_path: Path to the input file
+            matrix_size: Optional tuple of (rows, cols) for matrix transform
+    
+        Returns:
+            The preprocessed content as a string
+    
+        Raises:
+            PreprocessorError: If preprocessing fails
+        """
+        input_path = Path(input_path)
+        if not input_path.exists():
+>           raise PreprocessorError(
+                f"Input file does not exist: {input_path}",
+                help_text=(
+                    "Ensure the input file exists and has proper " "read permissions"
+                ),
+            )
+E           converter.dts.preprocessor.PreprocessorError: Input file does not exist: nonexistent.dts
+
+converter/dts/preprocessor.py:141: PreprocessorError
+_____________________ test_preprocess_invalid_cpp_command ______________________
+
+temp_dir = '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmph57k9rqm'
+
+    def test_preprocess_invalid_cpp_command(temp_dir):
+        """Test preprocessing with invalid cpp command."""
+        # Create a simple DTS file
+        input_path = os.path.join(temp_dir, "test.dts")
+        with open(input_path, "w") as f:
+            f.write("/ { test = <1>; };")
+    
+        # Use invalid cpp path
+        preprocessor = DtsPreprocessor(cpp_path="invalid_cpp")
+>       with pytest.raises(PreprocessorError):
+E       Failed: DID NOT RAISE <class 'converter.dts.preprocessor.PreprocessorError'>
+
+tests/dts/test_preprocessor.py:213: Failed
+----------------------------- Captured stdout call -----------------------------
+[DtsPreprocessor] ENVIRONMENT:
+  MallocNanoZone=0
+  USER=malpern
+  SECURITYSESSIONID=186a3
+  COMMAND_MODE=unix2003
+  __CFBundleIdentifier=com.todesktop.230313mzl4w4u92
+  PATH=/Users/malpern/.curs....cache/lm-studio/bin
+  LOGNAME=malpern
+  SSH_AUTH_SOCK=/private/tmp/com.app...x1qskoux7b/Listeners
+  HOME=/Users/malpern
+  SHELL=/bin/zsh
+  TMPDIR=/var/folders/0s/42v7...1cdnx0vrvyr0000gn/T/
+  LaunchInstanceID=BFD4BF06-15BD-4F76-8D8A-1AEC50E6795A
+  __CF_USER_TEXT_ENCODING=0x1F5:0x0:0x0
+  XPC_SERVICE_NAME=0
+  XPC_FLAGS=0x0
+  ORIGINAL_XDG_CURRENT_DESKTOP=undefined
+  CURSOR_TRACE_ID=f5e099fd466543c5a0d391e03a641e89
+  SHLVL=1
+  PWD=/Volumes/FlashGordon...ox/code/nicktokatana
+  OLDPWD=/Volumes/FlashGordon...ox/code/nicktokatana
+  HOMEBREW_PREFIX=/opt/homebrew
+  HOMEBREW_CELLAR=/opt/homebrew/Cellar
+  HOMEBREW_REPOSITORY=/opt/homebrew
+  INFOPATH=/opt/homebrew/share/...homebrew/share/info:
+  YOUR_CONSUMER_KEY=ah6HAffNJRCv4xNrV4OZcVIrQ
+  YOUR_CONSUMER_SECRET=EXM9IzH9IEdE2yJf0t5F...DPuFXLk55DwB8pLRswR5
+  YOUR_ACCESS_TOKEN=1483-5UbadNrxZUkJpAp...JSXPVSxtsPwJyrUrZvcO
+  YOUR_ACCESS_TOKEN_SECRET=jeyyEWPHAgoS0ebKus4t...0jH2T3gRCIz3dsYXQwqS
+  YOUR_BEARER_TOKEN=AAAAAAAAAAAAAAAAAAAA...8YVAWCOQu6Pyu4yhuY0a
+  OPENAI_API_KEY=sk-qVQDNdwpfPhrAvFr9...ob362AQbhWVa3p95yD28
+  ANTHROPIC_API_KEY=sk-ant-api03-Tq7nYRm...SCuUoAfwIQg-NWFWuAAA
+  TAVILY_API_KEY=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
+  BING_SUBSCRIPTION_KEY=bec8ded0f34a421ba60cc3bd4626825e
+  EDITOR=vi
+  ZSH=/Users/malpern/.oh-my-zsh
+  PAGER=head -n 10000 | cat
+  LESS=-R
+  LSCOLORS=Gxfxcxdxbxegedabagacad
+  LS_COLORS=di=1;36:ln=35:so=32:...46:tw=30;42:ow=30;43
+  PYENV_ROOT=/Users/malpern/.pyenv
+  PYENV_SHELL=zsh
+  DISABLE_AUTO_UPDATE=true
+  TERM_PROGRAM=vscode
+  TERM_PROGRAM_VERSION=0.50.1
+  LANG=en_US.UTF-8
+  COLORTERM=truecolor
+  GIT_ASKPASS=/Applications/Cursor.../git/dist/askpass.sh
+  VSCODE_GIT_ASKPASS_NODE=/Applications/Cursor...rsor Helper (Plugin)
+  VSCODE_GIT_ASKPASS_EXTRA_ARGS=
+  VSCODE_GIT_ASKPASS_MAIN=/Applications/Cursor...dist/askpass-main.js
+  VSCODE_GIT_IPC_HANDLE=/var/folders/0s/42v7...-git-14a5ce3e7f.sock
+  PYENV_VERSION=3.10.16
+  PYENV_DIR=/
+  VIRTUAL_ENV=/Volumes/Flash Gordo...e/nicktokatana/.venv
+  PYENV_HOOK_PATH=/Users/malpern/.pyen.../usr/lib/pyenv/hooks
+  VIRTUAL_ENV_PROMPT=.venv
+  VSCODE_INJECTION=1
+  ZDOTDIR=/Users/malpern
+  USER_ZDOTDIR=/Users/malpern
+  TERM=xterm-256color
+  PS1=.venv%(?:%{[01;32m%...} $(git_prompt_info)
+  PYTHONPATH=.
+  _=/Users/malpern/.pyen...s/3.10.16/bin/pytest
+  PYTEST_VERSION=8.3.4
+  PYTEST_CURRENT_TEST=tests/dts/test_prepr...d_cpp_command (call)
+[DtsPreprocessor] Temp file: /var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpmxr152my.dts
+[DtsPreprocessor] Temp file contents:
+/ { test = <1>; };
+[DtsPreprocessor] cpp command: ['/usr/bin/clang', '-E', '-nostdinc', '-undef', '-x', 'assembler-with-cpp', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpmxr152my.dts']
+________________________ test_preprocess_simple_keymap _________________________
+
+preprocessor = <converter.dts.preprocessor.DtsPreprocessor object at 0x103ccc070>
+simple_keymap_path = PosixPath('/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/simple_keymap.zmk')
+
+    def test_preprocess_simple_keymap(preprocessor, simple_keymap_path):
+        """Test preprocessing a simple keymap."""
+        result = preprocessor.preprocess(str(simple_keymap_path))
+    
+        # Check that the result contains the expected content
+>       assert "RC(0,0)" in result
+E       assert 'RC(0,0)' in '# 1 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp0kqvb29w.dts"\n# 1 "<built-in>" 1\n# 1 "<built-in>" 3\n\n\n\n\n\n\n# 1 "<command line>" 1\n# 1 "<built-in>" 2\n# 1 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp0kqvb29w.dts" 2\n# 1 "/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include/dt-bindings/zmk/keys.h" 1\n# 2 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp0kqvb29w.dts" 2\n# 1 "/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include/dt-bindings/zmk/matrix_transform.h" 1\n# 3 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp0kqvb29w.dts" 2\n\n/ {\n    chosen {\n        zmk,matrix_transform = &default_transform;\n    };\n\n    default_transform: matrix_transform {\n        compatible = "zmk,matrix-transform";\n        rows = <2>;\n        columns = <3>;\n        map = <\n            ((0) << 8 | (0)) ((0) << 8 | (1)) ((0) << 8 | (2))\n            ((1) << 8 | (0)) ((1) << 8 | (1)) ((1) << 8 | (2))\n        >;\n    };\n\n    keymap {\n        compatible = "zmk,keymap";\n\n        default_layer {\n            bindings = <\n                &kp 0x04 &kp 0x05 &kp 0x06\n                &kp 0x07 &kp 0x08 &kp 0x09\n            >;\n        };\n    };\n};\n'
+
+tests/dts/test_preprocessor.py:248: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[DtsPreprocessor] ENVIRONMENT:
+  MallocNanoZone=0
+  USER=malpern
+  SECURITYSESSIONID=186a3
+  COMMAND_MODE=unix2003
+  __CFBundleIdentifier=com.todesktop.230313mzl4w4u92
+  PATH=/Users/malpern/.curs....cache/lm-studio/bin
+  LOGNAME=malpern
+  SSH_AUTH_SOCK=/private/tmp/com.app...x1qskoux7b/Listeners
+  HOME=/Users/malpern
+  SHELL=/bin/zsh
+  TMPDIR=/var/folders/0s/42v7...1cdnx0vrvyr0000gn/T/
+  LaunchInstanceID=BFD4BF06-15BD-4F76-8D8A-1AEC50E6795A
+  __CF_USER_TEXT_ENCODING=0x1F5:0x0:0x0
+  XPC_SERVICE_NAME=0
+  XPC_FLAGS=0x0
+  ORIGINAL_XDG_CURRENT_DESKTOP=undefined
+  CURSOR_TRACE_ID=f5e099fd466543c5a0d391e03a641e89
+  SHLVL=1
+  PWD=/Volumes/FlashGordon...ox/code/nicktokatana
+  OLDPWD=/Volumes/FlashGordon...ox/code/nicktokatana
+  HOMEBREW_PREFIX=/opt/homebrew
+  HOMEBREW_CELLAR=/opt/homebrew/Cellar
+  HOMEBREW_REPOSITORY=/opt/homebrew
+  INFOPATH=/opt/homebrew/share/...homebrew/share/info:
+  YOUR_CONSUMER_KEY=ah6HAffNJRCv4xNrV4OZcVIrQ
+  YOUR_CONSUMER_SECRET=EXM9IzH9IEdE2yJf0t5F...DPuFXLk55DwB8pLRswR5
+  YOUR_ACCESS_TOKEN=1483-5UbadNrxZUkJpAp...JSXPVSxtsPwJyrUrZvcO
+  YOUR_ACCESS_TOKEN_SECRET=jeyyEWPHAgoS0ebKus4t...0jH2T3gRCIz3dsYXQwqS
+  YOUR_BEARER_TOKEN=AAAAAAAAAAAAAAAAAAAA...8YVAWCOQu6Pyu4yhuY0a
+  OPENAI_API_KEY=sk-qVQDNdwpfPhrAvFr9...ob362AQbhWVa3p95yD28
+  ANTHROPIC_API_KEY=sk-ant-api03-Tq7nYRm...SCuUoAfwIQg-NWFWuAAA
+  TAVILY_API_KEY=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
+  BING_SUBSCRIPTION_KEY=bec8ded0f34a421ba60cc3bd4626825e
+  EDITOR=vi
+  ZSH=/Users/malpern/.oh-my-zsh
+  PAGER=head -n 10000 | cat
+  LESS=-R
+  LSCOLORS=Gxfxcxdxbxegedabagacad
+  LS_COLORS=di=1;36:ln=35:so=32:...46:tw=30;42:ow=30;43
+  PYENV_ROOT=/Users/malpern/.pyenv
+  PYENV_SHELL=zsh
+  DISABLE_AUTO_UPDATE=true
+  TERM_PROGRAM=vscode
+  TERM_PROGRAM_VERSION=0.50.1
+  LANG=en_US.UTF-8
+  COLORTERM=truecolor
+  GIT_ASKPASS=/Applications/Cursor.../git/dist/askpass.sh
+  VSCODE_GIT_ASKPASS_NODE=/Applications/Cursor...rsor Helper (Plugin)
+  VSCODE_GIT_ASKPASS_EXTRA_ARGS=
+  VSCODE_GIT_ASKPASS_MAIN=/Applications/Cursor...dist/askpass-main.js
+  VSCODE_GIT_IPC_HANDLE=/var/folders/0s/42v7...-git-14a5ce3e7f.sock
+  PYENV_VERSION=3.10.16
+  PYENV_DIR=/
+  VIRTUAL_ENV=/Volumes/Flash Gordo...e/nicktokatana/.venv
+  PYENV_HOOK_PATH=/Users/malpern/.pyen.../usr/lib/pyenv/hooks
+  VIRTUAL_ENV_PROMPT=.venv
+  VSCODE_INJECTION=1
+  ZDOTDIR=/Users/malpern
+  USER_ZDOTDIR=/Users/malpern
+  TERM=xterm-256color
+  PS1=.venv%(?:%{[01;32m%...} $(git_prompt_info)
+  PYTHONPATH=.
+  _=/Users/malpern/.pyen...s/3.10.16/bin/pytest
+  PYTEST_VERSION=8.3.4
+  PYTEST_CURRENT_TEST=tests/dts/test_prepr...simple_keymap (call)
+[DtsPreprocessor] Temp file: /var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp0kqvb29w.dts
+[DtsPreprocessor] Temp file contents:
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/matrix_transform.h>
+
+/ {
+    chosen {
+        zmk,matrix_transform = &default_transform;
+    };
+
+    default_transform: matrix_transform {
+        compatible = "zmk,matrix-transform";
+        rows = <2>;
+        columns = <3>;
+        map = <
+            RC(0,0) RC(0,1) RC(0,2)
+            RC(1,0) RC(1,1) RC(1,2)
+        >;
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+        
+        default_layer {
+            bindings = <
+                &kp A &kp B &kp C
+                &kp D &kp E &kp F
+            >;
+        };
+    };
+}; 
+[DtsPreprocessor] cpp command: ['/usr/bin/clang', '-E', '-nostdinc', '-undef', '-x', 'assembler-with-cpp', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp0kqvb29w.dts']
+___________________________ test_parse_simple_keymap ___________________________
+
+    def test_parse_simple_keymap():
+        """Test parsing a simple keymap."""
+        fixtures_dir = os.path.join(os.path.dirname(__file__), "fixtures", "dts")
+    
+        preprocessor = DtsPreprocessor(
+            include_paths=[os.path.join(fixtures_dir, "include")]
+        )
+        parser = DtsParser()
+    
+        input_file = os.path.join(fixtures_dir, "simple_keymap.zmk")
+        preprocessed = preprocessor.preprocess(input_file)
+        print("\nPreprocessed content:")
+        print(preprocessed)
+>       root = parser.parse(preprocessed)
+
+tests/test_dts_parser.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+converter/dts/parser.py:34: in parse
+    self._tokenize(content)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <converter.dts.parser.DtsParser object at 0x103df2c80>
+content = '# 1 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpw4u040xy.dts"\n# 1 "<built-in>" 1\n# 1 "<built-in>" 3\n\n\n\...      &kp 0x04 &kp 0x05 &kp 0x06\n                &kp 0x07 &kp 0x08 &kp 0x09\n            >;\n        };\n    };\n};\n'
+
+    def _tokenize(self, content: str) -> None:
+        """Tokenize DTS content and build line/column map.
+    
+        Args:
+            content: DTS content string
+    
+        Raises:
+            DtsParseError: If string or array is unterminated
+        """
+        # Remove comments first
+        try:
+            content = self._remove_comments(content)
+        except Exception as e:
+            raise DtsParseError(
+                f"Failed to process comments: {str(e)}",
+                context=format_error_context(content, 1, 1),
+            )
+    
+        # Split on whitespace, but keep strings and arrays intact
+        current = ""
+        in_string = False
+        array_stack = []  # Stack to track nested arrays
+        line = 1
+        column = 1
+    
+        i = 0
+        while i < len(content):
+            char = content[i]
+    
+            # Track line and column
+            if char == "\n":
+                line += 1
+                column = 1
+            else:
+                column += 1
+    
+            if char == '"' and not array_stack:
+                if not in_string:
+                    if current.strip():
+                        tokens = current.strip().split()
+                        self.tokens.extend(tokens)
+                        for _ in tokens:
+                            self.line_map.append((line, column - len(current)))
+                    current = char
+                else:
+                    current += char
+                    self.tokens.append(current)
+                    self.line_map.append((line, column - len(current)))
+                    current = ""
+                in_string = not in_string
+                i += 1
+            elif char == "<" and not in_string:
+                if not array_stack:
+                    if current.strip():
+                        tokens = current.strip().split()
+                        self.tokens.extend(tokens)
+                        for _ in tokens:
+                            self.line_map.append((line, column - len(current)))
+                    current = ""
+                array_stack.append((i, line, column))
+                i += 1
+            elif char == ">" and not in_string:
+                if not array_stack:
+                    raise DtsParseError(
+                        "Unexpected '>'",
+                        line=line,
+                        column=column,
+                        context=format_error_context(content, line, column),
+                    )
+    
+                start_pos, start_line, start_col = array_stack.pop()
+                if not array_stack:  # Only add token if this is the outermost array
+                    array_content = content[start_pos : i + 1]
+                    self.tokens.append(array_content)
+                    self.line_map.append((start_line, start_col))
+                i += 1
+            elif char in "{};=:" and not (in_string or array_stack):
+                if current.strip():
+                    tokens = current.strip().split()
+                    self.tokens.extend(tokens)
+                    for _ in tokens:
+                        self.line_map.append((line, column - len(current)))
+                self.tokens.append(char)
+                self.line_map.append((line, column))
+                current = ""
+                i += 1
+            else:
+                if not array_stack:
+                    current += char
+                i += 1
+    
+        if in_string:
+            raise DtsParseError(
+                "Unterminated string",
+                line=line,
+                column=column,
+                context=format_error_context(content, line, column),
+            )
+    
+        if array_stack:
+            start_line, start_col = array_stack[-1][1:]
+>           raise DtsParseError(
+                "Unterminated array",
+                line=start_line,
+                column=start_col,
+                context=format_error_context(content, start_line, start_col),
+            )
+E           converter.dts.error_handler.DtsParseError: Unterminated array at line 29, column 53
+E           
+E           27 |         map = <
+E           28 |             ((0) << 8 | (0)) ((0) << 8 | (1)) ((0) << 8 | (2))
+E           29 |             ((1) << 8 | (0)) ((1) << 8 | (1)) ((1) << 8 | (2))
+E              |                                                     ^
+E           30 |         >;
+E           31 |     };
+E           
+E           Help: Check the DTS syntax and ensure it follows the specification.
+
+converter/dts/parser.py:181: DtsParseError
+----------------------------- Captured stdout call -----------------------------
+[DtsPreprocessor] ENVIRONMENT:
+  MallocNanoZone=0
+  USER=malpern
+  SECURITYSESSIONID=186a3
+  COMMAND_MODE=unix2003
+  __CFBundleIdentifier=com.todesktop.230313mzl4w4u92
+  PATH=/Users/malpern/.curs....cache/lm-studio/bin
+  LOGNAME=malpern
+  SSH_AUTH_SOCK=/private/tmp/com.app...x1qskoux7b/Listeners
+  HOME=/Users/malpern
+  SHELL=/bin/zsh
+  TMPDIR=/var/folders/0s/42v7...1cdnx0vrvyr0000gn/T/
+  LaunchInstanceID=BFD4BF06-15BD-4F76-8D8A-1AEC50E6795A
+  __CF_USER_TEXT_ENCODING=0x1F5:0x0:0x0
+  XPC_SERVICE_NAME=0
+  XPC_FLAGS=0x0
+  ORIGINAL_XDG_CURRENT_DESKTOP=undefined
+  CURSOR_TRACE_ID=f5e099fd466543c5a0d391e03a641e89
+  SHLVL=1
+  PWD=/Volumes/FlashGordon...ox/code/nicktokatana
+  OLDPWD=/Volumes/FlashGordon...ox/code/nicktokatana
+  HOMEBREW_PREFIX=/opt/homebrew
+  HOMEBREW_CELLAR=/opt/homebrew/Cellar
+  HOMEBREW_REPOSITORY=/opt/homebrew
+  INFOPATH=/opt/homebrew/share/...homebrew/share/info:
+  YOUR_CONSUMER_KEY=ah6HAffNJRCv4xNrV4OZcVIrQ
+  YOUR_CONSUMER_SECRET=EXM9IzH9IEdE2yJf0t5F...DPuFXLk55DwB8pLRswR5
+  YOUR_ACCESS_TOKEN=1483-5UbadNrxZUkJpAp...JSXPVSxtsPwJyrUrZvcO
+  YOUR_ACCESS_TOKEN_SECRET=jeyyEWPHAgoS0ebKus4t...0jH2T3gRCIz3dsYXQwqS
+  YOUR_BEARER_TOKEN=AAAAAAAAAAAAAAAAAAAA...8YVAWCOQu6Pyu4yhuY0a
+  OPENAI_API_KEY=sk-qVQDNdwpfPhrAvFr9...ob362AQbhWVa3p95yD28
+  ANTHROPIC_API_KEY=sk-ant-api03-Tq7nYRm...SCuUoAfwIQg-NWFWuAAA
+  TAVILY_API_KEY=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
+  BING_SUBSCRIPTION_KEY=bec8ded0f34a421ba60cc3bd4626825e
+  EDITOR=vi
+  ZSH=/Users/malpern/.oh-my-zsh
+  PAGER=head -n 10000 | cat
+  LESS=-R
+  LSCOLORS=Gxfxcxdxbxegedabagacad
+  LS_COLORS=di=1;36:ln=35:so=32:...46:tw=30;42:ow=30;43
+  PYENV_ROOT=/Users/malpern/.pyenv
+  PYENV_SHELL=zsh
+  DISABLE_AUTO_UPDATE=true
+  TERM_PROGRAM=vscode
+  TERM_PROGRAM_VERSION=0.50.1
+  LANG=en_US.UTF-8
+  COLORTERM=truecolor
+  GIT_ASKPASS=/Applications/Cursor.../git/dist/askpass.sh
+  VSCODE_GIT_ASKPASS_NODE=/Applications/Cursor...rsor Helper (Plugin)
+  VSCODE_GIT_ASKPASS_EXTRA_ARGS=
+  VSCODE_GIT_ASKPASS_MAIN=/Applications/Cursor...dist/askpass-main.js
+  VSCODE_GIT_IPC_HANDLE=/var/folders/0s/42v7...-git-14a5ce3e7f.sock
+  PYENV_VERSION=3.10.16
+  PYENV_DIR=/
+  VIRTUAL_ENV=/Volumes/Flash Gordo...e/nicktokatana/.venv
+  PYENV_HOOK_PATH=/Users/malpern/.pyen.../usr/lib/pyenv/hooks
+  VIRTUAL_ENV_PROMPT=.venv
+  VSCODE_INJECTION=1
+  ZDOTDIR=/Users/malpern
+  USER_ZDOTDIR=/Users/malpern
+  TERM=xterm-256color
+  PS1=.venv%(?:%{[01;32m%...} $(git_prompt_info)
+  PYTHONPATH=.
+  _=/Users/malpern/.pyen...s/3.10.16/bin/pytest
+  PYTEST_VERSION=8.3.4
+  PYTEST_CURRENT_TEST=tests/test_dts_parse...simple_keymap (call)
+[DtsPreprocessor] Temp file: /var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpw4u040xy.dts
+[DtsPreprocessor] Temp file contents:
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/matrix_transform.h>
+
+/ {
+    chosen {
+        zmk,matrix_transform = &default_transform;
+    };
+
+    default_transform: matrix_transform {
+        compatible = "zmk,matrix-transform";
+        rows = <2>;
+        columns = <3>;
+        map = <
+            RC(0,0) RC(0,1) RC(0,2)
+            RC(1,0) RC(1,1) RC(1,2)
+        >;
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+        
+        default_layer {
+            bindings = <
+                &kp A &kp B &kp C
+                &kp D &kp E &kp F
+            >;
+        };
+    };
+}; 
+[DtsPreprocessor] cpp command: ['/usr/bin/clang', '-E', '-nostdinc', '-undef', '-x', 'assembler-with-cpp', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpw4u040xy.dts']
+
+Preprocessed content:
+# 1 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpw4u040xy.dts"
+# 1 "<built-in>" 1
+# 1 "<built-in>" 3
+
+
+
+
+
+
+# 1 "<command line>" 1
+# 1 "<built-in>" 2
+# 1 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpw4u040xy.dts" 2
+# 1 "/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include/dt-bindings/zmk/keys.h" 1
+# 2 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpw4u040xy.dts" 2
+# 1 "/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include/dt-bindings/zmk/matrix_transform.h" 1
+# 3 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpw4u040xy.dts" 2
+
+/ {
+    chosen {
+        zmk,matrix_transform = &default_transform;
+    };
+
+    default_transform: matrix_transform {
+        compatible = "zmk,matrix-transform";
+        rows = <2>;
+        columns = <3>;
+        map = <
+            ((0) << 8 | (0)) ((0) << 8 | (1)) ((0) << 8 | (2))
+            ((1) << 8 | (0)) ((1) << 8 | (1)) ((1) << 8 | (2))
+        >;
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+
+        default_layer {
+            bindings = <
+                &kp 0x04 &kp 0x05 &kp 0x06
+                &kp 0x07 &kp 0x08 &kp 0x09
+            >;
+        };
+    };
+};
+
+___________________________ test_parse_large_keymap ____________________________
+
+    def test_parse_large_keymap():
+        """Test parsing a larger keymap."""
+        fixtures_dir = os.path.join(os.path.dirname(__file__), "fixtures", "dts")
+    
+        preprocessor = DtsPreprocessor(
+            include_paths=[os.path.join(fixtures_dir, "include")]
+        )
+        parser = DtsParser()
+    
+        input_file = os.path.join(fixtures_dir, "large_keymap.zmk")
+        preprocessed = preprocessor.preprocess(input_file)
+        print("\nPreprocessed content:")
+        print(preprocessed)
+>       root = parser.parse(preprocessed)
+
+tests/test_dts_parser.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+converter/dts/parser.py:34: in parse
+    self._tokenize(content)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <converter.dts.parser.DtsParser object at 0x103c06b90>
+content = '# 1 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpiwcj7zzk.dts"\n# 1 "<built-in>" 1\n# 1 "<built-in>" 3\n\n\n\...&kp K &kp L &kp M &kp N &kp O\n                &kp P &kp Q &kp R &kp S &kp T\n            >;\n        };\n    };\n};\n'
+
+    def _tokenize(self, content: str) -> None:
+        """Tokenize DTS content and build line/column map.
+    
+        Args:
+            content: DTS content string
+    
+        Raises:
+            DtsParseError: If string or array is unterminated
+        """
+        # Remove comments first
+        try:
+            content = self._remove_comments(content)
+        except Exception as e:
+            raise DtsParseError(
+                f"Failed to process comments: {str(e)}",
+                context=format_error_context(content, 1, 1),
+            )
+    
+        # Split on whitespace, but keep strings and arrays intact
+        current = ""
+        in_string = False
+        array_stack = []  # Stack to track nested arrays
+        line = 1
+        column = 1
+    
+        i = 0
+        while i < len(content):
+            char = content[i]
+    
+            # Track line and column
+            if char == "\n":
+                line += 1
+                column = 1
+            else:
+                column += 1
+    
+            if char == '"' and not array_stack:
+                if not in_string:
+                    if current.strip():
+                        tokens = current.strip().split()
+                        self.tokens.extend(tokens)
+                        for _ in tokens:
+                            self.line_map.append((line, column - len(current)))
+                    current = char
+                else:
+                    current += char
+                    self.tokens.append(current)
+                    self.line_map.append((line, column - len(current)))
+                    current = ""
+                in_string = not in_string
+                i += 1
+            elif char == "<" and not in_string:
+                if not array_stack:
+                    if current.strip():
+                        tokens = current.strip().split()
+                        self.tokens.extend(tokens)
+                        for _ in tokens:
+                            self.line_map.append((line, column - len(current)))
+                    current = ""
+                array_stack.append((i, line, column))
+                i += 1
+            elif char == ">" and not in_string:
+                if not array_stack:
+                    raise DtsParseError(
+                        "Unexpected '>'",
+                        line=line,
+                        column=column,
+                        context=format_error_context(content, line, column),
+                    )
+    
+                start_pos, start_line, start_col = array_stack.pop()
+                if not array_stack:  # Only add token if this is the outermost array
+                    array_content = content[start_pos : i + 1]
+                    self.tokens.append(array_content)
+                    self.line_map.append((start_line, start_col))
+                i += 1
+            elif char in "{};=:" and not (in_string or array_stack):
+                if current.strip():
+                    tokens = current.strip().split()
+                    self.tokens.extend(tokens)
+                    for _ in tokens:
+                        self.line_map.append((line, column - len(current)))
+                self.tokens.append(char)
+                self.line_map.append((line, column))
+                current = ""
+                i += 1
+            else:
+                if not array_stack:
+                    current += char
+                i += 1
+    
+        if in_string:
+            raise DtsParseError(
+                "Unterminated string",
+                line=line,
+                column=column,
+                context=format_error_context(content, line, column),
+            )
+    
+        if array_stack:
+            start_line, start_col = array_stack[-1][1:]
+>           raise DtsParseError(
+                "Unterminated array",
+                line=start_line,
+                column=start_col,
+                context=format_error_context(content, start_line, start_col),
+            )
+E           converter.dts.error_handler.DtsParseError: Unterminated array at line 31, column 87
+E           
+E           29 |             ((1) << 8 | (0)) ((1) << 8 | (1)) ((1) << 8 | (2)) ((1) << 8 | (3)) ((1) << 8 | (4))
+E           30 |             ((2) << 8 | (0)) ((2) << 8 | (1)) ((2) << 8 | (2)) ((2) << 8 | (3)) ((2) << 8 | (4))
+E           31 |             ((3) << 8 | (0)) ((3) << 8 | (1)) ((3) << 8 | (2)) ((3) << 8 | (3)) ((3) << 8 | (4))
+E              |                                                                                       ^
+E           32 |         >;
+E           33 |     };
+E           
+E           Help: Check the DTS syntax and ensure it follows the specification.
+
+converter/dts/parser.py:181: DtsParseError
+----------------------------- Captured stdout call -----------------------------
+[DtsPreprocessor] ENVIRONMENT:
+  MallocNanoZone=0
+  USER=malpern
+  SECURITYSESSIONID=186a3
+  COMMAND_MODE=unix2003
+  __CFBundleIdentifier=com.todesktop.230313mzl4w4u92
+  PATH=/Users/malpern/.curs....cache/lm-studio/bin
+  LOGNAME=malpern
+  SSH_AUTH_SOCK=/private/tmp/com.app...x1qskoux7b/Listeners
+  HOME=/Users/malpern
+  SHELL=/bin/zsh
+  TMPDIR=/var/folders/0s/42v7...1cdnx0vrvyr0000gn/T/
+  LaunchInstanceID=BFD4BF06-15BD-4F76-8D8A-1AEC50E6795A
+  __CF_USER_TEXT_ENCODING=0x1F5:0x0:0x0
+  XPC_SERVICE_NAME=0
+  XPC_FLAGS=0x0
+  ORIGINAL_XDG_CURRENT_DESKTOP=undefined
+  CURSOR_TRACE_ID=f5e099fd466543c5a0d391e03a641e89
+  SHLVL=1
+  PWD=/Volumes/FlashGordon...ox/code/nicktokatana
+  OLDPWD=/Volumes/FlashGordon...ox/code/nicktokatana
+  HOMEBREW_PREFIX=/opt/homebrew
+  HOMEBREW_CELLAR=/opt/homebrew/Cellar
+  HOMEBREW_REPOSITORY=/opt/homebrew
+  INFOPATH=/opt/homebrew/share/...homebrew/share/info:
+  YOUR_CONSUMER_KEY=ah6HAffNJRCv4xNrV4OZcVIrQ
+  YOUR_CONSUMER_SECRET=EXM9IzH9IEdE2yJf0t5F...DPuFXLk55DwB8pLRswR5
+  YOUR_ACCESS_TOKEN=1483-5UbadNrxZUkJpAp...JSXPVSxtsPwJyrUrZvcO
+  YOUR_ACCESS_TOKEN_SECRET=jeyyEWPHAgoS0ebKus4t...0jH2T3gRCIz3dsYXQwqS
+  YOUR_BEARER_TOKEN=AAAAAAAAAAAAAAAAAAAA...8YVAWCOQu6Pyu4yhuY0a
+  OPENAI_API_KEY=sk-qVQDNdwpfPhrAvFr9...ob362AQbhWVa3p95yD28
+  ANTHROPIC_API_KEY=sk-ant-api03-Tq7nYRm...SCuUoAfwIQg-NWFWuAAA
+  TAVILY_API_KEY=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
+  BING_SUBSCRIPTION_KEY=bec8ded0f34a421ba60cc3bd4626825e
+  EDITOR=vi
+  ZSH=/Users/malpern/.oh-my-zsh
+  PAGER=head -n 10000 | cat
+  LESS=-R
+  LSCOLORS=Gxfxcxdxbxegedabagacad
+  LS_COLORS=di=1;36:ln=35:so=32:...46:tw=30;42:ow=30;43
+  PYENV_ROOT=/Users/malpern/.pyenv
+  PYENV_SHELL=zsh
+  DISABLE_AUTO_UPDATE=true
+  TERM_PROGRAM=vscode
+  TERM_PROGRAM_VERSION=0.50.1
+  LANG=en_US.UTF-8
+  COLORTERM=truecolor
+  GIT_ASKPASS=/Applications/Cursor.../git/dist/askpass.sh
+  VSCODE_GIT_ASKPASS_NODE=/Applications/Cursor...rsor Helper (Plugin)
+  VSCODE_GIT_ASKPASS_EXTRA_ARGS=
+  VSCODE_GIT_ASKPASS_MAIN=/Applications/Cursor...dist/askpass-main.js
+  VSCODE_GIT_IPC_HANDLE=/var/folders/0s/42v7...-git-14a5ce3e7f.sock
+  PYENV_VERSION=3.10.16
+  PYENV_DIR=/
+  VIRTUAL_ENV=/Volumes/Flash Gordo...e/nicktokatana/.venv
+  PYENV_HOOK_PATH=/Users/malpern/.pyen.../usr/lib/pyenv/hooks
+  VIRTUAL_ENV_PROMPT=.venv
+  VSCODE_INJECTION=1
+  ZDOTDIR=/Users/malpern
+  USER_ZDOTDIR=/Users/malpern
+  TERM=xterm-256color
+  PS1=.venv%(?:%{[01;32m%...} $(git_prompt_info)
+  PYTHONPATH=.
+  _=/Users/malpern/.pyen...s/3.10.16/bin/pytest
+  PYTEST_VERSION=8.3.4
+  PYTEST_CURRENT_TEST=tests/test_dts_parse..._large_keymap (call)
+[DtsPreprocessor] Temp file: /var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpiwcj7zzk.dts
+[DtsPreprocessor] Temp file contents:
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/matrix_transform.h>
+
+/ {
+    chosen {
+        zmk,matrix_transform = &default_transform;
+    };
+
+    default_transform: matrix_transform {
+        compatible = "zmk,matrix-transform";
+        rows = <4>;
+        columns = <5>;
+        map = <
+            RC(0,0) RC(0,1) RC(0,2) RC(0,3) RC(0,4)
+            RC(1,0) RC(1,1) RC(1,2) RC(1,3) RC(1,4)
+            RC(2,0) RC(2,1) RC(2,2) RC(2,3) RC(2,4)
+            RC(3,0) RC(3,1) RC(3,2) RC(3,3) RC(3,4)
+        >;
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+        
+        default_layer {
+            bindings = <
+                &kp A &kp B &kp C &kp D &kp E
+                &kp F &kp G &kp H &kp I &kp J
+                &kp K &kp L &kp M &kp N &kp O
+                &kp P &kp Q &kp R &kp S &kp T
+            >;
+        };
+    };
+}; 
+[DtsPreprocessor] cpp command: ['/usr/bin/clang', '-E', '-nostdinc', '-undef', '-x', 'assembler-with-cpp', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpiwcj7zzk.dts']
+
+Preprocessed content:
+# 1 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpiwcj7zzk.dts"
+# 1 "<built-in>" 1
+# 1 "<built-in>" 3
+
+
+
+
+
+
+# 1 "<command line>" 1
+# 1 "<built-in>" 2
+# 1 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpiwcj7zzk.dts" 2
+# 1 "/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include/dt-bindings/zmk/keys.h" 1
+# 2 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpiwcj7zzk.dts" 2
+# 1 "/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include/dt-bindings/zmk/matrix_transform.h" 1
+# 3 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpiwcj7zzk.dts" 2
+
+/ {
+    chosen {
+        zmk,matrix_transform = &default_transform;
+    };
+
+    default_transform: matrix_transform {
+        compatible = "zmk,matrix-transform";
+        rows = <4>;
+        columns = <5>;
+        map = <
+            ((0) << 8 | (0)) ((0) << 8 | (1)) ((0) << 8 | (2)) ((0) << 8 | (3)) ((0) << 8 | (4))
+            ((1) << 8 | (0)) ((1) << 8 | (1)) ((1) << 8 | (2)) ((1) << 8 | (3)) ((1) << 8 | (4))
+            ((2) << 8 | (0)) ((2) << 8 | (1)) ((2) << 8 | (2)) ((2) << 8 | (3)) ((2) << 8 | (4))
+            ((3) << 8 | (0)) ((3) << 8 | (1)) ((3) << 8 | (2)) ((3) << 8 | (3)) ((3) << 8 | (4))
+        >;
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+
+        default_layer {
+            bindings = <
+                &kp 0x04 &kp 0x05 &kp 0x06 &kp 0x07 &kp 0x08
+                &kp 0x09 &kp G &kp H &kp I &kp J
+                &kp K &kp L &kp M &kp N &kp O
+                &kp P &kp Q &kp R &kp S &kp T
+            >;
+        };
+    };
+};
+
+________________________ test_preprocessor_large_matrix ________________________
+
+    def test_preprocessor_large_matrix():
+        # Get the absolute path to the test fixtures directory
+        fixtures_dir = os.path.join(os.path.dirname(__file__), "fixtures", "dts")
+        include_path = os.path.join(fixtures_dir, "include")
+    
+        # Create preprocessor with include path
+        preprocessor = DtsPreprocessor(include_paths=[include_path])
+    
+        # Preprocess the test file
+        input_file = os.path.join(fixtures_dir, "large_keymap.zmk")
+        result = preprocessor.preprocess(input_file)
+    
+        # Check that the result contains the expected content
+        for row in range(4):
+            for col in range(5):
+                assert f"(({row}) << 8 | ({col}))" in result
+    
+        # Check some key bindings
+        assert "&kp 0x04" in result  # A
+>       assert "&kp 0x17" in result  # T
+E       assert '&kp 0x17' in '# 1 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpcnqt5_pc.dts"\n# 1 "<built-in>" 1\n# 1 "<built-in>" 3\n\n\n\n\n\n\n# 1 "<command line>" 1\n# 1 "<built-in>" 2\n# 1 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpcnqt5_pc.dts" 2\n# 1 "/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include/dt-bindings/zmk/keys.h" 1\n# 2 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpcnqt5_pc.dts" 2\n# 1 "/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include/dt-bindings/zmk/matrix_transform.h" 1\n# 3 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpcnqt5_pc.dts" 2\n\n/ {\n    chosen {\n        zmk,matrix_transform = &default_transform;\n    };\n\n    default_transform: matrix_transform {\n        compatible = "zmk,matrix-transform";\n        rows = <4>;\n        columns = <5>;\n        map = <\n            ((0) << 8 | (0)) ((0) << 8 | (1)) ((0) << 8 | (2)) ((0) << 8 | (3)) ((0) << 8 | (4))\n            ((1) << 8 | (0)) ((1) << 8 | (1)) ((1) << 8 | (2)) ((1) << 8 | (3)) ((1) << 8 | (4))\n            ((2) << 8 | (0)) ((2) << 8 | (1)) ((2) << 8 | (2)) ((2) << 8 | (3)) ((2) << 8 | (4))\n            ((3) << 8 | (0)) ((3) << 8 | (1)) ((3) << 8 | (2)) ((3) << 8 | (3)) ((3) << 8 | (4))\n        >;\n    };\n\n    keymap {\n        compatible = "zmk,keymap";\n\n        default_layer {\n            bindings = <\n                &kp 0x04 &kp 0x05 &kp 0x06 &kp 0x07 &kp 0x08\n                &kp 0x09 &kp G &kp H &kp I &kp J\n                &kp K &kp L &kp M &kp N &kp O\n                &kp P &kp Q &kp R &kp S &kp T\n            >;\n        };\n    };\n};\n'
+
+tests/test_dts_preprocessor.py:54: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[DtsPreprocessor] ENVIRONMENT:
+  MallocNanoZone=0
+  USER=malpern
+  SECURITYSESSIONID=186a3
+  COMMAND_MODE=unix2003
+  __CFBundleIdentifier=com.todesktop.230313mzl4w4u92
+  PATH=/Users/malpern/.curs....cache/lm-studio/bin
+  LOGNAME=malpern
+  SSH_AUTH_SOCK=/private/tmp/com.app...x1qskoux7b/Listeners
+  HOME=/Users/malpern
+  SHELL=/bin/zsh
+  TMPDIR=/var/folders/0s/42v7...1cdnx0vrvyr0000gn/T/
+  LaunchInstanceID=BFD4BF06-15BD-4F76-8D8A-1AEC50E6795A
+  __CF_USER_TEXT_ENCODING=0x1F5:0x0:0x0
+  XPC_SERVICE_NAME=0
+  XPC_FLAGS=0x0
+  ORIGINAL_XDG_CURRENT_DESKTOP=undefined
+  CURSOR_TRACE_ID=f5e099fd466543c5a0d391e03a641e89
+  SHLVL=1
+  PWD=/Volumes/FlashGordon...ox/code/nicktokatana
+  OLDPWD=/Volumes/FlashGordon...ox/code/nicktokatana
+  HOMEBREW_PREFIX=/opt/homebrew
+  HOMEBREW_CELLAR=/opt/homebrew/Cellar
+  HOMEBREW_REPOSITORY=/opt/homebrew
+  INFOPATH=/opt/homebrew/share/...homebrew/share/info:
+  YOUR_CONSUMER_KEY=ah6HAffNJRCv4xNrV4OZcVIrQ
+  YOUR_CONSUMER_SECRET=EXM9IzH9IEdE2yJf0t5F...DPuFXLk55DwB8pLRswR5
+  YOUR_ACCESS_TOKEN=1483-5UbadNrxZUkJpAp...JSXPVSxtsPwJyrUrZvcO
+  YOUR_ACCESS_TOKEN_SECRET=jeyyEWPHAgoS0ebKus4t...0jH2T3gRCIz3dsYXQwqS
+  YOUR_BEARER_TOKEN=AAAAAAAAAAAAAAAAAAAA...8YVAWCOQu6Pyu4yhuY0a
+  OPENAI_API_KEY=sk-qVQDNdwpfPhrAvFr9...ob362AQbhWVa3p95yD28
+  ANTHROPIC_API_KEY=sk-ant-api03-Tq7nYRm...SCuUoAfwIQg-NWFWuAAA
+  TAVILY_API_KEY=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
+  BING_SUBSCRIPTION_KEY=bec8ded0f34a421ba60cc3bd4626825e
+  EDITOR=vi
+  ZSH=/Users/malpern/.oh-my-zsh
+  PAGER=head -n 10000 | cat
+  LESS=-R
+  LSCOLORS=Gxfxcxdxbxegedabagacad
+  LS_COLORS=di=1;36:ln=35:so=32:...46:tw=30;42:ow=30;43
+  PYENV_ROOT=/Users/malpern/.pyenv
+  PYENV_SHELL=zsh
+  DISABLE_AUTO_UPDATE=true
+  TERM_PROGRAM=vscode
+  TERM_PROGRAM_VERSION=0.50.1
+  LANG=en_US.UTF-8
+  COLORTERM=truecolor
+  GIT_ASKPASS=/Applications/Cursor.../git/dist/askpass.sh
+  VSCODE_GIT_ASKPASS_NODE=/Applications/Cursor...rsor Helper (Plugin)
+  VSCODE_GIT_ASKPASS_EXTRA_ARGS=
+  VSCODE_GIT_ASKPASS_MAIN=/Applications/Cursor...dist/askpass-main.js
+  VSCODE_GIT_IPC_HANDLE=/var/folders/0s/42v7...-git-14a5ce3e7f.sock
+  PYENV_VERSION=3.10.16
+  PYENV_DIR=/
+  VIRTUAL_ENV=/Volumes/Flash Gordo...e/nicktokatana/.venv
+  PYENV_HOOK_PATH=/Users/malpern/.pyen.../usr/lib/pyenv/hooks
+  VIRTUAL_ENV_PROMPT=.venv
+  VSCODE_INJECTION=1
+  ZDOTDIR=/Users/malpern
+  USER_ZDOTDIR=/Users/malpern
+  TERM=xterm-256color
+  PS1=.venv%(?:%{[01;32m%...} $(git_prompt_info)
+  PYTHONPATH=.
+  _=/Users/malpern/.pyen...s/3.10.16/bin/pytest
+  PYTEST_VERSION=8.3.4
+  PYTEST_CURRENT_TEST=tests/test_dts_prepr..._large_matrix (call)
+[DtsPreprocessor] Temp file: /var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpcnqt5_pc.dts
+[DtsPreprocessor] Temp file contents:
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/matrix_transform.h>
+
+/ {
+    chosen {
+        zmk,matrix_transform = &default_transform;
+    };
+
+    default_transform: matrix_transform {
+        compatible = "zmk,matrix-transform";
+        rows = <4>;
+        columns = <5>;
+        map = <
+            RC(0,0) RC(0,1) RC(0,2) RC(0,3) RC(0,4)
+            RC(1,0) RC(1,1) RC(1,2) RC(1,3) RC(1,4)
+            RC(2,0) RC(2,1) RC(2,2) RC(2,3) RC(2,4)
+            RC(3,0) RC(3,1) RC(3,2) RC(3,3) RC(3,4)
+        >;
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+        
+        default_layer {
+            bindings = <
+                &kp A &kp B &kp C &kp D &kp E
+                &kp F &kp G &kp H &kp I &kp J
+                &kp K &kp L &kp M &kp N &kp O
+                &kp P &kp Q &kp R &kp S &kp T
+            >;
+        };
+    };
+}; 
+[DtsPreprocessor] cpp command: ['/usr/bin/clang', '-E', '-nostdinc', '-undef', '-x', 'assembler-with-cpp', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/fixtures/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpcnqt5_pc.dts']
+_______________________ test_preprocessor_error_handling _______________________
+
+    def test_preprocessor_error_handling():
+        # Test with non-existent file
+>       preprocessor = DtsPreprocessor(include_paths=["/nonexistent/path"])
+
+tests/test_dts_preprocessor.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <converter.dts.preprocessor.DtsPreprocessor object at 0x103df0c70>
+cpp_path = '/usr/bin/cpp', include_paths = ['/nonexistent/path']
+
+    def __init__(
+        self,
+        cpp_path: Optional[str] = None,
+        include_paths: Optional[List[str]] = None,
+    ):
+        """Initialize the preprocessor.
+    
+        Args:
+            cpp_path: Path to the C preprocessor executable
+            include_paths: List of paths to search for include files
+        """
+        if cpp_path is None:
+            cpp_path = "/usr/bin/cpp"
+        cpp_path = str(cpp_path)
+        if not cpp_path.endswith("cpp"):
+            raise PreprocessorError(
+                "Invalid cpp path",
+                help_text="The cpp path must point to a cpp executable",
+            )
+        self.cpp_path = Path(cpp_path)
+    
+        self.include_paths = []
+        if include_paths:
+            for path in include_paths:
+                path_obj = Path(path)
+                if not path_obj.exists():
+                    msg = f"Include path does not exist: {path}"
+                    help_text = "Ensure all include paths exist and are " "accessible"
+>                   raise PreprocessorError(msg, help_text=help_text)
+E                   converter.dts.preprocessor.PreprocessorError: Include path does not exist: /nonexistent/path
+
+converter/dts/preprocessor.py:77: PreprocessorError
+______________________ test_main_simple_conversion_stdout ______________________
+
+simple_dts_file = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-78/test_main_simple_conversion_st0/simple.keymap')
+
+    def test_main_simple_conversion_stdout(simple_dts_file: Path):
+        """Test converting a simple file and printing to stdout."""
+        result = run_main_script([str(simple_dts_file)])
+    
+>       assert result.returncode == 0
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['python', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/main.py', '/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-78/test_main_simple_conversion_st0/simple.keymap'], returncode=1, stdout='[DtsPreprocessor] ENVIRONMENT:\n  MallocNanoZone=0\n  USER=malpern\n  SECURITYSESSIONID=186a3\n  COMMAND_MODE=unix2003\n  __CFBundleIdentifier=com.todesktop.230313mzl4w4u92\n  PATH=/Users/malpern/.curs....cache/lm-studio/bin\n  LOGNAME=malpern\n  SSH_AUTH_SOCK=/private/tmp/com.app...x1qskoux7b/Listeners\n  HOME=/Users/malpern\n  SHELL=/bin/zsh\n  TMPDIR=/var/folders/0s/42v7...1cdnx0vrvyr0000gn/T/\n  LaunchInstanceID=BFD4BF06-15BD-4F76-8D8A-1AEC50E6795A\n  __CF_USER_TEXT_ENCODING=0x1F5:0x0:0x0\n  XPC_SERVICE_NAME=0\n  XPC_FLAGS=0x0\n  ORIGINAL_XDG_CURRENT_DESKTOP=undefined\n  CURSOR_TRACE_ID=f5e099fd466543c5a0d391e03a641e89\n  SHLVL=1\n  PWD=/Volumes/FlashGordon...ox/code/nicktokatana\n  OLDPWD=/Volumes/FlashGordon...ox/code/nicktokatana\n  HOMEBREW_PREFIX=/opt/homebrew\n  HOMEBREW_CELLAR=/opt/homebrew/Cellar\n  HOMEBREW_REPOSITORY=/opt/homebrew\n  INFOPATH=/opt/homebrew/share/...homebrew/share/info:\n  YOUR_CONSUMER_KEY=ah6HAf... USER_ZDOTDIR=/Users/malpern\n  TERM=xterm-256color\n  PS1=.venv%(?:%{\x1b[01;32m%...} $(git_prompt_info)\n  PYTHONPATH=.\n  _=/Users/malpern/.pyen...s/3.10.16/bin/pytest\n  PYTEST_VERSION=8.3.4\n  PYTEST_CURRENT_TEST=tests/test_main.py::...ersion_stdout (call)\n[DtsPreprocessor] Temp file: /var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp_8oi2lo3.dts\n[DtsPreprocessor] Temp file contents:\n\n/ {\n    keymap {\n        compatible = "zmk,keymap";\n        default_layer {\n            bindings = <&kp A &kp B>;\n        };\n        shifted_layer {\n            bindings = <&kp C &kp D>;\n        };\n    };\n};\n\n[DtsPreprocessor] cpp command: [\'/usr/bin/clang\', \'-E\', \'-nostdinc\', \'-undef\', \'-x\', \'assembler-with-cpp\', \'-I\', \'/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/dts/include\', \'/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp_8oi2lo3.dts\']\n', stderr='Error: Failed to convert keymap: DTS must start with root node \'/\' at line 1, column 1\n\n1 | # 1 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp_8oi2lo3.dts"\n  | ^\n2 | # 1 "<built-in>" 1\n3 | # 1 "<built-in>" 3\n\nHelp: Check the DTS syntax and ensure it follows the specification.\n').returncode
+
+tests/test_main.py:93: AssertionError
+_____________________ test_main_simple_conversion_outfile ______________________
+
+simple_dts_file = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-78/test_main_simple_conversion_ou0/simple.keymap')
+tmp_path = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-78/test_main_simple_conversion_ou0')
+
+    def test_main_simple_conversion_outfile(simple_dts_file: Path, tmp_path: Path):
+        """Test converting a simple file and writing to an output file."""
+        output_file = tmp_path / "output.kanata"
+        result = run_main_script([str(simple_dts_file), "-o", str(output_file)])
+    
+>       assert result.returncode == 0
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['python', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/main.py', '/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-78/test_main_simple_conversion_ou0/simple.keymap', '-o', '/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-78/test_main_simple_conversion_ou0/output.kanata'], returncode=1, stdout='[DtsPreprocessor] ENVIRONMENT:\n  MallocNanoZone=0\n  USER=malpern\n  SECURITYSESSIONID=186a3\n  COMMAND_MODE=unix2003\n  __CFBundleIdentifier=com.todesktop.230313mzl4w4u92\n  PATH=/Users/malpern/.curs....cache/lm-studio/bin\n  LOGNAME=malpern\n  SSH_AUTH_SOCK=/private/tmp/com.app...x1qskoux7b/Listeners\n  HOME=/Users/malpern\n  SHELL=/bin/zsh\n  TMPDIR=/var/folders/0s/42v7...1cdnx0vrvyr0000gn/T/\n  LaunchInstanceID=BFD4BF06-15BD-4F76-8D8A-1AEC50E6795A\n  __CF_USER_TEXT_ENCODING=0x1F5:0x0:0x0\n  XPC_SERVICE_NAME=0\n  XPC_FLAGS=0x0\n  ORIGINAL_XDG_CURRENT_DESKTOP=undefined\n  CURSOR_TRACE_ID=f5e099fd466543c5a0d391e03a641e89\n  SHLVL=1\n  PWD=/Volumes/FlashGordon...ox/code/nicktokatana\n  OLDPWD=/Volumes/FlashGordon...ox/code/nicktokatana\n  HOMEBREW_PREFIX=/opt/homebrew\n  HOMEBREW_CELLAR=/... USER_ZDOTDIR=/Users/malpern\n  TERM=xterm-256color\n  PS1=.venv%(?:%{\x1b[01;32m%...} $(git_prompt_info)\n  PYTHONPATH=.\n  _=/Users/malpern/.pyen...s/3.10.16/bin/pytest\n  PYTEST_VERSION=8.3.4\n  PYTEST_CURRENT_TEST=tests/test_main.py::...rsion_outfile (call)\n[DtsPreprocessor] Temp file: /var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpfdrfp_64.dts\n[DtsPreprocessor] Temp file contents:\n\n/ {\n    keymap {\n        compatible = "zmk,keymap";\n        default_layer {\n            bindings = <&kp A &kp B>;\n        };\n        shifted_layer {\n            bindings = <&kp C &kp D>;\n        };\n    };\n};\n\n[DtsPreprocessor] cpp command: [\'/usr/bin/clang\', \'-E\', \'-nostdinc\', \'-undef\', \'-x\', \'assembler-with-cpp\', \'-I\', \'/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/dts/include\', \'/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpfdrfp_64.dts\']\n', stderr='Error: Failed to convert keymap: DTS must start with root node \'/\' at line 1, column 1\n\n1 | # 1 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpfdrfp_64.dts"\n  | ^\n2 | # 1 "<built-in>" 1\n3 | # 1 "<built-in>" 3\n\nHelp: Check the DTS syntax and ensure it follows the specification.\n').returncode
+
+tests/test_main.py:106: AssertionError
+____________________________ test_main_with_include ____________________________
+
+dts_with_include_files = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-78/test_main_with_include0/with_include.keymap')
+tmp_path = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-78/test_main_with_include0')
+
+    def test_main_with_include(dts_with_include_files: Path, tmp_path: Path):
+        """Test conversion with an include path."""
+        include_dir = tmp_path / "include"
+        result = run_main_script([str(dts_with_include_files), "-I", str(include_dir)])
+    
+>       assert result.returncode == 0
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['python', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/main.py', '/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-78/test_main_with_include0/with_include.keymap', '-I', '/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-78/test_main_with_include0/include'], returncode=1, stdout='[DtsPreprocessor] ENVIRONMENT:\n  MallocNanoZone=0\n  USER=malpern\n  SECURITYSESSIONID=186a3\n  COMMAND_MODE=unix2003\n  __CFBundleIdentifier=com.todesktop.230313mzl4w4u92\n  PATH=/Users/malpern/.curs....cache/lm-studio/bin\n  LOGNAME=malpern\n  SSH_AUTH_SOCK=/private/tmp/com.app...x1qskoux7b/Listeners\n  HOME=/Users/malpern\n  SHELL=/bin/zsh\n  TMPDIR=/var/folders/0s/42v7...1cdnx0vrvyr0000gn/T/\n  LaunchInstanceID=BFD4BF06-15BD-4F76-8D8A-1AEC50E6795A\n  __CF_USER_TEXT_ENCODING=0x1F5:0x0:0x0\n  XPC_SERVICE_NAME=0\n  XPC_FLAGS=0x0\n  ORIGINAL_XDG_CURRENT_DESKTOP=undefined\n  CURSOR_TRACE_ID=f5e099fd466543c5a0d391e03a641e89\n  SHLVL=1\n  PWD=/Volumes/FlashGordon...ox/code/nicktokatana\n  OLDPWD=/Volumes/FlashGordon...ox/code/nicktokatana\n  HOMEBREW_PREFIX=/opt/homebrew\n  HOMEBREW_CELLAR=/opt/homebrew/Cel......} $(git_prompt_info)\n  PYTHONPATH=.\n  _=/Users/malpern/.pyen...s/3.10.16/bin/pytest\n  PYTEST_VERSION=8.3.4\n  PYTEST_CURRENT_TEST=tests/test_main.py::..._with_include (call)\n[DtsPreprocessor] Temp file: /var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpk516s2sv.dts\n[DtsPreprocessor] Temp file contents:\n\n#include "test_header.h"\n\n/ {\n    keymap {\n        compatible = "zmk,keymap";\n        main_layer {\n            bindings = <TEST_KEY &kp F>;\n        };\n    };\n};\n\n[DtsPreprocessor] cpp command: [\'/usr/bin/clang\', \'-E\', \'-nostdinc\', \'-undef\', \'-x\', \'assembler-with-cpp\', \'-I\', \'/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/dts/include\', \'-I\', \'/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-78/test_main_with_include0/include\', \'/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpk516s2sv.dts\']\n', stderr='Error: Failed to convert keymap: DTS must start with root node \'/\' at line 1, column 1\n\n1 | # 1 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpk516s2sv.dts"\n  | ^\n2 | # 1 "<built-in>" 1\n3 | # 1 "<built-in>" 3\n\nHelp: Check the DTS syntax and ensure it follows the specification.\n').returncode
+
+tests/test_main.py:123: AssertionError
+________________________ test_main_input_file_not_found ________________________
+
+tmp_path = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-78/test_main_input_file_not_found0')
+
+    def test_main_input_file_not_found(tmp_path: Path):
+        """Test error handling for non-existent input file."""
+        non_existent_file = tmp_path / "does_not_exist.keymap"
+        result = run_main_script([str(non_existent_file)])
+    
+        assert result.returncode != 0
+>       assert "Error: Input file not found" in result.stderr
+E       AssertionError: assert 'Error: Input file not found' in 'Error: Failed to convert keymap: Input file does not exist: /private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-78/test_main_input_file_not_found0/does_not_exist.keymap\n'
+E        +  where 'Error: Failed to convert keymap: Input file does not exist: /private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-78/test_main_input_file_not_found0/does_not_exist.keymap\n' = CompletedProcess(args=['python', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/main.py', '/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-78/test_main_input_file_not_found0/does_not_exist.keymap'], returncode=1, stdout='', stderr='Error: Failed to convert keymap: Input file does not exist: /private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-78/test_main_input_file_not_found0/does_not_exist.keymap\n').stderr
+
+tests/test_main.py:136: AssertionError
+____________________________ test_main_invalid_dts _____________________________
+
+invalid_dts_file = PosixPath('/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-78/test_main_invalid_dts0/invalid.keymap')
+
+    def test_main_invalid_dts(invalid_dts_file: Path):
+        """Test error handling for invalid DTS content."""
+        result = run_main_script([str(invalid_dts_file)])
+    
+        assert result.returncode != 0
+        # Check for a generic conversion failure message,
+        # as the exact parser error might change
+        assert "Error: Failed to convert keymap" in result.stderr
+>       assert result.stdout == ""
+E       assert "[DtsPreproce..._vf4p.dts']\n" == ''
+E         
+E         + [DtsPreprocessor] ENVIRONMENT:
+E         +   MallocNanoZone=0
+E         +   USER=malpern
+E         +   SECURITYSESSIONID=186a3
+E         +   COMMAND_MODE=unix2003
+E         +   __CFBundleIdentifier=com.todesktop.230313mzl4w4u92...
+E         
+E         ...Full output truncated (70 lines hidden), use '-vv' to show
+
+tests/test_main.py:148: AssertionError
+=========================== short test summary info ============================
+FAILED tests/dts/test_end_to_end.py::test_keymap_with_unicode - AssertionErro...
+FAILED tests/dts/test_end_to_end.py::test_error_handling - AssertionError: Re...
+FAILED tests/dts/test_extractor.py::test_extract_invalid_content - converter....
+FAILED tests/dts/test_integration.py::test_full_pipeline_error_handling - con...
+FAILED tests/dts/test_parser.py::test_parse_error_handling - KeyError: 'node1'
+FAILED tests/dts/test_parser.py::test_parse_zmk_specific_constructs - Asserti...
+FAILED tests/dts/test_performance.py::test_preprocessor_performance - convert...
+FAILED tests/dts/test_performance.py::test_parser_performance - converter.dts...
+FAILED tests/dts/test_performance.py::test_extractor_performance - converter....
+FAILED tests/dts/test_performance.py::test_full_pipeline_performance - conver...
+FAILED tests/dts/test_preprocessor.py::test_preprocessor_initialization - Att...
+FAILED tests/dts/test_preprocessor.py::test_preprocess_invalid_file - convert...
+FAILED tests/dts/test_preprocessor.py::test_preprocess_invalid_cpp_command - ...
+FAILED tests/dts/test_preprocessor.py::test_preprocess_simple_keymap - assert...
+FAILED tests/test_dts_parser.py::test_parse_simple_keymap - converter.dts.err...
+FAILED tests/test_dts_parser.py::test_parse_large_keymap - converter.dts.erro...
+FAILED tests/test_dts_preprocessor.py::test_preprocessor_large_matrix - asser...
+FAILED tests/test_dts_preprocessor.py::test_preprocessor_error_handling - con...
+FAILED tests/test_main.py::test_main_simple_conversion_stdout - assert 1 == 0
+FAILED tests/test_main.py::test_main_simple_conversion_outfile - assert 1 == 0
+FAILED tests/test_main.py::test_main_with_include - assert 1 == 0
+FAILED tests/test_main.py::test_main_input_file_not_found - AssertionError: a...
+FAILED tests/test_main.py::test_main_invalid_dts - assert "[DtsPreproce..._vf...
+======================== 23 failed, 49 passed in 0.81s =========================

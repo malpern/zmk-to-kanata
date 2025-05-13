@@ -105,17 +105,13 @@ class DtsParser:
                 context=format_error_context(content, 1, 1),
             )
 
-        # Split on whitespace, but keep strings and arrays intact
         current = ""
         in_string = False
-        array_stack = []  # Stack to track nested arrays
         line = 1
         column = 1
-
         i = 0
         while i < len(content):
             char = content[i]
-
             # Track line and column
             if char == "\n":
                 line += 1
@@ -123,7 +119,7 @@ class DtsParser:
             else:
                 column += 1
 
-            if char == '"' and not array_stack:
+            if char == '"':
                 if not in_string:
                     if current.strip():
                         tokens = current.strip().split()
@@ -139,31 +135,58 @@ class DtsParser:
                 in_string = not in_string
                 i += 1
             elif char == "<" and not in_string:
-                if not array_stack:
-                    if current.strip():
-                        tokens = current.strip().split()
-                        self.tokens.extend(tokens)
-                        for _ in tokens:
-                            self.line_map.append((line, column - len(current)))
-                    current = ""
-                array_stack.append((i, line, column))
+                if current.strip():
+                    tokens = current.strip().split()
+                    self.tokens.extend(tokens)
+                    for _ in tokens:
+                        self.line_map.append((line, column - len(current)))
+                current = ""
+                # Check for '<<' (bitshift) and treat as part of token, not array delimiter
+                if i + 1 < len(content) and content[i + 1] == "<":
+                    current += "<<"
+                    i += 2
+                    continue
+                # Start collecting the array as a single token
+                start_i = i
+                start_line = line
+                start_col = column
+                depth = 1
                 i += 1
-            elif char == ">" and not in_string:
-                if not array_stack:
+                while i < len(content) and depth > 0:
+                    c = content[i]
+                    # Check for '<<' and '>>' and treat as part of token
+                    if c == "<" and i + 1 < len(content) and content[i + 1] == "<":
+                        i += 2
+                        continue
+                    if c == ">" and i + 1 < len(content) and content[i + 1] == ">":
+                        i += 2
+                        continue
+                    # Debug: print current char, index, depth, and snippet
+                    if i - start_i < 100:
+                        print(
+                            f"[DEBUG] i={i}, char={repr(c)}, depth={depth}, snippet={content[start_i:i+1]}"
+                        )
+                    if c == "<":
+                        depth += 1
+                    elif c == ">":
+                        depth -= 1
+                    if c == "\n":
+                        line += 1
+                        column = 1
+                    else:
+                        column += 1
+                    i += 1
+                if depth != 0:
                     raise DtsParseError(
-                        "Unexpected '>'",
-                        line=line,
-                        column=column,
-                        context=format_error_context(content, line, column),
+                        "Unterminated array",
+                        line=start_line,
+                        column=start_col,
+                        context=format_error_context(content, start_line, start_col),
                     )
-
-                start_pos, start_line, start_col = array_stack.pop()
-                if not array_stack:  # Only add token if this is the outermost array
-                    array_content = content[start_pos : i + 1]
-                    self.tokens.append(array_content)
-                    self.line_map.append((start_line, start_col))
-                i += 1
-            elif char in "{};=:" and not (in_string or array_stack):
+                array_content = content[start_i:i]
+                self.tokens.append(array_content)
+                self.line_map.append((start_line, start_col))
+            elif char in "{};=:" and not in_string:
                 if current.strip():
                     tokens = current.strip().split()
                     self.tokens.extend(tokens)
@@ -174,8 +197,7 @@ class DtsParser:
                 current = ""
                 i += 1
             else:
-                if not array_stack:
-                    current += char
+                current += char
                 i += 1
 
         if in_string:
@@ -184,15 +206,6 @@ class DtsParser:
                 line=line,
                 column=column,
                 context=format_error_context(content, line, column),
-            )
-
-        if array_stack:
-            start_line, start_col = array_stack[-1][1:]
-            raise DtsParseError(
-                "Unterminated array",
-                line=start_line,
-                column=start_col,
-                context=format_error_context(content, start_line, start_col),
             )
 
         if current.strip():
@@ -286,52 +299,8 @@ class DtsParser:
         if not value:
             return []
 
-        # Split on whitespace, but handle nested arrays
-        values = []
-        current = ""
-        array_stack = []
-
-        i = 0
-        while i < len(value):
-            char = value[i]
-
-            if char == "<":
-                array_stack.append(i)
-                current += char
-            elif char == ">":
-                if not array_stack:
-                    line, col = self._get_pos_info(self.pos)
-                    raise DtsParseError(
-                        "Unexpected '>' in array value",
-                        line=line,
-                        column=col + i,
-                        context=format_error_context(self.content, line, col + i),
-                    )
-                array_stack.pop()
-                current += char
-                if not array_stack:  # End of nested array
-                    if current.strip():
-                        values.append(current.strip())
-                    current = ""
-            elif char.isspace() and not array_stack:
-                if current.strip():
-                    values.append(current.strip())
-                current = ""
-            else:
-                current += char
-            i += 1
-
-        if array_stack:
-            line, col = self._get_pos_info(self.pos)
-            raise DtsParseError(
-                "Unterminated nested array",
-                line=line,
-                column=col,
-                context=format_error_context(self.content, line, col),
-            )
-
-        if current.strip():
-            values.append(current.strip())
+        # Split on whitespace at the top level; do not track parens or arrays
+        values = [v.strip() for v in value.split() if v.strip()]
 
         # Convert values to appropriate types
         result = []

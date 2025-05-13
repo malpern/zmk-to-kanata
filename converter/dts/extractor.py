@@ -145,8 +145,9 @@ class KeymapExtractor:
             if isinstance(behavior, MacroBehavior):
                 bindings_prop = node.properties.get("bindings")
                 if bindings_prop and bindings_prop.type == "array":
-                    # Now parse the bindings, all behaviors should be available
-                    behavior.bindings = self._parse_bindings(bindings_prop.value)
+                    # For macro behaviors, store the raw string tokens (not Binding objects)
+                    # and ensure all are strings for macro transformer compatibility.
+                    behavior.bindings = [str(x) for x in bindings_prop.value]
                 else:
                     print(
                         f"Warning: Macro behavior '{behavior_key}' missing "
