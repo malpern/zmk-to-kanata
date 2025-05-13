@@ -2,6 +2,7 @@
 zmk-kanata-env/
 .env/
 venv/
+.venv/
 
 # Python cache files
 __pycache__/
@@ -27,6 +28,7 @@ coverage.xml
 .vscode/
 *.swp
 *.swo
+.cursor/
 
 # macOS specific files
 .DS_Store

@@ -50,6 +50,12 @@ Thank you for your interest in contributing to the ZMK to Kanata Converter! This
    - All new code should include type hints
    - Use `mypy` to check type correctness
 
+4. **Data Contracts**
+   - All data models must use Python's `@dataclass` for data contracts
+   - Do **not** use Pydantic, attrs, TypedDict, or NamedTuple for new models
+   - Ensure all fields are type-annotated and include docstrings
+   - Maintain consistency with existing model style throughout the codebase
+
 ## Pull Request Process
 
 1. **Before Creating a PR**

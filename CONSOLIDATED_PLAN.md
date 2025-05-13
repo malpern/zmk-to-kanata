@@ -43,104 +43,71 @@ Kanata Output Generator
 
 ## 3. Current Status (July 2024)
 
-- Core extraction, parsing, and transformation logic is robust and in sync with the test suite
-- All major linter and style issues are fixed (Black, Ruff, line length)
-- Preprocessor is robust and cross-platform, using the canonical kernel solution for .dts files
+- Codebase is fully green: all tests pass, all linter/style checks pass
+- Robust, cross-platform preprocessor and parser
 - All core, preprocessor, parser, and main CLI/integration tests pass
 - Error handling and macro expansion are consistent and well-tested
 - Codebase is well-documented, type-hinted, and formatted
+- **v1.0.0 tag created:** First fully stable, robust release
 
 ## 4. Remaining Work
 
-- **Performance tests:**
-    - Some performance/benchmark tests depend on cpp and may require environment setup
-    - Action: Set up environment or mark these as expected failures if not critical
 - **Documentation:**
-    - Finalize and polish documentation for preprocessor configuration, troubleshooting, and platform-specific setup
+    - (Optional) Finalize and polish documentation for preprocessor configuration, troubleshooting, and platform-specific setup
+- **Future Enhancements:**
+    - Add new features or performance improvements as needed
 
 ## 5. Next Steps
 
-1. Set up or skip/mark as expected fail any performance/benchmark tests that depend on environment quirks
-2. Finalize and polish documentation (setup, troubleshooting, usage)
-3. Rerun the full test suite after any changes
+1. (Optional) Polish and expand documentation
+2. Plan and implement future enhancements as desired
+
+## 6. Test Coverage Improvement Plan
+
+To achieve 90%+ test coverage, focus on the following files in order of priority (lowest coverage first):
+
+1. `converter/model/keymap_model.py` (**32% covered**)
+   - Add unit tests for all model logic, especially for methods and edge cases not currently exercised.
+2. `converter/behaviors/hold_tap.py` (**42% covered**)
+   - Add tests for all HoldTap, HoldTapBinding, and HoldTapBehavior logic, including error handling and conversion methods.
+3. `converter/behaviors/unicode.py` (**42% covered**)
+   - Add tests for Unicode behavior conversion and edge cases.
+4. `converter/transformer/holdtap_transformer.py` (**38% covered**)
+   - Add tests for hold-tap transformation logic, including all branches and error cases.
+5. `converter/transformer/macro_transformer.py` (**48% covered**)
+   - Add tests for macro transformation logic, including edge cases and error handling.
+6. `converter/behaviors/sticky_key.py` (**54% covered**)
+   - Add tests for sticky key behavior logic and error handling.
+7. `converter/models.py` (**51% covered**)
+   - Add tests for all data models and their methods.
+8. `converter/behaviors/macro.py` (**63% covered**)
+   - Add tests for macro behavior logic and conversion.
+9. `converter/transformer/kanata_transformer.py` (**66% covered**)
+   - Add tests for Kanata transformation logic, especially for less common behaviors.
+10. `converter/kanata_converter.py` (**71% covered**)
+    - Add tests for Kanata output generation and error handling.
+11. `converter/error_handling/error_manager.py` (**68% covered**)
+    - Add tests for error manager logic, including all error types and logging.
+12. `converter/dts/error_handler.py` (**73% covered**)
+    - Add tests for DTS error handling, especially for edge cases.
+13. `converter/dts/preprocessor.py` (**77% covered**)
+    - Add tests for preprocessor logic, including all code paths and error handling.
+14. `converter/dts/extractor.py` (**77% covered**)
+    - Add tests for extractor logic, especially for complex keymap structures.
+15. `converter/dts/parser.py` (**83% covered**)
+    - Add tests for parser edge cases and error handling.
+16. `converter/dts/ast.py` (**91% covered**)
+    - Add tests for AST node methods and edge cases.
+
+**Step-by-step approach:**
+1. Start with `converter/model/keymap_model.py` and work down the list.
+2. For each file, identify untested functions, methods, and branches (see coverage report for missing lines).
+3. Write targeted unit tests to cover missing logic, edge cases, and error handling.
+4. Rerun coverage after each batch of tests to track progress.
+5. Continue until all files are at or above 90% coverage.
 
 ---
 
 **Summary:**
-- The codebase is stable and green for all core and integration features
-- Remaining work: performance test environment (optional) and documentation polish
-- The project is robust and ready for broader use
-
-## 6. macOS cpp/Preprocessor Issue: Resolution
-
-- The canonical kernel solution for preprocessing .dts files on macOS is now implemented and working.
-- The preprocessor step is robust and cross-platform.
-- All tests now expect macro-expanded output (e.g., ((0) << 0x25 /* 8 */ | (0))) and numeric keycodes (e.g., &kp 0x04).
-- Error handling tests are aligned with PreprocessorError exceptions.
-- The test suite is fully updated and passing.
-
-## 7. Test Suite Update Checklist (July 2024)
-
-- [x] Update all tests to expect macro-expanded output (e.g., ((0) << 0x25 /* 8 */ | (0))) instead of macro names (e.g., RC(0,0)).
-- [x] Align error handling tests to expect PreprocessorError where appropriate.
-- [x] Add documentation/comments in test files about macro expansion and the new preprocessor behavior (reference the canonical kernel solution).
-- [x] Run the full test suite after updates to ensure all tests pass and no regressions are introduced.
-
-## 8. Final Test and Codebase Update Plan (July 2024)
-
-To achieve full green status and ensure the codebase is robust for broader use, the following steps will be taken:
-
-### 1. Parser and Preprocessor Test Updates
-- **Files:**
-  - tests/dts/test_preprocessor.py
-  - tests/dts/test_parser.py
-  - tests/test_dts_parser.py
-- **Actions:**
-  - Update all assertions to expect macro-expanded output and numeric keycodes.
-  - Remove or update any checks for symbolic macro names (e.g., RC(0,0), &kp A).
-  - Ensure error handling tests expect the new exception types and messages.
-
-### 2. Integration and CLI Test Updates
-- **Files:**
-  - tests/test_main.py
-  - tests/dts/test_end_to_end.py
-  - tests/dts/test_integration.py
-- **Actions:**
-  - Update expected CLI output to match numeric keycodes and macro-expanded values.
-  - Update error message checks to match new error handling.
-  - Adjust any tests that parse or check for symbolic key names in output.
-
-### 3. Performance and Benchmark Test Updates
-- **Files:**
-  - tests/dts/test_performance.py
-- **Actions:**
-  - Update or mark as expected fail any tests that depend on old output or environment quirks.
-  - Ensure performance tests are compatible with the new preprocessor output.
-
-### 4. Documentation and Comments
-- **Files:**
-  - CONSOLIDATED_PLAN.md
-  - Test files (add comments where expectations have changed)
-- **Actions:**
-  - Document the new expected output format in test files.
-  - Update the plan to reflect completed work and any remaining edge cases.
-
-### 5. Codebase/Parser Adjustments (if needed)
-- **Files:**
-  - converter/dts/parser.py
-  - converter/dts/preprocessor.py
-  - Any modules that parse or transform keymap/preprocessor output.
-- **Actions:**
-  - Make minor adjustments if parser logic needs to be updated for macro-expanded/numeric input.
-  - Ensure all error messages and exception types are consistent.
-
-### Execution Order
-1. Update CONSOLIDATED_PLAN.md with this plan.
-2. Start with parser and preprocessor test updates.
-3. Move to integration/CLI test updates.
-4. Address performance/benchmark tests.
-5. Update documentation and comments.
-6. Make any necessary codebase/parser adjustments.
-7. Rerun the full test suite after each batch of changes.
-
---- 
+- The codebase is stable, robust, and fully green (v1.0.0)
+- Ready for broader use and future development
