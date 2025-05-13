@@ -5,7 +5,7 @@ configurations to Kanata format.
 """
 
 from converter.error_handling.error_manager import get_error_manager
-from converter.models import Binding, Layer, KeymapConfig, HoldTapBinding
+from converter.models import Binding, Layer, KeymapConfig
 from converter.dts.parser import DtsParser
 from converter.dts.extractor import KeymapExtractor
 
@@ -66,9 +66,22 @@ class KanataTransformer:
                             if binding and binding.behavior == behavior:
                                 hold_param = binding.params[0]
                                 tap_param = binding.params[1]
+                                # Use the correct type string for alias naming
+                                if hasattr(behavior, "name") and behavior.name in (
+                                    "lt",
+                                    "mt",
+                                ):
+                                    alias_type = behavior.name
+                                else:
+                                    alias_type = behavior.type
+                                alias_name = self._holdtap_alias_name(
+                                    alias_type,
+                                    hold_param,
+                                    tap_param,
+                                )
                                 (
                                     alias_def,
-                                    alias_name,
+                                    _alias_name,
                                 ) = self.holdtap_transformer.transform_behavior(
                                     behavior,
                                     hold_param,
@@ -121,7 +134,6 @@ class KanataTransformer:
         Returns:
             The Kanata format string for the binding
         """
-        logging.debug(f"[KanataTransformer]     Transforming binding: {binding}")
         # Map ZMK built-in compatible types to Kanata actions
         BUILTIN_TYPE_MAP = {
             "zmk,behavior-transparent": "trans",
@@ -138,25 +150,35 @@ class KanataTransformer:
                 behavior_type = BUILTIN_TYPE_MAP[btype]
             else:
                 behavior_type = btype
-        # Get the global tap-hold configuration parameters
-        tap_time = self.config["tapping_term_ms"]
-        hold_time = self.config["quick_tap_ms"]
-        quick_tap_ms = self.config.get("quick_tap_ms")
-        tap_hold_wait_ms = self.config.get("tap_hold_wait_ms")
-        require_prior_idle_ms = self.config.get("require_prior_idle_ms")
-        flavor = self.config.get("tap_hold_flavor")
-
         # Transform the hold-tap binding with all configuration parameters
-        if isinstance(binding, HoldTapBinding):
-            return self.holdtap_transformer.transform_binding(
-                binding,
-                tap_time=tap_time,
-                hold_time=hold_time,
-                quick_tap_ms=quick_tap_ms,
-                tap_hold_wait_ms=tap_hold_wait_ms,
-                require_prior_idle_ms=require_prior_idle_ms,
-                flavor=flavor,
+        if (
+            hasattr(binding, "behavior")
+            and binding.behavior is not None
+            and getattr(binding.behavior, "__class__", None)
+            and binding.behavior.__class__.__name__ == "HoldTap"
+        ):
+            if hasattr(binding.behavior, "name"):
+                if binding.behavior.name == "mt" and "mt" in self.hold_tap_definitions:
+                    return "@mt"
+                elif (
+                    binding.behavior.name == "lt" and "lt" in self.hold_tap_definitions
+                ):
+                    return "@lt"
+            alias_name = self._holdtap_alias_name(
+                (
+                    binding.behavior.name
+                    if hasattr(binding.behavior, "name")
+                    else binding.behavior.type
+                ),
+                binding.params[0],
+                binding.params[1],
             )
+            if alias_name in self.hold_tap_definitions:
+                return f"@{alias_name}"
+            else:
+                err_msg = f"Hold-tap alias '{alias_name}' not defined."
+                self.error_manager.add_error(err_msg, context={"binding": str(binding)})
+                return f"<undef_holdtap:{alias_name}>"
         elif behavior_type == "trans":
             return "_"
         elif binding.behavior is None:
@@ -186,55 +208,6 @@ class KanataTransformer:
                 return f"(layer-switch {layer_ref})"
             elif behavior_type == "tog":
                 return f"(layer-toggle {layer_ref})"
-        elif behavior_type == "mt":
-            if not binding.params or len(binding.params) < 2:
-                err_msg = "MT binding with missing mod/key parameters."
-                self.error_manager.add_error(err_msg, context={"binding": str(binding)})
-                return "<mt_missing_param>"
-            mod = self.macro_transformer._convert_key(binding.params[0])
-            key = self.macro_transformer._convert_key(binding.params[1])
-            alias_name = f"ht_{mod}_{key}"
-            if alias_name in self.hold_tap_definitions:
-                return f"@{alias_name}"
-            else:
-                err_msg = f"Mod-tap alias '{alias_name}' not defined."
-                self.error_manager.add_error(err_msg, context={"binding": str(binding)})
-                return f"(mt ??? {mod} {key})"
-        elif behavior_type == "lt":
-            if not binding.params or len(binding.params) < 2:
-                err_msg = "LT binding with missing layer/key parameters."
-                self.error_manager.add_error(err_msg, context={"binding": str(binding)})
-                return "<lt_missing_param>"
-            layer_index_or_name = binding.params[0]
-            key = self.macro_transformer._convert_key(binding.params[1])
-            layer_ref = layer_index_or_name
-            alias_name = f"lt_{layer_ref}_{key}"
-            if alias_name in self.hold_tap_definitions:
-                return f"@{alias_name}"
-            else:
-                err_msg = f"Layer-tap alias '{alias_name}' not defined."
-                self.error_manager.add_error(err_msg, context={"binding": str(binding)})
-                return f"(lt ??? {layer_ref} {key})"
-        elif behavior_type == "hold-tap":
-            if not binding.params or len(binding.params) < 2:
-                err_msg = "Hold-tap binding with missing hold/tap parameters."
-                self.error_manager.add_error(err_msg, context={"binding": str(binding)})
-                return "<holdtap_missing_param>"
-            hold_param = binding.params[0]
-            tap_param = binding.params[1]
-            if hold_param.isdigit():
-                alias_name = f"lt_{hold_param}_{tap_param.lower()}"
-            else:
-                mod_key = self.holdtap_transformer.modifier_map.get(
-                    hold_param, hold_param.lower()
-                )
-                alias_name = f"ht_{mod_key}_{tap_param.lower()}"
-            if alias_name in self.hold_tap_definitions:
-                return f"@{alias_name}"
-            else:
-                err_msg = f"Hold-tap alias '{alias_name}' not defined."
-                self.error_manager.add_error(err_msg, context={"binding": str(binding)})
-                return f"<undef_holdtap:{alias_name}>"
         elif behavior_type == "macro":
             macro_name = binding.behavior.name
             if len(binding.params) > 0:
@@ -248,3 +221,13 @@ class KanataTransformer:
             err_msg = f"Unknown binding type: {behavior_type}"
             self.error_manager.add_error(err_msg, context={"binding": str(binding)})
             return f"<unknown:{behavior_type}>"
+        return None
+
+    def _holdtap_alias_name(self, behavior_type, hold_param, tap_param):
+        """Generate a consistent alias name for hold-tap behaviors."""
+        hold = self.macro_transformer._convert_key(hold_param)
+        tap = self.macro_transformer._convert_key(tap_param)
+        if behavior_type == "lt":
+            return f"lt_{hold}_{tap}"
+        else:
+            return f"ht_{hold}_{tap}"

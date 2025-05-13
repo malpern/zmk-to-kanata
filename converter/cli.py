@@ -24,9 +24,11 @@ def create_parser() -> argparse.ArgumentParser:
     )
 
     parser.add_argument(
-        "output_file",
+        "-o",
+        "--output",
         type=Path,
-        help="Path where the Kanata config will be written",
+        help="Path where the Kanata config will be written (default: stdout)",
+        default=None,
     )
 
     parser.add_argument(
@@ -34,6 +36,53 @@ def create_parser() -> argparse.ArgumentParser:
         action="version",
         version=f"%(prog)s {__version__}",
         help="Show program's version number and exit",
+    )
+
+    # Add debug and dump flags
+    parser.add_argument(
+        "-I",
+        "--include",
+        action="append",
+        help="Additional include paths for preprocessing",
+        default=[],
+    )
+    parser.add_argument(
+        "--dump-preprocessed",
+        nargs="?",
+        const="-",
+        metavar="FILE",
+        help="Dump preprocessed DTS to FILE (or stdout if not specified)",
+    )
+    parser.add_argument(
+        "--dump-ast",
+        nargs="?",
+        const="-",
+        metavar="FILE",
+        help="Dump parsed AST as JSON to FILE (or stdout if not specified)",
+    )
+    parser.add_argument(
+        "--dump-extracted",
+        nargs="?",
+        const="-",
+        metavar="FILE",
+        help="Dump extracted keymap model as JSON to FILE (or stdout if not specified)",
+    )
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="Enable debug logging output",
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="count",
+        default=0,
+        help="Increase verbosity (can be used multiple times)",
+    )
+    parser.add_argument(
+        "--log-level",
+        default=None,
+        help="Set logging level (e.g., info, debug, warning)",
     )
 
     return parser
@@ -51,8 +100,32 @@ def main(argv: Optional[List[str]] = None) -> int:
     parser = create_parser()
     args = parser.parse_args(argv)
 
-    # Convert the args to a list for the main function
-    main_args = [str(args.input_file), str(args.output_file)]
+    # Build argument list for converter.main.main
+    main_args = [str(args.input_file)]
+    if args.output is not None:
+        main_args.extend(["-o", str(args.output)])
+    if args.include:
+        for inc in args.include:
+            main_args.extend(["-I", inc])
+    if args.dump_preprocessed is not None:
+        main_args.append(
+            f"--dump-preprocessed{'' if args.dump_preprocessed == '-' else f'={args.dump_preprocessed}' }"
+        )
+    if args.dump_ast is not None:
+        main_args.append(
+            f"--dump-ast{'' if args.dump_ast == '-' else f'={args.dump_ast}' }"
+        )
+    if args.dump_extracted is not None:
+        main_args.append(
+            f"--dump-extracted{'' if args.dump_extracted == '-' else f'={args.dump_extracted}' }"
+        )
+    if args.debug:
+        main_args.append("--debug")
+    if args.verbose:
+        main_args.extend(["-v"] * args.verbose)
+    if args.log_level:
+        main_args.extend(["--log-level", args.log_level])
+
     return convert_main(main_args)
 
 

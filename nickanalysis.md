@@ -222,4 +222,29 @@ Some ZMK features present in Keymap Editor outputs cannot be mapped to Kanata, e
    - Update documentation to reflect new feature support and any remaining limitations.
    - Ensure the converter emits clear warnings for any unsupported or partially supported features.
 
+---
+
+## Feature Matrix for Sample Coverage
+
+| Feature/Option                | Description/Variants                        | Covered by Sample? | Sample File(s)                |
+|-------------------------------|---------------------------------------------|--------------------|-------------------------------|
+| Layers                        | Multiple layers, naming, ordering           | Yes                | basic_keymap.dtsi, complex_keymap.dtsi |
+| Combos                        | Simple, multi-key, with/without layers      | Yes                | card.keymap                   |
+| Macros                        | Simple, parameterized, complex sequences    | Partial            | advanced_features.dtsi, card.keymap |
+| Behaviors                     | Mod-tap, hold-tap, sticky, custom           | Yes/Partial        | advanced_features.dtsi, card.keymap |
+| Rotary Encoders               | Single, multiple, with different actions    | No                 |                               |
+| Mouse Keys                    | All actions (move, click, scroll, drag)     | No                 |                               |
+| Conditional Layers            | Activation via behaviors, combos, macros    | Partial            | complex_keymap.dtsi           |
+| Multiple Keymaps              | Multiple keymap nodes/files per project     | No                 |                               |
+| Preprocessor Macros           | #define, nested, unusual usage              | Partial            | card.keymap                   |
+| Standard Includes             | All standard ZMK includes                   | Yes                | all .dtsi/.keymap files        |
+| Custom Behaviors              | User-defined, edge-case behaviors           | Partial            | card.keymap                   |
+| Advanced Macros               | Tap dance, retro-tap, timing                | Partial            | card.keymap                   |
+| RGB/LED Controls              | Lighting, effects                           | No                 |                               |
+| System Controls               | Bootloader, reset, power                    | No                 |                               |
+| Bluetooth Switching           | Profile switching, clearing                 | No                 |                               |
+| Edge-case Keycodes            | Unusual or rarely-used keycodes             | Partial            | card.keymap                   |
+
+*Update this matrix as new features or sample files are added. Use it to guide systematic sample generation and ensure comprehensive coverage.*
+
 --- 

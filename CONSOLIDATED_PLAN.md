@@ -145,10 +145,40 @@ The following real-world ZMK files have been collected and tested:
 | tests/fixtures/real_world/card.keymap  | ⏳ Collected, not yet tested |
 | tests/fixtures/real_world/piano.keymap | ⏳ Collected, not yet tested |
 | tests/fixtures/dts/simple_keymap.zmk   | ✅ Successfully tested |
-| tests/fixtures/dts/large_keymap.zmk    | ⏳ Collected, not yet tested |
-| tests/fixtures/dts/complex_keymap.zmk  | ⏳ Collected, not yet tested |
+| tests/fixtures/dts/large_keymap.zmk    | ✅ Successfully tested |
+| tests/fixtures/dts/complex_keymap.zmk  | ✅ Successfully tested |
 
 - ✅ = Successfully tested end-to-end (parse, extract, convert)
 - ⏳ = Collected, but not yet fully tested
 
 Update this table as more files are tested or added.
+
+## 10. Output Validation Strategies
+
+To ensure the converter produces correct Kanata output from ZMK files, use a combination of the following approaches:
+
+### 1. Golden File Comparison
+- For each ZMK input, save a "golden" (known-good) Kanata output after manual review.
+- On future runs, automatically compare the converter's output to the golden file.
+- If they differ, investigate whether the change is a bug or an intentional improvement.
+- Golden files can be bootstrapped: manually review and approve the output for a representative set of files, then use these as regression tests.
+
+### 2. Property-Based Checks
+- Write automated tests that check for key properties in the output (e.g., expected layers, keys, macros, or behaviors).
+- These tests are less brittle than full file comparison and can catch structural or semantic errors.
+
+### 3. Manual Review
+- For new or complex files, manually inspect the output YAML and compare it to the intended Kanata configuration.
+- Once reviewed, add the output to the golden set for future regression testing.
+
+### 4. Real-World Usage
+- Load the generated Kanata config into the actual Kanata tool and verify correct keyboard behavior.
+- This is the ultimate end-to-end test.
+
+### 5. Community/Reference Sets
+- If available, use public or community-contributed ZMK-to-Kanata conversions as additional golden files.
+
+**Summary:**
+- Start by manually reviewing and "blessing" outputs for a few files.
+- Automate regression testing with golden files and property-based checks.
+- Expand the golden set as new features and edge cases are encountered.
