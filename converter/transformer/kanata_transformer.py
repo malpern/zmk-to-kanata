@@ -11,6 +11,7 @@ from converter.dts.extractor import KeymapExtractor
 
 from .holdtap_transformer import HoldTapTransformer
 from .macro_transformer import MacroTransformer
+from .sticky_key_transformer import StickyKeyTransformer
 
 import logging
 
@@ -30,6 +31,7 @@ class KanataTransformer:
         self.holdtap_transformer = HoldTapTransformer()
         self.macro_transformer = MacroTransformer()
         self.macro_definitions = {}
+        self.sticky_key_transformer = StickyKeyTransformer()
         # Default configuration values
         self.config = {
             "tapping_term_ms": 200,
@@ -91,6 +93,50 @@ class KanataTransformer:
                                     self.hold_tap_definitions[alias_name] = alias_def
                                     self.output.append(f"\n{alias_def}")
                                 break
+
+        # Collect all unique (behavior, hold_param, tap_param) for hold-tap
+        holdtap_combos = set()
+        for layer in keymap.layers:
+            for binding in layer.bindings:
+                if (
+                    binding
+                    and hasattr(binding, "behavior")
+                    and binding.behavior is not None
+                    and getattr(binding.behavior, "type", None) == "hold-tap"
+                    and len(binding.params) >= 2
+                ):
+                    # Use modifier and key as the unique pair
+                    modifier = binding.params[0]
+                    key = binding.params[1]
+                    btype = getattr(binding.behavior, "type", None)
+                    bname = getattr(binding.behavior, "name", None)
+                    holdtap_combos.add((btype, bname, modifier, key))
+        for btype, bname, modifier, key in holdtap_combos:
+            alias_type = bname if bname in ("lt", "mt") else btype
+            # Find the behavior object for this combo
+            behavior = None
+            for layer in keymap.layers:
+                for binding in layer.bindings:
+                    if (
+                        binding
+                        and hasattr(binding, "behavior")
+                        and binding.behavior is not None
+                        and getattr(binding.behavior, "type", None) == btype
+                        and getattr(binding.behavior, "name", None) == bname
+                    ):
+                        behavior = binding.behavior
+                        break
+                if behavior:
+                    break
+            if behavior is None:
+                continue
+            alias_name = self._holdtap_alias_name(alias_type, modifier, key)
+            alias_def, _alias_name = self.holdtap_transformer.transform_behavior(
+                behavior, modifier, key
+            )
+            if alias_name not in self.hold_tap_definitions:
+                self.hold_tap_definitions[alias_name] = alias_def
+                self.output.append(f"\n{alias_def}")
 
         for layer in keymap.layers:
             self._transform_layer(layer)
@@ -226,6 +272,15 @@ class KanataTransformer:
                 return f"(macro {macro_name} {macro_params})"
             else:
                 return f"(macro {macro_name})"
+        elif (
+            hasattr(binding, "behavior")
+            and binding.behavior is not None
+            and (
+                getattr(binding.behavior, "type", None) == "zmk,behavior-sticky-key"
+                or getattr(binding.behavior, "name", None) == "sk"
+            )
+        ):
+            return self.sticky_key_transformer.transform_binding(binding)
         else:
             err_msg = f"Unknown binding type: {behavior_type}"
             self.error_manager.add_error(err_msg, context={"binding": str(binding)})

@@ -2,7 +2,7 @@ import logging
 from typing import Any
 
 from converter.behaviors.sticky_key import StickyKeyBinding
-from converter.error_handling import ErrorSeverity, get_error_manager
+from converter.error_handling.error_manager import ErrorSeverity, get_error_manager
 
 
 class StickyKeyTransformer:
@@ -23,8 +23,11 @@ class StickyKeyTransformer:
         # Accept both StickyKeyBinding and StickyKeyBehavior (with .key)
         key = None
         timeout = None
+        # Handle converter.models.Binding (from main transformer)
+        if hasattr(binding, "params") and isinstance(binding.params, (list, tuple)) and len(binding.params) > 0:
+            key = binding.params[0]
         # Handle StickyKeyBinding
-        if isinstance(binding, StickyKeyBinding):
+        elif isinstance(binding, StickyKeyBinding):
             key = binding.key
             behavior = binding.behavior
             timeout = getattr(behavior, "release_after_ms", None)
@@ -38,8 +41,8 @@ class StickyKeyTransformer:
             timeout = getattr(binding, "timeout", None)
         else:
             self.error_manager.add_error(
-                message=(f"Invalid binding type for sticky key: " f"{type(binding)}"),
-                source="sticky_key_transformer",
+                message=(f"Invalid binding type for sticky key: {type(binding)}"),
+                context={"source": "sticky_key_transformer"},
                 severity=ErrorSeverity.ERROR,
             )
             self.logger.error(f"Invalid binding type: {type(binding)}")
@@ -49,7 +52,7 @@ class StickyKeyTransformer:
         if not key or (isinstance(key, str) and not key.strip()):
             self.error_manager.add_error(
                 message="Sticky key binding is empty or None.",
-                source="sticky_key_transformer",
+                context={"source": "sticky_key_transformer"},
                 severity=ErrorSeverity.WARNING,
             )
             self.logger.warning("Sticky key binding is empty or None.")
@@ -104,7 +107,7 @@ class StickyKeyTransformer:
         elif isinstance(key, str):
             self.error_manager.add_error(
                 message=f"Unknown or special sticky key: {key}",
-                source="sticky_key_transformer",
+                context={"source": "sticky_key_transformer"},
                 severity=ErrorSeverity.WARNING,
             )
             self.logger.warning(f"Unknown or special sticky key: {key}")
@@ -112,7 +115,7 @@ class StickyKeyTransformer:
         else:
             self.error_manager.add_error(
                 message=f"Sticky key binding is not a string: {key}",
-                source="sticky_key_transformer",
+                context={"source": "sticky_key_transformer"},
                 severity=ErrorSeverity.ERROR,
             )
             self.logger.error(f"Sticky key binding is not a string: {key}")
@@ -127,9 +130,8 @@ class StickyKeyTransformer:
             except Exception as e:
                 self.error_manager.add_error(
                     message=f"Invalid timeout value for sticky key: {timeout}",
-                    source="sticky_key_transformer",
+                    context={"source": "sticky_key_transformer", "exception": str(e)},
                     severity=ErrorSeverity.WARNING,
-                    exception=e,
                 )
                 self.logger.warning(f"Invalid timeout value for sticky key: {timeout}")
 
