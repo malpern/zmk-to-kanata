@@ -1,0 +1,43 @@
+(defcfg
+  input (kb () () )
+  output (kbd ())
+)
+
+(defvar tap-time 200)
+(defvar hold-time 250)
+
+
+(defalias mt (tap-hold 200 200 4 lctl))
+
+(defalias mt (tap-hold 200 200 12 ralt))
+
+(defalias mt (tap-hold 200 200 18 rctl))
+
+(defalias mt (tap-hold 200 200 21 lalt))
+
+(defalias mt (tap-hold 200 200 22 lmet))
+
+(defalias mt (tap-hold 200 200 17 rsft))
+
+(defalias mt (tap-hold 200 200 8 rmet))
+
+(defalias mt (tap-hold 200 200 23 lsft))
+(deflayer default
+  tab q w f p b j l u y semi bspc esc @ht_lctl_a @ht_lalt_r @ht_lmet_s @ht_lsft_t g m @ht_rsft_n @ht_rmet_e @ht_ralt_i @ht_rctl_o sqt sticky-lshft z x c d v k h comma dot fslh sticky-rshft lctl lmet lalt (layer 30) (layer 31) (layer 32) (layer 33) ralt rmet rctl
+)
+
+(deflayer num_sym_layer
+  grv 1 2 3 4 5 6 7 8 9 0 del _ excl at hash dllr prcnt caret amps star lpar rpar bslh _ tilde pipe minus plus equal lbrc rbrc lbrc rbrc under _ _ _ _ _ spc ret _ _ _ _
+)
+
+(deflayer nav_layer
+  _ ins home up end pg_up c_vol_up c_prev c_pp c_next c_mute _ _ del left down right pg_dn c_vol_dn rsft rmet ralt rctl _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ spc ret _ _ _ _
+)
+
+(deflayer function_layer
+  _ f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 _ _ f11 f12 caps slck pscrn k_app rsft rmet ralt rctl _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ spc ret _ _ _ _
+)
+
+(deflayer gaming_layer
+  esc kp_n7 kp_n8 kp_n9 kp_plus kp_multiply _ _ _ _ _ _ tab kp_n4 kp_n5 kp_n6 kp_minus kp_divide _ _ _ _ _ _ lshft kp_n1 kp_n2 kp_n3 kp_equal kp_dot _ _ _ _ _ _ lctl kp_n0 lalt _ spc kp_enter _ _ _ _
+)

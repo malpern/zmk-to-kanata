@@ -102,7 +102,7 @@ class KanataTransformer:
                     binding
                     and hasattr(binding, "behavior")
                     and binding.behavior is not None
-                    and getattr(binding.behavior, "type", None) == "hold-tap"
+                    and getattr(binding.behavior, "type", None) in ("hold-tap", "zmk,behavior-mod-tap")
                     and len(binding.params) >= 2
                 ):
                     # Use modifier and key as the unique pair
@@ -205,13 +205,24 @@ class KanataTransformer:
                 behavior_type = BUILTIN_TYPE_MAP[btype]
             else:
                 behavior_type = btype
-        # Transform the hold-tap binding with all configuration parameters
+        # Treat zmk,behavior-mod-tap as hold-tap
         if (
             hasattr(binding, "behavior")
             and binding.behavior is not None
             and getattr(binding.behavior, "__class__", None)
-            and binding.behavior.__class__.__name__ == "HoldTap"
+            and (
+                binding.behavior.__class__.__name__ == "HoldTap"
+                or getattr(binding.behavior, "type", None) in ("hold-tap", "zmk,behavior-mod-tap")
+            )
         ):
+            # Defensive: check for missing params
+            if not binding.params or len(binding.params) < 2:
+                err_msg = (
+                    f"Hold-tap/mod-tap binding missing params: {binding}. "
+                    f"This may be due to incomplete extraction or preprocessing."
+                )
+                self.error_manager.add_error(err_msg, context={"binding": str(binding)})
+                return "<missing_holdtap_params>"
             if hasattr(binding.behavior, "name"):
                 if binding.behavior.name == "mt" and "mt" in self.hold_tap_definitions:
                     return "@mt"

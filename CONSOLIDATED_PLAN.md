@@ -163,7 +163,7 @@ The following real-world ZMK files have been collected and tested:
 | File Location                          | Size (bytes) | Status                |
 |----------------------------------------|--------------|-----------------------|
 | examples/basic_keymap.dtsi             | 569          | ✅ Successfully tested |
-| examples/advanced_features.dtsi        | 2056         | ⏳ Collected, not yet tested |
+| examples/advanced_features.dtsi        | 2056         | ✅ Successfully tested |
 | examples/multi_layer_keymap.dtsi       | 1669         | ✅ Successfully tested |
 | examples/complex_keymap.dtsi           | 3503         | ⏳ Collected, not yet tested |
 | examples/ben_vallack_test.dtsi         | 2817         | ⏳ Collected, not yet tested |

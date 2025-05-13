@@ -439,6 +439,8 @@ class KeymapExtractor:
                 # Determine expected parameters
                 if behavior_name in ("kp", "mo", "to", "sl", "sk", "td", "bt", "mkp"):
                     num_params_expected = 1
+                elif behavior_name in ("mt", "hold-tap", "mod-tap"):  # recognize mt as hold-tap
+                    num_params_expected = 2
                 elif behavior_name in self.behaviors:
                     b_type = getattr(self.behaviors[behavior_name], "type", None)
                     if b_type == "hold-tap":
@@ -447,12 +449,18 @@ class KeymapExtractor:
                         num_params_expected = 0
                     # Add other known behaviors here...
 
+                logging.debug(f"[extractor] Token: {token}, behavior: {behavior_name}, expected params: {num_params_expected}")
+
                 # When resolving a binding, only allow behaviors explicitly defined by the user
                 def get_or_create_behavior(name, type_str):
                     if name in self.behaviors:
                         return self.behaviors[name]
                     if name in BUILTIN_BEHAVIORS:
-                        b = Behavior(name=name, type=BUILTIN_BEHAVIORS[name])
+                        if name in ("mt", "hold-tap", "mod-tap"):
+                            # Create a HoldTap with sensible defaults
+                            b = HoldTap(name=name, tapping_term_ms=200, flavor="balanced")
+                        else:
+                            b = Behavior(name=name, type=BUILTIN_BEHAVIORS[name])
                         self.behaviors[name] = b
                         return b
                     raise ValueError(
@@ -469,6 +477,8 @@ class KeymapExtractor:
                         break
                     params.append(str(next_token))
                     actual_params_consumed += 1
+
+                logging.debug(f"[extractor]   Params consumed: {params} (actual: {actual_params_consumed})")
 
                 behavior = get_or_create_behavior(behavior_name, behavior_name)
                 if behavior:
