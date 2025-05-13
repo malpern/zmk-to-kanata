@@ -68,8 +68,8 @@ To achieve 90%+ test coverage, focus on the following files in order of priority
 
 1. `converter/model/keymap_model.py` (**91% covered, fully tested as of July 2024**)
    - All model logic, methods, and edge cases are now exercised by unit tests.
-2. `converter/behaviors/hold_tap.py` (**42% covered**)
-   - Add tests for all HoldTap, HoldTapBinding, and HoldTapBehavior logic, including error handling and conversion methods.
+2. `converter/behaviors/hold_tap.py` (**100% covered, fully tested as of July 2024**)
+   - All logic, error handling, and conversion methods are now exercised by unit tests.
 3. `converter/behaviors/unicode.py` (**42% covered**)
    - Add tests for Unicode behavior conversion and edge cases.
 4. `converter/transformer/holdtap_transformer.py` (**38% covered**)
