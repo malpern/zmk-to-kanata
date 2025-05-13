@@ -104,6 +104,12 @@ class KanataTransformer:
         self.output.append("  output (kbd ())")
         self.output.append(")")
         self.output.append("")
+        # Add global settings (tap-time, hold-time)
+        tap_time = getattr(self, 'tap_time', None) or self.config.get('tap_time', 200)
+        hold_time = getattr(self, 'hold_time', None) or self.config.get('hold_time', 250)
+        self.output.append(f"(defvar tap-time {tap_time})")
+        self.output.append(f"(defvar hold-time {hold_time})")
+        self.output.append("")
 
     def _transform_layer(self, layer: Layer):
         """Transform a single layer into Kanata format."""

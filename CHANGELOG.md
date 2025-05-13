@@ -53,4 +53,5 @@ Initial release of the ZMK to Kanata converter.
 
 ## [Unreleased]
 - Kanata output now maps ZMK layer name `default_layer` to `default` for improved readability and Kanata compatibility.
-- Introduced a manual review process for output validation. Findings are tracked in `MANUAL_REVIEW.md`. 
+- Introduced a manual review process for output validation. Findings are tracked in `MANUAL_REVIEW.md`.
+- Symbolic key names are now preserved in Kanata output using a reverse keycode mapping, improving readability and fidelity. 
