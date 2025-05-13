@@ -111,3 +111,63 @@ To achieve 90%+ test coverage, focus on the following files in order of priority
 **Summary:**
 - The codebase is stable, robust, and fully green (v1.0.0)
 - Ready for broader use and future development
+
+## 7. Debugging and Output Flags Plan
+
+To aid in diagnosing parsing and processing bugs, the following plan will be implemented to provide robust visibility at each important stage of the conversion pipeline:
+
+### Key Processing Stages
+- **Preprocessing:** Raw DTS → Preprocessed DTS
+- **Parsing:** Preprocessed DTS → AST (Abstract Syntax Tree)
+- **Extraction:** AST → Keymap Model (Python dataclasses)
+- **Transformation/Output:** Keymap Model → Kanata YAML
+
+### Proposed CLI Flags
+| Flag                        | Description                                                      |
+|-----------------------------|------------------------------------------------------------------|
+| `--dump-preprocessed [FILE]`| Output preprocessed DTS to stdout or FILE                         |
+| `--dump-ast [FILE]`         | Output parsed AST (as JSON/YAML) to stdout or FILE               |
+| `--dump-extracted [FILE]`   | Output extracted keymap model (as JSON/YAML) to stdout or FILE   |
+| `--debug`                   | Print debug logs at all stages (uses logging, not just print)    |
+| `-v`, `--verbose`           | Increase verbosity (can be cumulative: `-vv` for more detail)    |
+| `--log-level LEVEL`         | Set logging level (`info`, `debug`, `warning`, etc.)             |
+
+### Implementation Steps
+1. **CLI Argument Parsing:**
+   - Add the above flags using `argparse` or `click`.
+   - Allow optional file arguments for dump flags (default to stdout).
+2. **Logging:**
+   - Replace ad hoc `print` statements with Python's `logging` module.
+   - Set log level based on `--debug`, `--verbose`, or `--log-level`.
+3. **Dumping Intermediate Outputs:**
+   - After each stage, if the corresponding flag is set, output the result.
+   - Support both stdout and file output.
+4. **Error Handling:**
+   - On failure, print/log a clear error and, if possible, dump the last successful intermediate result.
+5. **Documentation:**
+   - Update `README.md` and `CONTRIBUTING.md` to document the new flags and their usage.
+
+### Example CLI Usage
+```
+# Just convert, no extra output
+python3 -m converter.main input.dtsi -o output.yaml
+
+# See preprocessed DTS
+python3 -m converter.main input.dtsi -o output.yaml --dump-preprocessed
+
+# Save AST to a file
+python3 -m converter.main input.dtsi -o output.yaml --dump-ast ast.json
+
+# See extracted model in YAML
+python3 -m converter.main input.dtsi -o output.yaml --dump-extracted
+
+# Full debug logs and all intermediate outputs
+python3 -m converter.main input.dtsi -o output.yaml --debug --dump-preprocessed --dump-ast --dump-extracted
+```
+
+### Optional Advanced Features
+- Allow multiple dump flags at once.
+- Support output formats: `--dump-ast-format json|yaml`.
+- Allow logging to a file: `--log-file debug.log`.
+
+---
