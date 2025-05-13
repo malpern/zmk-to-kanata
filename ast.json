@@ -4,42 +4,20 @@
   "children": {
     "behaviors": {
       "name": "behaviors",
-      "properties": {
-        "compatible": {
-          "name": "compatible",
-          "type": "string",
-          "value": "zmk,behaviors"
-        }
-      },
+      "properties": {},
       "children": {
-        "key_press": {
-          "name": "key_press",
-          "properties": {
-            "compatible": {
-              "name": "compatible",
-              "type": "string",
-              "value": "zmk,behavior-key-press"
-            },
-            "#binding-cells": {
-              "name": "#binding-cells",
-              "type": "array",
-              "value": [
-                30
-              ]
-            }
-          },
-          "children": {},
-          "labels": {
-            "kp": "key_press"
-          }
-        },
-        "mod_tap": {
-          "name": "mod_tap",
+        "homerow_mods_left": {
+          "name": "homerow_mods_left",
           "properties": {
             "compatible": {
               "name": "compatible",
               "type": "string",
               "value": "zmk,behavior-hold-tap"
+            },
+            "label": {
+              "name": "label",
+              "type": "string",
+              "value": "HOMEROW_MODS_L"
             },
             "#binding-cells": {
               "name": "#binding-cells",
@@ -52,7 +30,14 @@
               "name": "tapping-term-ms",
               "type": "array",
               "value": [
-                200
+                300
+              ]
+            },
+            "quick-tap-ms": {
+              "name": "quick-tap-ms",
+              "type": "array",
+              "value": [
+                250
               ]
             },
             "flavor": {
@@ -71,16 +56,21 @@
           },
           "children": {},
           "labels": {
-            "mt": "mod_tap"
+            "hm_l": "homerow_mods_left"
           }
         },
-        "layer_tap": {
-          "name": "layer_tap",
+        "homerow_mods_right": {
+          "name": "homerow_mods_right",
           "properties": {
             "compatible": {
               "name": "compatible",
               "type": "string",
               "value": "zmk,behavior-hold-tap"
+            },
+            "label": {
+              "name": "label",
+              "type": "string",
+              "value": "HOMEROW_MODS_R"
             },
             "#binding-cells": {
               "name": "#binding-cells",
@@ -93,7 +83,125 @@
               "name": "tapping-term-ms",
               "type": "array",
               "value": [
-                200
+                300
+              ]
+            },
+            "quick-tap-ms": {
+              "name": "quick-tap-ms",
+              "type": "array",
+              "value": [
+                250
+              ]
+            },
+            "flavor": {
+              "name": "flavor",
+              "type": "string",
+              "value": "tap-preferred"
+            },
+            "bindings": {
+              "name": "bindings",
+              "type": "array",
+              "value": [
+                "&kp",
+                "&kp"
+              ]
+            }
+          },
+          "children": {},
+          "labels": {
+            "hm_r": "homerow_mods_right"
+          }
+        },
+        "shift_layer": {
+          "name": "shift_layer",
+          "properties": {
+            "compatible": {
+              "name": "compatible",
+              "type": "string",
+              "value": "zmk,behavior-hold-tap"
+            },
+            "label": {
+              "name": "label",
+              "type": "string",
+              "value": "SHIFT_LAYER"
+            },
+            "#binding-cells": {
+              "name": "#binding-cells",
+              "type": "array",
+              "value": [
+                31
+              ]
+            },
+            "tapping-term-ms": {
+              "name": "tapping-term-ms",
+              "type": "array",
+              "value": [
+                300
+              ]
+            },
+            "quick_tap_ms": {
+              "name": "quick_tap_ms",
+              "type": "array",
+              "value": [
+                39
+              ]
+            },
+            "flavor": {
+              "name": "flavor",
+              "type": "string",
+              "value": "tap-preferred"
+            },
+            "bindings": {
+              "name": "bindings",
+              "type": "array",
+              "value": [
+                "&kp",
+                "&to"
+              ]
+            },
+            "retro-tap": {
+              "name": "retro-tap",
+              "type": "boolean",
+              "value": true
+            }
+          },
+          "children": {},
+          "labels": {
+            "sr": "shift_layer"
+          }
+        },
+        "homerow_layers_left": {
+          "name": "homerow_layers_left",
+          "properties": {
+            "compatible": {
+              "name": "compatible",
+              "type": "string",
+              "value": "zmk,behavior-hold-tap"
+            },
+            "label": {
+              "name": "label",
+              "type": "string",
+              "value": "HOMEROW_LAYERS_L"
+            },
+            "#binding-cells": {
+              "name": "#binding-cells",
+              "type": "array",
+              "value": [
+                31
+              ]
+            },
+            "tapping-term-ms": {
+              "name": "tapping-term-ms",
+              "type": "array",
+              "value": [
+                220
+              ]
+            },
+            "quick-tap-ms": {
+              "name": "quick-tap-ms",
+              "type": "array",
+              "value": [
+                250
               ]
             },
             "flavor": {
@@ -112,121 +220,127 @@
           },
           "children": {},
           "labels": {
-            "lt": "layer_tap"
+            "hl_l": "homerow_layers_left"
           }
         },
-        "sticky_key": {
-          "name": "sticky_key",
+        "homerow_layers_right": {
+          "name": "homerow_layers_right",
           "properties": {
             "compatible": {
               "name": "compatible",
               "type": "string",
-              "value": "zmk,behavior-sticky-key"
+              "value": "zmk,behavior-hold-tap"
+            },
+            "label": {
+              "name": "label",
+              "type": "string",
+              "value": "HOMEROW_LAYERS_R"
             },
             "#binding-cells": {
               "name": "#binding-cells",
               "type": "array",
               "value": [
-                30
+                31
               ]
             },
-            "release-after-ms": {
-              "name": "release-after-ms",
+            "tapping-term-ms": {
+              "name": "tapping-term-ms",
               "type": "array",
               "value": [
-                1000
+                220
               ]
+            },
+            "quick-tap-ms": {
+              "name": "quick-tap-ms",
+              "type": "array",
+              "value": [
+                250
+              ]
+            },
+            "flavor": {
+              "name": "flavor",
+              "type": "string",
+              "value": "tap-preferred"
             },
             "bindings": {
               "name": "bindings",
               "type": "array",
               "value": [
+                "&mo",
                 "&kp"
               ]
             }
           },
           "children": {},
           "labels": {
-            "sk": "sticky_key"
+            "hl_r": "homerow_layers_right"
           }
         },
-        "momentary_layer": {
-          "name": "momentary_layer",
+        "tapdance": {
+          "name": "tapdance",
           "properties": {
             "compatible": {
               "name": "compatible",
               "type": "string",
-              "value": "zmk,behavior-momentary-layer"
+              "value": "zmk,behavior-hold-tap"
+            },
+            "label": {
+              "name": "label",
+              "type": "string",
+              "value": "TAPDANCE"
             },
             "#binding-cells": {
               "name": "#binding-cells",
               "type": "array",
               "value": [
-                30
+                31
+              ]
+            },
+            "tapping-term-ms": {
+              "name": "tapping-term-ms",
+              "type": "array",
+              "value": [
+                190
+              ]
+            },
+            "quick-tap-ms": {
+              "name": "quick-tap-ms",
+              "type": "array",
+              "value": [
+                250
+              ]
+            },
+            "flavor": {
+              "name": "flavor",
+              "type": "string",
+              "value": "tap-preferred"
+            },
+            "bindings": {
+              "name": "bindings",
+              "type": "array",
+              "value": [
+                "&kp",
+                "&kp"
               ]
             }
           },
           "children": {},
           "labels": {
-            "mo": "momentary_layer"
+            "td": "tapdance"
           }
         },
-        "toggle_layer": {
-          "name": "toggle_layer",
+        "behavior_macro_1": {
+          "name": "behavior_macro_1",
           "properties": {
             "compatible": {
               "name": "compatible",
               "type": "string",
-              "value": "zmk,behavior-toggle-layer"
+              "value": "zmk,behavior-macro"
             },
-            "#binding-cells": {
-              "name": "#binding-cells",
-              "type": "array",
-              "value": [
-                30
-              ]
-            }
-          },
-          "children": {},
-          "labels": {
-            "to": "toggle_layer"
-          }
-        },
-        "sticky_layer": {
-          "name": "sticky_layer",
-          "properties": {
-            "compatible": {
-              "name": "compatible",
+            "label": {
+              "name": "label",
               "type": "string",
-              "value": "zmk,behavior-sticky-layer"
-            },
-            "#binding-cells": {
-              "name": "#binding-cells",
-              "type": "array",
-              "value": [
-                30
-              ]
-            },
-            "release-after-ms": {
-              "name": "release-after-ms",
-              "type": "array",
-              "value": [
-                1000
-              ]
-            }
-          },
-          "children": {},
-          "labels": {
-            "sl": "sticky_layer"
-          }
-        },
-        "caps_word": {
-          "name": "caps_word",
-          "properties": {
-            "compatible": {
-              "name": "compatible",
-              "type": "string",
-              "value": "zmk,behavior-caps-word"
+              "value": "MACRO1"
             },
             "#binding-cells": {
               "name": "#binding-cells",
@@ -234,20 +348,33 @@
               "value": [
                 39
               ]
+            },
+            "bindings": {
+              "name": "bindings",
+              "type": "array",
+              "value": [
+                "&sl",
+                30
+              ]
             }
           },
           "children": {},
           "labels": {
-            "caps_word": "caps_word"
+            "alpha2macro": "behavior_macro_1"
           }
         },
-        "key_repeat": {
-          "name": "key_repeat",
+        "behavior_macro_2": {
+          "name": "behavior_macro_2",
           "properties": {
             "compatible": {
               "name": "compatible",
               "type": "string",
-              "value": "zmk,behavior-key-repeat"
+              "value": "zmk,behavior-macro"
+            },
+            "label": {
+              "name": "label",
+              "type": "string",
+              "value": "MACRO2"
             },
             "#binding-cells": {
               "name": "#binding-cells",
@@ -255,33 +382,280 @@
               "value": [
                 39
               ]
-            }
-          },
-          "children": {},
-          "labels": {
-            "key_repeat": "key_repeat"
-          }
-        },
-        "mouse_key_press": {
-          "name": "mouse_key_press",
-          "properties": {
-            "compatible": {
-              "name": "compatible",
-              "type": "string",
-              "value": "zmk,behavior-mouse-key-press"
             },
-            "#binding-cells": {
-              "name": "#binding-cells",
+            "bindings": {
+              "name": "bindings",
               "type": "array",
               "value": [
-                30
+                "&sl",
+                36
               ]
             }
           },
           "children": {},
           "labels": {
-            "mkp": "mouse_key_press"
+            "caps_alpha2macro": "behavior_macro_2"
           }
+        }
+      },
+      "labels": {}
+    },
+    "mt": {
+      "name": "mt",
+      "properties": {
+        "tapping-term-ms": {
+          "name": "tapping-term-ms",
+          "type": "array",
+          "value": [
+            201
+          ]
+        },
+        "flavor": {
+          "name": "flavor",
+          "type": "string",
+          "value": "tap-preferred"
+        }
+      },
+      "children": {},
+      "labels": {}
+    },
+    "sk": {
+      "name": "sk",
+      "properties": {
+        "release-after-ms": {
+          "name": "release-after-ms",
+          "type": "array",
+          "value": [
+            2000
+          ]
+        },
+        "quick-release": {
+          "name": "quick-release",
+          "type": "boolean",
+          "value": true
+        }
+      },
+      "children": {},
+      "labels": {}
+    },
+    "combos": {
+      "name": "combos",
+      "properties": {
+        "compatible": {
+          "name": "compatible",
+          "type": "string",
+          "value": "zmk,combos"
+        }
+      },
+      "children": {
+        "combo_sys": {
+          "name": "combo_sys",
+          "properties": {
+            "timeout-ms": {
+              "name": "timeout-ms",
+              "type": "array",
+              "value": [
+                30
+              ]
+            },
+            "key-positions": {
+              "name": "key-positions",
+              "type": "array",
+              "value": [
+                32,
+                33,
+                34
+              ]
+            },
+            "bindings": {
+              "name": "bindings",
+              "type": "array",
+              "value": [
+                "&to",
+                34
+              ]
+            }
+          },
+          "children": {},
+          "labels": {}
+        },
+        "combo_caps": {
+          "name": "combo_caps",
+          "properties": {
+            "timeout-ms": {
+              "name": "timeout-ms",
+              "type": "array",
+              "value": [
+                30
+              ]
+            },
+            "key-positions": {
+              "name": "key-positions",
+              "type": "array",
+              "value": [
+                10,
+                11,
+                12
+              ]
+            },
+            "bindings": {
+              "name": "bindings",
+              "type": "array",
+              "value": [
+                "&caps_word"
+              ]
+            }
+          },
+          "children": {},
+          "labels": {}
+        },
+        "combo_bt": {
+          "name": "combo_bt",
+          "properties": {
+            "timeout-ms": {
+              "name": "timeout-ms",
+              "type": "array",
+              "value": [
+                10
+              ]
+            },
+            "key-positions": {
+              "name": "key-positions",
+              "type": "array",
+              "value": [
+                11,
+                12
+              ]
+            },
+            "bindings": {
+              "name": "bindings",
+              "type": "array",
+              "value": [
+                "&to",
+                35
+              ]
+            },
+            "layers": {
+              "name": "layers",
+              "type": "array",
+              "value": [
+                31
+              ]
+            }
+          },
+          "children": {},
+          "labels": {}
+        },
+        "lalt": {
+          "name": "lalt",
+          "properties": {
+            "timeout-ms": {
+              "name": "timeout-ms",
+              "type": "array",
+              "value": [
+                20
+              ]
+            },
+            "key-positions": {
+              "name": "key-positions",
+              "type": "array",
+              "value": [
+                37,
+                38
+              ]
+            },
+            "bindings": {
+              "name": "bindings",
+              "type": "array",
+              "value": [
+                "&kp",
+                "LALT"
+              ]
+            },
+            "layers": {
+              "name": "layers",
+              "type": "array",
+              "value": [
+                34
+              ]
+            }
+          },
+          "children": {},
+          "labels": {}
+        },
+        "lclk": {
+          "name": "lclk",
+          "properties": {
+            "timeout-ms": {
+              "name": "timeout-ms",
+              "type": "array",
+              "value": [
+                20
+              ]
+            },
+            "key-positions": {
+              "name": "key-positions",
+              "type": "array",
+              "value": [
+                10,
+                11
+              ]
+            },
+            "bindings": {
+              "name": "bindings",
+              "type": "array",
+              "value": [
+                "&mkp",
+                1
+              ]
+            },
+            "layers": {
+              "name": "layers",
+              "type": "array",
+              "value": [
+                34
+              ]
+            }
+          },
+          "children": {},
+          "labels": {}
+        },
+        "rclk": {
+          "name": "rclk",
+          "properties": {
+            "timeout-ms": {
+              "name": "timeout-ms",
+              "type": "array",
+              "value": [
+                20
+              ]
+            },
+            "key-positions": {
+              "name": "key-positions",
+              "type": "array",
+              "value": [
+                32,
+                33
+              ]
+            },
+            "bindings": {
+              "name": "bindings",
+              "type": "array",
+              "value": [
+                "&mkp",
+                2
+              ]
+            },
+            "layers": {
+              "name": "layers",
+              "type": "array",
+              "value": [
+                34
+              ]
+            }
+          },
+          "children": {},
+          "labels": {}
         }
       },
       "labels": {}
@@ -296,81 +670,390 @@
         }
       },
       "children": {
-        "default_layer": {
-          "name": "default_layer",
+        "alpha1": {
+          "name": "alpha1",
+          "properties": {
+            "bindings": {
+              "name": "bindings",
+              "type": "array",
+              "value": [
+                "&hm_l",
+                "LCTL",
+                15,
+                "&hm_l",
+                "LALT",
+                10,
+                "&hm_l",
+                "LGUI",
+                7,
+                "&hm_r",
+                "RGUI",
+                11,
+                "&hm_r",
+                "RALT",
+                24,
+                "&hm_r",
+                "RCTL",
+                18,
+                "&hl_l",
+                33,
+                12,
+                "&hl_l",
+                32,
+                22,
+                "&hl_l",
+                31,
+                21,
+                "&hl_l",
+                34,
+                23,
+                "&hl_r",
+                34,
+                17,
+                "&hl_r",
+                31,
+                8,
+                "&hl_r",
+                32,
+                4,
+                "&hl_r",
+                33,
+                6,
+                "&mt",
+                "LC(LS(LALT))",
+                "SPC",
+                "&key_repeat",
+                "&caps_alpha2macro",
+                "&alpha2macro"
+              ]
+            }
+          },
+          "children": {},
+          "labels": {}
+        },
+        "alpha2": {
+          "name": "alpha2",
           "properties": {
             "bindings": {
               "name": "bindings",
               "type": "array",
               "value": [
                 "&kp",
-                20,
+                25,
                 "&kp",
                 26,
                 "&kp",
-                8,
-                "&kp",
-                21,
-                "&kp",
-                23,
-                "&kp",
-                28,
-                "&kp",
-                24,
-                "&kp",
-                12,
-                "&kp",
-                18,
-                "&kp",
-                19,
-                "&kp",
-                4,
-                "&kp",
-                22,
-                "&kp",
-                7,
+                16,
                 "&kp",
                 9,
                 "&kp",
-                10,
-                "&kp",
-                11,
-                "&kp",
-                13,
-                "&kp",
-                14,
-                "&kp",
-                15,
-                "&kp",
-                "SEMI",
+                "SQT",
                 "&kp",
                 29,
                 "&kp",
-                27,
+                20,
                 "&kp",
-                6,
+                13,
                 "&kp",
-                25,
+                19,
+                "&kp",
+                14,
                 "&kp",
                 5,
                 "&kp",
-                17,
+                "DOT",
                 "&kp",
-                16,
+                27,
+                "&kp",
+                28,
+                "&sk",
+                "LSHIFT",
+                "&none",
+                "&none",
+                "&sl",
+                36
+              ]
+            }
+          },
+          "children": {},
+          "labels": {}
+        },
+        "sym1": {
+          "name": "sym1",
+          "properties": {
+            "bindings": {
+              "name": "bindings",
+              "type": "array",
+              "value": [
+                "&kp",
+                "LA(N3)",
+                "&kp",
+                "LS(N3)",
+                "&kp",
+                "DLLR",
+                "&kp",
+                "LS(COMMA)",
+                "&kp",
+                "LS(DOT)",
+                "&kp",
+                "CARET",
+                "&kp",
+                "GRAVE",
+                "&kp",
+                "TILDE",
+                "&kp",
+                "MINUS",
+                "&kp",
+                "BSLH",
+                "&kp",
+                "LBKT",
+                "&kp",
+                "RBKT",
+                "&kp",
+                "PIPE",
+                "&kp",
+                "SLASH",
+                "&trans",
+                "&trans",
+                "&trans",
+                "&trans"
+              ]
+            }
+          },
+          "children": {},
+          "labels": {}
+        },
+        "sym2": {
+          "name": "sym2",
+          "properties": {
+            "bindings": {
+              "name": "bindings",
+              "type": "array",
+              "value": [
+                "&kp",
+                "ATSN",
+                "&td",
+                "LA(RBKT)",
+                "LA(LS(RBKT))",
+                "&td",
+                "LA(LBKT)",
+                "LA(LS(LBKT))",
+                "&kp",
+                "LPRN",
+                "&kp",
+                "RPRN",
+                "&kp",
+                "SEMI",
+                "&kp",
+                "STAR",
+                "&kp",
+                "PRCNT",
+                "&td",
+                "QMARK",
+                "EXCL",
+                "&kp",
+                "DQT",
+                "&kp",
+                "LBRC",
+                "&kp",
+                "RBRC",
+                "&kp",
+                "AMPS",
+                "&kp",
+                "COLON",
+                "&trans",
+                "&trans",
+                "&trans",
+                "&none",
+                "&none",
+                "&trans"
+              ]
+            }
+          },
+          "children": {},
+          "labels": {}
+        },
+        "num": {
+          "name": "num",
+          "properties": {
+            "bindings": {
+              "name": "bindings",
+              "type": "array",
+              "value": [
+                "&hm_l",
+                "LCTL",
+                "DOT",
+                "&hm_l",
+                "LALT",
+                "N0",
+                "&hm_l",
+                "LGUI",
+                "N1",
+                "&hm_r",
+                "RGUI",
+                "N2",
+                "&hm_r",
+                "RALT",
+                "N3",
+                "&hm_r",
+                "RCTL",
+                "N4",
+                "&kp",
+                "MINUS",
+                "&kp",
+                "PLUS",
+                "&kp",
+                "N5",
+                "&kp",
+                "N6",
+                "&kp",
+                "N7",
+                "&kp",
+                "N8",
+                "&kp",
+                "N9",
+                "&kp",
+                "EQUAL",
+                "&sr",
+                "LSHIFT",
+                39,
+                "&trans",
+                "&trans",
+                "&trans"
+              ]
+            }
+          },
+          "children": {},
+          "labels": {}
+        },
+        "sys": {
+          "name": "sys",
+          "properties": {
+            "bindings": {
+              "name": "bindings",
+              "type": "array",
+              "value": [
+                "&kp",
+                "ESC",
+                "&kp",
+                "LC(LS(TAB))",
+                "&kp",
+                "RC(TAB)",
+                "&td",
+                "LG(V)",
+                "LG(C)",
+                "&kp",
+                "UP",
+                "&td",
+                20,
+                "BKSP",
+                "&td",
+                "LG(GRAVE)",
+                "TAB",
+                "&td",
+                "HOME",
+                "DEL",
+                "&td",
+                "END",
+                "LG(LBKT)",
+                "&kp",
+                "LG(RBKT)",
+                "&td",
+                "TAB",
+                "LEFT",
+                "&kp",
+                "DOWN",
+                "&td",
+                "LC(LG(LS(N4)))",
+                "RIGHT",
+                "&kp",
+                "RET",
+                "&sr",
+                "LSHIFT",
+                39,
+                "&none",
+                "&none",
+                "&kp",
+                "RGUI"
+              ]
+            }
+          },
+          "children": {},
+          "labels": {}
+        },
+        "bt": {
+          "name": "bt",
+          "properties": {
+            "bindings": {
+              "name": "bindings",
+              "type": "array",
+              "value": [
+                "&bt",
+                31,
+                "&bt",
+                30,
+                "&trans",
+                "&trans",
+                "&trans",
+                "&trans",
+                "&bootloader",
+                "&trans",
+                "&trans",
+                "&trans",
+                "&trans",
+                "&trans",
+                "&trans",
+                "&bt",
+                39,
+                "&to",
+                39,
+                "&none",
+                "&none",
+                "&none"
+              ]
+            }
+          },
+          "children": {},
+          "labels": {}
+        },
+        "alpha2cap": {
+          "name": "alpha2cap",
+          "properties": {
+            "bindings": {
+              "name": "bindings",
+              "type": "array",
+              "value": [
+                "&kp",
+                "LS(V)",
+                "&kp",
+                "LS(W)",
+                "&kp",
+                "LS(M)",
+                "&kp",
+                "LS(F)",
+                "&trans",
+                "&kp",
+                "LS(Z)",
+                "&kp",
+                "LS(Q)",
+                "&kp",
+                "LS(J)",
+                "&kp",
+                "LS(P)",
+                "&kp",
+                "LS(K)",
+                "&kp",
+                "LS(B)",
                 "&kp",
                 "COMMA",
                 "&kp",
-                "DOT",
+                "LS(X)",
                 "&kp",
-                "SLASH",
-                "&kp",
-                "LCTRL",
-                "&kp",
-                "SPACE",
-                "&kp",
-                "ENTER",
-                "&kp",
-                "RALT"
+                "LS(Y)",
+                "&trans",
+                "&trans",
+                "&trans",
+                "&none"
               ]
             }
           },

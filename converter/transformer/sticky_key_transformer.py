@@ -24,7 +24,11 @@ class StickyKeyTransformer:
         key = None
         timeout = None
         # Handle converter.models.Binding (from main transformer)
-        if hasattr(binding, "params") and isinstance(binding.params, (list, tuple)) and len(binding.params) > 0:
+        if (
+            hasattr(binding, "params")
+            and isinstance(binding.params, (list, tuple))
+            and len(binding.params) > 0
+        ):
             key = binding.params[0]
         # Handle StickyKeyBinding
         elif isinstance(binding, StickyKeyBinding):

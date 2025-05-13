@@ -165,10 +165,10 @@ The following real-world ZMK files have been collected and tested:
 | examples/basic_keymap.dtsi             | 569          | ✅ Successfully tested |
 | examples/advanced_features.dtsi        | 2056         | ✅ Successfully tested |
 | examples/multi_layer_keymap.dtsi       | 1669         | ✅ Successfully tested |
-| examples/complex_keymap.dtsi           | 3503         | ⏳ Collected, not yet tested |
+| examples/complex_keymap.dtsi           | 3503         | ✅ Successfully tested |
 | examples/ben_vallack_test.dtsi         | 2817         | ⏳ Collected, not yet tested |
-| tests/fixtures/real_world/card.keymap  | 5892         | ⏳ Collected, not yet tested |
-| tests/fixtures/real_world/piano.keymap | 5847         | ⏳ Collected, not yet tested |
+| tests/fixtures/real_world/card.keymap  | 5892         | ✅ Successfully tested |
+| tests/fixtures/real_world/piano.keymap | 5847         | ✅ Successfully tested |
 | tests/fixtures/dts/simple_keymap.zmk   | 604          | ✅ Successfully tested |
 | tests/fixtures/dts/large_keymap.zmk    | 856          | ✅ Successfully tested |
 | tests/fixtures/dts/complex_keymap.zmk  | 4327         | ✅ Successfully tested |

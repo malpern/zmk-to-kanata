@@ -1,4 +1,4 @@
-# 0x1E "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp3btq78st.dts"
+# 0x1E "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp97k2soqn.dts"
 # 0x1E "<built-in>" 0x1E
 # 0x1E "<built-in>" 0x20
 
@@ -9,7 +9,9 @@
 
 # 0x1E "<command line>" 0x1E
 # 0x1E "<built-in>" 0x1F
-# 0x1E "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp3btq78st.dts" 0x1F
+# 0x1E "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp97k2soqn.dts" 0x1F
+
+
 
 
 
@@ -93,20 +95,200 @@
         };
     };
 };
-# 0x23 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp3btq78st.dts" 0x1F
+# 0x25 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp97k2soqn.dts" 0x1F
 
 
+
+
+
+
+&mt {
+    tapping-term-ms = <201>;
+    flavor = "tap-preferred";
+ };
+&sk {
+     release-after-ms = <2000>;
+     quick-release;
+ };
+# 32 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp97k2soqn.dts"
 / {
-    keymap {
-        compatible = "zmk,keymap";
-
-        default_layer {
-            bindings = <
-                &kp 0x14 &kp 0x1A &kp 0x08 &kp 0x15 &kp 0x17 &kp 0x1C &kp 0x18 &kp 0x0C &kp 0x12 &kp 0x13
-                &kp 0x04 &kp 0x16 &kp 0x07 &kp 0x09 &kp 0x0A &kp 0x0B &kp 0x0D &kp 0x0E &kp 0x0F &kp SEMI
-                &kp 0x1D &kp 0x1B &kp 0x06 &kp 0x19 &kp 0x05 &kp 0x11 &kp 0x10 &kp COMMA &kp DOT &kp SLASH
-                          &kp LCTRL &kp SPACE &kp ENTER &kp RALT
-            >;
+    combos {
+        compatible = "zmk,combos";
+        combo_sys {
+            timeout-ms = <30>;
+     key-positions = <0x20 0x21 0x22>;
+            bindings = <&to 0x22>;
         };
+        combo_caps {
+            timeout-ms = <30>;
+     key-positions = <10 11 12>;
+            bindings = <&caps_word>;
+        };
+        combo_bt {
+            timeout-ms = <10>;
+            key-positions = <11 12>;
+            bindings = <&to 0x23>;
+     layers = <0x1F>;
+        };
+        lalt {
+            timeout-ms = <20>;
+     key-positions = <0x25 0x26>;
+            bindings = <&kp LALT>;
+     layers = <0x22>;
+        };
+        lclk {
+            timeout-ms = <20>;
+     key-positions = <10 11>;
+            bindings = <&mkp 0x01>;
+     layers = <0x22>;
+        };
+        rclk {
+            timeout-ms = <20>;
+     key-positions = <0x20 0x21>;
+            bindings = <&mkp 0x02>;
+     layers = <0x22>;
+        };
+
+
     };
+
+    behaviors {
+        hm_l: homerow_mods_left {
+            compatible = "zmk,behavior-hold-tap";
+            label = "HOMEROW_MODS_L";
+            #binding-cells = <0x1F>;
+            tapping-term-ms = <300>;
+            quick-tap-ms = <250>;
+            flavor = "tap-preferred";
+            bindings = <&kp>, <&kp>;
+        };
+        hm_r: homerow_mods_right {
+            compatible = "zmk,behavior-hold-tap";
+            label = "HOMEROW_MODS_R";
+            #binding-cells = <0x1F>;
+            tapping-term-ms = <300>;
+            quick-tap-ms = <250>;
+            flavor = "tap-preferred";
+            bindings = <&kp>, <&kp>;
+        };
+        sr: shift_layer {
+            compatible = "zmk,behavior-hold-tap";
+            label = "SHIFT_LAYER";
+            #binding-cells = <0x1F>;
+            tapping-term-ms = <300>;
+            quick_tap_ms = <0x27>;
+            flavor = "tap-preferred";
+            bindings = <&kp>, <&to>;
+     retro-tap;
+        };
+        hl_l: homerow_layers_left {
+            compatible = "zmk,behavior-hold-tap";
+            label = "HOMEROW_LAYERS_L";
+            #binding-cells = <0x1F>;
+            tapping-term-ms = <220>;
+            quick-tap-ms = <250>;
+            flavor = "tap-preferred";
+            bindings = <&mo>, <&kp>;
+        };
+        hl_r: homerow_layers_right {
+            compatible = "zmk,behavior-hold-tap";
+            label = "HOMEROW_LAYERS_R";
+            #binding-cells = <0x1F>;
+            tapping-term-ms = <220>;
+            quick-tap-ms = <250>;
+            flavor = "tap-preferred";
+            bindings = <&mo>, <&kp>;
+        };
+ td: tapdance {
+            compatible = "zmk,behavior-hold-tap";
+            label = "TAPDANCE";
+            #binding-cells = <0x1F>;
+            tapping-term-ms = <190>;
+            quick-tap-ms = <250>;
+            flavor = "tap-preferred";
+            bindings = <&kp>, <&kp>;
+        };
+ alpha2macro: behavior_macro_1 {
+  compatible = "zmk,behavior-macro";
+  label = "MACRO1";
+  #binding-cells = <0x27>;
+  bindings = < &sl 0x1E >;
+ };
+ caps_alpha2macro: behavior_macro_2 {
+  compatible = "zmk,behavior-macro";
+  label = "MACRO2";
+  #binding-cells = <0x27>;
+  bindings = < &sl 0x24 >;
+ };
+    };
+
+
+
+       keymap {
+                compatible = "zmk,keymap";
+
+         alpha1 {
+  bindings = <
+     &hm_l LCTL 0x0F &hm_l LALT 0x0A &hm_l LGUI 0x07 &hm_r RGUI 0x0B &hm_r RALT 0x18 &hm_r RCTL 0x12
+  &hl_l 0x21 0x0C &hl_l 0x20 0x16 &hl_l 0x1F 0x15 &hl_l 0x22 0x17 &hl_r 0x22 0x11 &hl_r 0x1F 0x08 &hl_r 0x20 0x04 &hl_r 0x21 0x06
+           &mt LC(LS(LALT)) SPC &key_repeat &caps_alpha2macro &alpha2macro
+  >;
+  };
+         alpha2 {
+  bindings = <
+      &kp 0x19 &kp 0x1A &kp 0x10 &kp 0x09 &kp SQT &kp 0x1D
+  &kp 0x14 &kp 0x0D &kp 0x13 &kp 0x0E &kp 0x05 &kp DOT &kp 0x1B &kp 0x1C
+           &sk LSHIFT &none &none &sl 0x24
+  >;
+  };
+
+         sym1 {
+  bindings = <
+     &kp LA(N3) &kp LS(N3) &kp DLLR &kp LS(COMMA) &kp LS(DOT) &kp CARET
+  &kp GRAVE &kp TILDE &kp MINUS &kp BSLH &kp LBKT &kp RBKT &kp PIPE &kp SLASH
+          &trans &trans &trans &trans
+  >;
+  };
+  sym2 {
+  bindings = <
+    &kp ATSN &td LA(RBKT) LA(LS(RBKT)) &td LA(LBKT) LA(LS(LBKT)) &kp LPRN &kp RPRN &kp SEMI
+  &kp STAR &kp PRCNT &td QMARK EXCL &kp DQT &kp LBRC &kp RBRC &kp AMPS &kp COLON
+     &trans &trans &trans &none &none &trans
+
+  >;
+  };
+
+  num {
+  bindings = <
+    &hm_l LCTL DOT &hm_l LALT N0 &hm_l LGUI N1 &hm_r RGUI N2 &hm_r RALT N3 &hm_r RCTL N4
+  &kp MINUS &kp PLUS &kp N5 &kp N6 &kp N7 &kp N8 &kp N9 &kp EQUAL
+       &sr LSHIFT 0x27 &trans &trans &trans
+  >;
+  };
+
+  sys {
+  bindings = <
+      &kp ESC &kp LC(LS(TAB)) &kp RC(TAB) &td LG(V) LG(C) &kp UP &td 0x14 BKSP
+  &td LG(GRAVE) TAB &td HOME DEL &td END LG(LBKT) &kp LG(RBKT) &td TAB LEFT &kp DOWN &td LC(LG(LS(N4))) RIGHT &kp RET
+              &sr LSHIFT 0x27 &none &none &kp RGUI
+  >;
+  };
+
+  bt {
+  bindings = <
+    &bt 0x1F &bt 0x1E &trans &trans &trans &trans
+  &bootloader &trans &trans &trans &trans &trans &trans &bt 0x27
+           &to 0x27 &none &none &none
+  >;
+  };
+
+         alpha2cap {
+  bindings = <
+      &kp LS(V) &kp LS(W) &kp LS(M) &kp LS(F) &trans &kp LS(Z)
+  &kp LS(Q) &kp LS(J) &kp LS(P) &kp LS(K) &kp LS(B) &kp COMMA &kp LS(X) &kp LS(Y)
+     &trans &trans &trans &none
+  >;
+  };
+
+ };
 };

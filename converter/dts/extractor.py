@@ -423,6 +423,7 @@ class KeymapExtractor:
             "unicode": "zmk,behavior-unicode",
             "unicode_string": "zmk,behavior-unicode-string",
             "caps_word": "zmk,behavior-caps-word",
+            "key_repeat": "zmk,behavior-key-repeat",
             # Add more as needed
         }
 
@@ -439,7 +440,11 @@ class KeymapExtractor:
                 # Determine expected parameters
                 if behavior_name in ("kp", "mo", "to", "sl", "sk", "td", "bt", "mkp"):
                     num_params_expected = 1
-                elif behavior_name in ("mt", "hold-tap", "mod-tap"):  # recognize mt as hold-tap
+                elif behavior_name in (
+                    "mt",
+                    "hold-tap",
+                    "mod-tap",
+                ):  # recognize mt as hold-tap
                     num_params_expected = 2
                 elif behavior_name in self.behaviors:
                     b_type = getattr(self.behaviors[behavior_name], "type", None)
@@ -449,7 +454,9 @@ class KeymapExtractor:
                         num_params_expected = 0
                     # Add other known behaviors here...
 
-                logging.debug(f"[extractor] Token: {token}, behavior: {behavior_name}, expected params: {num_params_expected}")
+                logging.debug(
+                    f"[extractor] Token: {token}, behavior: {behavior_name}, expected params: {num_params_expected}"
+                )
 
                 # When resolving a binding, only allow behaviors explicitly defined by the user
                 def get_or_create_behavior(name, type_str):
@@ -458,7 +465,9 @@ class KeymapExtractor:
                     if name in BUILTIN_BEHAVIORS:
                         if name in ("mt", "hold-tap", "mod-tap"):
                             # Create a HoldTap with sensible defaults
-                            b = HoldTap(name=name, tapping_term_ms=200, flavor="balanced")
+                            b = HoldTap(
+                                name=name, tapping_term_ms=200, flavor="balanced"
+                            )
                         else:
                             b = Behavior(name=name, type=BUILTIN_BEHAVIORS[name])
                         self.behaviors[name] = b
@@ -478,7 +487,9 @@ class KeymapExtractor:
                     params.append(str(next_token))
                     actual_params_consumed += 1
 
-                logging.debug(f"[extractor]   Params consumed: {params} (actual: {actual_params_consumed})")
+                logging.debug(
+                    f"[extractor]   Params consumed: {params} (actual: {actual_params_consumed})"
+                )
 
                 behavior = get_or_create_behavior(behavior_name, behavior_name)
                 if behavior:

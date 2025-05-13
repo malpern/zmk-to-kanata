@@ -120,7 +120,7 @@ class DtsParser:
             # Only process truly stray tokens after the root block is closed
             logging.debug(
                 "Tokens after first root node: %s",
-                self.tokens[self.pos:self.pos+20],
+                self.tokens[self.pos : self.pos + 20],
             )
             while self.pos < len(self.tokens):
                 if self.tokens[self.pos] == "/":
@@ -304,7 +304,7 @@ class DtsParser:
                             i,
                             c,
                             depth,
-                            content[start_i:i+1],
+                            content[start_i : i + 1],
                         )
                     if c == "<":
                         depth += 1
@@ -365,16 +365,16 @@ class DtsParser:
         in_comment = 0  # nesting level
         in_string = False
         while i < n:
-            if not in_comment and not in_string and content[i:i+2] == '/*':
+            if not in_comment and not in_string and content[i : i + 2] == "/*":
                 in_comment = 1
                 i += 2
                 continue
             elif in_comment:
-                if content[i:i+2] == '/*':
+                if content[i : i + 2] == "/*":
                     in_comment += 1
                     i += 2
                     continue
-                elif content[i:i+2] == '*/':
+                elif content[i : i + 2] == "*/":
                     in_comment -= 1
                     i += 2
                     continue
@@ -390,7 +390,8 @@ class DtsParser:
                 result.append(content[i])
                 i += 1
         # Remove any stray '*/' tokens left behind
-        cleaned = ''.join(result).replace('*/', '')
+        cleaned = "".join(result).replace("*/", "")
+
         # Now remove // comments outside of string literals
         def strip_cpp_comments(line):
             in_str = False
@@ -398,12 +399,13 @@ class DtsParser:
             while idx < len(line):
                 if line[idx] == '"':
                     in_str = not in_str
-                elif not in_str and line[idx:idx+2] == '//':
+                elif not in_str and line[idx : idx + 2] == "//":
                     return line[:idx]
                 idx += 1
             return line
+
         cleaned_lines = [strip_cpp_comments(line) for line in cleaned.splitlines()]
-        return '\n'.join(cleaned_lines)
+        return "\n".join(cleaned_lines)
 
     def _parse_array_value(self, value: str) -> List[Any]:
         """Parse array value (e.g., '<&kp A 1 0x10>').
@@ -540,22 +542,20 @@ class DtsParser:
             token = self.tokens[self.pos]
 
             # Skip over extra semicolons and blank/empty tokens
-            if token == ";" or (
-                isinstance(token, str) and token.strip() == ""
-            ):
+            if token == ";" or (isinstance(token, str) and token.strip() == ""):
                 self.pos += 1
                 continue
 
             if token == "}":
                 logging.debug(
                     "Tokens after closing node: %s",
-                    self.tokens[self.pos:self.pos+10],
+                    self.tokens[self.pos : self.pos + 10],
                 )
                 # Skip over any stray semicolons or blank tokens (but not braces)
-                while (
-                    self.pos < len(self.tokens)
-                    and self.tokens[self.pos] in [";", ""]
-                ):
+                while self.pos < len(self.tokens) and self.tokens[self.pos] in [
+                    ";",
+                    "",
+                ]:
                     logging.debug(
                         "Skipping stray token after node close: %s",
                         self.tokens[self.pos],
@@ -600,9 +600,7 @@ class DtsParser:
                 name = token
                 if (
                     name
-                    and all(
-                        c.isalnum() or c in ("_", "-", "#") for c in name
-                    )
+                    and all(c.isalnum() or c in ("_", "-", "#") for c in name)
                     and (name[0].isalpha() or name[0] == "#" or name[0] == "_")
                 ):
                     prop = DtsProperty(name=name, value=True, type="boolean")
@@ -634,8 +632,7 @@ class DtsParser:
                     # Check for additional comma-separated array cells
                     if prop.type == "array":
                         while (
-                            self.pos < len(self.tokens)
-                            and self.tokens[self.pos] == ","
+                            self.pos < len(self.tokens) and self.tokens[self.pos] == ","
                         ):
                             self.pos += 1
                             if self.pos >= len(self.tokens):
@@ -657,9 +654,8 @@ class DtsParser:
                                 "_{temp}", next_value_token
                             )
                             if additional_prop_part.type == "array":
-                                if (
-                                    isinstance(prop.value, list)
-                                    and isinstance(additional_prop_part.value, list)
+                                if isinstance(prop.value, list) and isinstance(
+                                    additional_prop_part.value, list
                                 ):
                                     prop.value.extend(additional_prop_part.value)
                                 else:
@@ -722,10 +718,7 @@ class DtsParser:
             current_token = token  # Start with the first token we haven't processed as property/etc.
 
             # Loop to gather all labels: label1: label2: ... node_name
-            while (
-                self.pos + 1 < len(self.tokens)
-                and self.tokens[self.pos + 1] == ":"
-            ):
+            while self.pos + 1 < len(self.tokens) and self.tokens[self.pos + 1] == ":":
                 # Current token is a label
                 current_labels_for_node.append(current_token)
                 self.pos += 2  # Consume label and ':'

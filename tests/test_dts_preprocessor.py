@@ -17,7 +17,9 @@ def test_preprocessor():
     input_file = os.path.join(fixtures_dir, "simple_keymap.zmk")
     result = preprocessor.preprocess(input_file)
     # Remove preprocessor line markers
-    filtered = "\n".join(line for line in result.splitlines() if not line.strip().startswith("#"))
+    filtered = "\n".join(
+        line for line in result.splitlines() if not line.strip().startswith("#")
+    )
     # Check that the result contains the expected content
     assert "((0) << 0x25 | (0))" in filtered
     assert "((0) << 0x25 | (1))" in filtered
@@ -45,7 +47,9 @@ def test_preprocessor_large_matrix():
     input_file = os.path.join(fixtures_dir, "large_keymap.zmk")
     result = preprocessor.preprocess(input_file)
     # Remove preprocessor line markers
-    filtered = "\n".join(line for line in result.splitlines() if not line.strip().startswith("#"))
+    filtered = "\n".join(
+        line for line in result.splitlines() if not line.strip().startswith("#")
+    )
     # Check that the result contains the expected content
     for row in range(4):
         for col in range(5):

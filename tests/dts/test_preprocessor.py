@@ -244,7 +244,9 @@ def test_preprocess_simple_keymap(preprocessor, simple_keymap_path):
     """Test preprocessing a simple keymap."""
     result = preprocessor.preprocess(str(simple_keymap_path))
     # Remove preprocessor line markers
-    filtered = "\n".join(line for line in result.splitlines() if not line.strip().startswith("#"))
+    filtered = "\n".join(
+        line for line in result.splitlines() if not line.strip().startswith("#")
+    )
     # Check that the result contains the expected content
     assert "((0) << 0x25 | (0))" in filtered
     assert "((0) << 0x25 | (1))" in filtered

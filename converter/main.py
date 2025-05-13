@@ -244,10 +244,19 @@ def main(args=None):
 
         # Transform to Kanata format
         logging.info("Transforming keymap to Kanata format")
-        kanata_config = transformer.transform(keymap_config)
+        kanata_config = None
+        transform_error = None
+        try:
+            kanata_config = transformer.transform(keymap_config)
+        except Exception as e:
+            logging.error(f"Transformation error: {e}")
+            transform_error = e
+            kanata_config = f"; <error: transformation failed: {e}>\n"
 
         # Write output
         if parsed_args.output:
+            logging.info(f"Writing Kanata output to: {parsed_args.output}")
+            logging.debug(f"First 100 chars of output: {kanata_config[:100]}")
             with open(parsed_args.output, "w") as f:
                 f.write(kanata_config)
             logging.info(
@@ -258,6 +267,9 @@ def main(args=None):
         else:
             print(kanata_config)
 
+        # If there was a transformation error, return error code
+        if transform_error:
+            return 1
         return 0  # Return success code
 
     except Exception as e:

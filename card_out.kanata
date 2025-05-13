@@ -1,0 +1,357 @@
+(defcfg
+  input (kb () () )
+  output (kbd ())
+)
+
+(defvar tap-time 200)
+(defvar hold-time 250)
+
+
+(defalias hm (tap-hold 300 300 15 lctl))
+
+(defalias hm (tap-hold 300 300 11 rmet))
+
+(defalias hm (tap-hold 300 300 dot lctl))
+
+(defalias sr (tap-hold 300 300 39 lsft))
+
+(defalias hl (tap-hold 220 220 12 34))
+
+(defalias hl (tap-hold 220 220 17 35))
+
+(defmacro alpha2macro
+)
+
+(defalias mt (tap-hold 200 200 spc lc(ls(lalt))))
+
+(defalias hm (tap-hold 300 300 n0 lalt))
+
+(defalias hl (tap-hold 220 220 22 33))
+
+(defalias hm (tap-hold 300 300 7 lmet))
+
+(defalias hl (tap-hold 220 220 6 34))
+
+(defalias hl (tap-hold 220 220 21 32))
+
+(defalias hm (tap-hold 300 300 n4 rctl))
+
+(defalias hm (tap-hold 300 300 10 lalt))
+
+(defalias hm (tap-hold 300 300 18 rctl))
+
+(defalias hm (tap-hold 300 300 24 ralt))
+
+(defalias hl (tap-hold 220 220 4 33))
+
+(defalias hl (tap-hold 220 220 8 32))
+
+(defalias hm (tap-hold 300 300 n1 lmet))
+
+(defalias hm (tap-hold 300 300 n3 ralt))
+
+(defalias hl (tap-hold 220 220 23 35))
+
+(defalias hm (tap-hold 300 300 n2 rmet))
+(deflayer alpha1
+  _
+  @ht_lctl_l
+  @ht_lalt_g
+  @ht_lmet_d
+  @ht_rmet_h
+  @ht_ralt_u
+  @ht_rctl_o
+  _
+  @ht_5_i
+  @ht_4_s
+  @ht_3_r
+  @ht_6_t
+  @ht_6_n
+  @ht_3_e
+  @ht_4_a
+  @ht_5_c
+  _
+  _
+  _
+  @ht_lc(ls(lalt))_spc
+  (macro alpha2macro)
+  _
+  _
+  _
+  _
+  _
+)
+(deflayer game
+  _
+  l
+  g
+  d
+  @ht_rmet_h
+  @ht_ralt_u
+  @ht_rctl_o
+  _
+  i
+  s
+  r
+  t
+  @ht_6_n
+  @ht_3_e
+  @ht_4_a
+  @ht_5_c
+  _
+  _
+  _
+  spc
+  <err:unknown:zmk,behavior-sticky-layer>
+  _
+  _
+  _
+  _
+  _
+)
+(deflayer alpha2
+  _
+  v
+  w
+  m
+  f
+  sqt
+  z
+  _
+  q
+  j
+  p
+  k
+  b
+  dot
+  x
+  y
+  _
+  _
+  _
+  sticky-lsft
+  <err:unknown:zmk,behavior-sticky-layer>
+  _
+  _
+  _
+  _
+  _
+)
+(deflayer sym1
+  _
+  la(n3)
+  ls(n3)
+  dllr
+  ls(comma)
+  ls(dot)
+  caret
+  _
+  grv
+  tilde
+  minus
+  bslh
+  lbrc
+  rbrc
+  pipe
+  slash
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+)
+(deflayer sym2
+  _
+  atsn
+  <err:missing_holdtap_params>
+  la(ls(rbkt))
+  <err:missing_holdtap_params>
+  la(ls(lbkt))
+  lprn
+  rprn
+  semi
+  _
+  star
+  prcnt
+  <err:missing_holdtap_params>
+  excl
+  dqt
+  lbrc
+  rbrc
+  amps
+  colon
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+)
+(deflayer num
+  _
+  @ht_lctl_dot
+  @ht_lalt_0
+  @ht_lmet_1
+  @ht_rmet_2
+  @ht_ralt_3
+  @ht_rctl_4
+  _
+  minus
+  plus
+  5
+  6
+  7
+  8
+  9
+  equal
+  _
+  _
+  _
+  @ht_lsft_0
+  _
+  _
+  _
+  _
+  _
+  _
+)
+(deflayer sys
+  _
+  esc
+  lc(ls(tab))
+  rc(tab)
+  <err:missing_holdtap_params>
+  lg(c)
+  up
+  <err:missing_holdtap_params>
+  bksp
+  _
+  <err:missing_holdtap_params>
+  tab
+  <err:missing_holdtap_params>
+  del
+  <err:missing_holdtap_params>
+  lg(lbkt)
+  lg(rbkt)
+  <err:missing_holdtap_params>
+  left
+  down
+  <err:missing_holdtap_params>
+  right
+  ret
+  _
+  _
+  _
+  @ht_lsft_0
+  rmet
+  _
+  _
+  _
+  _
+  _
+)
+(deflayer bt
+  _
+  <err:unknown:zmk,behavior-bluetooth>
+  <err:unknown:zmk,behavior-bluetooth>
+  _
+  _
+  _
+  _
+  _
+  <err:unknown:zmk,behavior-bootloader>
+  _
+  _
+  _
+  _
+  _
+  _
+  <err:unknown:zmk,behavior-bluetooth>
+  _
+  _
+  _
+  <err:unknown:zmk,behavior-toggle-layer>
+  _
+  _
+  _
+  <err:unknown:zmk,behavior-bluetooth>
+  _
+  _
+)
+(deflayer alpha2cap
+  _
+  ls(v)
+  ls(w)
+  ls(m)
+  ls(f)
+  _
+  ls(z)
+  _
+  ls(q)
+  ls(j)
+  ls(p)
+  ls(k)
+  ls(b)
+  comma
+  ls(x)
+  ls(y)
+  _
+  _
+  _
+  _
+  la(semi)
+  _
+  _
+  _
+  _
+  _
+)
+
+; --- Unsupported/Unknown ZMK Features ---
+[KanataTransformer] Skipping hold-tap alias: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LA(RBKT)'])
+[KanataTransformer] Skipping hold-tap alias: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LA(LBKT)'])
+[KanataTransformer] Skipping hold-tap alias: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['QMARK'])
+[KanataTransformer] Skipping hold-tap alias: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LG(V)'])
+[KanataTransformer] Skipping hold-tap alias: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['20'])
+[KanataTransformer] Skipping hold-tap alias: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LG(GRAVE)'])
+[KanataTransformer] Skipping hold-tap alias: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['HOME'])
+[KanataTransformer] Skipping hold-tap alias: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['END'])
+[KanataTransformer] Skipping hold-tap alias: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['TAB'])
+[KanataTransformer] Skipping hold-tap alias: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LC(LG(LS(N4)))'])
+[KanataTransformer] Skipping hold-tap combo: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LA(RBKT)'])
+[KanataTransformer] Skipping hold-tap combo: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LA(LBKT)'])
+[KanataTransformer] Skipping hold-tap combo: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['QMARK'])
+[KanataTransformer] Skipping hold-tap combo: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LG(V)'])
+[KanataTransformer] Skipping hold-tap combo: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['20'])
+[KanataTransformer] Skipping hold-tap combo: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LG(GRAVE)'])
+[KanataTransformer] Skipping hold-tap combo: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['HOME'])
+[KanataTransformer] Skipping hold-tap combo: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['END'])
+[KanataTransformer] Skipping hold-tap combo: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['TAB'])
+[KanataTransformer] Skipping hold-tap combo: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LC(LG(LS(N4)))'])
+Unknown binding type: zmk,behavior-sticky-layer for binding: Binding(behavior=Behavior(name='sl', type='zmk,behavior-sticky-layer'), params=['31'])
+Unknown binding type: zmk,behavior-sticky-layer for binding: Binding(behavior=Behavior(name='sl', type='zmk,behavior-sticky-layer'), params=['37'])
+Hold-tap/mod-tap binding missing params: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LA(RBKT)']). This may be due to incomplete extraction or preprocessing.
+Hold-tap/mod-tap binding missing params: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LA(LBKT)']). This may be due to incomplete extraction or preprocessing.
+Hold-tap/mod-tap binding missing params: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['QMARK']). This may be due to incomplete extraction or preprocessing.
+Hold-tap/mod-tap binding missing params: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LG(V)']). This may be due to incomplete extraction or preprocessing.
+Hold-tap/mod-tap binding missing params: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['20']). This may be due to incomplete extraction or preprocessing.
+Hold-tap/mod-tap binding missing params: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LG(GRAVE)']). This may be due to incomplete extraction or preprocessing.
+Hold-tap/mod-tap binding missing params: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['HOME']). This may be due to incomplete extraction or preprocessing.
+Hold-tap/mod-tap binding missing params: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['END']). This may be due to incomplete extraction or preprocessing.
+Hold-tap/mod-tap binding missing params: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['TAB']). This may be due to incomplete extraction or preprocessing.
+Hold-tap/mod-tap binding missing params: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LC(LG(LS(N4)))']). This may be due to incomplete extraction or preprocessing.
+Unknown binding type: zmk,behavior-bluetooth for binding: Binding(behavior=Behavior(name='bt', type='zmk,behavior-bluetooth'), params=['31'])
+Unknown binding type: zmk,behavior-bluetooth for binding: Binding(behavior=Behavior(name='bt', type='zmk,behavior-bluetooth'), params=['30'])
+Unknown binding type: zmk,behavior-bootloader for binding: Binding(behavior=Behavior(name='bootloader', type='zmk,behavior-bootloader'), params=[])
+Unknown binding type: zmk,behavior-bluetooth for binding: Binding(behavior=Behavior(name='bt', type='zmk,behavior-bluetooth'), params=['39'])
+Unknown binding type: zmk,behavior-toggle-layer for binding: Binding(behavior=Behavior(name='to', type='zmk,behavior-toggle-layer'), params=['39'])
+Unknown binding type: zmk,behavior-bluetooth for binding: Binding(behavior=Behavior(name='bt', type='zmk,behavior-bluetooth'), params=['39'])

@@ -1,0 +1,24 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.10.16, pytest-8.3.5, pluggy-1.5.0
+rootdir: /Volumes/FlashGordon/Dropbox/code/nicktokatana
+configfile: pyproject.toml
+testpaths: tests
+collected 111 items
+
+tests/dts/test_ast.py .....                                              [  4%]
+tests/dts/test_end_to_end.py ......                                      [  9%]
+tests/dts/test_extractor.py .....                                        [ 14%]
+tests/dts/test_integration.py .....                                      [ 18%]
+tests/dts/test_parser.py .............                                   [ 30%]
+tests/dts/test_performance.py ....                                       [ 34%]
+tests/dts/test_preprocessor.py ...........                               [ 44%]
+tests/test_dts_parser.py ..............                                  [ 56%]
+tests/test_dts_preprocessor.py ...                                       [ 59%]
+tests/test_hold_tap_behavior.py ......                                   [ 64%]
+tests/test_holdtap_transformer.py ..........                             [ 73%]
+tests/test_kanata_converter.py .....                                     [ 78%]
+tests/test_keymap_model.py ..........                                    [ 87%]
+tests/test_main.py .......                                               [ 93%]
+tests/test_unicode_behavior.py .......                                   [100%]
+
+============================= 111 passed in 1.37s ==============================
