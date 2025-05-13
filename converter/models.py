@@ -11,6 +11,13 @@ class GlobalSettings:
     tap_time: int
     hold_time: int
 
+    def to_dict(self) -> dict:
+        """Return a serializable dictionary representation of global settings."""
+        return {
+            "tap_time": self.tap_time,
+            "hold_time": self.hold_time,
+        }
+
 
 @dataclass
 class Binding:
@@ -18,6 +25,13 @@ class Binding:
 
     behavior: Optional["Behavior"]
     params: List[str]
+
+    def to_dict(self) -> dict:
+        """Return a serializable dictionary representation of this binding."""
+        return {
+            "behavior": self.behavior.to_dict() if self.behavior else None,
+            "params": list(self.params),
+        }
 
 
 @dataclass
@@ -178,6 +192,22 @@ class KeyMapping(Binding):
             # Assume this is a direct key reference (for test files)
             return cls(key=binding_str)
 
+    def to_dict(self) -> dict:
+        """Return a serializable dictionary representation of this key mapping."""
+        base = super().to_dict()
+        base.update(
+            {
+                "key": self.key,
+                "hold_tap": (
+                    self.hold_tap.to_dict()
+                    if self.hold_tap and hasattr(self.hold_tap, "to_dict")
+                    else self.hold_tap
+                ),
+                "sticky": self.sticky,
+            }
+        )
+        return base
+
 
 @dataclass
 class Behavior:
@@ -185,6 +215,13 @@ class Behavior:
 
     name: str
     type: str = ""
+
+    def to_dict(self) -> dict:
+        """Return a serializable dictionary representation of this behavior."""
+        return {
+            "name": self.name,
+            "type": self.type,
+        }
 
 
 class HoldTap(Behavior):
@@ -221,6 +258,19 @@ class HoldTap(Behavior):
         self.tap_hold_wait_ms = tap_hold_wait_ms
         self.require_prior_idle_ms = require_prior_idle_ms
 
+    def to_dict(self) -> dict:
+        """Return a serializable dictionary representation of this hold-tap behavior."""
+        return {
+            "name": self.name,
+            "type": self.type,
+            "tapping_term_ms": self.tapping_term_ms,
+            "hold_time_ms": self.hold_time_ms,
+            "quick_tap_ms": self.quick_tap_ms,
+            "flavor": self.flavor,
+            "tap_hold_wait_ms": self.tap_hold_wait_ms,
+            "require_prior_idle_ms": self.require_prior_idle_ms,
+        }
+
 
 @dataclass
 class HoldTapBinding:
@@ -232,6 +282,17 @@ class HoldTapBinding:
     hold_trigger_key_positions: Optional[Tuple[int, ...]] = None
     hold_trigger_on_release: bool = False
     retro_tap: bool = False
+
+    def to_dict(self) -> dict:
+        """Return a serializable dictionary representation of this hold-tap binding."""
+        return {
+            "behavior_name": self.behavior_name,
+            "hold_key": self.hold_key,
+            "tap_key": self.tap_key,
+            "hold_trigger_key_positions": self.hold_trigger_key_positions,
+            "hold_trigger_on_release": self.hold_trigger_on_release,
+            "retro_tap": self.retro_tap,
+        }
 
 
 class MacroBehavior(Behavior):
@@ -247,6 +308,14 @@ class MacroBehavior(Behavior):
         super().__init__(name=name, type="macro")
         self.bindings = bindings
 
+    def to_dict(self) -> dict:
+        """Return a serializable dictionary representation of this macro behavior."""
+        return {
+            "name": self.name,
+            "type": self.type,
+            "bindings": [b.to_dict() for b in self.bindings],
+        }
+
 
 @dataclass
 class Layer:
@@ -255,6 +324,14 @@ class Layer:
     name: str
     bindings: List[Binding]
     index: int
+
+    def to_dict(self) -> dict:
+        """Return a serializable dictionary representation of this layer."""
+        return {
+            "name": self.name,
+            "bindings": [b.to_dict() for b in self.bindings],
+            "index": self.index,
+        }
 
 
 @dataclass
@@ -266,6 +343,15 @@ class Combo:
     key_positions: List[int]
     binding: Binding
 
+    def to_dict(self) -> dict:
+        """Return a serializable dictionary representation of this combo."""
+        return {
+            "name": self.name,
+            "timeout_ms": self.timeout_ms,
+            "key_positions": list(self.key_positions),
+            "binding": self.binding.to_dict(),
+        }
+
 
 @dataclass
 class ConditionalLayer:
@@ -274,6 +360,14 @@ class ConditionalLayer:
     name: str
     if_layers: List[int]
     then_layer: int
+
+    def to_dict(self) -> dict:
+        """Return a serializable dictionary representation of this conditional layer."""
+        return {
+            "name": self.name,
+            "if_layers": list(self.if_layers),
+            "then_layer": self.then_layer,
+        }
 
 
 @dataclass
@@ -285,6 +379,15 @@ class KeymapConfig:
     combos: List[Combo] = field(default_factory=list)
     conditional_layers: List[ConditionalLayer] = field(default_factory=list)
 
+    def to_dict(self) -> dict:
+        """Return a serializable dictionary representation of the keymap config."""
+        return {
+            "layers": [layer.to_dict() for layer in self.layers],
+            "behaviors": {k: v.to_dict() for k, v in self.behaviors.items()},
+            "combos": [c.to_dict() for c in self.combos],
+            "conditional_layers": [cl.to_dict() for cl in self.conditional_layers],
+        }
+
 
 @dataclass
 class KanataConfig:
@@ -295,3 +398,13 @@ class KanataConfig:
     permissive_hold: bool = False
     hold_on_other_key_press: bool = False
     retro_tapping: bool = False
+
+    def to_dict(self) -> dict:
+        """Return a serializable dictionary representation of the Kanata config."""
+        return {
+            "tapping_term_ms": self.tapping_term_ms,
+            "quick_tap_ms": self.quick_tap_ms,
+            "permissive_hold": self.permissive_hold,
+            "hold_on_other_key_press": self.hold_on_other_key_press,
+            "retro_tapping": self.retro_tapping,
+        }
