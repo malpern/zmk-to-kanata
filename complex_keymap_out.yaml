@@ -1,0 +1,30 @@
+(defcfg
+  input (kb () () )
+  output (kbd ())
+)
+
+
+(defalias mt (tap-hold 200 200 4 lsft))
+
+(defalias lt (tap-hold 200 200 8 30))
+
+(defmacro macro_a
+)
+
+(defmacro macro_b
+)
+(deflayer default_layer
+  @ht_lsft_4 5 */ (macro macro_a) 7 */ @lt_30_8 9 */ 10 */ 11 */ 12 */ 13 */ 14 */ 15 */ 16 */ 17 */ 18 */ 19 */ 20 */ 21 */ 22 */ 23 */ 24 */ 25 */ 26 */ 27 */
+)
+
+(deflayer lower_layer
+  1 2 3 4 5 6 7 8 9 0 minus equal f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12
+)
+
+(deflayer raise_layer
+  exclamation at hash dollar percent caret ampersand star lpar rpar under plus f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12
+)
+
+(deflayer adjust_layer
+  reset bootloader none none none none none none none none none none none none none none none none none none none none none none
+)

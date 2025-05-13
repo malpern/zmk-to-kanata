@@ -1,0 +1,385 @@
+{
+  "name": "/",
+  "properties": {},
+  "children": {
+    "behaviors": {
+      "name": "behaviors",
+      "properties": {
+        "compatible": {
+          "name": "compatible",
+          "type": "string",
+          "value": "zmk,behaviors"
+        }
+      },
+      "children": {
+        "key_press": {
+          "name": "key_press",
+          "properties": {
+            "compatible": {
+              "name": "compatible",
+              "type": "string",
+              "value": "zmk,behavior-key-press"
+            },
+            "#binding-cells": {
+              "name": "#binding-cells",
+              "type": "array",
+              "value": [
+                30
+              ]
+            }
+          },
+          "children": {},
+          "labels": {
+            "kp": "key_press"
+          }
+        },
+        "mod_tap": {
+          "name": "mod_tap",
+          "properties": {
+            "compatible": {
+              "name": "compatible",
+              "type": "string",
+              "value": "zmk,behavior-hold-tap"
+            },
+            "#binding-cells": {
+              "name": "#binding-cells",
+              "type": "array",
+              "value": [
+                31
+              ]
+            },
+            "tapping-term-ms": {
+              "name": "tapping-term-ms",
+              "type": "array",
+              "value": [
+                200
+              ]
+            },
+            "flavor": {
+              "name": "flavor",
+              "type": "string",
+              "value": "tap-preferred"
+            },
+            "bindings": {
+              "name": "bindings",
+              "type": "array",
+              "value": [
+                "&kp",
+                "&kp"
+              ]
+            }
+          },
+          "children": {},
+          "labels": {
+            "mt": "mod_tap"
+          }
+        },
+        "layer_tap": {
+          "name": "layer_tap",
+          "properties": {
+            "compatible": {
+              "name": "compatible",
+              "type": "string",
+              "value": "zmk,behavior-hold-tap"
+            },
+            "#binding-cells": {
+              "name": "#binding-cells",
+              "type": "array",
+              "value": [
+                31
+              ]
+            },
+            "tapping-term-ms": {
+              "name": "tapping-term-ms",
+              "type": "array",
+              "value": [
+                200
+              ]
+            },
+            "flavor": {
+              "name": "flavor",
+              "type": "string",
+              "value": "tap-preferred"
+            },
+            "bindings": {
+              "name": "bindings",
+              "type": "array",
+              "value": [
+                "&mo",
+                "&kp"
+              ]
+            }
+          },
+          "children": {},
+          "labels": {
+            "lt": "layer_tap"
+          }
+        },
+        "sticky_key": {
+          "name": "sticky_key",
+          "properties": {
+            "compatible": {
+              "name": "compatible",
+              "type": "string",
+              "value": "zmk,behavior-sticky-key"
+            },
+            "#binding-cells": {
+              "name": "#binding-cells",
+              "type": "array",
+              "value": [
+                30
+              ]
+            },
+            "release-after-ms": {
+              "name": "release-after-ms",
+              "type": "array",
+              "value": [
+                1000
+              ]
+            },
+            "bindings": {
+              "name": "bindings",
+              "type": "array",
+              "value": [
+                "&kp"
+              ]
+            }
+          },
+          "children": {},
+          "labels": {
+            "sk": "sticky_key"
+          }
+        },
+        "momentary_layer": {
+          "name": "momentary_layer",
+          "properties": {
+            "compatible": {
+              "name": "compatible",
+              "type": "string",
+              "value": "zmk,behavior-momentary-layer"
+            },
+            "#binding-cells": {
+              "name": "#binding-cells",
+              "type": "array",
+              "value": [
+                30
+              ]
+            }
+          },
+          "children": {},
+          "labels": {
+            "mo": "momentary_layer"
+          }
+        },
+        "toggle_layer": {
+          "name": "toggle_layer",
+          "properties": {
+            "compatible": {
+              "name": "compatible",
+              "type": "string",
+              "value": "zmk,behavior-toggle-layer"
+            },
+            "#binding-cells": {
+              "name": "#binding-cells",
+              "type": "array",
+              "value": [
+                30
+              ]
+            }
+          },
+          "children": {},
+          "labels": {
+            "to": "toggle_layer"
+          }
+        },
+        "sticky_layer": {
+          "name": "sticky_layer",
+          "properties": {
+            "compatible": {
+              "name": "compatible",
+              "type": "string",
+              "value": "zmk,behavior-sticky-layer"
+            },
+            "#binding-cells": {
+              "name": "#binding-cells",
+              "type": "array",
+              "value": [
+                30
+              ]
+            },
+            "release-after-ms": {
+              "name": "release-after-ms",
+              "type": "array",
+              "value": [
+                1000
+              ]
+            }
+          },
+          "children": {},
+          "labels": {
+            "sl": "sticky_layer"
+          }
+        },
+        "caps_word": {
+          "name": "caps_word",
+          "properties": {
+            "compatible": {
+              "name": "compatible",
+              "type": "string",
+              "value": "zmk,behavior-caps-word"
+            },
+            "#binding-cells": {
+              "name": "#binding-cells",
+              "type": "array",
+              "value": [
+                39
+              ]
+            }
+          },
+          "children": {},
+          "labels": {
+            "caps_word": "caps_word"
+          }
+        },
+        "key_repeat": {
+          "name": "key_repeat",
+          "properties": {
+            "compatible": {
+              "name": "compatible",
+              "type": "string",
+              "value": "zmk,behavior-key-repeat"
+            },
+            "#binding-cells": {
+              "name": "#binding-cells",
+              "type": "array",
+              "value": [
+                39
+              ]
+            }
+          },
+          "children": {},
+          "labels": {
+            "key_repeat": "key_repeat"
+          }
+        },
+        "mouse_key_press": {
+          "name": "mouse_key_press",
+          "properties": {
+            "compatible": {
+              "name": "compatible",
+              "type": "string",
+              "value": "zmk,behavior-mouse-key-press"
+            },
+            "#binding-cells": {
+              "name": "#binding-cells",
+              "type": "array",
+              "value": [
+                30
+              ]
+            }
+          },
+          "children": {},
+          "labels": {
+            "mkp": "mouse_key_press"
+          }
+        }
+      },
+      "labels": {}
+    },
+    "keymap": {
+      "name": "keymap",
+      "properties": {
+        "compatible": {
+          "name": "compatible",
+          "type": "string",
+          "value": "zmk,keymap"
+        }
+      },
+      "children": {
+        "default_layer": {
+          "name": "default_layer",
+          "properties": {
+            "bindings": {
+              "name": "bindings",
+              "type": "array",
+              "value": [
+                "&kp",
+                20,
+                "&kp",
+                26,
+                "&kp",
+                8,
+                "&kp",
+                21,
+                "&kp",
+                23,
+                "&kp",
+                28,
+                "&kp",
+                24,
+                "&kp",
+                12,
+                "&kp",
+                18,
+                "&kp",
+                19,
+                "&kp",
+                4,
+                "&kp",
+                22,
+                "&kp",
+                7,
+                "&kp",
+                9,
+                "&kp",
+                10,
+                "&kp",
+                11,
+                "&kp",
+                13,
+                "&kp",
+                14,
+                "&kp",
+                15,
+                "&kp",
+                "SEMI",
+                "&kp",
+                29,
+                "&kp",
+                27,
+                "&kp",
+                6,
+                "&kp",
+                25,
+                "&kp",
+                5,
+                "&kp",
+                17,
+                "&kp",
+                16,
+                "&kp",
+                "COMMA",
+                "&kp",
+                "DOT",
+                "&kp",
+                "SLASH",
+                "&kp",
+                "LCTRL",
+                "&kp",
+                "SPACE",
+                "&kp",
+                "ENTER",
+                "&kp",
+                "RALT"
+              ]
+            }
+          },
+          "children": {},
+          "labels": {}
+        }
+      },
+      "labels": {}
+    }
+  },
+  "labels": {}
+}

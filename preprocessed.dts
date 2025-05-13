@@ -1,0 +1,112 @@
+# 0x1E "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp3btq78st.dts"
+# 0x1E "<built-in>" 0x1E
+# 0x1E "<built-in>" 0x20
+
+
+
+
+
+
+# 0x1E "<command line>" 0x1E
+# 0x1E "<built-in>" 0x1F
+# 0x1E "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp3btq78st.dts" 0x1F
+
+
+
+
+# 0x1E "/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/dts/include/behaviors.dtsi" 0x1E
+
+
+
+
+
+
+# 0x1E "/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/dts/include/dt-bindings/zmk/keys.h" 0x1E
+# 0x25 "/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/dts/include/behaviors.dtsi" 0x1F
+# 0x1E "/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/dts/include/dt-bindings/zmk/bt.h" 0x1E
+# 0x26 "/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/dts/include/behaviors.dtsi" 0x1F
+# 0x1E "/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/dts/include/dt-bindings/zmk/mouse.h" 0x1E
+# 10 "/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/dts/include/behaviors.dtsi" 0x1F
+
+/ {
+    behaviors {
+        compatible = "zmk,behaviors";
+
+
+        kp: key_press {
+            compatible = "zmk,behavior-key-press";
+            #binding-cells = <0x1E>;
+        };
+
+        mt: mod_tap {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <0x1F>;
+            tapping-term-ms = <200>;
+            flavor = "tap-preferred";
+            bindings = <&kp>, <&kp>;
+        };
+
+        lt: layer_tap {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <0x1F>;
+            tapping-term-ms = <200>;
+            flavor = "tap-preferred";
+            bindings = <&mo>, <&kp>;
+        };
+
+        sk: sticky_key {
+            compatible = "zmk,behavior-sticky-key";
+            #binding-cells = <0x1E>;
+            release-after-ms = <1000>;
+            bindings = <&kp>;
+        };
+
+        mo: momentary_layer {
+            compatible = "zmk,behavior-momentary-layer";
+            #binding-cells = <0x1E>;
+        };
+
+        to: toggle_layer {
+            compatible = "zmk,behavior-toggle-layer";
+            #binding-cells = <0x1E>;
+        };
+
+        sl: sticky_layer {
+            compatible = "zmk,behavior-sticky-layer";
+            #binding-cells = <0x1E>;
+            release-after-ms = <1000>;
+        };
+
+        caps_word: caps_word {
+            compatible = "zmk,behavior-caps-word";
+            #binding-cells = <0x27>;
+        };
+
+        key_repeat: key_repeat {
+            compatible = "zmk,behavior-key-repeat";
+            #binding-cells = <0x27>;
+        };
+
+        mkp: mouse_key_press {
+            compatible = "zmk,behavior-mouse-key-press";
+            #binding-cells = <0x1E>;
+        };
+    };
+};
+# 0x23 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp3btq78st.dts" 0x1F
+
+
+/ {
+    keymap {
+        compatible = "zmk,keymap";
+
+        default_layer {
+            bindings = <
+                &kp 0x14 &kp 0x1A &kp 0x08 &kp 0x15 &kp 0x17 &kp 0x1C &kp 0x18 &kp 0x0C &kp 0x12 &kp 0x13
+                &kp 0x04 &kp 0x16 &kp 0x07 &kp 0x09 &kp 0x0A &kp 0x0B &kp 0x0D &kp 0x0E &kp 0x0F &kp SEMI
+                &kp 0x1D &kp 0x1B &kp 0x06 &kp 0x19 &kp 0x05 &kp 0x11 &kp 0x10 &kp COMMA &kp DOT &kp SLASH
+                          &kp LCTRL &kp SPACE &kp ENTER &kp RALT
+            >;
+        };
+    };
+};

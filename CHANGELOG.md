@@ -49,4 +49,8 @@ Initial release of the ZMK to Kanata converter.
 - Layer support
 - Hold-tap behaviors
 - Macro support
-- Basic error handling 
+- Basic error handling
+
+## [Unreleased]
+- Kanata output now maps ZMK layer name `default_layer` to `default` for improved readability and Kanata compatibility.
+- Introduced a manual review process for output validation. Findings are tracked in `MANUAL_REVIEW.md`. 

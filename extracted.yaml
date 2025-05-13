@@ -1,0 +1,151 @@
+layers:
+- name: default_layer
+  bindings:
+  - behavior: null
+    params:
+    - '20'
+  - behavior: null
+    params:
+    - '26'
+  - behavior: null
+    params:
+    - '8'
+  - behavior: null
+    params:
+    - '21'
+  - behavior: null
+    params:
+    - '23'
+  - behavior: null
+    params:
+    - '28'
+  - behavior: null
+    params:
+    - '24'
+  - behavior: null
+    params:
+    - '12'
+  - behavior: null
+    params:
+    - '18'
+  - behavior: null
+    params:
+    - '19'
+  - behavior: null
+    params:
+    - '4'
+  - behavior: null
+    params:
+    - '22'
+  - behavior: null
+    params:
+    - '7'
+  - behavior: null
+    params:
+    - '9'
+  - behavior: null
+    params:
+    - '10'
+  - behavior: null
+    params:
+    - '11'
+  - behavior: null
+    params:
+    - '13'
+  - behavior: null
+    params:
+    - '14'
+  - behavior: null
+    params:
+    - '15'
+  - behavior: null
+    params:
+    - SEMI
+  - behavior: null
+    params:
+    - '29'
+  - behavior: null
+    params:
+    - '27'
+  - behavior: null
+    params:
+    - '6'
+  - behavior: null
+    params:
+    - '25'
+  - behavior: null
+    params:
+    - '5'
+  - behavior: null
+    params:
+    - '17'
+  - behavior: null
+    params:
+    - '16'
+  - behavior: null
+    params:
+    - COMMA
+  - behavior: null
+    params:
+    - DOT
+  - behavior: null
+    params:
+    - SLASH
+  - behavior: null
+    params:
+    - LCTRL
+  - behavior: null
+    params:
+    - SPACE
+  - behavior: null
+    params:
+    - ENTER
+  - behavior: null
+    params:
+    - RALT
+  index: 0
+behaviors:
+  kp:
+    name: kp
+    type: zmk,behavior-key-press
+  mt:
+    name: mt
+    type: hold-tap
+    tapping_term_ms: 200
+    hold_time_ms: 200
+    quick_tap_ms: null
+    flavor: null
+    tap_hold_wait_ms: null
+    require_prior_idle_ms: null
+  lt:
+    name: lt
+    type: hold-tap
+    tapping_term_ms: 200
+    hold_time_ms: 200
+    quick_tap_ms: null
+    flavor: null
+    tap_hold_wait_ms: null
+    require_prior_idle_ms: null
+  sk:
+    name: sk
+    type: zmk,behavior-sticky-key
+  mo:
+    name: mo
+    type: zmk,behavior-momentary-layer
+  to:
+    name: to
+    type: zmk,behavior-toggle-layer
+  sl:
+    name: sl
+    type: zmk,behavior-sticky-layer
+  caps_word:
+    name: caps_word
+    type: zmk,behavior-caps-word
+  key_repeat:
+    name: key_repeat
+    type: zmk,behavior-key-repeat
+  mkp:
+    name: mkp
+    type: zmk,behavior-mouse-key-press
+combos: []
+conditional_layers: []

@@ -422,6 +422,7 @@ class KeymapExtractor:
             "bootloader": "zmk,behavior-bootloader",
             "unicode": "zmk,behavior-unicode",
             "unicode_string": "zmk,behavior-unicode-string",
+            "caps_word": "zmk,behavior-caps-word",
             # Add more as needed
         }
 
@@ -444,7 +445,7 @@ class KeymapExtractor:
                         num_params_expected = 2
                     elif b_type == "macro":
                         num_params_expected = 0
-                # Add other known behaviors here...
+                    # Add other known behaviors here...
 
                 # When resolving a binding, only allow behaviors explicitly defined by the user
                 def get_or_create_behavior(name, type_str):
@@ -472,7 +473,7 @@ class KeymapExtractor:
                 behavior = get_or_create_behavior(behavior_name, behavior_name)
                 if behavior:
                     bindings.append(self._create_binding([behavior_name] + params))
-                i += 1 + actual_params_consumed
+                    i += 1 + actual_params_consumed
             else:
                 bindings.append(self._create_binding(str(token)))
                 i += 1

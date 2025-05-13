@@ -62,6 +62,88 @@ Kanata Output Generator
 1. (Optional) Polish and expand documentation
 2. Plan and implement future enhancements as desired
 
+### Conversion Fidelity Improvements (July 2024)
+Based on recent analysis of the conversion pipeline and golden file comparisons, the following improvements are recommended to further increase output fidelity and user confidence:
+
+- **Preserve Symbolic Key Names:**
+  - Where possible, retain symbolic key names (e.g., `q`, `w`, `e`) in the Kanata output instead of converting to numeric codes. This improves readability and matches Kanata's expected input format.
+- **Match Layer Names:**
+  - Ensure that layer names in the output (e.g., `default`) match the conventions and expectations of Kanata and the golden/reference files.
+- **Include Global Settings:**
+  - Add any required global settings (such as `tap-time`, `hold-time`) to the output if present in the golden/reference files or required by Kanata.
+- **Enhance Regression Testing:**
+  - Expand automated regression tests to compare generated output to golden files, and flag any differences for review.
+- **Manual Review and Iteration:**
+  - Continue to manually review outputs for new or complex files, and iterate on the converter until outputs are both correct and idiomatic.
+
+These steps will help ensure the converter produces not only functionally correct but also user-friendly and idiomatic Kanata configurations.
+
+### Detailed Implementation Plan for Conversion Fidelity
+
+#### 1. Preserve Symbolic Key Names
+- **Difficulty:** Medium
+- **Size:** Medium
+- **a. Audit Key Name Handling:**
+  - Review the key extraction and output generation code to identify where symbolic names are replaced by numeric codes.
+- **b. Update Key Mapping Logic:**
+  - Modify the mapping logic to prefer symbolic names (e.g., `q`, `w`, `e`) when generating Kanata output, falling back to numeric codes only if a symbolic name is unavailable.
+- **c. Maintain a Symbolic Key Map:**
+  - Ensure a comprehensive mapping from ZMK keycodes to Kanata symbolic names is available and up to date.
+- **d. Test Output:**
+  - Generate Kanata output for all test and example files, verifying that symbolic names are used wherever possible.
+
+#### 2. Match Layer Names
+- **Difficulty:** Easy
+- **Size:** Small
+- **a. Review Layer Naming Conventions:**
+  - Compare layer names in ZMK input, extracted model, and Kanata output to identify mismatches.
+- **b. Update Output Generator:**
+  - Adjust the output generator to use Kanata-idiomatic layer names (e.g., `default` instead of `default_layer`).
+- **c. Add/Update Tests:**
+  - Ensure tests check for correct layer naming in the output.
+
+#### 3. Include Global Settings
+- **Difficulty:** Medium
+- **Size:** Small/Medium
+- **a. Identify Required Settings:**
+  - Review golden/reference files and Kanata documentation for required global settings (e.g., `tap-time`, `hold-time`).
+- **b. Update Output Generator:**
+  - Modify the output generator to include these settings if present in the input or required by Kanata.
+- **c. Add/Update Tests:**
+  - Add tests to verify that global settings are included and correctly formatted in the output.
+
+#### 4. Enhance Regression Testing
+- **Difficulty:** Medium
+- **Size:** Medium
+- **a. Expand Golden File Set:**
+  - Collect and review golden outputs for all supported ZMK input files.
+- **b. Automate Golden File Comparison:**
+  - Implement or update test scripts to automatically compare generated output to golden files and flag differences.
+- **c. Review and Approve Changes:**
+  - Establish a process for reviewing and approving intentional changes to golden files.
+
+#### 5. Manual Review and Iteration
+- **Difficulty:** Easy
+- **Size:** Small
+- **a. Schedule Regular Reviews:**
+  - Periodically review outputs for new or complex files, especially after major changes.
+- **b. Document Findings:**
+  - Record any issues, mismatches, or improvement opportunities found during manual review.
+- **c. Iterate and Refine:**
+  - Address issues, rerun tests, and repeat the review process until outputs are correct and idiomatic.
+
+#### 6. Documentation and Communication
+- **Difficulty:** Easy
+- **Size:** Small
+- **a. Update Documentation:**
+  - Document any changes to the conversion process, output format, or testing strategy in the README and developer docs.
+- **b. Communicate Changes:**
+  - Inform contributors and users of improvements and new validation strategies.
+
+---
+
+This plan provides a clear, actionable path to achieving high-fidelity, user-friendly Kanata output from ZMK files, and ensures ongoing quality through robust testing and review.
+
 ## 6. Test Coverage Improvement Plan
 
 To maintain 90%+ test coverage, periodically review coverage reports and add targeted tests for any new or changed code, especially for edge cases and error handling.

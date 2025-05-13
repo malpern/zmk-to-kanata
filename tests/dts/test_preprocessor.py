@@ -243,20 +243,21 @@ def test_matrix_size_extraction():
 def test_preprocess_simple_keymap(preprocessor, simple_keymap_path):
     """Test preprocessing a simple keymap."""
     result = preprocessor.preprocess(str(simple_keymap_path))
-
+    # Remove preprocessor line markers
+    filtered = "\n".join(line for line in result.splitlines() if not line.strip().startswith("#"))
     # Check that the result contains the expected content
-    assert "((0) << 0x25 /* 8 */ | (0))" in result
-    assert "((0) << 0x25 /* 8 */ | (1))" in result
-    assert "((0) << 0x25 /* 8 */ | (2))" in result
-    assert "((1) << 0x25 /* 8 */ | (0))" in result
-    assert "((1) << 0x25 /* 8 */ | (1))" in result
-    assert "((1) << 0x25 /* 8 */ | (2))" in result
-    assert "&kp 0x04" in result
-    assert "&kp 0x05" in result
-    assert "&kp 0x06" in result
-    assert "&kp 0x07" in result
-    assert "&kp 0x08" in result
-    assert "&kp 0x09" in result
+    assert "((0) << 0x25 | (0))" in filtered
+    assert "((0) << 0x25 | (1))" in filtered
+    assert "((0) << 0x25 | (2))" in filtered
+    assert "((1) << 0x25 | (0))" in filtered
+    assert "((1) << 0x25 | (1))" in filtered
+    assert "((1) << 0x25 | (2))" in filtered
+    assert "&kp 0x04" in filtered
+    assert "&kp 0x05" in filtered
+    assert "&kp 0x06" in filtered
+    assert "&kp 0x07" in filtered
+    assert "&kp 0x08" in filtered
+    assert "&kp 0x09" in filtered
 
 
 def test_preprocess_with_include_paths():

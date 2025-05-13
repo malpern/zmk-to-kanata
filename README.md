@@ -237,3 +237,14 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Kanata Output Layer Naming Convention
+
+- The converter now maps the ZMK layer name `default_layer` to `default` in the Kanata output for better readability and compatibility with Kanata conventions.
+- Other layer names are preserved as-is unless further mapping is required.
+
+## Manual Review Process for Output Validation
+
+- In addition to automated tests, the project maintains a manual review process for new or complex conversions.
+- Reviewers should inspect the generated Kanata output for correctness, idiomatic formatting, and fidelity to the original ZMK intent.
+- Findings and improvement suggestions should be recorded in `MANUAL_REVIEW.md`.

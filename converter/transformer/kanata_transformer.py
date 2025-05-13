@@ -107,7 +107,10 @@ class KanataTransformer:
 
     def _transform_layer(self, layer: Layer):
         """Transform a single layer into Kanata format."""
+        # Map ZMK layer names to Kanata conventions
         layer_name = layer.name if layer.name else f"layer{layer.index}"
+        if layer_name == "default_layer":
+            layer_name = "default"
         self.current_layer_name = layer_name
         logging.debug(
             f"[KanataTransformer] Transforming layer: {layer_name} "

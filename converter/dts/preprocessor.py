@@ -270,14 +270,11 @@ class DtsPreprocessor:
                 key = match.group(2)
                 if key in keycode_map:
                     code = keycode_map[key]
-                    # Only add comment if not already present
-                    if "/*" not in match.group(0):
-                        return f"{match.group(1)}{code} /* {key} */"
-                    else:
-                        return match.group(0)
+                    # Only replace with numeric code, do not add comment
+                    return f"{match.group(1)}{code}"
                 return match.group(0)
 
-            # Replace &kp <key> with &kp 0xXX /* LETTER */
+            # Replace &kp <key> with &kp 0xXX (no comment)
             processed = re.sub(
                 r"(&kp\s+)([A-Z0-9])\b",
                 repl,
@@ -287,8 +284,8 @@ class DtsPreprocessor:
             # Replace bare <key> in arrays (e.g., <A B C>)
             def array_repl(m):
                 key = m.group(2)
-                if key in keycode_map and "/*" not in m.group(0):
-                    return f"{m.group(1)}{keycode_map[key]} /* {key} */"
+                if key in keycode_map:
+                    return f"{m.group(1)}{keycode_map[key]}"
                 return m.group(0)
 
             processed = re.sub(
