@@ -1,0 +1,176 @@
+(defcfg
+  input (kb () () )
+  output (kbd ())
+)
+
+(defvar tap-time 200)
+(defvar hold-time 250)
+
+
+(defalias mt (tap-hold 200 200 spc lc(ls(lalt))))
+
+(defalias hm (tap-hold 200 200 22 lctl))
+
+(defalias hm (tap-hold 200 200 equal lctl))
+
+(defalias hm (tap-hold 200 200 c_vol_dn lalt))
+
+(defalias hs (tap-hold 150 150 20 lsft))
+
+(defalias hs (tap-hold 150 150 tilde lsft))
+
+(defalias hs (tap-hold 150 150 prcnt lsft))
+
+(defalias hm (tap-hold 200 200 lbrc rmet))
+
+(defalias hm (tap-hold 200 200 21 lalt))
+
+(defalias hm (tap-hold 200 200 4 rctl))
+
+(defalias hm (tap-hold 200 200 la(rbkt) lalt))
+
+(defalias hs (tap-hold 150 150 27 rsft))
+
+(defalias hm (tap-hold 200 200 n4 rmet))
+
+(defalias hm (tap-hold 200 200 la(ls(rbkt)) lmet))
+
+(defalias hm (tap-hold 200 200 rbrc ralt))
+
+(defalias hm (tap-hold 200 200 17 rmet))
+
+(defalias hm (tap-hold 200 200 23 lmet))
+
+(defalias hm (tap-hold 200 200 c_vol_up lmet))
+
+(defalias hm (tap-hold 200 200 pipe rctl))
+
+(defalias hm (tap-hold 200 200 14 ralt))
+(deflayer default_layer
+  tab
+  c
+  l
+  m
+  _
+  _
+  f
+  u
+  z
+  bksp
+  i
+  @ht_lctl_s
+  @ht_lalt_r
+  @ht_lmet_t
+  _
+  _
+  @ht_rmet_n
+  @ht_ralt_k
+  @ht_rctl_a
+  o
+  @ht_lsft_q
+  v
+  w
+  d
+  @ht_lc(ls(lalt))_spc
+  e
+  h
+  y
+  <err:missing_holdtap_params>
+  dot
+  @ht_rsft_x
+  @ht_lc(ls(lalt))_spc
+  _
+  _
+  e
+)
+(deflayer left_layer
+  _
+  atsn
+  <err:missing_holdtap_params>
+  ls(n3)
+  dllr
+  _
+  _
+  ls(comma)
+  ls(dot)
+  caret
+  _
+  tab
+  @ht_lctl_equal
+  @ht_lalt_la(rbkt)
+  @ht_lmet_la(ls(rbkt))
+  _
+  _
+  @ht_rmet_lbrc
+  @ht_ralt_rbrc
+  @ht_rctl_pipe
+  amps
+  @ht_lsft_tilde
+  grv
+  la(lbkt)
+  la(ls(lbkt))
+  <err:unknown:zmk,behavior-toggle-layer>
+  <err:unknown:zmk,behavior-toggle-layer>
+  lprn
+  rprn
+  rbrc
+  rsft
+  <err:unknown:zmk,behavior-toggle-layer>
+  _
+  _
+  <err:unknown:zmk,behavior-toggle-layer>
+)
+(deflayer right_layer
+  _
+  c_pp
+  c_prev
+  c_next
+  _
+  _
+  7
+  8
+  9
+  _
+  tab
+  _
+  @ht_lalt_c_vol_dn
+  @ht_lmet_c_vol_up
+  _
+  _
+  @ht_rmet_4
+  5
+  6
+  equal
+  @ht_lsft_prcnt
+  prcnt
+  slash
+  star
+  <err:unknown:zmk,behavior-toggle-layer>
+  _
+  1
+  2
+  <err:missing_holdtap_params>
+  3
+  minus
+  <err:unknown:zmk,behavior-toggle-layer>
+  _
+  _
+  _
+)
+
+; --- Unsupported/Unknown ZMK Features ---
+[KanataTransformer] Skipping hold-tap alias: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['EXCL'])
+[KanataTransformer] Skipping hold-tap alias: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LC(LG(LS(N4)))'])
+[KanataTransformer] Skipping hold-tap alias: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['DOT'])
+[KanataTransformer] Skipping hold-tap combo: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['EXCL'])
+[KanataTransformer] Skipping hold-tap combo: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LC(LG(LS(N4)))'])
+[KanataTransformer] Skipping hold-tap combo: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['DOT'])
+Hold-tap/mod-tap binding missing params: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['EXCL']). This may be due to incomplete extraction or preprocessing.
+Hold-tap/mod-tap binding missing params: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LC(LG(LS(N4)))']). This may be due to incomplete extraction or preprocessing.
+Unknown binding type: zmk,behavior-toggle-layer for binding: Binding(behavior=Behavior(name='to', type='zmk,behavior-toggle-layer'), params=['39'])
+Unknown binding type: zmk,behavior-toggle-layer for binding: Binding(behavior=Behavior(name='to', type='zmk,behavior-toggle-layer'), params=['31'])
+Unknown binding type: zmk,behavior-toggle-layer for binding: Binding(behavior=Behavior(name='to', type='zmk,behavior-toggle-layer'), params=['39'])
+Unknown binding type: zmk,behavior-toggle-layer for binding: Binding(behavior=Behavior(name='to', type='zmk,behavior-toggle-layer'), params=['31'])
+Unknown binding type: zmk,behavior-toggle-layer for binding: Binding(behavior=Behavior(name='to', type='zmk,behavior-toggle-layer'), params=['39'])
+Hold-tap/mod-tap binding missing params: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['DOT']). This may be due to incomplete extraction or preprocessing.
+Unknown binding type: zmk,behavior-toggle-layer for binding: Binding(behavior=Behavior(name='to', type='zmk,behavior-toggle-layer'), params=['39'])

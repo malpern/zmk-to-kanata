@@ -207,3 +207,19 @@ To ensure the converter produces correct Kanata output from ZMK files, use a com
 - Start by manually reviewing and "blessing" outputs for a few files.
 - Automate regression testing with golden files and property-based checks.
 - Expand the golden set as new features and edge cases are encountered.
+
+### Pipeline Improvements for Ben Vallack's Config (July 2024)
+
+- **Enhance extractor for nested keycodes/macros:**
+  - Improve parameter extraction logic to treat nested keycode macros (e.g., LC(LG(LS(N4)))) as a single parameter for hold-tap/tap-dance behaviors.
+  - Ensure tap-dance/hold-tap with variable param counts are handled gracefully, emitting a warning if only one param is present (but do not crash).
+
+- **Add/clarify toggle-layer (to) mapping:**
+  - If Kanata supports layer toggling, add a mapping in the transformer.
+  - If not, emit a clear Kanata comment (e.g., '; unsupported: toggle-layer N') for clarity.
+
+- **Expand error comments:**
+  - When a param is missing, include the original keymap line in the error comment for easier debugging.
+
+- **Document unsupported ZMK features:**
+  - Maintain a mapping table in the code or docs for ZMK behaviors that are not (yet) supported in Kanata, so users know what to expect.
