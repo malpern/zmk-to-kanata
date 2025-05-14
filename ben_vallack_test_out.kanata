@@ -21,138 +21,138 @@
 
 (defalias hs (tap-hold 150 150 prcnt lsft))
 
-(defalias hm (tap-hold 200 200 lbrc rmet))
-
-(defalias hm (tap-hold 200 200 21 lalt))
-
-(defalias hm (tap-hold 200 200 4 rctl))
-
 (defalias hm (tap-hold 200 200 la(rbkt) lalt))
-
-(defalias hs (tap-hold 150 150 27 rsft))
-
-(defalias hm (tap-hold 200 200 n4 rmet))
 
 (defalias hm (tap-hold 200 200 la(ls(rbkt)) lmet))
 
-(defalias hm (tap-hold 200 200 rbrc ralt))
+(defalias hs (tap-hold 150 150 27 rsft))
+
+(defalias hm (tap-hold 200 200 4 rctl))
 
 (defalias hm (tap-hold 200 200 17 rmet))
 
-(defalias hm (tap-hold 200 200 23 lmet))
-
 (defalias hm (tap-hold 200 200 c_vol_up lmet))
+
+(defalias hm (tap-hold 200 200 n4 rmet))
 
 (defalias hm (tap-hold 200 200 pipe rctl))
 
+(defalias hm (tap-hold 200 200 rbrc ralt))
+
+(defalias hm (tap-hold 200 200 21 lalt))
+
+(defalias hm (tap-hold 200 200 23 lmet))
+
 (defalias hm (tap-hold 200 200 14 ralt))
+
+(defalias hm (tap-hold 200 200 lbrc rmet))
 (deflayer default_layer
-  tab
-  c
-  l
-  m
+  TAB
+  6
+  15
+  16
   _
   _
-  f
-  u
-  z
-  bksp
-  i
-  @ht_lctl_s
-  @ht_lalt_r
-  @ht_lmet_t
+  9
+  24
+  29
+  BKSP
+  12
+  LCTL
+  LALT
+  LGUI
   _
   _
-  @ht_rmet_n
-  @ht_ralt_k
-  @ht_rctl_a
-  o
-  @ht_lsft_q
-  v
-  w
-  d
-  @ht_lc(ls(lalt))_spc
-  e
-  h
-  y
-  <err:missing_holdtap_params>
-  dot
-  @ht_rsft_x
-  @ht_lc(ls(lalt))_spc
+  RGUI
+  RALT
+  RCTL
+  18
+  LSHIFT
+  25
+  26
+  7
+  LC(LS(LALT))
+  8
+  11
+  28
+  EXCL ; tap only (ZMK: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['EXCL'])) ; unsupported: missing hold param
+  DOT
+  RSHIFT
+  LC(LS(LALT))
   _
   _
-  e
+  8
 )
 (deflayer left_layer
   _
-  atsn
-  <err:missing_holdtap_params>
-  ls(n3)
-  dllr
+  ATSN
+  LC(LG(LS(N4))) ; tap only (ZMK: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LC(LG(LS(N4)))'])) ; unsupported: missing hold param
+  LS(N3)
+  DLLR
   _
   _
-  ls(comma)
-  ls(dot)
-  caret
+  LS(COMMA)
+  LS(DOT)
+  CARET
   _
-  tab
-  @ht_lctl_equal
-  @ht_lalt_la(rbkt)
-  @ht_lmet_la(ls(rbkt))
-  _
-  _
-  @ht_rmet_lbrc
-  @ht_ralt_rbrc
-  @ht_rctl_pipe
-  amps
-  @ht_lsft_tilde
-  grv
-  la(lbkt)
-  la(ls(lbkt))
-  <err:unknown:zmk,behavior-toggle-layer>
-  <err:unknown:zmk,behavior-toggle-layer>
-  lprn
-  rprn
-  rbrc
-  rsft
-  <err:unknown:zmk,behavior-toggle-layer>
+  TAB
+  LCTL
+  LALT
+  LGUI
   _
   _
-  <err:unknown:zmk,behavior-toggle-layer>
+  RGUI
+  RALT
+  RCTL
+  AMPS
+  LSHIFT
+  GRAVE
+  LA(LBKT)
+  LA(LS(LBKT))
+  ; unsupported: toggle-layer to 39 (ZMK: Binding(behavior=Behavior(name='to', type='zmk,behavior-toggle-layer'), params=['39']))
+  ; unsupported: toggle-layer to 31 (ZMK: Binding(behavior=Behavior(name='to', type='zmk,behavior-toggle-layer'), params=['31']))
+  LPRN
+  RPRN
+  RBKT
+  RSHIFT
+  ; unsupported: toggle-layer to 39 (ZMK: Binding(behavior=Behavior(name='to', type='zmk,behavior-toggle-layer'), params=['39']))
+  _
+  _
+  ; unsupported: toggle-layer to 31 (ZMK: Binding(behavior=Behavior(name='to', type='zmk,behavior-toggle-layer'), params=['31']))
 )
 (deflayer right_layer
   _
-  c_pp
-  c_prev
-  c_next
+  C_PP
+  C_PREV
+  C_NEXT
   _
   _
-  7
-  8
-  9
+  N7
+  N8
+  N9
   _
-  tab
+  TAB
   _
-  @ht_lalt_c_vol_dn
-  @ht_lmet_c_vol_up
+  LALT
+  LGUI
   _
   _
-  @ht_rmet_4
-  5
-  6
-  equal
-  @ht_lsft_prcnt
-  prcnt
-  slash
-  star
-  <err:unknown:zmk,behavior-toggle-layer>
+  RGUI
+  N5
+  N6
+  EQUAL
+  LSHIFT
+  PRCNT
+  SLASH
+  STAR
+  ; unsupported: toggle-layer to 39 (ZMK: Binding(behavior=Behavior(name='to', type='zmk,behavior-toggle-layer'), params=['39']))
   _
-  1
-  2
-  <err:missing_holdtap_params>
-  3
-  minus
-  <err:unknown:zmk,behavior-toggle-layer>
+  N1
+  N2
+  DOT ; tap only (ZMK: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['DOT'])) ; unsupported: missing hold param
+  N3
+  MINUS
+  ; unsupported: toggle-layer to 39 (ZMK: Binding(behavior=Behavior(name='to', type='zmk,behavior-toggle-layer'), params=['39']))
   _
   _
   _
@@ -165,12 +165,3 @@
 [KanataTransformer] Skipping hold-tap combo: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['EXCL'])
 [KanataTransformer] Skipping hold-tap combo: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LC(LG(LS(N4)))'])
 [KanataTransformer] Skipping hold-tap combo: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['DOT'])
-Hold-tap/mod-tap binding missing params: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['EXCL']). This may be due to incomplete extraction or preprocessing.
-Hold-tap/mod-tap binding missing params: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LC(LG(LS(N4)))']). This may be due to incomplete extraction or preprocessing.
-Unknown binding type: zmk,behavior-toggle-layer for binding: Binding(behavior=Behavior(name='to', type='zmk,behavior-toggle-layer'), params=['39'])
-Unknown binding type: zmk,behavior-toggle-layer for binding: Binding(behavior=Behavior(name='to', type='zmk,behavior-toggle-layer'), params=['31'])
-Unknown binding type: zmk,behavior-toggle-layer for binding: Binding(behavior=Behavior(name='to', type='zmk,behavior-toggle-layer'), params=['39'])
-Unknown binding type: zmk,behavior-toggle-layer for binding: Binding(behavior=Behavior(name='to', type='zmk,behavior-toggle-layer'), params=['31'])
-Unknown binding type: zmk,behavior-toggle-layer for binding: Binding(behavior=Behavior(name='to', type='zmk,behavior-toggle-layer'), params=['39'])
-Hold-tap/mod-tap binding missing params: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['DOT']). This may be due to incomplete extraction or preprocessing.
-Unknown binding type: zmk,behavior-toggle-layer for binding: Binding(behavior=Behavior(name='to', type='zmk,behavior-toggle-layer'), params=['39'])

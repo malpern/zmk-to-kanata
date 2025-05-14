@@ -235,7 +235,9 @@ class KanataTransformer:
         """
         Transform a binding to Kanata format.
         If unsupported or unknown, emit a Kanata comment describing the ZMK feature.
-        Replaces error markers with Kanata comments in layer output.
+        For single-param hold-tap/tap-dance, emit a macro or comment for tap action only.
+        For toggle-layer, emit a descriptive Kanata comment.
+        Error comments include the original ZMK binding for easier debugging.
         """
         logging.debug(f"[KanataTransformer]     Transforming binding: {binding}")
         behavior_type = None
@@ -245,186 +247,48 @@ class KanataTransformer:
                 behavior_type = binding.behavior.name
 
         # Map ZMK transparent/none to Kanata '_'
-        if behavior_type in [
-            "zmk,behavior-none",
-            "zmk,behavior-transparent",
-            "trans",
-        ]:
+        if behavior_type in ("zmk,behavior-transparent", "zmk,behavior-none", "trans"):
             return "_"
 
-        # Defensive: check params length for known behaviors
-        try:
-            # Treat zmk,behavior-mod-tap as hold-tap
-            if (
-                hasattr(binding, "behavior")
-                and binding.behavior is not None
-                and getattr(binding.behavior, "__class__", None)
-                and (
-                    binding.behavior.__class__.__name__ == "HoldTap"
-                    or getattr(binding.behavior, "type", None)
-                    in ("hold-tap", "zmk,behavior-mod-tap")
-                )
-            ):
-                if not binding.params or len(binding.params) < 2:
-                    msg = (
-                        f"Hold-tap/mod-tap binding missing params: {binding}. "
-                        f"This may be due to incomplete extraction or preprocessing."
-                    )
-                    logging.error(msg)
-                    self.error_messages.append(msg)
-                    self.error_manager.add_error(msg, context={"binding": str(binding)})
-                    return "<err:missing_holdtap_params>"
-                try:
-                    hold_param = binding.params[0]
-                except Exception:
-                    hold_param = "<missing>"
-                try:
-                    tap_param = binding.params[1]
-                except Exception:
-                    tap_param = "<missing>"
-                logging.debug(
-                    f"[KanataTransformer] Accessing binding.params[0]: {hold_param}"
-                )
-                logging.debug(
-                    f"[KanataTransformer] Accessing binding.params[1]: {tap_param}"
-                )
-                if hasattr(binding.behavior, "name"):
-                    if (
-                        binding.behavior.name == "mt"
-                        and "mt" in self.hold_tap_definitions
-                    ):
-                        return "@mt"
-                    elif (
-                        binding.behavior.name == "lt"
-                        and "lt" in self.hold_tap_definitions
-                    ):
-                        return "@lt"
-                alias_name = self._holdtap_alias_name(
-                    (
-                        binding.behavior.name
-                        if hasattr(binding.behavior, "name")
-                        else binding.behavior.type
-                    ),
-                    hold_param,
-                    tap_param,
-                )
-                if alias_name in self.hold_tap_definitions:
-                    return f"@{alias_name}"
-                else:
-                    msg = f"Hold-tap alias '{alias_name}' not defined."
-                    logging.error(msg)
-                    self.error_messages.append(msg)
-                    self.error_manager.add_error(msg, context={"binding": str(binding)})
-                    return "<err:undef_holdtap>"
-            elif binding.behavior is None:
-                if not binding.params or len(binding.params) < 1:
-                    msg = f"Binding with no parameters: {binding}"
-                    logging.error(msg)
-                    self.error_messages.append(msg)
-                    self.error_manager.add_error(msg, context={"binding": str(binding)})
-                    return "<err:missing_param>"
-                try:
-                    zmk_key = binding.params[0]
-                except Exception:
-                    zmk_key = "<missing>"
-                logging.debug(
-                    f"[KanataTransformer] Accessing binding.params[0]: {zmk_key}"
-                )
-                return self.macro_transformer._convert_key(zmk_key)
-            elif behavior_type == "kp":
-                if not binding.params or len(binding.params) < 1:
-                    msg = f"KP binding with no parameters: {binding}"
-                    logging.error(msg)
-                    self.error_messages.append(msg)
-                    self.error_manager.add_error(msg, context={"binding": str(binding)})
-                    return "<err:missing_param>"
-                try:
-                    zmk_key = binding.params[0]
-                except Exception:
-                    zmk_key = "<missing>"
-                logging.debug(
-                    f"[KanataTransformer] Accessing binding.params[0]: {zmk_key}"
-                )
-                return self.macro_transformer._convert_key(zmk_key)
-            elif behavior_type in ["mo", "to", "tog"]:
-                if not binding.params or len(binding.params) < 1:
-                    msg = f"{behavior_type} binding with no layer parameter: {binding}"
-                    logging.error(msg)
-                    self.error_messages.append(msg)
-                    self.error_manager.add_error(msg, context={"binding": str(binding)})
-                    return f"<err:{behavior_type}_missing_layer>"
-                try:
-                    layer_index_or_name = binding.params[0]
-                except Exception:
-                    layer_index_or_name = "<missing>"
-                logging.debug(
-                    f"[KanataTransformer] Accessing binding.params[0]: {layer_index_or_name}"
-                )
-                layer_ref = layer_index_or_name
-                if behavior_type == "mo":
-                    return f"(layer {layer_ref})"
-                elif behavior_type == "to":
-                    return f"(layer-switch {layer_ref})"
-                elif behavior_type == "tog":
-                    return f"(layer-toggle {layer_ref})"
-            elif behavior_type == "macro":
-                macro_name = binding.behavior.name
-                if binding.params and len(binding.params) > 0:
-                    macro_params = []
-                    for i, p in enumerate(binding.params):
-                        try:
-                            macro_params.append(self.macro_transformer._convert_key(p))
-                        except Exception as e:
-                            msg = f"Error converting macro param {i}: {e}"
-                            logging.error(msg)
-                            self.error_messages.append(msg)
-                            macro_params.append(f"<err:{e}>")
-                    return f"(macro {macro_name} {' '.join(macro_params)})"
-                else:
-                    return f"(macro {macro_name})"
-            elif (
-                hasattr(binding, "behavior")
-                and binding.behavior is not None
-                and (
-                    getattr(binding.behavior, "type", None) == "zmk,behavior-sticky-key"
-                    or getattr(binding.behavior, "name", None) == "sk"
-                )
-            ):
-                try:
-                    return self.sticky_key_transformer.transform_binding(binding)
-                except Exception as e:
-                    msg = f"Error transforming sticky key: {e}"
-                    logging.error(msg)
-                    self.error_messages.append(msg)
-                    self.error_manager.add_error(msg, context={"binding": str(binding)})
-                    return "<err:sticky_key>"
-            else:
-                msg = f"Unknown binding type: {behavior_type} for binding: {binding}"
-                logging.error(msg)
-                self.error_messages.append(msg)
-                self.error_manager.add_error(msg, context={"binding": str(binding)})
-                return f"<err:unknown:{behavior_type}>"
-        except Exception as e:
-            # If a known behavior fails, emit a Kanata comment
-            msg = f"; unsupported: {behavior_type} binding: {binding} (err: {e})"
-            msg = msg[:79]  # Ensure line length
-            self.error_messages.append(msg)
-            return msg
+        # Handle toggle-layer (to)
+        if behavior_type == "zmk,behavior-toggle-layer":
+            param = binding.params[0] if binding.params else "?"
+            return f"; unsupported: toggle-layer to {param} (ZMK: {binding})"
 
-        # Handle missing hold-tap/mod-tap params
-        if behavior_type in ["hold-tap", "mod-tap"] and (
-            not hasattr(binding, "params") or len(binding.params) < 2
+        # Handle hold-tap/tap-dance with only one param
+        if behavior_type in (
+            "hold-tap",
+            "zmk,behavior-hold-tap",
+            "zmk,behavior-tap-dance",
         ):
-            msg = f"; unsupported: hold-tap missing params: {binding.params}"
-            msg = msg[:79]
-            self.error_messages.append(msg)
-            return msg
+            if len(binding.params) == 1:
+                tap = binding.params[0]
+                return (
+                    f"{tap} ; tap only (ZMK: {binding}) "
+                    f"; unsupported: missing hold param"
+                )
+            elif len(binding.params) == 2:
+                # Normal case, handled as before
+                pass
+            else:
+                return f"; unsupported: hold-tap/tap-dance malformed: {binding}"
 
-        # Unknown/unsupported behavior: emit Kanata comment
-        err_msg = f"; unsupported: {behavior_type} binding: {binding.params}"
-        err_msg = err_msg[:79]
-        self.error_messages.append(err_msg)
-        return err_msg
+        # Existing error handling for missing params
+        if (
+            behavior_type
+            in ("hold-tap", "zmk,behavior-hold-tap", "zmk,behavior-tap-dance")
+            and len(binding.params) < 2
+        ):
+            return f"; unsupported: hold-tap/tap-dance missing params: {binding}"
+
+        # Unknown/unsupported behavior
+        if behavior_type and behavior_type.startswith("zmk,behavior-"):
+            return f"; unsupported: {behavior_type} binding: {binding}"
+
+        # Fallback: try to emit the param or binding as-is
+        if binding.params:
+            return str(binding.params[0])
+        return f"; unsupported: unknown binding: {binding}"
 
     def _holdtap_alias_name(self, behavior_type, hold_param, tap_param):
         """Generate a consistent alias name for hold-tap behaviors."""

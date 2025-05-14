@@ -476,21 +476,43 @@ class KeymapExtractor:
                         f"Unknown behavior referenced during binding creation: {name}"
                     )
 
-                # Consume expected parameters
+                # Enhanced parameter extraction for nested macros
                 param_start_index = i + 1
-                param_end_index = min(i + 1 + num_params_expected, len(value))
                 actual_params_consumed = 0
-                for j in range(param_start_index, param_end_index):
+                j = param_start_index
+                while actual_params_consumed < num_params_expected and j < len(value):
                     next_token = value[j]
-                    if isinstance(next_token, str) and next_token.startswith("&"):
+                    if (
+                        isinstance(next_token, str)
+                        and next_token.startswith("&")
+                        and actual_params_consumed < num_params_expected
+                    ):
                         break
-                    params.append(str(next_token))
-                    actual_params_consumed += 1
-
+                    # Detect nested macro/parenthesis
+                    if isinstance(next_token, str) and (
+                        "(" in next_token or ")" in next_token
+                    ):
+                        # Group tokens until parentheses are balanced
+                        paren_count = 0
+                        param_tokens = []
+                        while j < len(value):
+                            t = value[j]
+                            param_tokens.append(str(t))
+                            paren_count += t.count("(")
+                            paren_count -= t.count(")")
+                            if paren_count <= 0 and ("(" in param_tokens[0]):
+                                break
+                            j += 1
+                        params.append(" ".join(param_tokens))
+                        actual_params_consumed += 1
+                        j += 1
+                    else:
+                        params.append(str(next_token))
+                        actual_params_consumed += 1
+                        j += 1
                 logging.debug(
                     f"[extractor]   Params consumed: {params} (actual: {actual_params_consumed})"
                 )
-
                 behavior = get_or_create_behavior(behavior_name, behavior_name)
                 if behavior:
                     bindings.append(self._create_binding([behavior_name] + params))

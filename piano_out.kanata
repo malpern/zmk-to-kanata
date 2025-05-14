@@ -31,31 +31,203 @@
 
 (defalias hm_l (tap-hold 300 300 10 lalt))
 
-(defalias hm_r (tap-hold 300 300 18 rctl))
-
 (defalias hl_l (tap-hold 220 220 23 34))
-
-(defalias hl_l (tap-hold 220 220 21 31))
-
-(defalias hm_l (tap-hold 300 300 n1 lmet))
-
-(defalias hm_r (tap-hold 300 300 n4 rctl))
-
-(defalias hm_l (tap-hold 300 300 7 lmet))
-
-(defalias hm_r (tap-hold 300 300 n3 ralt))
 
 (defalias hl_r (tap-hold 220 220 8 31))
 
+(defalias hm_r (tap-hold 300 300 24 ralt))
+
+(defalias hm_l (tap-hold 300 300 n1 lmet))
+
+(defalias hm_r (tap-hold 300 300 n3 ralt))
+
 (defalias hl_l (tap-hold 220 220 22 32))
 
-(defalias hm_l (tap-hold 300 300 n0 lalt))
-
-(defalias hm_r (tap-hold 300 300 24 ralt))
+(defalias hl_r (tap-hold 220 220 6 33))
 
 (defalias hl_r (tap-hold 220 220 4 32))
 
-(defalias hl_r (tap-hold 220 220 6 33))
+(defalias hl_l (tap-hold 220 220 21 31))
+
+(defalias hm_l (tap-hold 300 300 n0 lalt))
+
+(defalias hm_l (tap-hold 300 300 7 lmet))
+
+(defalias hm_r (tap-hold 300 300 18 rctl))
+
+(defalias hm_r (tap-hold 300 300 n4 rctl))
+(deflayer alpha1
+  LCTL
+  LALT
+  LGUI
+  RGUI
+  RALT
+  RCTL
+  33
+  32
+  31
+  34
+  34
+  31
+  32
+  33
+  LC(LS(LALT))
+  ; unsupported: zmk,behavior-key-repeat binding: Binding(behavior=Behavior(name='key_repeat', type='zmk,behavior-key-repeat'), params=[])
+  ; unsupported: unknown binding: Binding(behavior=MacroBehavior(name='caps_alpha2macro', type='macro'), params=[])
+  ; unsupported: unknown binding: Binding(behavior=MacroBehavior(name='alpha2macro', type='macro'), params=[])
+)
+(deflayer alpha2
+  25
+  26
+  16
+  9
+  SQT
+  29
+  20
+  13
+  19
+  14
+  5
+  DOT
+  27
+  28
+  ; unsupported: zmk,behavior-sticky-key binding: Binding(behavior=Behavior(name='sk', type='zmk,behavior-sticky-key'), params=['LSHIFT'])
+  _
+  _
+  ; unsupported: zmk,behavior-sticky-layer binding: Binding(behavior=Behavior(name='sl', type='zmk,behavior-sticky-layer'), params=['36'])
+)
+(deflayer sym1
+  LA(N3)
+  LS(N3)
+  DLLR
+  LS(COMMA)
+  LS(DOT)
+  CARET
+  GRAVE
+  TILDE
+  MINUS
+  BSLH
+  LBKT
+  RBKT
+  PIPE
+  SLASH
+  _
+  _
+  _
+  _
+)
+(deflayer sym2
+  ATSN
+  LA(RBKT) ; tap only (ZMK: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LA(RBKT)'])) ; unsupported: missing hold param
+  LA(LS(RBKT))
+  LA(LBKT) ; tap only (ZMK: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LA(LBKT)'])) ; unsupported: missing hold param
+  LA(LS(LBKT))
+  LPRN
+  RPRN
+  SEMI
+  STAR
+  PRCNT
+  QMARK ; tap only (ZMK: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['QMARK'])) ; unsupported: missing hold param
+  EXCL
+  DQT
+  LBRC
+  RBRC
+  AMPS
+  COLON
+  _
+  _
+  _
+  _
+  _
+  _
+)
+(deflayer num
+  LCTL
+  LALT
+  LGUI
+  RGUI
+  RALT
+  RCTL
+  MINUS
+  PLUS
+  N5
+  N6
+  N7
+  N8
+  N9
+  EQUAL
+  LSHIFT
+  _
+  _
+  _
+)
+(deflayer sys
+  ESC
+  LC(LS(TAB))
+  RC(TAB)
+  LG(V) ; tap only (ZMK: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LG(V)'])) ; unsupported: missing hold param
+  LG(C)
+  UP
+  20 ; tap only (ZMK: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['20'])) ; unsupported: missing hold param
+  BKSP
+  LG(GRAVE) ; tap only (ZMK: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LG(GRAVE)'])) ; unsupported: missing hold param
+  TAB
+  HOME ; tap only (ZMK: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['HOME'])) ; unsupported: missing hold param
+  DEL
+  END ; tap only (ZMK: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['END'])) ; unsupported: missing hold param
+  LG(LBKT)
+  LG(RBKT)
+  TAB ; tap only (ZMK: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['TAB'])) ; unsupported: missing hold param
+  LEFT
+  DOWN
+  LC(LG(LS(N4))) ; tap only (ZMK: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LC(LG(LS(N4)))'])) ; unsupported: missing hold param
+  RIGHT
+  RET
+  LSHIFT
+  _
+  _
+  RGUI
+)
+(deflayer bt
+  ; unsupported: zmk,behavior-bluetooth binding: Binding(behavior=Behavior(name='bt', type='zmk,behavior-bluetooth'), params=['31'])
+  ; unsupported: zmk,behavior-bluetooth binding: Binding(behavior=Behavior(name='bt', type='zmk,behavior-bluetooth'), params=['30'])
+  _
+  _
+  _
+  _
+  ; unsupported: zmk,behavior-bootloader binding: Binding(behavior=Behavior(name='bootloader', type='zmk,behavior-bootloader'), params=[])
+  _
+  _
+  _
+  _
+  _
+  _
+  ; unsupported: zmk,behavior-bluetooth binding: Binding(behavior=Behavior(name='bt', type='zmk,behavior-bluetooth'), params=['39'])
+  ; unsupported: toggle-layer to 39 (ZMK: Binding(behavior=Behavior(name='to', type='zmk,behavior-toggle-layer'), params=['39']))
+  _
+  _
+  _
+)
+(deflayer alpha2cap
+  LS(V)
+  LS(W)
+  LS(M)
+  LS(F)
+  _
+  LS(Z)
+  LS(Q)
+  LS(J)
+  LS(P)
+  LS(K)
+  LS(B)
+  COMMA
+  LS(X)
+  LS(Y)
+  _
+  _
+  _
+  _
+)
 
 ; --- Unsupported/Unknown ZMK Features ---
 [KanataTransformer] Skipping hold-tap alias: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LA(RBKT)'])
@@ -78,20 +250,3 @@
 [KanataTransformer] Skipping hold-tap combo: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['END'])
 [KanataTransformer] Skipping hold-tap combo: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['TAB'])
 [KanataTransformer] Skipping hold-tap combo: insufficient params for binding: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LC(LG(LS(N4)))'])
-Unknown binding type: zmk,behavior-key-repeat for binding: Binding(behavior=Behavior(name='key_repeat', type='zmk,behavior-key-repeat'), params=[])
-Unknown binding type: zmk,behavior-sticky-layer for binding: Binding(behavior=Behavior(name='sl', type='zmk,behavior-sticky-layer'), params=['36'])
-Hold-tap/mod-tap binding missing params: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LA(RBKT)']). This may be due to incomplete extraction or preprocessing.
-Hold-tap/mod-tap binding missing params: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LA(LBKT)']). This may be due to incomplete extraction or preprocessing.
-Hold-tap/mod-tap binding missing params: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['QMARK']). This may be due to incomplete extraction or preprocessing.
-Hold-tap/mod-tap binding missing params: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LG(V)']). This may be due to incomplete extraction or preprocessing.
-Hold-tap/mod-tap binding missing params: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['20']). This may be due to incomplete extraction or preprocessing.
-Hold-tap/mod-tap binding missing params: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LG(GRAVE)']). This may be due to incomplete extraction or preprocessing.
-Hold-tap/mod-tap binding missing params: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['HOME']). This may be due to incomplete extraction or preprocessing.
-Hold-tap/mod-tap binding missing params: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['END']). This may be due to incomplete extraction or preprocessing.
-Hold-tap/mod-tap binding missing params: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['TAB']). This may be due to incomplete extraction or preprocessing.
-Hold-tap/mod-tap binding missing params: Binding(behavior=HoldTap(name='td', type='hold-tap'), params=['LC(LG(LS(N4)))']). This may be due to incomplete extraction or preprocessing.
-Unknown binding type: zmk,behavior-bluetooth for binding: Binding(behavior=Behavior(name='bt', type='zmk,behavior-bluetooth'), params=['31'])
-Unknown binding type: zmk,behavior-bluetooth for binding: Binding(behavior=Behavior(name='bt', type='zmk,behavior-bluetooth'), params=['30'])
-Unknown binding type: zmk,behavior-bootloader for binding: Binding(behavior=Behavior(name='bootloader', type='zmk,behavior-bootloader'), params=[])
-Unknown binding type: zmk,behavior-bluetooth for binding: Binding(behavior=Behavior(name='bt', type='zmk,behavior-bluetooth'), params=['39'])
-Unknown binding type: zmk,behavior-toggle-layer for binding: Binding(behavior=Behavior(name='to', type='zmk,behavior-toggle-layer'), params=['39'])
