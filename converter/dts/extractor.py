@@ -524,58 +524,49 @@ class KeymapExtractor:
 
     def _create_binding(self, value: str | List[str]) -> Binding:
         """Create a binding instance from a value."""
-        # NOTE: Parameterless 'mo' (and similar) is valid only in the context of a behavior
-        # definition (e.g., in a behavior's 'bindings' property), not in a keymap binding.
-        # If a parameterless 'mo' is created in a keymap binding, this likely indicates a
-        # malformed keymap or a bug in the extractor. All real-world keymap bindings should
-        # provide a parameter for 'mo' (e.g., '&mo 1').
         if isinstance(value, list):
-            # Handle list format [behavior_name, param1, ...]
             if not value:
-                raise ValueError("Empty binding list value")
+                # Instead of raising, emit error binding
+                msg = "Empty binding list value"
+                logging.error(msg)
+                return Binding(behavior=None, params=[f"ERROR: {msg}"])
             behavior_name = value[0]
             params = value[1:]
-
             if behavior_name == "kp":
                 if len(params) != 1:
-                    raise ValueError(
-                        f"kp behavior expects 1 parameter, "
-                        f"got {len(params)}: {params}"
+                    msg = (
+                        f"kp behavior expects 1 parameter, got {len(params)}: {params}"
                     )
-                # Ensure params is always a list
-                return Binding(behavior=None, params=[params[0]])  # Wrap param
-
-            # Look up custom behavior - should exist now
+                    logging.error(msg)
+                    return Binding(behavior=None, params=[f"ERROR: {msg}"])
+                return Binding(behavior=None, params=[params[0]])
             behavior = self.behaviors.get(behavior_name)
             if behavior:
-                # TODO: Validate params against behavior definition if needed
                 return Binding(behavior=behavior, params=params)
             else:
-                # This shouldn't happen if pass logic is correct
-                raise ValueError(
-                    f"Unknown behavior referenced during binding creation: "
-                    f"{behavior_name}"
-                )
-
+                msg = f"Unknown behavior referenced during binding creation: {behavior_name}"
+                logging.error(msg)
+                return Binding(behavior=None, params=[f"ERROR: {msg}"])
         elif isinstance(value, str):
-            # Handle simple binding ('A') or parameterless behavior ('&macro')
             if value.startswith("&"):
                 behavior_name = value[1:]
                 if behavior_name == "kp":
-                    raise ValueError("&kp behavior requires a parameter")
+                    msg = "&kp behavior requires a parameter"
+                    logging.error(msg)
+                    return Binding(behavior=None, params=[f"ERROR: {msg}"])
                 behavior = self.behaviors.get(behavior_name)
                 if behavior:
-                    # Parameterless, use empty list for params
                     return Binding(behavior=behavior, params=[])
                 else:
-                    raise ValueError(
-                        f"Unknown parameterless behavior reference: {value}"
-                    )
+                    msg = f"Unknown parameterless behavior reference: {value}"
+                    logging.error(msg)
+                    return Binding(behavior=None, params=[f"ERROR: {msg}"])
             else:
-                # Simple value binding, treat param as list
-                return Binding(behavior=None, params=[value])  # Wrap param
+                return Binding(behavior=None, params=[value])
         else:
-            raise ValueError(f"Invalid type for _create_binding: {type(value)}")
+            msg = f"Invalid type for _create_binding: {type(value)}"
+            logging.error(msg)
+            return Binding(behavior=None, params=[f"ERROR: {msg}"])
 
     def _parse_integer_prop(self, prop: DtsProperty) -> Optional[int]:
         """Safely parse an integer value from a property."""

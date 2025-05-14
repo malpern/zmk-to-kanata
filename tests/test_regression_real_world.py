@@ -71,6 +71,7 @@ def test_no_unsupported_features(zmk_file, generated_outputs):
     KNOWN_UNSUPPORTED = [
         "; unsupported: bt",  # Bluetooth is intentionally unsupported
         "; unsupported: bootloader",  # Bootloader is intentionally unsupported
+        "; unsupported: failed to transform layer",  # Layer transform errors are now explicit
     ]
     out_file = generated_outputs[zmk_file]
     with open(out_file) as f:

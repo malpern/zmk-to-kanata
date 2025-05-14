@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass, field
 from typing import List, Optional, Dict, Tuple, Union
+from .transformer.keycode_map import zmk_to_kanata
 
 
 @dataclass
@@ -55,86 +56,45 @@ class KeyMapping(Binding):
         return self.key == other.key
 
     def to_kanata(self) -> str:
-        """Convert the key mapping to Kanata format."""
+        """Convert the key mapping to Kanata format using the central mapping utility."""
+        # Emit alias for hold-tap if present
         if self.hold_tap:
-            # Use the alias we created for this hold-tap binding
-            if hasattr(self.hold_tap, "behavior_name"):
-                binding_id = (
-                    f"{self.hold_tap.behavior_name}_"
-                    f"{self.hold_tap.hold_key}_"
-                    f"{self.hold_tap.tap_key}"
-                )
-                return f"@{binding_id}"
-            else:
-                # Fall back to direct conversion
-                return self.hold_tap.to_kanata()
-
+            if hasattr(self.hold_tap, 'hold_tap') and hasattr(self.hold_tap.hold_tap, 'name') and hasattr(self.hold_tap, 'hold') and hasattr(self.hold_tap, 'tap'):
+                alias = f"@{self.hold_tap.hold_tap.name}_{self.hold_tap.hold}_{self.hold_tap.tap}"
+                return alias
+            elif hasattr(self.hold_tap, 'name') and hasattr(self.hold_tap, 'hold_key') and hasattr(self.hold_tap, 'tap_key'):
+                alias = f"@{self.hold_tap.name}_{self.hold_tap.hold_key}_{self.hold_tap.tap_key}"
+                return alias
+        key = zmk_to_kanata(self.key)
         if self.key.startswith("mo "):
-            # Handle momentary layer switch
             layer_num = self.key.split()[1]
             return f"(layer-while-held {layer_num})"
         elif self.key == "trans":
-            # Handle transparent key
             return "_"
         elif self.sticky:
-            # Handle sticky key with proper modifier conversion
-            key = self.key
-            # For function keys, preserve the case
-            if key.startswith("F") and key[1:].isdigit():
-                return f"sticky-{key}"
-            # For other keys, convert to lowercase and map modifiers
-            key = key.lower()
-            key_map = {
-                "lshift": "lsft",
-                "rshift": "rsft",
-                "lctrl": "lctl",
-                "rctrl": "rctl",
-                "lgui": "lmet",
-                "rgui": "rmet",
-            }
-            if key in key_map:
-                key = key_map[key]
-            return f"sticky-{key}"
+            k = key if key is not None else self.key
+            if k and k.startswith("f") and k[1:].isdigit():
+                return f"sticky-{k}"
+            return f"sticky-{k if k is not None else ''}"
         else:
-            # Handle regular key
-            key = self.key.lower()
-            # Convert number keys by removing 'n' prefix if followed by digits
-            if key.startswith("n") and len(key) > 1 and key[1:].isdigit():
-                key = key[1:]
-            # Convert numpad keys by removing 'n' from KP_N prefix
-            elif key.startswith("kp_n") and len(key) > 4 and key[4:].isdigit():
-                key = "kp" + key[4:]
-            return key
+            return key if key is not None else self.key
 
     @classmethod
     def from_zmk(cls, binding_str: str) -> "KeyMapping":
-        """Create a KeyMapping from a ZMK binding string.
-
-        Args:
-            binding_str: The ZMK binding string
-
-        Returns:
-            A KeyMapping object
-
-        Raises:
-            ValueError: If the binding string is invalid
-        """
+        """Create a KeyMapping from a ZMK binding string."""
         # Handle empty binding
         if not binding_str or binding_str == "&none":
-            return cls(key="none")
-
+            return cls(key="none", behavior=None, params=[])
         # Handle transparent binding
         if binding_str == "&trans":
-            return cls(key="trans")
-
+            return cls(key="trans", behavior=None, params=[])
         # Handle sticky key bindings
         if binding_str.startswith("&sk"):
             parts = binding_str.split()
             if len(parts) != 2:
                 raise ValueError(f"Invalid sticky key binding: {binding_str}")
             key = parts[1]
-            return cls(key=key, sticky=True)
-
+            return cls(key=key, sticky=True, behavior=None, params=[])
         # Handle hold-tap bindings
         hold_tap_prefixes = [
             "&mt",
@@ -152,51 +112,34 @@ class KeyMapping(Binding):
             parts = binding_str.split(maxsplit=2)
             if len(parts) != 3:
                 raise ValueError(f"Invalid hold-tap binding: {binding_str}")
-
-            behavior_name = parts[0][1:]  # Remove & prefix
-            hold_key = parts[1]
             tap_key = parts[2]
-
-            return cls(
-                key=tap_key,
-                hold_tap=HoldTap(
-                    behavior_name=behavior_name,
-                    hold_key=hold_key,
-                    tap_key=tap_key,
-                ),
-            )
-
+            return cls(key=tap_key, behavior=None, params=[])
         # Handle layer switch bindings
         if binding_str.startswith("&mo"):
             parts = binding_str.split()
             if len(parts) != 2:
                 raise ValueError(f"Invalid layer switch binding: {binding_str}")
             layer_num = parts[1]
-            return cls(key=f"mo {layer_num}")
-
+            return cls(key=f"mo {layer_num}", behavior=None, params=[])
         # Handle layer toggle bindings
         if binding_str.startswith("&to"):
             parts = binding_str.split()
             if len(parts) != 2:
                 raise ValueError(f"Invalid layer toggle binding: {binding_str}")
             layer_num = parts[1]
-            return cls(key=f"to {layer_num}")
-
+            return cls(key=f"to {layer_num}", behavior=None, params=[])
         # Handle regular key bindings
         if binding_str.startswith("&kp"):
             parts = binding_str.split()
             if len(parts) != 2:
                 raise ValueError(f"Invalid key binding: {binding_str}")
             key = parts[1]
-            return cls(key=key)
-
+            return cls(key=key, behavior=None, params=[])
         # Special case for test files that don't use &kp prefix
         if binding_str.startswith("&"):
-            # This is some other binding type we don't support yet
             raise ValueError(f"Unknown binding: {binding_str}")
         else:
-            # Assume this is a direct key reference (for test files)
-            return cls(key=binding_str)
+            return cls(key=binding_str, behavior=None, params=[])
 
     def to_dict(self) -> dict:
         """Return a serializable dictionary representation of this key mapping."""

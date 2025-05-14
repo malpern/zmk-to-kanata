@@ -9,10 +9,7 @@ all the model classes and conversion logic for the keymap converter.
 
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, List, Optional, Union, Dict, Any
-
-if TYPE_CHECKING:
-    # These imports are only used for type checking
-    from .behaviors import Behavior
+from converter.transformer.keycode_map import zmk_to_kanata
 
 
 @dataclass
@@ -141,68 +138,34 @@ class KeyMapping:
         return self.key == other.key
 
     def to_kanata(self) -> str:
-        """Convert the key mapping to Kanata format."""
-        if self.hold_tap:
-            # Generate alias for HoldTapBinding or HoldTap
-            if hasattr(self.hold_tap, "name"):
-                binding_id = (
-                    f"{self.hold_tap.name}_"
-                    f"{self.hold_tap.hold}_"
-                    f"{self.hold_tap.tap}"
-                )
-                return f"@{binding_id}"
-            elif (
-                hasattr(self.hold_tap, "hold_tap")
-                and hasattr(self.hold_tap.hold_tap, "name")
-                and hasattr(self.hold_tap, "hold")
-                and hasattr(self.hold_tap, "tap")
-            ):
-                binding_id = (
-                    f"{self.hold_tap.hold_tap.name}_"
-                    f"{self.hold_tap.hold}_"
-                    f"{self.hold_tap.tap}"
-                )
-                return f"@{binding_id}"
-            else:
-                # Fall back to direct conversion
-                return self.hold_tap.to_kanata()
-
+        """Convert the key mapping to Kanata format using the central mapping utility."""
+        ht = self.hold_tap
+        if ht and hasattr(ht, 'hold_tap') and hasattr(ht.hold_tap, 'name') and hasattr(ht, 'hold') and hasattr(ht, 'tap'):
+            return f"@{ht.hold_tap.name}_{ht.hold}_{ht.tap}"
+        if ht and hasattr(ht, 'name') and hasattr(ht, 'hold_key') and hasattr(ht, 'tap_key'):
+            return f"@{ht.name}_{ht.hold_key}_{ht.tap_key}"
+        if ht and hasattr(ht, 'to_kanata') and callable(ht.to_kanata):
+            return ht.to_kanata()
+        key = zmk_to_kanata(self.key)
         if self.key.startswith("mo "):
-            # Handle momentary layer switch
             layer_num = self.key.split()[1]
             return f"(layer-while-held {layer_num})"
         elif self.key == "trans":
-            # Handle transparent key
             return "_"
         elif self.sticky:
-            # Handle sticky key with proper modifier conversion
-            key = self.key
-            # For function keys, preserve the case
-            if key.startswith("F") and key[1:].isdigit():
-                return f"sticky-{key}"
-            # For other keys, convert to lowercase and map modifiers
-            key = key.lower()
-            key_map = {
-                "lshift": "lsft",
-                "rshift": "rsft",
-                "lctrl": "lctl",
-                "rctrl": "rctl",
-                "lgui": "lmet",
-                "rgui": "rmet",
-            }
-            if key in key_map:
-                key = key_map[key]
-            return f"sticky-{key}"
+            # Use original case for F-keys
+            if self.key.startswith("F") and self.key[1:].isdigit():
+                return f"sticky-{self.key}"
+            k = key if key is not None else self.key
+            return f"sticky-{k if k is not None else ''}"
         else:
-            # Handle regular key
-            key = self.key.lower()
-            # Convert number keys by removing 'n' prefix if followed by digits
-            if key.startswith("n") and len(key) > 1 and key[1:].isdigit():
-                key = key[1:]
-            # Convert numpad keys by removing 'n' from KP_N prefix
-            elif key.startswith("kp_n") and len(key) > 4 and key[4:].isdigit():
-                key = "kp" + key[4:]
-            return key
+            # Special case: number keys with 'n' prefix
+            if self.key.startswith('n') and self.key[1:].isdigit():
+                return self.key[1:]
+            # Special case: numpad keys with 'kp_n' prefix
+            if self.key.startswith('kp_n') and len(self.key) > 4 and self.key[4:].isdigit():
+                return 'kp' + self.key[4:]
+            return key if key is not None else (self.key if self.key is not None else '')
 
     @classmethod
     def from_zmk(

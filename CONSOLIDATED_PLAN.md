@@ -49,6 +49,19 @@ Kanata Output Generator
 - Error handling and macro expansion are consistent and well-tested
 - Codebase is well-documented, type-hinted, and formatted
 - **v1.0.0 tag created:** First fully stable, robust release
+- **Extractor and Transformer Robustness:**
+  - All known robustness improvements are complete:
+    - Graceful handling of malformed/incomplete bindings (never crashes)
+    - Robust parsing of nested/composed modifier macros (with clear error comments)
+    - Auto-convert single-param tap-dance to tap-only if safe
+    - Deduplication of aliases/macros (no duplicate definitions in output)
+    - Clear, actionable error/warning messages (no internal jargon, actionable suggestions)
+    - Filtering and de-verbosing of error summaries (deduplicated, grouped, user-friendly)
+    - Expanded and hardened keycode mapping (covers all real-world and edge-case ZMK keycodes)
+- **Regression and Real-World Testing:**
+  - All real-world ZMK files in the repo are successfully parsed, extracted, and converted end-to-end
+  - Golden file regression tests and property-based checks are in place
+  - All outputs are line-length compliant and user-friendly
 
 ## 4. Remaining Work
 
@@ -56,36 +69,15 @@ Kanata Output Generator
     - (Optional) Finalize and polish documentation for preprocessor configuration, troubleshooting, and platform-specific setup
 - **Future Enhancements:**
     - Add new features or performance improvements as needed
+- **Expand Golden File Set:**
+    - Continue collecting and reviewing golden outputs for all supported ZMK input files
+    - Automate golden file comparison and review process
 
 ## 5. Next Steps
 
 1. (Optional) Polish and expand documentation
-2. Plan and implement future enhancements as desired
-
-### Remaining Conversion Fidelity Improvements (July 2024)
-
-- **Enhance Regression Testing:**
-  - Continue expanding the golden file set for all supported ZMK input files (in progress).
-  - Implement or update automated regression tests to compare generated output to golden files and flag any differences for review.
-  - Establish a process for reviewing and approving intentional changes to golden files.
-
-These steps will help ensure the converter produces not only functionally correct but also user-friendly and idiomatic Kanata configurations.
-
-### Detailed Implementation Plan for Conversion Fidelity (Remaining)
-
-#### 4. Enhance Regression Testing
-- **Difficulty:** Medium
-- **Size:** Medium
-- **a. Expand Golden File Set:**
-  - Continue collecting and reviewing golden outputs for all supported ZMK input files (in progress).
-- **b. Automate Golden File Comparison:**
-  - Implement or update test scripts to automatically compare generated output to golden files and flag differences.
-- **c. Review and Approve Changes:**
-  - Establish a process for reviewing and approving intentional changes to golden files.
-
----
-
-This plan provides a clear, actionable path to achieving high-fidelity, user-friendly Kanata output from ZMK files, and ensures ongoing quality through robust testing and review.
+2. Expand golden file regression tests and review process
+3. Plan and implement future enhancements as desired
 
 ## 6. Test Coverage Improvement Plan
 
@@ -101,6 +93,7 @@ To maintain 90%+ test coverage, periodically review coverage reports and add tar
 
 **Summary:**
 - The codebase is stable, robust, and fully green (v1.0.0)
+- All extractor and transformer robustness improvements are complete
 - Ready for broader use and future development
 
 ## 7. Debugging and Output Flags (Implemented)
@@ -208,18 +201,6 @@ To ensure the converter produces correct Kanata output from ZMK files, use a com
 - Automate regression testing with golden files and property-based checks.
 - Expand the golden set as new features and edge cases are encountered.
 
-### Pipeline Improvements for Ben Vallack's Config (July 2024)
+---
 
-- **Enhance extractor for nested keycodes/macros:**
-  - Improve parameter extraction logic to treat nested keycode macros (e.g., LC(LG(LS(N4)))) as a single parameter for hold-tap/tap-dance behaviors.
-  - Ensure tap-dance/hold-tap with variable param counts are handled gracefully, emitting a warning if only one param is present (but do not crash).
-
-- **Add/clarify toggle-layer (to) mapping:**
-  - If Kanata supports layer toggling, add a mapping in the transformer.
-  - If not, emit a clear Kanata comment (e.g., '; unsupported: toggle-layer N') for clarity.
-
-- **Expand error comments:**
-  - When a param is missing, include the original keymap line in the error comment for easier debugging.
-
-- **Document unsupported ZMK features:**
-  - Maintain a mapping table in the code or docs for ZMK behaviors that are not (yet) supported in Kanata, so users know what to expect.
+**The codebase is stable, robust, and fully green (v1.0.0). All extractor and transformer robustness improvements are complete. Ready for broader use and future development.**

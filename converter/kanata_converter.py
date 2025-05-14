@@ -1,4 +1,5 @@
 from typing import Dict, List
+from converter.transformer.keycode_map import zmk_to_kanata
 
 
 class KanataConverter:
@@ -54,33 +55,23 @@ class KanataConverter:
         }
 
     def _convert_key_code(self, key_code: str) -> str:
-        """Convert a ZMK key code to a Kanata key code.
-
-        Args:
-            key_code: The ZMK key code (e.g., '&kp A')
-
-        Returns:
-            The Kanata key code
-
-        Raises:
-            ValueError: If the key code cannot be converted
-        """
-        # Split the key code into type and value
+        """Convert a ZMK key code to a Kanata key code using the central mapping utility."""
         parts = key_code.split()
-        if len(parts) != 2:
+        if len(parts) == 2:
+            key_type, key_value = parts
+            if key_type != "&kp":
+                raise ValueError(f"Unsupported key type: {key_type}")
+            mapped = zmk_to_kanata(key_value)
+            if mapped is None:
+                raise ValueError(f"Unsupported key value: {key_value}")
+            return mapped
+        elif len(parts) == 1:
+            mapped = zmk_to_kanata(parts[0])
+            if mapped is None:
+                raise ValueError(f"Unsupported key value: {parts[0]}")
+            return mapped
+        else:
             raise ValueError(f"Invalid key code format: {key_code}")
-
-        key_type, key_value = parts
-
-        # Check if we have a mapping for this key type
-        if key_type not in self._key_mapping:
-            raise ValueError(f"Unsupported key type: {key_type}")
-
-        # Check if we have a mapping for this key value
-        if key_value not in self._key_mapping[key_type]:
-            raise ValueError(f"Unsupported key value: {key_value}")
-
-        return self._key_mapping[key_type][key_value]
 
     def _generate_layer(self, layer_name: str, keymap: List[List[str]]) -> str:
         """Generate a Kanata layer configuration.

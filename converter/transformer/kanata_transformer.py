@@ -14,6 +14,7 @@ from .macro_transformer import MacroTransformer
 from .sticky_key_transformer import StickyKeyTransformer
 
 import logging
+import re
 
 # --- Unsupported ZMK features and their Kanata equivalents/limitations ---
 UNSUPPORTED_ZMK_FEATURES = {
@@ -85,9 +86,8 @@ class KanataTransformer:
                             if binding and binding.behavior == behavior:
                                 if not binding.params or len(binding.params) < 2:
                                     msg = (
-                                        "[KanataTransformer] Skipping hold-tap alias: "
-                                        "insufficient params for binding: "
-                                        f"{binding}"
+                                        "Warning: Skipped hold-tap alias due to missing parameters "
+                                        f"(binding: {getattr(binding, 'params', binding)})"
                                     )
                                     logging.error(msg)
                                     self.error_messages.append(msg)
@@ -117,8 +117,8 @@ class KanataTransformer:
                                     )
                                 except Exception as e:
                                     msg = (
-                                        "[KanataTransformer] Error generating hold-tap alias for "
-                                        f"{alias_type}, {hold_param}, {tap_param}: {e}"
+                                        f"Error: Could not generate hold-tap alias for '{alias_type}' "
+                                        f"(hold: {hold_param}, tap: {tap_param}). Reason: {e}"
                                     )
                                     logging.error(msg)
                                     self.error_messages.append(msg)
@@ -139,9 +139,8 @@ class KanataTransformer:
                 ):
                     if not binding.params or len(binding.params) < 2:
                         msg = (
-                            "[KanataTransformer] Skipping hold-tap combo: "
-                            "insufficient params for binding: "
-                            f"{binding}"
+                            "Warning: Skipped hold-tap combo due to missing parameters "
+                            f"(binding: {getattr(binding, 'params', binding)})"
                         )
                         logging.error(msg)
                         self.error_messages.append(msg)
@@ -169,8 +168,8 @@ class KanataTransformer:
                     break
             if behavior is None:
                 msg = (
-                    "[KanataTransformer] No behavior found for hold-tap alias: "
-                    f"{alias_type}, {modifier}, {key}"
+                    f"Warning: No behavior found for hold-tap alias '{alias_type}' "
+                    f"(hold: {modifier}, tap: {key})"
                 )
                 logging.warning(msg)
                 self.error_messages.append(msg)
@@ -188,8 +187,8 @@ class KanataTransformer:
                 )
             except Exception as e:
                 msg = (
-                    "[KanataTransformer] Error generating hold-tap alias for "
-                    f"{alias_type}, {modifier}, {key}: {e}"
+                    f"Error: Could not generate hold-tap alias for '{alias_type}' "
+                    f"(hold: {modifier}, tap: {key}). Reason: {e}"
                 )
                 logging.error(msg)
                 self.error_messages.append(msg)
@@ -201,33 +200,51 @@ class KanataTransformer:
             try:
                 self.output.append(self._transform_layer(layer))
             except Exception as e:
-                msg = (
-                    "[KanataTransformer] Error transforming layer "
-                    f"{getattr(layer, 'name', None)}: {e}"
-                )
+                msg = f"Error: Failed to transform layer '{getattr(layer, 'name', None)}'. Reason: {e}"
                 logging.error(msg)
                 self.error_messages.append(msg)
-                self.output.append(
-                    f"; <err: failed to transform layer "
-                    f"{getattr(layer, 'name', None)}: {e}>"
+                err_line = (
+                    f"; unsupported: failed to transform layer "
+                    f"{getattr(layer, 'name', None)}. Reason: {e}>"
                 )
+                self.output.append(self._format_binding_comment("", err_line))
         # Append error summary as a Kanata comment
         if self.error_messages:
+            # Deduplicate and filter messages
+            unique_msgs = list(dict.fromkeys(self.error_messages))
+            filtered_msgs = []
+            skip_phrases = [
+                "Warning: Skipped hold-tap alias due to missing parameters",
+                "Warning: Skipped hold-tap combo due to missing parameters",
+            ]
+            skip_counts = {phrase: 0 for phrase in skip_phrases}
+            for msg in unique_msgs:
+                for phrase in skip_phrases:
+                    if msg.startswith(phrase):
+                        skip_counts[phrase] += 1
+                        break
+                else:
+                    filtered_msgs.append(msg)
             self.output.append("\n; --- Unsupported/Unknown ZMK Features ---")
-            for msg in self.error_messages:
-                # Only include the essential unsupported feature comment
+            # Grouped warnings
+            for phrase, count in skip_counts.items():
+                if count:
+                    self.output.append(
+                        self._format_binding_comment(
+                            "",
+                            f"; {phrase} ({count} occurrence{'s' if count > 1 else ''})",
+                        )
+                    )
+            # Other unique, actionable messages
+            for msg in filtered_msgs:
                 if "; unsupported:" in msg:
                     idx = msg.index("; unsupported:")
                     comment = msg[idx:]
                     comment = comment.lstrip()
-                    if len(comment) > 79:
-                        comment = comment[:76] + "..."
-                    self.output.append(comment)
+                    self.output.append(self._format_binding_comment("", comment))
                 else:
                     line = msg.lstrip()
-                    if len(line) > 79:
-                        line = line[:76] + "..."
-                    self.output.append(line)
+                    self.output.append(self._format_binding_comment("", line))
         return "\n".join(self.output)
 
     def _add_header(self):
@@ -372,6 +389,13 @@ class KanataTransformer:
         ):
             if len(binding.params) == 1:
                 tap = binding.params[0]
+                if behavior_type == "zmk,behavior-tap-dance":
+                    # Safe: treat as tap-only, no comment
+                    from .keycode_map import zmk_to_kanata
+
+                    mapped = zmk_to_kanata(str(tap))
+                    return mapped if mapped is not None else str(tap)
+                # For hold-tap/mod-tap, keep current error/comment
                 comment = (
                     f"; tap only (ZMK: &{getattr(binding.behavior, 'name', 'td')} {tap}) "
                     f"; unsupported: missing hold param"
@@ -414,9 +438,50 @@ class KanataTransformer:
             )
             return self._format_binding_comment("", comment)
 
+        # --- BEGIN: Error binding handling ---
+        if (
+            hasattr(binding, "params")
+            and binding.params
+            and isinstance(binding.params[0], str)
+            and binding.params[0].startswith("ERROR:")
+        ):
+            error_msg = binding.params[0]
+            comment = self._format_binding_comment("", f"; {error_msg}")
+            # Add to error summary if not already present
+            if not hasattr(self, "error_messages"):
+                self.error_messages = []
+            if error_msg not in self.error_messages:
+                self.error_messages.append(error_msg)
+            return comment
+        # --- END: Error binding handling ---
+
         # Fallback: try to emit the param or binding as-is
         if binding.params:
-            return str(binding.params[0])
+            from .keycode_map import zmk_to_kanata, MODIFIER_MACROS
+
+            param_str = str(binding.params[0])
+            mapped = zmk_to_kanata(param_str)
+            if isinstance(mapped, str) and mapped.startswith("ERROR:"):
+                comment = self._format_binding_comment("", f"; {mapped}")
+                if not hasattr(self, "error_messages"):
+                    self.error_messages = []
+                if mapped not in self.error_messages:
+                    self.error_messages.append(mapped)
+                return comment
+            if mapped is not None:
+                return mapped
+            # Fallback: if param looks like a macro but is unmapped, emit error comment
+            macro_prefixes = [p.split("\\")[0][2:-3] for p, _ in MODIFIER_MACROS]
+            macro_regex = re.compile(rf"^({'|'.join(macro_prefixes)})\\s*\\(")
+            if macro_regex.match(param_str.strip()):
+                error_msg = f"ERROR: malformed or unknown macro: {param_str}"
+                comment = self._format_binding_comment("", f"; {error_msg}")
+                if not hasattr(self, "error_messages"):
+                    self.error_messages = []
+                if error_msg not in self.error_messages:
+                    self.error_messages.append(error_msg)
+                return comment
+            return param_str
         return self._format_binding_comment(
             "",
             f"; unsupported: unknown binding: &"

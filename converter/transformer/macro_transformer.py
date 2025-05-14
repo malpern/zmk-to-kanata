@@ -10,6 +10,7 @@ from converter.behaviors.macro import MacroActivationMode, MacroBehavior
 from converter.error_handling.error_manager import (
     get_error_manager,
 )
+from .keycode_map import zmk_to_kanata
 
 
 class MacroTransformer:
@@ -374,13 +375,6 @@ class MacroTransformer:
         return macro_def
 
     def _convert_key(self, zmk_key: str) -> str:
-        """Convert a ZMK key name or code to Kanata key name."""
-        # Try symbolic name first
-        if zmk_key in self.key_map:
-            return self.key_map[zmk_key]
-        # Try reverse mapping if input is a numeric code
-        if zmk_key in self.reverse_key_map:
-            symbolic = self.reverse_key_map[zmk_key]
-            return self.key_map.get(symbolic, symbolic.lower())
-        # Fallback: lowercase
-        return zmk_key.lower()
+        """Convert a ZMK key name or code to Kanata key name using the central mapping utility."""
+        mapped = zmk_to_kanata(zmk_key)
+        return mapped if mapped is not None else zmk_key

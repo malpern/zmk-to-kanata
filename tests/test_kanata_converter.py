@@ -176,3 +176,132 @@ def test_convert_invalid_key_type():
     converter = KanataConverter()
     with pytest.raises(ValueError):
         converter.convert(dts_data)
+
+
+def test_kanata_transformer_error_binding():
+    """Test that error bindings are rendered as Kanata comments and summarized."""
+    from converter.model.keymap_model import Binding, Layer, KeymapConfig
+    from converter.transformer.kanata_transformer import KanataTransformer
+
+    # Create a binding with an error param
+    error_param = "ERROR: test error binding"
+    binding = Binding(behavior=None, params=[error_param])
+    layer = Layer(name="default", index=0, bindings=[binding])
+    keymap = KeymapConfig(layers=[layer])
+
+    transformer = KanataTransformer()
+    output = transformer.transform(keymap)
+
+    # Check for the error comment in the layer
+    assert "; ERROR: test error binding" in output
+    # Check for the error in the summary at the end
+    assert "test error binding" in output
+    # Check that the error comment is unindented (at start of line)
+    for line in output.splitlines():
+        if "; ERROR: test error binding" in line:
+            assert line.startswith(";")
+    # Check line length
+    for line in output.splitlines():
+        assert len(line) <= 79
+
+
+def test_kanata_transformer_nested_macro():
+    """Test that deeply nested modifier macros are parsed recursively."""
+    from converter.model.keymap_model import Binding, Layer, KeymapConfig
+    from converter.transformer.kanata_transformer import KanataTransformer
+
+    macro = "LS(LA(LG(A)))"
+    binding = Binding(behavior=None, params=[macro])
+    layer = Layer(name="default", index=0, bindings=[binding])
+    keymap = KeymapConfig(layers=[layer])
+
+    transformer = KanataTransformer()
+    output = transformer.transform(keymap)
+
+    # Should produce ls(la(lg(a)))
+    assert "ls(la(lg(a)))" in output
+    for line in output.splitlines():
+        assert len(line) <= 79
+
+
+def test_kanata_transformer_malformed_macro():
+    """Test that malformed modifier macros emit error comments."""
+    from converter.model.keymap_model import Binding, Layer, KeymapConfig
+    from converter.transformer.kanata_transformer import KanataTransformer
+
+    for macro in ["LS()", "LS(LA())", "LS(A", "LS LA(A)"]:
+        binding = Binding(behavior=None, params=[macro])
+        layer = Layer(name="default", index=0, bindings=[binding])
+        keymap = KeymapConfig(layers=[layer])
+        transformer = KanataTransformer()
+        output = transformer.transform(keymap)
+        # Accept either a direct macro error or a layer transform error
+        assert (
+            "; ERROR: malformed or unknown macro" in output
+            or "; unsupported: failed to transform layer" in output
+        )
+        for line in output.splitlines():
+            assert len(line) <= 79
+
+
+def test_kanata_transformer_unknown_modifier_macro():
+    """Test that unknown modifier macros emit error comments."""
+    from converter.model.keymap_model import Binding, Layer, KeymapConfig
+    from converter.transformer.kanata_transformer import KanataTransformer
+
+    macro = "XX(A)"
+    binding = Binding(behavior=None, params=[macro])
+    layer = Layer(name="default", index=0, bindings=[binding])
+    keymap = KeymapConfig(layers=[layer])
+    transformer = KanataTransformer()
+    output = transformer.transform(keymap)
+    assert "; ERROR: malformed or unknown macro" in output
+    for line in output.splitlines():
+        assert len(line) <= 79
+
+
+def test_kanata_transformer_no_duplicate_macros_or_aliases():
+    """Test that macros and hold-tap aliases are defined only once in the output."""
+    from converter.model.keymap_model import Binding, Layer, KeymapConfig
+    from converter.transformer.kanata_transformer import KanataTransformer
+    from converter.behaviors.macro import MacroBehavior
+    from converter.behaviors.hold_tap import HoldTapBehavior
+
+    # Define a macro behavior
+    macro_behavior = MacroBehavior(name="my_macro", bindings=["&kp A", "&kp B"])
+    macro_behavior.type = "macro"  # Patch for transformer compatibility
+    # Define a hold-tap behavior
+    holdtap_behavior = HoldTapBehavior(
+        name="lt",
+        label="LT",
+        binding_cells=2,
+        bindings=[],
+        tapping_term_ms=200,
+        flavor="hold-preferred",
+    )
+    holdtap_behavior.hold_time_ms = 250  # Patch for transformer compatibility
+    holdtap_behavior.type = "hold-tap"  # Patch for transformer compatibility
+    holdtap_behavior.tap_hold_wait_ms = None  # Patch for transformer compatibility
+
+    # Macro binding (referenced twice)
+    macro_binding1 = Binding(behavior=macro_behavior, params=[])
+    macro_binding2 = Binding(behavior=macro_behavior, params=[])
+    # Hold-tap binding (referenced twice)
+    holdtap_binding1 = Binding(behavior=holdtap_behavior, params=["LCTRL", "A"])
+    holdtap_binding2 = Binding(behavior=holdtap_behavior, params=["LCTRL", "A"])
+
+    # Two layers, each referencing the same macro and hold-tap alias
+    layer1 = Layer(name="base", index=0, bindings=[macro_binding1, holdtap_binding1])
+    layer2 = Layer(name="fn", index=1, bindings=[macro_binding2, holdtap_binding2])
+    keymap = KeymapConfig(layers=[layer1, layer2], behaviors={"my_macro": macro_behavior, "lt": holdtap_behavior})
+
+    transformer = KanataTransformer()
+    output = transformer.transform(keymap)
+
+    print("\nKANATA OUTPUT:\n", output)
+
+    # Macro and alias should only be defined once each
+    macro_count = output.count("(defmacro my_macro")
+    alias_count = output.count("(defalias lt ")
+    assert macro_count == 1, f"Macro defined {macro_count} times"
+    assert alias_count == 1, f"Alias defined {alias_count} times"

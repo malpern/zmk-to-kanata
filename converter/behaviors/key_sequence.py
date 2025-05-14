@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import List, Optional
 
 from converter.model.keymap_model import Binding
+from converter.transformer.keycode_map import zmk_to_kanata
 
 
 @dataclass
@@ -18,7 +19,7 @@ class KeySequenceBehavior:
 
     wait_ms: int = 30
     tap_ms: int = 30
-    bindings: List[str] = None
+    bindings: Optional[List[str]] = None
 
     def __post_init__(self):
         """Validate the behavior configuration."""
@@ -60,10 +61,10 @@ class KeySequenceBinding(Binding):
         self.behavior = behavior or KeySequenceBehavior()
 
     def to_kanata(self) -> str:
-        """Convert the key sequence binding to Kanata format."""
-        # Kanata uses (chord ...) for key sequences
-        # Convert each key using the mapping or lowercase
-        key_str = " ".join(self.key_mapping.get(k, k.lower()) for k in self.keys)
+        """Convert the key sequence binding to Kanata format using the central mapping utility."""
+        key_str = " ".join(
+            zmk_to_kanata(k) if zmk_to_kanata(k) is not None else k for k in self.keys
+        )
         return f"(chord {key_str})"
 
     @classmethod
