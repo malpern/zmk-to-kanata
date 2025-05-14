@@ -26,33 +26,33 @@
 
 (defalias hl (tap-hold 220 220 21 32))
 
-(defalias hl (tap-hold 220 220 23 35))
+(defalias hm (tap-hold 300 300 n2 rmet))
 
-(defalias hm (tap-hold 300 300 n0 lalt))
+(defalias hl (tap-hold 220 220 4 33))
 
 (defalias hm (tap-hold 300 300 n4 rctl))
 
-(defalias hm (tap-hold 300 300 n2 rmet))
+(defalias hm (tap-hold 300 300 n3 ralt))
+
+(defalias hm (tap-hold 300 300 24 ralt))
 
 (defalias hm (tap-hold 300 300 18 rctl))
+
+(defalias hm (tap-hold 300 300 10 lalt))
+
+(defalias hm (tap-hold 300 300 n0 lalt))
+
+(defalias hl (tap-hold 220 220 6 34))
+
+(defalias hm (tap-hold 300 300 7 lmet))
 
 (defalias hm (tap-hold 300 300 n1 lmet))
 
 (defalias hl (tap-hold 220 220 8 32))
 
-(defalias hl (tap-hold 220 220 6 34))
-
-(defalias hm (tap-hold 300 300 10 lalt))
-
-(defalias hm (tap-hold 300 300 24 ralt))
-
-(defalias hm (tap-hold 300 300 n3 ralt))
-
-(defalias hm (tap-hold 300 300 7 lmet))
-
 (defalias hl (tap-hold 220 220 22 33))
 
-(defalias hl (tap-hold 220 220 4 33))
+(defalias hl (tap-hold 220 220 23 35))
 (deflayer alpha1
   _
   @ht_lctl_l

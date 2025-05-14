@@ -1,4 +1,4 @@
-# 0x1E "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp97k2soqn.dts"
+# 0x1E "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpgwecd8pr.dts"
 # 0x1E "<built-in>" 0x1E
 # 0x1E "<built-in>" 0x20
 
@@ -9,7 +9,7 @@
 
 # 0x1E "<command line>" 0x1E
 # 0x1E "<built-in>" 0x1F
-# 0x1E "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp97k2soqn.dts" 0x1F
+# 0x1E "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpgwecd8pr.dts" 0x1F
 
 
 
@@ -95,7 +95,7 @@
         };
     };
 };
-# 0x25 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp97k2soqn.dts" 0x1F
+# 0x25 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpgwecd8pr.dts" 0x1F
 
 
 
@@ -110,64 +110,60 @@
      release-after-ms = <2000>;
      quick-release;
  };
-# 32 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmp97k2soqn.dts"
+# 33 "/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpgwecd8pr.dts"
 / {
     combos {
         compatible = "zmk,combos";
+        combo_game {
+            timeout-ms = <30>;
+     key-positions = <0x1F 0x20 0x21 0x22>;
+            bindings = <&to 0x1E>;
+        };
         combo_sys {
             timeout-ms = <30>;
-     key-positions = <0x20 0x21 0x22>;
-            bindings = <&to 0x22>;
+     key-positions = <0x21 0x22 0x23>;
+            bindings = <&to 0x23>;
         };
         combo_caps {
             timeout-ms = <30>;
-     key-positions = <10 11 12>;
+     key-positions = <12 13 14>;
             bindings = <&caps_word>;
         };
         combo_bt {
             timeout-ms = <10>;
-            key-positions = <11 12>;
-            bindings = <&to 0x23>;
-     layers = <0x1F>;
+            key-positions = <13 14>;
+            bindings = <&to 0x24>;
+     layers = <0x20>;
         };
         lalt {
             timeout-ms = <20>;
-     key-positions = <0x25 0x26>;
+     key-positions = <10 11>;
             bindings = <&kp LALT>;
-     layers = <0x22>;
+     layers = <0x23>;
         };
         lclk {
             timeout-ms = <20>;
-     key-positions = <10 11>;
+     key-positions = <12 13>;
             bindings = <&mkp 0x01>;
-     layers = <0x22>;
+     layers = <0x23>;
         };
         rclk {
             timeout-ms = <20>;
-     key-positions = <0x20 0x21>;
+     key-positions = <0x21 0x22>;
             bindings = <&mkp 0x02>;
-     layers = <0x22>;
+     layers = <0x23>;
         };
 
 
     };
 
     behaviors {
-        hm_l: homerow_mods_left {
+        hm: homerow_mods {
             compatible = "zmk,behavior-hold-tap";
-            label = "HOMEROW_MODS_L";
+            label = "HOMEROW_MODS";
             #binding-cells = <0x1F>;
             tapping-term-ms = <300>;
-            quick-tap-ms = <250>;
-            flavor = "tap-preferred";
-            bindings = <&kp>, <&kp>;
-        };
-        hm_r: homerow_mods_right {
-            compatible = "zmk,behavior-hold-tap";
-            label = "HOMEROW_MODS_R";
-            #binding-cells = <0x1F>;
-            tapping-term-ms = <300>;
-            quick-tap-ms = <250>;
+            quick_tap_ms = <0x27>;
             flavor = "tap-preferred";
             bindings = <&kp>, <&kp>;
         };
@@ -181,30 +177,21 @@
             bindings = <&kp>, <&to>;
      retro-tap;
         };
-        hl_l: homerow_layers_left {
+        hl: homerow_layers {
             compatible = "zmk,behavior-hold-tap";
-            label = "HOMEROW_LAYERS_L";
+            label = "HOMEROW_LAYERS";
             #binding-cells = <0x1F>;
             tapping-term-ms = <220>;
-            quick-tap-ms = <250>;
+            quick_tap_ms = <0x27>;
             flavor = "tap-preferred";
-            bindings = <&mo>, <&kp>;
-        };
-        hl_r: homerow_layers_right {
-            compatible = "zmk,behavior-hold-tap";
-            label = "HOMEROW_LAYERS_R";
-            #binding-cells = <0x1F>;
-            tapping-term-ms = <220>;
-            quick-tap-ms = <250>;
-            flavor = "tap-preferred";
-            bindings = <&mo>, <&kp>;
+            bindings = <&sl>, <&kp>;
         };
  td: tapdance {
             compatible = "zmk,behavior-hold-tap";
             label = "TAPDANCE";
             #binding-cells = <0x1F>;
             tapping-term-ms = <190>;
-            quick-tap-ms = <250>;
+            quick_tap_ms = <0x27>;
             flavor = "tap-preferred";
             bindings = <&kp>, <&kp>;
         };
@@ -212,81 +199,88 @@
   compatible = "zmk,behavior-macro";
   label = "MACRO1";
   #binding-cells = <0x27>;
-  bindings = < &sl 0x1E >;
- };
- caps_alpha2macro: behavior_macro_2 {
-  compatible = "zmk,behavior-macro";
-  label = "MACRO2";
-  #binding-cells = <0x27>;
-  bindings = < &sl 0x24 >;
+  bindings = < &sl 0x1F >;
  };
     };
-
-
-
        keymap {
                 compatible = "zmk,keymap";
 
          alpha1 {
   bindings = <
-     &hm_l LCTL 0x0F &hm_l LALT 0x0A &hm_l LGUI 0x07 &hm_r RGUI 0x0B &hm_r RALT 0x18 &hm_r RCTL 0x12
-  &hl_l 0x21 0x0C &hl_l 0x20 0x16 &hl_l 0x1F 0x15 &hl_l 0x22 0x17 &hl_r 0x22 0x11 &hl_r 0x1F 0x08 &hl_r 0x20 0x04 &hl_r 0x21 0x06
-           &mt LC(LS(LALT)) SPC &key_repeat &caps_alpha2macro &alpha2macro
+  &trans &hm LCTL 0x0F &hm LALT 0x0A &hm LGUI 0x07 &hm RGUI 0x0B &hm RALT 0x18 &hm RCTL 0x12 &trans
+  &hl 0x22 0x0C &hl 0x21 0x16 &hl 0x20 0x15 &hl 0x23 0x17 &hl 0x23 0x11 &hl 0x20 0x08 &hl 0x21 0x04 &hl 0x22 0x06
+  &trans &trans &trans &mt LC(LS(LALT)) SPC &alpha2macro &trans &trans &trans
+        &trans &trans
+  >;
+  };
+         game {
+  bindings = <
+  &trans &kp 0x0F &kp 0x0A &kp 0x07 &hm RGUI 0x0B &hm RALT 0x18 &hm RCTL 0x12 &trans
+  &kp 0x0C &kp 0x16 &kp 0x15 &kp 0x17 &hl 0x23 0x11 &hl 0x20 0x08 &hl 0x21 0x04 &hl 0x22 0x06
+  &trans &trans &trans &kp SPC &sl 0x1F &trans &trans &trans
+        &trans &trans
   >;
   };
          alpha2 {
   bindings = <
-      &kp 0x19 &kp 0x1A &kp 0x10 &kp 0x09 &kp SQT &kp 0x1D
+  &trans &kp 0x19 &kp 0x1A &kp 0x10 &kp 0x09 &kp SQT &kp 0x1D &trans
   &kp 0x14 &kp 0x0D &kp 0x13 &kp 0x0E &kp 0x05 &kp DOT &kp 0x1B &kp 0x1C
-           &sk LSHIFT &none &none &sl 0x24
+  &trans &trans &trans &sk LSHIFT &sl 0x25 &trans &trans &trans
+        &trans &trans
   >;
   };
 
          sym1 {
   bindings = <
-     &kp LA(N3) &kp LS(N3) &kp DLLR &kp LS(COMMA) &kp LS(DOT) &kp CARET
+  &trans &kp LA(N3) &kp LS(N3) &kp DLLR &kp LS(COMMA) &kp LS(DOT) &kp CARET &trans
   &kp GRAVE &kp TILDE &kp MINUS &kp BSLH &kp LBKT &kp RBKT &kp PIPE &kp SLASH
-          &trans &trans &trans &trans
+  &trans &trans &trans &trans &trans &trans &trans &trans
+         &trans &trans
   >;
   };
   sym2 {
   bindings = <
-    &kp ATSN &td LA(RBKT) LA(LS(RBKT)) &td LA(LBKT) LA(LS(LBKT)) &kp LPRN &kp RPRN &kp SEMI
+  &trans &kp ATSN &td LA(RBKT) LA(LS(RBKT)) &td LA(LBKT) LA(LS(LBKT)) &kp LPRN &kp RPRN &kp SEMI &trans
   &kp STAR &kp PRCNT &td QMARK EXCL &kp DQT &kp LBRC &kp RBRC &kp AMPS &kp COLON
-     &trans &trans &trans &none &none &trans
+  &trans &trans &trans &trans &trans &trans &trans &trans
+           &trans &trans
 
   >;
   };
 
   num {
   bindings = <
-    &hm_l LCTL DOT &hm_l LALT N0 &hm_l LGUI N1 &hm_r RGUI N2 &hm_r RALT N3 &hm_r RCTL N4
+  &trans &hm LCTL DOT &hm LALT N0 &hm LGUI N1 &hm RGUI N2 &hm RALT N3 &hm RCTL N4 &trans
   &kp MINUS &kp PLUS &kp N5 &kp N6 &kp N7 &kp N8 &kp N9 &kp EQUAL
-       &sr LSHIFT 0x27 &trans &trans &trans
+  &trans &trans &trans &sr LSHIFT 0x27 &trans &trans &trans &trans
+        &trans &trans
   >;
   };
 
   sys {
   bindings = <
-      &kp ESC &kp LC(LS(TAB)) &kp RC(TAB) &td LG(V) LG(C) &kp UP &td 0x14 BKSP
+  &trans &kp ESC &kp LC(LS(TAB)) &kp RC(TAB) &td LG(V) LG(C) &kp UP &td 0x14 BKSP &trans
   &td LG(GRAVE) TAB &td HOME DEL &td END LG(LBKT) &kp LG(RBKT) &td TAB LEFT &kp DOWN &td LC(LG(LS(N4))) RIGHT &kp RET
-              &sr LSHIFT 0x27 &none &none &kp RGUI
+  &trans &trans &trans &sr LSHIFT 0x27 &kp RGUI &trans &trans &trans
+            &trans &trans
   >;
   };
 
   bt {
   bindings = <
-    &bt 0x1F &bt 0x1E &trans &trans &trans &trans
+  &trans &bt 0x1F &bt 0x1E &trans &trans &trans &trans &trans
   &bootloader &trans &trans &trans &trans &trans &trans &bt 0x27
-           &to 0x27 &none &none &none
+  &trans &trans &trans &to 0x27 &trans &trans &trans &bt 0x27
+         &trans &trans
   >;
   };
 
          alpha2cap {
   bindings = <
-      &kp LS(V) &kp LS(W) &kp LS(M) &kp LS(F) &trans &kp LS(Z)
+  &trans &kp LS(V) &kp LS(W) &kp LS(M) &kp LS(F) &trans &kp LS(Z) &trans
   &kp LS(Q) &kp LS(J) &kp LS(P) &kp LS(K) &kp LS(B) &kp COMMA &kp LS(X) &kp LS(Y)
-     &trans &trans &trans &none
+  &trans &trans &trans &trans &kp LA(SEMI) &trans &trans &trans
+        &trans &trans
   >;
   };
 

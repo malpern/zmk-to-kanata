@@ -17,13 +17,9 @@ import logging
 
 # --- Unsupported ZMK features and their Kanata equivalents/limitations ---
 UNSUPPORTED_ZMK_FEATURES = {
-    "zmk,behavior-bluetooth": (
-        "No Kanata equivalent; Bluetooth switching is not supported."
-    ),
-    "zmk,behavior-bootloader": (
-        "No Kanata equivalent; bootloader key is not supported."
-    ),
-    "zmk,behavior-caps-word": ("No Kanata equivalent; caps word is not supported."),
+    "zmk,behavior-bluetooth": ("No Kanata equivalent: Bluetooth not supported."),
+    "zmk,behavior-bootloader": ("No Kanata equivalent: bootloader key not supported."),
+    # caps-word now supported, so removed from unsupported list
     # Add more as needed
 }
 
@@ -157,7 +153,7 @@ class KanataTransformer:
                     holdtap_combos.add((btype, bname, modifier, key))
         for btype, bname, modifier, key in holdtap_combos:
             alias_type = bname if bname in ("lt", "mt") else btype
-            behavior = None
+            behavior = None  # type: ignore
             for layer in keymap.layers:
                 for binding in layer.bindings:
                     if (
@@ -179,10 +175,16 @@ class KanataTransformer:
                 logging.warning(msg)
                 self.error_messages.append(msg)
                 continue
-            alias_name = self._holdtap_alias_name(alias_type, modifier, key)
+            alias_name = self._holdtap_alias_name(
+                alias_type,
+                modifier,
+                key,
+            )
             try:
                 alias_def, _alias_name = self.holdtap_transformer.transform_behavior(
-                    behavior, modifier, key
+                    behavior,  # type: ignore
+                    modifier,
+                    key,
                 )
             except Exception as e:
                 msg = (
@@ -213,7 +215,19 @@ class KanataTransformer:
         if self.error_messages:
             self.output.append("\n; --- Unsupported/Unknown ZMK Features ---")
             for msg in self.error_messages:
-                self.output.append(msg)
+                # Only include the essential unsupported feature comment
+                if "; unsupported:" in msg:
+                    idx = msg.index("; unsupported:")
+                    comment = msg[idx:]
+                    comment = comment.lstrip()
+                    if len(comment) > 79:
+                        comment = comment[:76] + "..."
+                    self.output.append(comment)
+                else:
+                    line = msg.lstrip()
+                    if len(line) > 79:
+                        line = line[:76] + "..."
+                    self.output.append(line)
         return "\n".join(self.output)
 
     def _add_header(self):
@@ -245,10 +259,38 @@ class KanataTransformer:
         lines = [f"(deflayer {layer.name}"]
         for idx, binding in enumerate(layer.bindings):
             logging.debug(f"  Binding {idx}: {binding}")
+            if (
+                hasattr(binding, "behavior")
+                and binding.behavior is not None
+                and getattr(binding.behavior, "type", None)
+                in (
+                    "hold-tap",
+                    "zmk,behavior-hold-tap",
+                    "zmk,behavior-mod-tap",
+                )
+                and len(binding.params) == 2
+            ):
+                behavior_type = getattr(binding.behavior, "name", None) or getattr(
+                    binding.behavior, "type", None
+                )
+                if behavior_type in ("lt", "mt"):
+                    alias_type = behavior_type
+                else:
+                    alias_type = "ht"
+                hold_param = binding.params[0]
+                tap_param = binding.params[1]
+                alias_name = self._holdtap_alias_name(
+                    alias_type,
+                    hold_param,
+                    tap_param,
+                )
+                lines.append(f"  @{alias_name}")
+                continue
             result = self._transform_binding(binding)
-            if result.startswith(";"):
-                # Output comment as a separate line in the layer block
-                lines.append(f"  {result}")
+            result_stripped = result.lstrip()
+            if result_stripped.startswith(";"):
+                # Output comment as a separate line in the layer block, no indentation
+                lines.append(result_stripped)
             else:
                 lines.append(f"  {result}")
         lines.append(")")
@@ -258,10 +300,11 @@ class KanataTransformer:
         """
         Transform a binding to Kanata format.
 
-        If unsupported or unknown, emit a Kanata comment describing the ZMK feature.
-        For single-param hold-tap/tap-dance, emit a macro or comment for tap action only.
-        For toggle-layer, emit a descriptive Kanata comment.
-        Error comments include the original ZMK binding for easier debugging.
+        If unsupported or unknown, emit a Kanata comment describing the ZMK
+        feature. For single-param hold-tap/tap-dance, emit a macro or comment
+        for tap action only. For toggle-layer, emit a descriptive Kanata
+        comment. Error comments include the original ZMK binding for easier
+        debugging.
         """
         logging.debug(f"[KanataTransformer]     Transforming binding: {binding}")
         behavior_type = None
@@ -269,6 +312,14 @@ class KanataTransformer:
             behavior_type = getattr(binding.behavior, "type", None)
             if behavior_type is None and hasattr(binding.behavior, "name"):
                 behavior_type = binding.behavior.name
+
+        # Macro reference handling
+        if hasattr(binding, "behavior") and binding.behavior is not None:
+            macro_name = getattr(binding.behavior, "name", None)
+            if behavior_type == "macro" or (
+                macro_name and macro_name in self.macro_definitions
+            ):
+                return f"(macro {macro_name})"
 
         # Map ZMK transparent/none to Kanata '_'
         if behavior_type in (
@@ -284,15 +335,18 @@ class KanataTransformer:
 
         # Map ZMK sticky-key to Kanata one-shot
         if behavior_type == "zmk,behavior-sticky-key":
-            # Use one-shot 500 <key> (timeout 500ms, can be adjusted)
             key = binding.params[0] if binding.params else "?"
             return f"(one-shot 500 {key})"
 
         # Map ZMK sticky-layer to Kanata one-shot + layer-while-held
         if behavior_type == "zmk,behavior-sticky-layer":
-            # Use one-shot 500 (layer-while-held <layer>)
             layer = binding.params[0] if binding.params else "?"
             return f"(one-shot 500 (layer-while-held {layer}))"
+
+        # Kanata caps-word support
+        if behavior_type == "zmk,behavior-caps-word":
+            # Kanata's caps-word action, 2000ms timeout is typical
+            return "(caps-word 2000)"
 
         # Handle known unsupported ZMK features
         if behavior_type in UNSUPPORTED_ZMK_FEATURES:
@@ -302,17 +356,13 @@ class KanataTransformer:
                 f"; unsupported: {zmk_syntax} {param_str} -- "
                 f"{UNSUPPORTED_ZMK_FEATURES[behavior_type]}"
             )
-            if len(comment) > 79:
-                comment = comment[:76] + "..."
-            return comment
+            return self._format_binding_comment("", comment)
 
         # Handle toggle-layer (to)
         if behavior_type == "zmk,behavior-toggle-layer":
             param = binding.params[0] if binding.params else "?"
-            comment = f"; unsupported: toggle-layer to {param} " f"(ZMK: &to {param})"
-            if len(comment) > 79:
-                comment = comment[:76] + "..."
-            return comment
+            # Map to Kanata's layer-toggle action
+            return f"(layer-toggle {param})"
 
         # Handle hold-tap/tap-dance with only one param
         if behavior_type in (
@@ -323,12 +373,10 @@ class KanataTransformer:
             if len(binding.params) == 1:
                 tap = binding.params[0]
                 comment = (
-                    f"{tap} ; tap only (ZMK: &{getattr(binding.behavior, 'name', 'td')} {tap}) "
+                    f"; tap only (ZMK: &{getattr(binding.behavior, 'name', 'td')} {tap}) "
                     f"; unsupported: missing hold param"
                 )
-                if len(comment) > 79:
-                    comment = comment[:76] + "..."
-                return comment
+                return self._format_binding_comment(str(tap), comment)
             elif len(binding.params) == 2:
                 pass
             else:
@@ -337,14 +385,16 @@ class KanataTransformer:
                     f"&{getattr(binding.behavior, 'name', 'td')} "
                     f"{' '.join(str(p) for p in binding.params)}"
                 )
-                if len(comment) > 79:
-                    comment = comment[:76] + "..."
-                return comment
+                return self._format_binding_comment("", comment)
 
         # Existing error handling for missing params
         if (
             behavior_type
-            in ("hold-tap", "zmk,behavior-hold-tap", "zmk,behavior-tap-dance")
+            in (
+                "hold-tap",
+                "zmk,behavior-hold-tap",
+                "zmk,behavior-tap-dance",
+            )
             and len(binding.params) < 2
         ):
             comment = (
@@ -352,9 +402,7 @@ class KanataTransformer:
                 f"&{getattr(binding.behavior, 'name', 'td')} "
                 f"{' '.join(str(p) for p in binding.params)}"
             )
-            if len(comment) > 79:
-                comment = comment[:76] + "..."
-            return comment
+            return self._format_binding_comment("", comment)
 
         # Unknown/unsupported behavior
         if behavior_type and behavior_type.startswith("zmk,behavior-"):
@@ -364,18 +412,48 @@ class KanataTransformer:
                 f"; unsupported: {zmk_syntax} {param_str} "
                 f"(ZMK: &{zmk_syntax} {param_str})"
             )
-            if len(comment) > 79:
-                comment = comment[:76] + "..."
-            return comment
+            return self._format_binding_comment("", comment)
 
         # Fallback: try to emit the param or binding as-is
         if binding.params:
             return str(binding.params[0])
-        return (
-            f"; unsupported: unknown binding: "
-            f"&{getattr(binding.behavior, 'name', 'unknown')} "
-            f"{' '.join(str(p) for p in binding.params)}"
+        return self._format_binding_comment(
+            "",
+            f"; unsupported: unknown binding: &"
+            f"{getattr(binding.behavior, 'name', 'unknown')} "
+            f"{' '.join(str(p) for p in binding.params)}",
         )
+
+    def _format_binding_comment(self, binding_str: str, comment: str) -> str:
+        """
+        Format a binding and comment so that no line exceeds 79 chars.
+
+        If the combined line is too long, place the comment on a new indented
+        line. Truncate the comment if still too long, including indentation.
+        """
+        max_len = 79
+        indent = "  " if not binding_str else ""
+        if binding_str:
+            line = f"{binding_str} {comment}".rstrip()
+        else:
+            line = f"{indent}{comment}".rstrip()
+        if len(line) <= max_len:
+            return line
+        # If too long, split comment onto a new line, indented
+        if binding_str:
+            truncated_comment = comment
+            allowed = max_len - len(binding_str) - 1
+            if allowed < 0:
+                allowed = 0
+            if len(comment) > allowed:
+                truncated_comment = comment[: allowed - 3] + "..."
+            return f"{binding_str}\n  {truncated_comment.strip()}"
+        else:
+            allowed = max_len - len(indent)
+            truncated_comment = comment
+            if len(comment) > allowed:
+                truncated_comment = comment[: allowed - 3] + "..."
+            return f"{indent}{truncated_comment.strip()}"
 
     def _holdtap_alias_name(self, behavior_type, hold_param, tap_param):
         """Generate a consistent alias name for hold-tap behaviors."""

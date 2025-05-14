@@ -248,3 +248,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - In addition to automated tests, the project maintains a manual review process for new or complex conversions.
 - Reviewers should inspect the generated Kanata output for correctness, idiomatic formatting, and fidelity to the original ZMK intent.
 - Findings and improvement suggestions should be recorded in `MANUAL_REVIEW.md`.
+
+# ZMK-to-Kanata Feature Support
+
+- ZMK 'caps word' is now supported and mapped to Kanata's `(caps-word 2000)` action.
+- Bluetooth and bootloader remain unsupported and are mapped to comments.

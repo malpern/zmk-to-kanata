@@ -6,8 +6,8 @@
       "name": "behaviors",
       "properties": {},
       "children": {
-        "homerow_mods_left": {
-          "name": "homerow_mods_left",
+        "homerow_mods": {
+          "name": "homerow_mods",
           "properties": {
             "compatible": {
               "name": "compatible",
@@ -17,7 +17,7 @@
             "label": {
               "name": "label",
               "type": "string",
-              "value": "HOMEROW_MODS_L"
+              "value": "HOMEROW_MODS"
             },
             "#binding-cells": {
               "name": "#binding-cells",
@@ -33,11 +33,11 @@
                 300
               ]
             },
-            "quick-tap-ms": {
-              "name": "quick-tap-ms",
+            "quick_tap_ms": {
+              "name": "quick_tap_ms",
               "type": "array",
               "value": [
-                250
+                39
               ]
             },
             "flavor": {
@@ -56,60 +56,7 @@
           },
           "children": {},
           "labels": {
-            "hm_l": "homerow_mods_left"
-          }
-        },
-        "homerow_mods_right": {
-          "name": "homerow_mods_right",
-          "properties": {
-            "compatible": {
-              "name": "compatible",
-              "type": "string",
-              "value": "zmk,behavior-hold-tap"
-            },
-            "label": {
-              "name": "label",
-              "type": "string",
-              "value": "HOMEROW_MODS_R"
-            },
-            "#binding-cells": {
-              "name": "#binding-cells",
-              "type": "array",
-              "value": [
-                31
-              ]
-            },
-            "tapping-term-ms": {
-              "name": "tapping-term-ms",
-              "type": "array",
-              "value": [
-                300
-              ]
-            },
-            "quick-tap-ms": {
-              "name": "quick-tap-ms",
-              "type": "array",
-              "value": [
-                250
-              ]
-            },
-            "flavor": {
-              "name": "flavor",
-              "type": "string",
-              "value": "tap-preferred"
-            },
-            "bindings": {
-              "name": "bindings",
-              "type": "array",
-              "value": [
-                "&kp",
-                "&kp"
-              ]
-            }
-          },
-          "children": {},
-          "labels": {
-            "hm_r": "homerow_mods_right"
+            "hm": "homerow_mods"
           }
         },
         "shift_layer": {
@@ -170,8 +117,8 @@
             "sr": "shift_layer"
           }
         },
-        "homerow_layers_left": {
-          "name": "homerow_layers_left",
+        "homerow_layers": {
+          "name": "homerow_layers",
           "properties": {
             "compatible": {
               "name": "compatible",
@@ -181,7 +128,7 @@
             "label": {
               "name": "label",
               "type": "string",
-              "value": "HOMEROW_LAYERS_L"
+              "value": "HOMEROW_LAYERS"
             },
             "#binding-cells": {
               "name": "#binding-cells",
@@ -197,11 +144,11 @@
                 220
               ]
             },
-            "quick-tap-ms": {
-              "name": "quick-tap-ms",
+            "quick_tap_ms": {
+              "name": "quick_tap_ms",
               "type": "array",
               "value": [
-                250
+                39
               ]
             },
             "flavor": {
@@ -213,67 +160,14 @@
               "name": "bindings",
               "type": "array",
               "value": [
-                "&mo",
+                "&sl",
                 "&kp"
               ]
             }
           },
           "children": {},
           "labels": {
-            "hl_l": "homerow_layers_left"
-          }
-        },
-        "homerow_layers_right": {
-          "name": "homerow_layers_right",
-          "properties": {
-            "compatible": {
-              "name": "compatible",
-              "type": "string",
-              "value": "zmk,behavior-hold-tap"
-            },
-            "label": {
-              "name": "label",
-              "type": "string",
-              "value": "HOMEROW_LAYERS_R"
-            },
-            "#binding-cells": {
-              "name": "#binding-cells",
-              "type": "array",
-              "value": [
-                31
-              ]
-            },
-            "tapping-term-ms": {
-              "name": "tapping-term-ms",
-              "type": "array",
-              "value": [
-                220
-              ]
-            },
-            "quick-tap-ms": {
-              "name": "quick-tap-ms",
-              "type": "array",
-              "value": [
-                250
-              ]
-            },
-            "flavor": {
-              "name": "flavor",
-              "type": "string",
-              "value": "tap-preferred"
-            },
-            "bindings": {
-              "name": "bindings",
-              "type": "array",
-              "value": [
-                "&mo",
-                "&kp"
-              ]
-            }
-          },
-          "children": {},
-          "labels": {
-            "hl_r": "homerow_layers_right"
+            "hl": "homerow_layers"
           }
         },
         "tapdance": {
@@ -303,11 +197,11 @@
                 190
               ]
             },
-            "quick-tap-ms": {
-              "name": "quick-tap-ms",
+            "quick_tap_ms": {
+              "name": "quick_tap_ms",
               "type": "array",
               "value": [
-                250
+                39
               ]
             },
             "flavor": {
@@ -354,47 +248,13 @@
               "type": "array",
               "value": [
                 "&sl",
-                30
+                31
               ]
             }
           },
           "children": {},
           "labels": {
             "alpha2macro": "behavior_macro_1"
-          }
-        },
-        "behavior_macro_2": {
-          "name": "behavior_macro_2",
-          "properties": {
-            "compatible": {
-              "name": "compatible",
-              "type": "string",
-              "value": "zmk,behavior-macro"
-            },
-            "label": {
-              "name": "label",
-              "type": "string",
-              "value": "MACRO2"
-            },
-            "#binding-cells": {
-              "name": "#binding-cells",
-              "type": "array",
-              "value": [
-                39
-              ]
-            },
-            "bindings": {
-              "name": "bindings",
-              "type": "array",
-              "value": [
-                "&sl",
-                36
-              ]
-            }
-          },
-          "children": {},
-          "labels": {
-            "caps_alpha2macro": "behavior_macro_2"
           }
         }
       },
@@ -448,6 +308,38 @@
         }
       },
       "children": {
+        "combo_game": {
+          "name": "combo_game",
+          "properties": {
+            "timeout-ms": {
+              "name": "timeout-ms",
+              "type": "array",
+              "value": [
+                30
+              ]
+            },
+            "key-positions": {
+              "name": "key-positions",
+              "type": "array",
+              "value": [
+                31,
+                32,
+                33,
+                34
+              ]
+            },
+            "bindings": {
+              "name": "bindings",
+              "type": "array",
+              "value": [
+                "&to",
+                30
+              ]
+            }
+          },
+          "children": {},
+          "labels": {}
+        },
         "combo_sys": {
           "name": "combo_sys",
           "properties": {
@@ -462,9 +354,9 @@
               "name": "key-positions",
               "type": "array",
               "value": [
-                32,
                 33,
-                34
+                34,
+                35
               ]
             },
             "bindings": {
@@ -472,7 +364,7 @@
               "type": "array",
               "value": [
                 "&to",
-                34
+                35
               ]
             }
           },
@@ -493,9 +385,9 @@
               "name": "key-positions",
               "type": "array",
               "value": [
-                10,
-                11,
-                12
+                12,
+                13,
+                14
               ]
             },
             "bindings": {
@@ -523,8 +415,8 @@
               "name": "key-positions",
               "type": "array",
               "value": [
-                11,
-                12
+                13,
+                14
               ]
             },
             "bindings": {
@@ -532,14 +424,14 @@
               "type": "array",
               "value": [
                 "&to",
-                35
+                36
               ]
             },
             "layers": {
               "name": "layers",
               "type": "array",
               "value": [
-                31
+                32
               ]
             }
           },
@@ -560,8 +452,8 @@
               "name": "key-positions",
               "type": "array",
               "value": [
-                37,
-                38
+                10,
+                11
               ]
             },
             "bindings": {
@@ -576,7 +468,7 @@
               "name": "layers",
               "type": "array",
               "value": [
-                34
+                35
               ]
             }
           },
@@ -597,8 +489,8 @@
               "name": "key-positions",
               "type": "array",
               "value": [
-                10,
-                11
+                12,
+                13
               ]
             },
             "bindings": {
@@ -613,7 +505,7 @@
               "name": "layers",
               "type": "array",
               "value": [
-                34
+                35
               ]
             }
           },
@@ -634,8 +526,8 @@
               "name": "key-positions",
               "type": "array",
               "value": [
-                32,
-                33
+                33,
+                34
               ]
             },
             "bindings": {
@@ -650,7 +542,7 @@
               "name": "layers",
               "type": "array",
               "value": [
-                34
+                35
               ]
             }
           },
@@ -677,54 +569,124 @@
               "name": "bindings",
               "type": "array",
               "value": [
-                "&hm_l",
+                "&trans",
+                "&hm",
                 "LCTL",
                 15,
-                "&hm_l",
+                "&hm",
                 "LALT",
                 10,
-                "&hm_l",
+                "&hm",
                 "LGUI",
                 7,
-                "&hm_r",
+                "&hm",
                 "RGUI",
                 11,
-                "&hm_r",
+                "&hm",
                 "RALT",
                 24,
-                "&hm_r",
+                "&hm",
                 "RCTL",
                 18,
-                "&hl_l",
-                33,
+                "&trans",
+                "&hl",
+                34,
                 12,
-                "&hl_l",
-                32,
-                22,
-                "&hl_l",
-                31,
-                21,
-                "&hl_l",
-                34,
-                23,
-                "&hl_r",
-                34,
-                17,
-                "&hl_r",
-                31,
-                8,
-                "&hl_r",
-                32,
-                4,
-                "&hl_r",
+                "&hl",
                 33,
+                22,
+                "&hl",
+                32,
+                21,
+                "&hl",
+                35,
+                23,
+                "&hl",
+                35,
+                17,
+                "&hl",
+                32,
+                8,
+                "&hl",
+                33,
+                4,
+                "&hl",
+                34,
                 6,
+                "&trans",
+                "&trans",
+                "&trans",
                 "&mt",
                 "LC(LS(LALT))",
                 "SPC",
-                "&key_repeat",
-                "&caps_alpha2macro",
-                "&alpha2macro"
+                "&alpha2macro",
+                "&trans",
+                "&trans",
+                "&trans",
+                "&trans",
+                "&trans"
+              ]
+            }
+          },
+          "children": {},
+          "labels": {}
+        },
+        "game": {
+          "name": "game",
+          "properties": {
+            "bindings": {
+              "name": "bindings",
+              "type": "array",
+              "value": [
+                "&trans",
+                "&kp",
+                15,
+                "&kp",
+                10,
+                "&kp",
+                7,
+                "&hm",
+                "RGUI",
+                11,
+                "&hm",
+                "RALT",
+                24,
+                "&hm",
+                "RCTL",
+                18,
+                "&trans",
+                "&kp",
+                12,
+                "&kp",
+                22,
+                "&kp",
+                21,
+                "&kp",
+                23,
+                "&hl",
+                35,
+                17,
+                "&hl",
+                32,
+                8,
+                "&hl",
+                33,
+                4,
+                "&hl",
+                34,
+                6,
+                "&trans",
+                "&trans",
+                "&trans",
+                "&kp",
+                "SPC",
+                "&sl",
+                31,
+                "&trans",
+                "&trans",
+                "&trans",
+                "&trans",
+                "&trans"
               ]
             }
           },
@@ -738,6 +700,7 @@
               "name": "bindings",
               "type": "array",
               "value": [
+                "&trans",
                 "&kp",
                 25,
                 "&kp",
@@ -750,6 +713,7 @@
                 "SQT",
                 "&kp",
                 29,
+                "&trans",
                 "&kp",
                 20,
                 "&kp",
@@ -766,12 +730,18 @@
                 27,
                 "&kp",
                 28,
+                "&trans",
+                "&trans",
+                "&trans",
                 "&sk",
                 "LSHIFT",
-                "&none",
-                "&none",
                 "&sl",
-                36
+                37,
+                "&trans",
+                "&trans",
+                "&trans",
+                "&trans",
+                "&trans"
               ]
             }
           },
@@ -785,6 +755,7 @@
               "name": "bindings",
               "type": "array",
               "value": [
+                "&trans",
                 "&kp",
                 "LA(N3)",
                 "&kp",
@@ -797,6 +768,7 @@
                 "LS(DOT)",
                 "&kp",
                 "CARET",
+                "&trans",
                 "&kp",
                 "GRAVE",
                 "&kp",
@@ -816,6 +788,12 @@
                 "&trans",
                 "&trans",
                 "&trans",
+                "&trans",
+                "&trans",
+                "&trans",
+                "&trans",
+                "&trans",
+                "&trans",
                 "&trans"
               ]
             }
@@ -830,6 +808,7 @@
               "name": "bindings",
               "type": "array",
               "value": [
+                "&trans",
                 "&kp",
                 "ATSN",
                 "&td",
@@ -844,6 +823,7 @@
                 "RPRN",
                 "&kp",
                 "SEMI",
+                "&trans",
                 "&kp",
                 "STAR",
                 "&kp",
@@ -864,8 +844,12 @@
                 "&trans",
                 "&trans",
                 "&trans",
-                "&none",
-                "&none",
+                "&trans",
+                "&trans",
+                "&trans",
+                "&trans",
+                "&trans",
+                "&trans",
                 "&trans"
               ]
             }
@@ -880,24 +864,26 @@
               "name": "bindings",
               "type": "array",
               "value": [
-                "&hm_l",
+                "&trans",
+                "&hm",
                 "LCTL",
                 "DOT",
-                "&hm_l",
+                "&hm",
                 "LALT",
                 "N0",
-                "&hm_l",
+                "&hm",
                 "LGUI",
                 "N1",
-                "&hm_r",
+                "&hm",
                 "RGUI",
                 "N2",
-                "&hm_r",
+                "&hm",
                 "RALT",
                 "N3",
-                "&hm_r",
+                "&hm",
                 "RCTL",
                 "N4",
+                "&trans",
                 "&kp",
                 "MINUS",
                 "&kp",
@@ -914,9 +900,15 @@
                 "N9",
                 "&kp",
                 "EQUAL",
+                "&trans",
+                "&trans",
+                "&trans",
                 "&sr",
                 "LSHIFT",
                 39,
+                "&trans",
+                "&trans",
+                "&trans",
                 "&trans",
                 "&trans",
                 "&trans"
@@ -933,6 +925,7 @@
               "name": "bindings",
               "type": "array",
               "value": [
+                "&trans",
                 "&kp",
                 "ESC",
                 "&kp",
@@ -947,6 +940,7 @@
                 "&td",
                 20,
                 "BKSP",
+                "&trans",
                 "&td",
                 "LG(GRAVE)",
                 "TAB",
@@ -968,13 +962,19 @@
                 "RIGHT",
                 "&kp",
                 "RET",
+                "&trans",
+                "&trans",
+                "&trans",
                 "&sr",
                 "LSHIFT",
                 39,
-                "&none",
-                "&none",
                 "&kp",
-                "RGUI"
+                "RGUI",
+                "&trans",
+                "&trans",
+                "&trans",
+                "&trans",
+                "&trans"
               ]
             }
           },
@@ -988,10 +988,12 @@
               "name": "bindings",
               "type": "array",
               "value": [
+                "&trans",
                 "&bt",
                 31,
                 "&bt",
                 30,
+                "&trans",
                 "&trans",
                 "&trans",
                 "&trans",
@@ -1005,11 +1007,18 @@
                 "&trans",
                 "&bt",
                 39,
+                "&trans",
+                "&trans",
+                "&trans",
                 "&to",
                 39,
-                "&none",
-                "&none",
-                "&none"
+                "&trans",
+                "&trans",
+                "&trans",
+                "&bt",
+                39,
+                "&trans",
+                "&trans"
               ]
             }
           },
@@ -1023,6 +1032,7 @@
               "name": "bindings",
               "type": "array",
               "value": [
+                "&trans",
                 "&kp",
                 "LS(V)",
                 "&kp",
@@ -1034,6 +1044,7 @@
                 "&trans",
                 "&kp",
                 "LS(Z)",
+                "&trans",
                 "&kp",
                 "LS(Q)",
                 "&kp",
@@ -1053,7 +1064,14 @@
                 "&trans",
                 "&trans",
                 "&trans",
-                "&none"
+                "&trans",
+                "&kp",
+                "LA(SEMI)",
+                "&trans",
+                "&trans",
+                "&trans",
+                "&trans",
+                "&trans"
               ]
             }
           },
