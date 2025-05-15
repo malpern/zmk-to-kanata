@@ -1,8 +1,10 @@
 """Data models for keymap configuration."""
 
 from dataclasses import dataclass, field
-from typing import List, Optional, Dict, Tuple, Union
-from .transformer.keycode_map import zmk_to_kanata
+from typing import List, Optional, Dict, Union
+from .transformer.keycode_map import zmk_binding_to_kanata
+from converter.model.keymap_model import HoldTap, HoldTapBinding
+from converter.model.behavior_base import Behavior
 
 
 @dataclass
@@ -56,28 +58,11 @@ class KeyMapping(Binding):
         return self.key == other.key
 
     def to_kanata(self) -> str:
-        """Convert the key mapping to Kanata format using the central mapping utility."""
-        # Emit alias for hold-tap if present
-        if self.hold_tap:
-            if hasattr(self.hold_tap, 'hold_tap') and hasattr(self.hold_tap.hold_tap, 'name') and hasattr(self.hold_tap, 'hold') and hasattr(self.hold_tap, 'tap'):
-                alias = f"@{self.hold_tap.hold_tap.name}_{self.hold_tap.hold}_{self.hold_tap.tap}"
-                return alias
-            elif hasattr(self.hold_tap, 'name') and hasattr(self.hold_tap, 'hold_key') and hasattr(self.hold_tap, 'tap_key'):
-                alias = f"@{self.hold_tap.name}_{self.hold_tap.hold_key}_{self.hold_tap.tap_key}"
-                return alias
-        key = zmk_to_kanata(self.key)
-        if self.key.startswith("mo "):
-            layer_num = self.key.split()[1]
-            return f"(layer-while-held {layer_num})"
-        elif self.key == "trans":
-            return "_"
-        elif self.sticky:
-            k = key if key is not None else self.key
-            if k and k.startswith("f") and k[1:].isdigit():
-                return f"sticky-{k}"
-            return f"sticky-{k if k is not None else ''}"
-        else:
-            return key if key is not None else self.key
+        """Convert the key mapping to Kanata format using the centralized mapping utility."""
+        result = zmk_binding_to_kanata(
+            self.key, hold_tap=self.hold_tap, sticky=self.sticky
+        )
+        return result if result is not None else ""
 
     @classmethod
     def from_zmk(cls, binding_str: str) -> "KeyMapping":
@@ -156,121 +141,6 @@ class KeyMapping(Binding):
             }
         )
         return base
-
-
-@dataclass
-class Behavior:
-    """Base class for behaviors."""
-
-    name: str
-    type: str = ""
-
-    def to_dict(self) -> dict:
-        """Return a serializable dictionary representation of this behavior."""
-        return {
-            "name": self.name,
-            "type": self.type,
-        }
-
-
-class HoldTap(Behavior):
-    """Hold-tap behavior."""
-
-    def __init__(
-        self,
-        name: str,
-        tapping_term_ms: int,
-        hold_time_ms: Optional[int] = None,
-        quick_tap_ms: Optional[int] = None,
-        flavor: Optional[str] = None,
-        tap_hold_wait_ms: Optional[int] = None,
-        require_prior_idle_ms: Optional[int] = None,
-    ):
-        """Initialize a hold-tap behavior.
-
-        Args:
-            name: Name of the behavior
-            tapping_term_ms: Tap timeout in milliseconds
-            hold_time_ms: Hold timeout in milliseconds (defaults to tapping_term_ms)
-            quick_tap_ms: Optional quick tap timeout in milliseconds
-            flavor: Optional hold-tap flavor (e.g. 'tap-preferred')
-            tap_hold_wait_ms: Optional tap-hold wait time in ms
-            require_prior_idle_ms: Optional prior idle time in ms
-        """
-        super().__init__(name=name, type="hold-tap")
-        self.tapping_term_ms = tapping_term_ms
-        self.hold_time_ms = (
-            hold_time_ms if hold_time_ms is not None else tapping_term_ms
-        )
-        self.quick_tap_ms = quick_tap_ms
-        self.flavor = flavor
-        self.tap_hold_wait_ms = tap_hold_wait_ms
-        self.require_prior_idle_ms = require_prior_idle_ms
-
-    def to_dict(self) -> dict:
-        """Return a serializable dictionary representation of this hold-tap behavior."""
-        return {
-            "name": self.name,
-            "type": self.type,
-            "tapping_term_ms": self.tapping_term_ms,
-            "hold_time_ms": self.hold_time_ms,
-            "quick_tap_ms": self.quick_tap_ms,
-            "flavor": self.flavor,
-            "tap_hold_wait_ms": self.tap_hold_wait_ms,
-            "require_prior_idle_ms": self.require_prior_idle_ms,
-        }
-
-
-@dataclass
-class HoldTapBinding:
-    """Represents a hold-tap binding configuration."""
-
-    behavior_name: str
-    hold_key: str
-    tap_key: str
-    hold_trigger_key_positions: Optional[Tuple[int, ...]] = None
-    hold_trigger_on_release: bool = False
-    retro_tap: bool = False
-
-    def to_dict(self) -> dict:
-        """Return a serializable dictionary representation of this hold-tap binding."""
-        return {
-            "behavior_name": self.behavior_name,
-            "hold_key": self.hold_key,
-            "tap_key": self.tap_key,
-            "hold_trigger_key_positions": self.hold_trigger_key_positions,
-            "hold_trigger_on_release": self.hold_trigger_on_release,
-            "retro_tap": self.retro_tap,
-        }
-
-
-class MacroBehavior(Behavior):
-    """Macro behavior."""
-
-    def __init__(self, name: str, bindings: List[Binding]):
-        """Initialize a macro behavior.
-
-        Args:
-            name: Name of the macro behavior
-            bindings: List of key bindings in the macro
-        """
-        super().__init__(name=name, type="macro")
-        self.bindings = bindings
-
-    def to_dict(self) -> dict:
-        """Return a serializable dictionary representation of this macro behavior."""
-        # Debug: Assert all bindings are Binding
-        for b in self.bindings:
-            if not hasattr(b, "to_dict"):
-                print(
-                    f"[ERROR] MacroBehavior.bindings contains non-Binding: {type(b)} value: {repr(b)}"
-                )
-                assert False, "MacroBehavior.bindings must be Binding instances"
-        return {
-            "name": self.name,
-            "type": self.type,
-            "bindings": [b.to_dict() for b in self.bindings],
-        }
 
 
 @dataclass
@@ -415,4 +285,33 @@ class KanataConfig:
             "permissive_hold": self.permissive_hold,
             "hold_on_other_key_press": self.hold_on_other_key_press,
             "retro_tapping": self.retro_tapping,
+        }
+
+
+class MacroBehavior(Behavior):
+    """Macro behavior."""
+
+    def __init__(self, name: str, bindings: list):
+        """Initialize a macro behavior.
+
+        Args:
+            name: Name of the macro behavior
+            bindings: List of key bindings in the macro
+        """
+        super().__init__(name=name)
+        self.type = "macro"
+        self.bindings = bindings
+
+    def to_dict(self) -> dict:
+        """Return a serializable dictionary representation of this macro behavior."""
+        for b in self.bindings:
+            if not hasattr(b, "to_dict"):
+                print(
+                    f"[ERROR] MacroBehavior.bindings contains non-Binding: {type(b)} value: {repr(b)}"
+                )
+                assert False, "MacroBehavior.bindings must be Binding instances"
+        return {
+            "name": self.name,
+            "type": self.type,
+            "bindings": [b.to_dict() for b in self.bindings],
         }

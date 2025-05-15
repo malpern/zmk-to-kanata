@@ -4,69 +4,12 @@ Hold-tap data models and contracts for ZMK to Kanata conversion.
 Implements HoldTap, HoldTapBinding, and HoldTapBehavior as per the new architecture.
 """
 from dataclasses import dataclass
-from typing import List, Optional, Tuple
+from typing import List, Optional
 
 # TODO: Import the centralized error manager when available
 # from converter.error_handling import get_error_manager
 
-
-@dataclass
-class HoldTap:
-    """Represents a single hold-tap key binding."""
-
-    behavior_name: str
-    hold_key: str
-    tap_key: str
-
-    def __post_init__(self):
-        if not isinstance(self.behavior_name, str):
-            # TODO: Log error via error manager
-            raise TypeError("behavior_name must be a string")
-        if not isinstance(self.hold_key, str):
-            # TODO: Log error via error manager
-            raise TypeError("hold_key must be a string")
-        if not isinstance(self.tap_key, str):
-            # TODO: Log error via error manager
-            raise TypeError("tap_key must be a string")
-
-    def to_kanata(self) -> str:
-        """Convert to Kanata S-expression format."""
-        # TODO: Implement actual conversion logic
-        return f"(holdtap {self.behavior_name} {self.hold_key} {self.tap_key})"
-
-
-@dataclass(frozen=True)
-class HoldTapBinding:
-    """Represents a hold-tap binding with its behavior and parameters."""
-
-    behavior_name: str
-    hold_key: str
-    tap_key: str
-    hold_trigger_key_positions: Optional[Tuple[int, ...]] = None
-    hold_trigger_on_release: bool = False
-    retro_tap: bool = False
-
-    def __post_init__(self):
-        if not isinstance(self.behavior_name, str):
-            # TODO: Log error via error manager
-            raise TypeError("behavior_name must be a string")
-        if not isinstance(self.hold_key, str):
-            # TODO: Log error via error manager
-            raise TypeError("hold_key must be a string")
-        if not isinstance(self.tap_key, str):
-            # TODO: Log error via error manager
-            raise TypeError("tap_key must be a string")
-        if self.hold_trigger_key_positions is not None and not isinstance(
-            self.hold_trigger_key_positions, tuple
-        ):
-            # TODO: Log error via error manager
-            raise TypeError(
-                "hold_trigger_key_positions must be a tuple of ints or None"
-            )
-
-    def to_kanata(self) -> str:
-        # TODO: Implement actual conversion logic
-        return f"(holdtap-binding {self.behavior_name} {self.hold_key} {self.tap_key})"
+# HoldTap and HoldTapBinding classes removed to avoid duplication.
 
 
 @dataclass

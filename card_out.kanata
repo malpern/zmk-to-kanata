@@ -7,69 +7,136 @@
 (defvar hold-time 250)
 
 
-(defalias hm (tap-hold 300 300 15 lctl))
+(defalias
+  combo_game (combo 31 32 33 34 30)
+)
 
-(defalias hm (tap-hold 300 300 11 rmet))
+(defalias
+  combo_sys (combo 33 34 35 35)
+)
+  ; unsupported: combo 'combo_caps' is not a simple combo
 
-(defalias hm (tap-hold 300 300 dot lctl))
+(defalias
+  combo_bt (combo 32 33 36)
+)
 
-(defalias sr (tap-hold 300 300 39 lsft))
+(defalias
+  lalt (combo 32 35 lalt)
+)
 
-(defalias hl (tap-hold 220 220 12 34))
+(defalias
+  lclk (combo 35 32 1)
+)
 
-(defalias hl (tap-hold 220 220 17 35))
+(defalias
+  rclk (combo 33 34 2)
+)
+
+(defalias
+  hm (tap-hold 300 300 &kp &kp)
+)
+  ; TODO: hold-tap 'hm' property 'label' not mapped. Manual review needed.
+  ; TODO: hold-tap 'hm' property '#binding-cells' not mapped. Manual review ...
+  ; TODO: hold-tap 'hm' property 'quick_tap_ms' not mapped. Manual review ne...
+  ; unsupported: hold-tap 'hm' property 'label' not mapped
+  ; unsupported: hold-tap 'hm' property '#binding-cells' not mapped
+  ; unsupported: hold-tap 'hm' property 'quick_tap_ms' not mapped
+
+(defalias
+  sr (tap-hold 300 300 &kp &to)
+)
+  ; TODO: retro-tap property present; Kanata does not support retro-tap. Man...
+  ; TODO: hold-tap 'sr' property 'label' not mapped. Manual review needed.
+  ; TODO: hold-tap 'sr' property '#binding-cells' not mapped. Manual review ...
+  ; TODO: hold-tap 'sr' property 'quick_tap_ms' not mapped. Manual review ne...
+  ; unsupported: hold-tap 'sr' property 'label' not mapped
+  ; unsupported: hold-tap 'sr' property '#binding-cells' not mapped
+  ; unsupported: hold-tap 'sr' property 'quick_tap_ms' not mapped
+
+(defalias
+  hl (tap-hold 220 220 &sl &kp)
+)
+  ; TODO: hold-tap 'hl' property 'label' not mapped. Manual review needed.
+  ; TODO: hold-tap 'hl' property '#binding-cells' not mapped. Manual review ...
+  ; TODO: hold-tap 'hl' property 'quick_tap_ms' not mapped. Manual review ne...
+  ; unsupported: hold-tap 'hl' property 'label' not mapped
+  ; unsupported: hold-tap 'hl' property '#binding-cells' not mapped
+  ; unsupported: hold-tap 'hl' property 'quick_tap_ms' not mapped
+
+(defalias
+  td (tap-hold 190 190 &kp &kp)
+)
+  ; TODO: hold-tap 'td' property 'label' not mapped. Manual review needed.
+  ; TODO: hold-tap 'td' property '#binding-cells' not mapped. Manual review ...
+  ; TODO: hold-tap 'td' property 'quick_tap_ms' not mapped. Manual review ne...
+  ; unsupported: hold-tap 'td' property 'label' not mapped
+  ; unsupported: hold-tap 'td' property '#binding-cells' not mapped
+  ; unsupported: hold-tap 'td' property 'quick_tap_ms' not mapped
 
 (defmacro alpha2macro
 )
+  ; unsupported: hold-tap behavior 'mt' not a HoldTap
+
+(defalias hm (tap-hold 300 300 dot lctl))
+
+(defalias hm (tap-hold 300 300 11 rmet))
+
+(defalias hl (tap-hold 220 220 12 34))
+
+(defalias hm (tap-hold 300 300 7 lmet))
 
 (defalias mt (tap-hold 200 200 spc lc(ls(lalt))))
 
-(defalias hl (tap-hold 220 220 21 32))
-
-(defalias hl (tap-hold 220 220 23 35))
-
-(defalias hm (tap-hold 300 300 n0 lalt))
-
-(defalias hm (tap-hold 300 300 n4 rctl))
-
-(defalias hm (tap-hold 300 300 n2 rmet))
-
-(defalias hm (tap-hold 300 300 18 rctl))
-
-(defalias hm (tap-hold 300 300 n1 lmet))
+(defalias hl (tap-hold 220 220 17 35))
 
 (defalias hl (tap-hold 220 220 8 32))
 
-(defalias hl (tap-hold 220 220 6 34))
-
-(defalias hm (tap-hold 300 300 10 lalt))
+(defalias hm (tap-hold 300 300 n0 lalt))
 
 (defalias hm (tap-hold 300 300 24 ralt))
 
 (defalias hm (tap-hold 300 300 n3 ralt))
 
-(defalias hm (tap-hold 300 300 7 lmet))
-
 (defalias hl (tap-hold 220 220 22 33))
 
+(defalias hl (tap-hold 220 220 6 34))
+
+(defalias sr (tap-hold 300 300 39 lsft))
+
+(defalias hm (tap-hold 300 300 10 lalt))
+
+(defalias hm (tap-hold 300 300 15 lctl))
+
 (defalias hl (tap-hold 220 220 4 33))
+
+(defalias hl (tap-hold 220 220 21 32))
+
+(defalias hm (tap-hold 300 300 n1 lmet))
+
+(defalias hl (tap-hold 220 220 23 35))
+
+(defalias hm (tap-hold 300 300 n2 rmet))
+
+(defalias hm (tap-hold 300 300 n4 rctl))
+
+(defalias hm (tap-hold 300 300 18 rctl))
 (deflayer alpha1
   _
-  @ht_lctl_l
-  @ht_lalt_g
-  @ht_lmet_d
-  @ht_rmet_h
-  @ht_ralt_u
-  @ht_rctl_o
+  @ht_LCTL_15
+  @ht_lalt_10
+  @ht_lmet_7
+  @ht_rmet_11
+  @ht_ralt_24
+  @ht_RCTL_18
   _
-  @ht_5_i
-  @ht_4_s
-  @ht_3_r
-  @ht_6_t
-  @ht_6_n
-  @ht_3_e
-  @ht_4_a
-  @ht_5_c
+  @ht_34_12
+  @ht_33_22
+  @ht_32_21
+  @ht_35_23
+  @ht_35_17
+  @ht_32_8
+  @ht_33_4
+  @ht_34_6
   _
   _
   _
@@ -86,22 +153,22 @@
   15
   10
   7
-  @ht_rmet_h
-  @ht_ralt_u
-  @ht_rctl_o
+  @ht_rmet_11
+  @ht_ralt_24
+  @ht_RCTL_18
   _
   12
   22
   21
   23
-  @ht_6_n
-  @ht_3_e
-  @ht_4_a
-  @ht_5_c
+  @ht_35_17
+  @ht_32_8
+  @ht_33_4
+  @ht_34_6
   _
   _
   _
-  SPC
+  spc
   (one-shot 500 (layer-while-held 31))
   _
   _
@@ -115,7 +182,7 @@
   26
   16
   9
-  SQT
+  sqt
   29
   _
   20
@@ -123,7 +190,7 @@
   19
   14
   5
-  DOT
+  dot
   27
   28
   _
@@ -139,21 +206,21 @@
 )
 (deflayer sym1
   _
-  LA(N3)
-  LS(N3)
-  DLLR
-  LS(COMMA)
-  LS(DOT)
-  CARET
+  la(3)
+  ls(3)
+  dollar
+  ls(comma)
+  ls(dot)
+  caret
   _
-  GRAVE
-  TILDE
-  MINUS
-  BSLH
-  LBKT
-  RBKT
-  PIPE
-  SLASH
+  grv
+  tilde
+  minus
+  bslh
+  lbrc
+  rbrc
+  pipe
+; ERROR: regex error in macro detection: missing ), unterminated subpatter...
   _
   _
   _
@@ -167,24 +234,24 @@
 )
 (deflayer sym2
   _
-  ATSN
-  LA(RBKT) ; tap only (ZMK: &td LA(RBKT)) ; unsupported: missing hold param
-  LA(LS(RBKT))
-  LA(LBKT) ; tap only (ZMK: &td LA(LBKT)) ; unsupported: missing hold param
-  LA(LS(LBKT))
-  LPRN
-  RPRN
-  SEMI
+  atsn
+; ERROR: [extractor] Invalid hold-tap binding for 'td': params=['LA(RBKT)'...
+  la(ls(rbrc))
+; ERROR: [extractor] Invalid hold-tap binding for 'td': params=['LA(LBKT)'...
+  la(ls(lbrc))
+  lpar
+  rpar
+  semi
   _
-  STAR
-  PRCNT
-  QMARK ; tap only (ZMK: &td QMARK) ; unsupported: missing hold param
-  EXCL
-  DQT
-  LBRC
-  RBRC
-  AMPS
-  COLON
+  astrk
+  percent
+; ERROR: [extractor] Invalid hold-tap binding for 'td': params=['QMARK']. ...
+  excl
+  dqt
+  lbrc
+  rbrc
+  amp
+  colon
   _
   _
   _
@@ -198,25 +265,25 @@
 )
 (deflayer num
   _
-  @ht_lctl_dot
+  @ht_LCTL_dot
   @ht_lalt_0
   @ht_lmet_1
   @ht_rmet_2
   @ht_ralt_3
-  @ht_rctl_4
+  @ht_RCTL_4
   _
-  MINUS
-  PLUS
-  N5
-  N6
-  N7
-  N8
-  N9
-  EQUAL
+  minus
+  plus
+  5
+  6
+  7
+  8
+  9
+  equal
   _
   _
   _
-  @ht_lsft_0
+  @ht_lsft_39
   _
   _
   _
@@ -226,34 +293,33 @@
 )
 (deflayer sys
   _
-  ESC
-  LC(LS(TAB))
-  RC(TAB)
-  LG(V) ; tap only (ZMK: &td LG(V)) ; unsupported: missing hold param
-  LG(C)
-  UP
-  20 ; tap only (ZMK: &td 20) ; unsupported: missing hold param
-  BKSP
+  esc
+  lc(ls(tab))
+  rc(tab)
+; ERROR: [extractor] Invalid hold-tap binding for 'td': params=['LG(V)']. ...
+  lg(c)
+  up
+; ERROR: [extractor] Invalid hold-tap binding for 'td': params=['20']. Cre...
+; ERROR: regex error in macro detection: missing ), unterminated subpatter...
   _
-  LG(GRAVE) ; tap only (ZMK: &td LG(GRAVE)) ; unsupported: missing hold param
-  TAB
-  HOME ; tap only (ZMK: &td HOME) ; unsupported: missing hold param
-  DEL
-  END ; tap only (ZMK: &td END) ; unsupported: missing hold param
-  LG(LBKT)
-  LG(RBKT)
-  TAB ; tap only (ZMK: &td TAB) ; unsupported: missing hold param
-  LEFT
-  DOWN
-  LC(LG(LS(N4)))
-  ; tap only (ZMK: &td LC(LG(LS(N4)))) ; unsupported: missing h...
-  RIGHT
-  RET
-  _
+; ERROR: [extractor] Invalid hold-tap binding for 'td': params=['LG(GRAVE)...
+  tab
+; ERROR: [extractor] Invalid hold-tap binding for 'td': params=['HOME']. C...
+  del
+; ERROR: [extractor] Invalid hold-tap binding for 'td': params=['END']. Cr...
+  lg(lbrc)
+  lg(rbrc)
+; ERROR: [extractor] Invalid hold-tap binding for 'td': params=['TAB']. Cr...
+  left
+  down
+; ERROR: [extractor] Invalid hold-tap binding for 'td': params=['LC(LG(LS(...
+  right
+  ret
   _
   _
-  @ht_lsft_0
-  RGUI
+  _
+  @ht_lsft_39
+  rmet
   _
   _
   _
@@ -290,26 +356,26 @@
 )
 (deflayer alpha2cap
   _
-  LS(V)
-  LS(W)
-  LS(M)
-  LS(F)
+  ls(v)
+  ls(w)
+  ls(m)
+  ls(f)
   _
-  LS(Z)
+  ls(z)
   _
-  LS(Q)
-  LS(J)
-  LS(P)
-  LS(K)
-  LS(B)
-  COMMA
-  LS(X)
-  LS(Y)
-  _
-  _
+  ls(q)
+  ls(j)
+  ls(p)
+  ls(k)
+  ls(b)
+  comma
+  ls(x)
+  ls(y)
   _
   _
-  LA(SEMI)
+  _
+  _
+  la(semi)
   _
   _
   _
@@ -318,23 +384,29 @@
 )
 
 ; --- Unsupported/Unknown ZMK Features ---
-[KanataTransformer] Skipping hold-tap alias: insufficient params for binding...
-[KanataTransformer] Skipping hold-tap alias: insufficient params for binding...
-[KanataTransformer] Skipping hold-tap alias: insufficient params for binding...
-[KanataTransformer] Skipping hold-tap alias: insufficient params for binding...
-[KanataTransformer] Skipping hold-tap alias: insufficient params for binding...
-[KanataTransformer] Skipping hold-tap alias: insufficient params for binding...
-[KanataTransformer] Skipping hold-tap alias: insufficient params for binding...
-[KanataTransformer] Skipping hold-tap alias: insufficient params for binding...
-[KanataTransformer] Skipping hold-tap alias: insufficient params for binding...
-[KanataTransformer] Skipping hold-tap alias: insufficient params for binding...
-[KanataTransformer] Skipping hold-tap combo: insufficient params for binding...
-[KanataTransformer] Skipping hold-tap combo: insufficient params for binding...
-[KanataTransformer] Skipping hold-tap combo: insufficient params for binding...
-[KanataTransformer] Skipping hold-tap combo: insufficient params for binding...
-[KanataTransformer] Skipping hold-tap combo: insufficient params for binding...
-[KanataTransformer] Skipping hold-tap combo: insufficient params for binding...
-[KanataTransformer] Skipping hold-tap combo: insufficient params for binding...
-[KanataTransformer] Skipping hold-tap combo: insufficient params for binding...
-[KanataTransformer] Skipping hold-tap combo: insufficient params for binding...
-[KanataTransformer] Skipping hold-tap combo: insufficient params for binding...
+  Warning: Combo 'combo_caps' skipped: not a simple combo.
+  Warning: Hold-tap behavior 'hm' has unsupported property 'label'
+  Warning: Hold-tap behavior 'hm' has unsupported property '#binding-cells'
+  Warning: Hold-tap behavior 'hm' has unsupported property 'quick_tap_ms'
+  Warning: Hold-tap 'sr' uses retro-tap, which Kanata does not support. Manu...
+  Warning: Hold-tap behavior 'sr' has unsupported property 'label'
+  Warning: Hold-tap behavior 'sr' has unsupported property '#binding-cells'
+  Warning: Hold-tap behavior 'sr' has unsupported property 'quick_tap_ms'
+  Warning: Hold-tap behavior 'hl' has unsupported property 'label'
+  Warning: Hold-tap behavior 'hl' has unsupported property '#binding-cells'
+  Warning: Hold-tap behavior 'hl' has unsupported property 'quick_tap_ms'
+  Warning: Hold-tap behavior 'td' has unsupported property 'label'
+  Warning: Hold-tap behavior 'td' has unsupported property '#binding-cells'
+  Warning: Hold-tap behavior 'td' has unsupported property 'quick_tap_ms'
+  Warning: Skipping hold-tap behavior 'mt' because it is not a HoldTap (got ...
+  ERROR: regex error in macro detection: missing ), unterminated subpattern ...
+  ERROR: [extractor] Invalid hold-tap binding for 'td': params=['LA(RBKT)']....
+  ERROR: [extractor] Invalid hold-tap binding for 'td': params=['LA(LBKT)']....
+  ERROR: [extractor] Invalid hold-tap binding for 'td': params=['QMARK']. Cr...
+  ERROR: [extractor] Invalid hold-tap binding for 'td': params=['LG(V)']. Cr...
+  ERROR: [extractor] Invalid hold-tap binding for 'td': params=['20']. Creat...
+  ERROR: [extractor] Invalid hold-tap binding for 'td': params=['LG(GRAVE)']...
+  ERROR: [extractor] Invalid hold-tap binding for 'td': params=['HOME']. Cre...
+  ERROR: [extractor] Invalid hold-tap binding for 'td': params=['END']. Crea...
+  ERROR: [extractor] Invalid hold-tap binding for 'td': params=['TAB']. Crea...
+  ERROR: [extractor] Invalid hold-tap binding for 'td': params=['LC(LG(LS(N4...

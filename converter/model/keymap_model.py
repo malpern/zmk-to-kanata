@@ -8,8 +8,9 @@ all the model classes and conversion logic for the keymap converter.
 """
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, List, Optional, Union, Dict, Any
+from typing import List, Optional, Union, Dict
 from converter.transformer.keycode_map import zmk_to_kanata
+from converter.model.behavior_base import Behavior
 
 
 @dataclass
@@ -33,7 +34,7 @@ class GlobalSettings:
 
 
 @dataclass
-class HoldTap:
+class HoldTap(Behavior):
     """Represents a hold-tap behavior in ZMK."""
 
     name: str
@@ -43,6 +44,32 @@ class HoldTap:
     hold_time_ms: Optional[int] = None
     quick_tap_ms: Optional[int] = None
     flavor: Optional[str] = None
+    tap_hold_wait_ms: Optional[int] = None
+    require_prior_idle_ms: Optional[int] = None
+
+    def __post_init__(self):
+        if not isinstance(self.name, str):
+            raise TypeError("name must be a string")
+        if not isinstance(self.hold_key, str):
+            raise TypeError("hold_key must be a string")
+        if not isinstance(self.tap_key, str):
+            raise TypeError("tap_key must be a string")
+        if not isinstance(self.tapping_term_ms, int):
+            raise TypeError("tapping_term_ms must be an int")
+        if self.hold_time_ms is not None and not isinstance(self.hold_time_ms, int):
+            raise TypeError("hold_time_ms must be int or None")
+        if self.quick_tap_ms is not None and not isinstance(self.quick_tap_ms, int):
+            raise TypeError("quick_tap_ms must be int or None")
+        if self.flavor is not None and not isinstance(self.flavor, str):
+            raise TypeError("flavor must be str or None")
+        if self.tap_hold_wait_ms is not None and not isinstance(
+            self.tap_hold_wait_ms, int
+        ):
+            raise TypeError("tap_hold_wait_ms must be int or None")
+        if self.require_prior_idle_ms is not None and not isinstance(
+            self.require_prior_idle_ms, int
+        ):
+            raise TypeError("require_prior_idle_ms must be int or None")
 
     def to_kanata(self) -> str:
         """Convert the hold-tap to Kanata format."""
@@ -93,6 +120,23 @@ class HoldTap:
 
         return f"({' '.join(config)})"
 
+    def to_dict(self) -> dict:
+        """
+        Return a serializable dictionary representation of this hold-tap
+        behavior.
+        """
+        return {
+            "name": self.name,
+            "hold_key": self.hold_key,
+            "tap_key": self.tap_key,
+            "tapping_term_ms": self.tapping_term_ms,
+            "hold_time_ms": self.hold_time_ms,
+            "quick_tap_ms": self.quick_tap_ms,
+            "flavor": self.flavor,
+            "tap_hold_wait_ms": self.tap_hold_wait_ms,
+            "require_prior_idle_ms": self.require_prior_idle_ms,
+        }
+
 
 @dataclass(frozen=True)
 class HoldTapBinding:
@@ -102,9 +146,26 @@ class HoldTapBinding:
     hold_tap: HoldTap
     tap: str
     hold: str
-    params: Dict[str, Any] = field(default_factory=dict)
+    params: Dict[str, Union[str, int]] = field(default_factory=dict)
 
-    def __eq__(self, other: Any) -> bool:
+    def __post_init__(self):
+        if not isinstance(self.key, str):
+            raise TypeError("key must be a string")
+        if not isinstance(self.hold_tap, HoldTap):
+            raise TypeError("hold_tap must be a HoldTap instance")
+        if not isinstance(self.tap, str):
+            raise TypeError("tap must be a string")
+        if not isinstance(self.hold, str):
+            raise TypeError("hold must be a string")
+        if not isinstance(self.params, dict):
+            raise TypeError("params must be a dict")
+        for k, v in self.params.items():
+            if not isinstance(k, str):
+                raise TypeError("params keys must be strings")
+            if not (isinstance(v, str) or isinstance(v, int)):
+                raise TypeError("params values must be str or int")
+
+    def __eq__(self, other: object) -> bool:
         """Compare two HoldTapBindings for equality."""
         if not isinstance(other, HoldTapBinding):
             return False
@@ -126,12 +187,12 @@ class KeyMapping:
     """Represents a key mapping in the keymap."""
 
     key: str
-    behavior: Optional["Behavior"] = None
+    behavior: Optional[Behavior] = None
     params: List[str] = field(default_factory=list)
     hold_tap: Optional[Union[HoldTap, HoldTapBinding]] = None
     sticky: bool = False
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         """Compare two KeyMapping instances for equality."""
         if not isinstance(other, KeyMapping):
             return False
@@ -140,11 +201,22 @@ class KeyMapping:
     def to_kanata(self) -> str:
         """Convert the key mapping to Kanata format using the central mapping utility."""
         ht = self.hold_tap
-        if ht and hasattr(ht, 'hold_tap') and hasattr(ht.hold_tap, 'name') and hasattr(ht, 'hold') and hasattr(ht, 'tap'):
+        if (
+            ht
+            and hasattr(ht, "hold_tap")
+            and hasattr(ht.hold_tap, "name")
+            and hasattr(ht, "hold")
+            and hasattr(ht, "tap")
+        ):
             return f"@{ht.hold_tap.name}_{ht.hold}_{ht.tap}"
-        if ht and hasattr(ht, 'name') and hasattr(ht, 'hold_key') and hasattr(ht, 'tap_key'):
+        if (
+            ht
+            and hasattr(ht, "name")
+            and hasattr(ht, "hold_key")
+            and hasattr(ht, "tap_key")
+        ):
             return f"@{ht.name}_{ht.hold_key}_{ht.tap_key}"
-        if ht and hasattr(ht, 'to_kanata') and callable(ht.to_kanata):
+        if ht and hasattr(ht, "to_kanata") and callable(ht.to_kanata):
             return ht.to_kanata()
         key = zmk_to_kanata(self.key)
         if self.key.startswith("mo "):
@@ -153,19 +225,22 @@ class KeyMapping:
         elif self.key == "trans":
             return "_"
         elif self.sticky:
-            # Use original case for F-keys
             if self.key.startswith("F") and self.key[1:].isdigit():
                 return f"sticky-{self.key}"
             k = key if key is not None else self.key
             return f"sticky-{k if k is not None else ''}"
         else:
-            # Special case: number keys with 'n' prefix
-            if self.key.startswith('n') and self.key[1:].isdigit():
+            if self.key.startswith("n") and self.key[1:].isdigit():
                 return self.key[1:]
-            # Special case: numpad keys with 'kp_n' prefix
-            if self.key.startswith('kp_n') and len(self.key) > 4 and self.key[4:].isdigit():
-                return 'kp' + self.key[4:]
-            return key if key is not None else (self.key if self.key is not None else '')
+            if (
+                self.key.startswith("kp_n")
+                and len(self.key) > 4
+                and self.key[4:].isdigit()
+            ):
+                return "kp" + self.key[4:]
+            return (
+                key if key is not None else (self.key if self.key is not None else "")
+            )
 
     @classmethod
     def from_zmk(
@@ -201,7 +276,15 @@ class KeyMapping:
             return cls(key=key, sticky=True)
 
         # Handle hold-tap bindings
-        hold_tap_prefixes = ["&mt", "&lh_hm", "&rh_hm", "&ht", "&hm", "&hs", "&td"]
+        hold_tap_prefixes = [
+            "&mt",
+            "&lh_hm",
+            "&rh_hm",
+            "&ht",
+            "&hm",
+            "&hs",
+            "&td",
+        ]
         has_hold_tap_prefix = any(
             binding_str.startswith(prefix) for prefix in hold_tap_prefixes
         )
@@ -231,7 +314,10 @@ class KeyMapping:
                 hold_tap=hold_tap,
                 tap=tap_key,
                 hold=hold_key,
-                params={"tapping_term_ms": tap_time, "hold_time_ms": hold_time},
+                params={
+                    "tapping_term_ms": tap_time,
+                    "hold_time_ms": hold_time,
+                },
             )
 
             # Return KeyMapping with both behavior and hold_tap set
@@ -290,4 +376,4 @@ class KeymapConfig:
     """Top-level configuration containing all keymap data."""
 
     layers: List[Layer]
-    behaviors: Dict[str, "Behavior"] = field(default_factory=dict)
+    behaviors: Dict[str, Behavior] = field(default_factory=dict)

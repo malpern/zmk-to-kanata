@@ -7,11 +7,11 @@ from ..models import (
     Layer,
     Binding,
     Behavior,
-    HoldTap,
     MacroBehavior,
     Combo,
     ConditionalLayer,
 )
+from converter.model.keymap_model import HoldTap
 import logging
 from converter.behaviors.unicode import is_unicode_binding, UnicodeBinding
 
@@ -187,15 +187,15 @@ class KeymapExtractor:
                     label_key = next(iter(child_node.labels.keys()), name)
                     self._behavior_nodes_to_process.append((label_key, child_node))
                 elif compatible == "zmk,behavior-unicode":
-                    behavior_object = Behavior(name="", type="unicode")
-                    behavior_type = "unicode"
+                    behavior_object = Behavior(name="")
+                    behavior_object.type = "unicode"
                 elif compatible == "zmk,behavior-unicode-string":
-                    behavior_object = Behavior(name="", type="unicode_string")
-                    behavior_type = "unicode_string"
+                    behavior_object = Behavior(name="")
+                    behavior_object.type = "unicode_string"
                 else:
                     # Register all other behaviors as generic
-                    behavior_object = Behavior(name="", type=compatible)
-                    behavior_type = compatible
+                    behavior_object = Behavior(name="")
+                    behavior_object.type = compatible
 
                 if behavior_object:
                     # Use the first label found as the primary key
@@ -367,7 +367,7 @@ class KeymapExtractor:
             return None
 
         # Create object, name/type set by caller (_extract_behaviors_pass1)
-        ht = HoldTap(name="", tapping_term_ms=tapping_term_ms)
+        ht = HoldTap(name="", hold_key="", tap_key="", tapping_term_ms=tapping_term_ms)
         # Store all extra properties for best-effort mapping
         ht.extra_properties = {}
         # Explicitly parse and store all relevant hold-tap properties
@@ -490,12 +490,12 @@ class KeymapExtractor:
                         return self.behaviors[name]
                     if name in BUILTIN_BEHAVIORS:
                         if name in ("mt", "hold-tap", "mod-tap"):
-                            # Create a HoldTap with sensible defaults
-                            b = HoldTap(
-                                name=name, tapping_term_ms=200, flavor="balanced"
-                            )
+                            # Register a generic Behavior for now; HoldTap will be created at binding time
+                            b = Behavior(name=name)
+                            b.type = "hold-tap"
                         else:
-                            b = Behavior(name=name, type=BUILTIN_BEHAVIORS[name])
+                            b = Behavior(name=name)
+                            b.type = BUILTIN_BEHAVIORS[name]
                         self.behaviors[name] = b
                         return b
                     raise ValueError(
@@ -539,10 +539,9 @@ class KeymapExtractor:
                 logging.debug(
                     f"[extractor]   Params consumed: {params} (actual: {actual_params_consumed})"
                 )
-                behavior = get_or_create_behavior(behavior_name, behavior_name)
-                if behavior:
-                    bindings.append(self._create_binding([behavior_name] + params))
-                    i += 1 + actual_params_consumed
+                get_or_create_behavior(behavior_name, behavior_name)
+                bindings.append(self._create_binding([behavior_name] + params))
+                i += 1 + actual_params_consumed
             else:
                 # Unicode macro detection
                 if is_unicode_binding(str(token)):
@@ -557,12 +556,54 @@ class KeymapExtractor:
         """Create a binding instance from a value."""
         if isinstance(value, list):
             if not value:
-                # Instead of raising, emit error binding
                 msg = "Empty binding list value"
                 logging.error(msg)
                 return Binding(behavior=None, params=[f"ERROR: {msg}"])
             behavior_name = value[0]
             params = value[1:]
+            hold_tap_names = {"mt", "hold-tap", "mod-tap", "hm", "hl", "sr", "td"}
+            behavior = self.behaviors.get(behavior_name)
+            is_hold_tap = False
+            if behavior and hasattr(behavior, "type") and behavior.type == "hold-tap":
+                is_hold_tap = True
+            if behavior_name in hold_tap_names:
+                is_hold_tap = True
+            if is_hold_tap:
+                if len(params) == 2 and all(params):
+                    hold_key, tap_key = params
+                    # Use the canonical behavior object if available
+                    if (
+                        behavior
+                        and hasattr(behavior, "type")
+                        and behavior.type == "hold-tap"
+                    ):
+                        behavior.hold_key = hold_key
+                        behavior.tap_key = tap_key
+                        return Binding(behavior=behavior, params=[hold_key, tap_key])
+                    else:
+                        tapping_term_ms = 200
+                        flavor = "balanced"
+                        if behavior and hasattr(behavior, "tapping_term_ms"):
+                            tapping_term_ms = getattr(behavior, "tapping_term_ms")
+                        if behavior and hasattr(behavior, "flavor"):
+                            flavor = getattr(behavior, "flavor")
+                        ht = HoldTap(
+                            name=behavior_name,
+                            hold_key=hold_key,
+                            tap_key=tap_key,
+                            tapping_term_ms=tapping_term_ms,
+                            flavor=flavor,
+                        )
+                        ht.type = "hold-tap"
+                        logging.debug(f"[extractor] Created HoldTap: {ht}")
+                        return Binding(behavior=ht, params=[hold_key, tap_key])
+                else:
+                    msg = (
+                        f"[extractor] Invalid hold-tap binding for '{behavior_name}': "
+                        f"params={params}. Creating error binding."
+                    )
+                    logging.warning(msg)
+                    return Binding(behavior=None, params=[f"ERROR: {msg}"])
             if behavior_name == "kp":
                 if len(params) != 1:
                     msg = (
@@ -571,7 +612,6 @@ class KeymapExtractor:
                     logging.error(msg)
                     return Binding(behavior=None, params=[f"ERROR: {msg}"])
                 return Binding(behavior=None, params=[params[0]])
-            behavior = self.behaviors.get(behavior_name)
             if behavior:
                 return Binding(behavior=behavior, params=params)
             else:

@@ -126,31 +126,25 @@ def test_transform_behavior_optional_params():
 
 
 def test_transform_binding_error_no_hold_tap():
-    t = HoldTapTransformer()
     b = make_binding()
     # Patch to remove hold_tap
-    b = HoldTapBinding(
-        key=b.key, hold_tap=None, tap=b.tap, hold=b.hold, params=b.params
-    )
-    with pytest.raises(ValueError):
-        t.transform_binding(b)
+    with pytest.raises(TypeError):
+        HoldTapBinding(
+            key=b.key, hold_tap=None, tap=b.tap, hold=b.hold, params=b.params
+        )
 
 
 def test_transform_binding_error_no_hold():
-    t = HoldTapTransformer()
     b = make_binding()
-    b = HoldTapBinding(
-        key=b.key, hold_tap=b.hold_tap, tap=b.tap, hold=None, params=b.params
-    )
-    with pytest.raises(ValueError):
-        t.transform_binding(b)
+    with pytest.raises(TypeError):
+        HoldTapBinding(
+            key=b.key, hold_tap=b.hold_tap, tap=b.tap, hold=None, params=b.params
+        )
 
 
 def test_transform_binding_error_no_tap():
-    t = HoldTapTransformer()
     b = make_binding()
-    b = HoldTapBinding(
-        key=b.key, hold_tap=b.hold_tap, tap=None, hold=b.hold, params=b.params
-    )
-    with pytest.raises(ValueError):
-        t.transform_binding(b)
+    with pytest.raises(TypeError):
+        HoldTapBinding(
+            key=b.key, hold_tap=b.hold_tap, tap=None, hold=b.hold, params=b.params
+        )

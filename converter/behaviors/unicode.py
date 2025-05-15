@@ -30,7 +30,7 @@ class UnicodeBinding(Binding):
         """
         # Return a properly formatted unicode character reference
         if sys.platform == "darwin":
-            return f"(unicode \"{self.character}\")"
+            return f'(unicode "{self.character}")'
         else:
             return f"; WARNING: Unicode output is only supported on macOS (darwin). Unicode '{self.character}' not emitted."
 

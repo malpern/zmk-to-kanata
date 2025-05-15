@@ -2,8 +2,7 @@
 
 from typing import Dict, Optional
 
-from ..model.keymap_model import HoldTapBinding
-from ..behaviors.hold_tap import HoldTap
+from ..model.keymap_model import HoldTapBinding, HoldTap
 
 
 class HoldTapTransformer:

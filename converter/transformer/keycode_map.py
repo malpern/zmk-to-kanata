@@ -211,3 +211,68 @@ def zmk_to_kanata(key: str) -> Optional[str]:
 
 # For testability: expose the mapping table
 ALL_MAPPED_KEYS = set(ZMK_TO_KANATA.keys())
+
+
+def zmk_binding_to_kanata(
+    binding_str: str,
+    hold_tap: Optional[object] = None,
+    sticky: bool = False,
+) -> Optional[str]:
+    """
+    Convert a ZMK binding string (e.g., '&kp A', '&mo 1', '&sk LSHIFT', '&trans').
+    Handles all special cases. Optionally, pass hold_tap or sticky flags for advanced cases.
+    """
+    binding_str = binding_str.strip()
+    # Handle empty or none
+    if not binding_str or binding_str == "&none":
+        return "none"
+    # Transparent
+    if binding_str == "&trans" or binding_str == "trans":
+        return "_"
+    # Sticky key
+    if binding_str.startswith("&sk") or sticky:
+        parts = binding_str.split()
+        key = (
+            parts[1] if len(parts) > 1 else (parts[0][3:] if len(parts[0]) > 3 else "")
+        )
+        k = zmk_to_kanata(key) if key else key
+        if k and k.startswith("f") and k[1:].isdigit():
+            return f"sticky-{k}"
+        return f"sticky-{k if k else ''}"
+    # Hold-tap (emit alias if hold_tap info is present)
+    if hold_tap:
+        if (
+            hasattr(hold_tap, "hold_tap")
+            and hasattr(hold_tap.hold_tap, "name")
+            and hasattr(hold_tap, "hold")
+            and hasattr(hold_tap, "tap")
+        ):
+            return f"@{hold_tap.hold_tap.name}_{hold_tap.hold}_{hold_tap.tap}"
+        elif (
+            hasattr(hold_tap, "name")
+            and hasattr(hold_tap, "hold_key")
+            and hasattr(hold_tap, "tap_key")
+        ):
+            return f"@{hold_tap.name}_{hold_tap.hold_key}_{hold_tap.tap_key}"
+    # Layer switch
+    if binding_str.startswith("&mo") or binding_str.startswith("mo "):
+        parts = binding_str.split()
+        layer_num = parts[1] if len(parts) > 1 else "?"
+        return f"(layer-while-held {layer_num})"
+    if binding_str.startswith("&to") or binding_str.startswith("to "):
+        parts = binding_str.split()
+        layer_num = parts[1] if len(parts) > 1 else "?"
+        return f"(layer-switch {layer_num})"
+    # Regular key binding
+    if binding_str.startswith("&kp"):
+        parts = binding_str.split()
+        key = parts[1] if len(parts) > 1 else ""
+        return zmk_to_kanata(key) if key else key
+    # Fallback: try direct mapping
+    mapped = zmk_to_kanata(binding_str)
+    if mapped is not None:
+        return mapped
+    # Unknown binding
+    if binding_str.startswith("&"):
+        return f"; TODO: Unknown binding: {binding_str}"
+    return binding_str

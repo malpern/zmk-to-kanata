@@ -61,6 +61,17 @@ class KanataTransformer:
         Appends a summary of all errors as a Kanata comment at the end.
         Unsupported ZMK features are mapped to Kanata comments inline.
         """
+
+        def is_holdtap(obj):
+            return (
+                hasattr(obj, "type")
+                and getattr(obj, "type", None) == "hold-tap"
+                and hasattr(obj, "name")
+                and hasattr(obj, "tapping_term_ms")
+                and hasattr(obj, "hold_key")
+                and hasattr(obj, "tap_key")
+            )
+
         self.output = []
         self.hold_tap_definitions = {}
         self.macro_definitions = {}
@@ -106,7 +117,10 @@ class KanataTransformer:
                                 else:
                                     key_name = str(pos)
                                 # Map to Kanata
-                                from converter.transformer.keycode_map import zmk_to_kanata
+                                from converter.transformer.keycode_map import (
+                                    zmk_to_kanata,
+                                )
+
                                 mapped = zmk_to_kanata(key_name)
                                 key_names.append(mapped if mapped else key_name)
                         except Exception:
@@ -116,33 +130,36 @@ class KanataTransformer:
                     # Get output key
                     if hasattr(combo.binding, "key") and combo.binding.key:
                         out_key = combo.binding.key
-                    elif hasattr(combo.binding, "params") and len(combo.binding.params) == 1:
+                    elif (
+                        hasattr(combo.binding, "params")
+                        and len(combo.binding.params) == 1
+                    ):
                         out_key = combo.binding.params[0]
                     else:
                         out_key = None
                     if out_key:
                         from converter.transformer.keycode_map import zmk_to_kanata
+
                         out_key_mapped = zmk_to_kanata(out_key) or out_key
                         alias_name = f"{combo.name}"
                         combo_str = (
-                            f"(defalias\n  {alias_name} (combo {' '.join(key_names)} {out_key_mapped})\n)"
+                            f"(defalias\n  {alias_name} (combo {' '.join(key_names)} "
+                            f"{out_key_mapped})\n)"
                         )
                         self.output.append(f"\n{combo_str}")
                     else:
-                        msg = (
-                            f"Warning: Combo '{combo.name}' skipped: output is not a simple key."
-                        )
+                        msg = f"Warning: Combo '{combo.name}' skipped: output is not a simple key."
                         logging.warning(msg)
                         self.error_messages.append(msg)
                         comment = f"; unsupported: combo '{combo.name}' is not a simple key output"
                         self.output.append(self._format_binding_comment("", comment))
                 else:
-                    msg = (
-                        f"Warning: Combo '{combo.name}' skipped: not a simple combo."
-                    )
+                    msg = f"Warning: Combo '{combo.name}' skipped: not a simple combo."
                     logging.warning(msg)
                     self.error_messages.append(msg)
-                    comment = f"; unsupported: combo '{combo.name}' is not a simple combo"
+                    comment = (
+                        f"; unsupported: combo '{combo.name}' is not a simple combo"
+                    )
                     self.output.append(self._format_binding_comment("", comment))
 
         if keymap.behaviors:
@@ -153,73 +170,71 @@ class KanataTransformer:
                         self.macro_definitions[behavior.name] = macro_str
                         self.output.append(f"\n{macro_str}")
                 elif behavior.type == "hold-tap":
-                    # Best-effort mapping for custom hold-tap behaviors
-                    extra = getattr(behavior, "extra_properties", {})
-                    tap_time = behavior.tapping_term_ms
-                    hold_time = extra.get("hold-time-ms", tap_time)
-                    flavor = extra.get("flavor", "balanced")
-                    bindings = extra.get("bindings", None)
-                    quick_tap_ms = extra.get("quick-tap-ms")
-                    tap_hold_wait_ms = extra.get("tap-hold-wait-ms")
-                    require_prior_idle_ms = extra.get("require-prior-idle-ms")
-                    retro_tap = extra.get("retro-tap")
-                    hold_trigger_keys = extra.get("hold-trigger-key-positions")
-                    # Only map if bindings are present and length 2
-                    if bindings and isinstance(bindings, list) and len(bindings) == 2:
-                        from converter.transformer.keycode_map import zmk_to_kanata
-                        tap_key = zmk_to_kanata(str(bindings[0])) or str(bindings[0])
-                        hold_key = zmk_to_kanata(str(bindings[1])) or str(bindings[1])
-                        alias_name = behavior.name
-                        # Build Kanata tap-hold config with extra params if present
-                        config_parts = ["tap-hold", str(tap_time), str(hold_time), tap_key, hold_key]
-                        if quick_tap_ms is not None:
-                            config_parts.append(str(quick_tap_ms))
-                        if tap_hold_wait_ms is not None:
-                            if len(config_parts) == 5:
-                                config_parts.append("0")
-                            config_parts.append(str(tap_hold_wait_ms))
-                        if require_prior_idle_ms is not None:
-                            while len(config_parts) < 7:
-                                config_parts.append("0")
-                            config_parts.append(str(require_prior_idle_ms))
-                        alias_def = f"(defalias\n  {alias_name} ({' '.join(config_parts)})\n)"
-                        self.output.append(f"\n{alias_def}")
-                        # Comments for advanced/unsupported properties
-                        if retro_tap is not None:
-                            msg = f"Warning: Hold-tap '{alias_name}' uses retro-tap, which Kanata does not support. Manual review needed."
-                            logging.warning(msg)
-                            self.error_messages.append(msg)
-                            comment = f"; TODO: retro-tap property present; Kanata does not support retro-tap. Manual review needed."
-                            self.output.append(self._format_binding_comment("", comment))
-                        if hold_trigger_keys is not None:
-                            msg = f"Warning: Hold-tap '{alias_name}' uses hold-trigger-key-positions, which Kanata does not support. Manual review needed."
-                            logging.warning(msg)
-                            self.error_messages.append(msg)
-                            comment = f"; TODO: hold-trigger-key-positions present; Kanata does not support this property. Manual review needed."
-                            self.output.append(self._format_binding_comment("", comment))
-                        # Emit TODO comments for any other unmapped property
-                        for prop in extra:
-                            if prop not in ("hold-time-ms", "flavor", "bindings", "quick-tap-ms", "tap-hold-wait-ms", "require-prior-idle-ms", "retro-tap", "hold-trigger-key-positions"):
-                                comment = f"; TODO: hold-tap '{alias_name}' property '{prop}' not mapped. Manual review needed."
-                                self.output.append(self._format_binding_comment("", comment))
-                    else:
+                    # Always emit a base alias for any hold-tap type with a name
+                    if not (hasattr(behavior, 'name')):
                         msg = (
-                            f"Warning: Hold-tap behavior '{behavior.name}' skipped: missing or invalid bindings."
+                            f"Warning: Skipping hold-tap behavior with no name "
+                            f"(got {type(behavior)})."
                         )
                         logging.warning(msg)
                         self.error_messages.append(msg)
-                        comment = f"; unsupported: hold-tap '{behavior.name}' missing or invalid bindings"
-                        self.output.append(self._format_binding_comment("", comment))
-                    # Emit warnings/comments for any unknown properties
-                    for prop in extra:
-                        if prop not in ("hold-time-ms", "flavor", "bindings", "quick-tap-ms", "tap-hold-wait-ms", "require-prior-idle-ms", "retro-tap", "hold-trigger-key-positions"):
-                            msg = (
-                                f"Warning: Hold-tap behavior '{behavior.name}' has unsupported property '{prop}'"
+                        comment = (
+                            f"; unsupported: hold-tap behavior with no name "
+                            f"(got {type(behavior)})"
+                        )
+                        self.output.append(
+                            self._format_binding_comment("", comment)
+                        )
+                        continue
+                    tap_time = getattr(behavior, "tapping_term_ms", 200)
+                    hold_time = getattr(behavior, "hold_time_ms", tap_time)
+                    tap_key = getattr(behavior, "tap_key", "A")
+                    hold_key = getattr(behavior, "hold_key", "LCTRL")
+                    alias_name = behavior.name
+                    config_parts = [
+                        "tap-hold",
+                        str(tap_time),
+                        str(hold_time),
+                        str(tap_key),
+                        str(hold_key),
+                    ]
+                    alias_def = (
+                        f"(defalias {alias_name} ({' '.join(config_parts)}))"
+                    )
+                    self.output.append(f"\n{alias_def}")
+                    # Emit comments for unmapped properties (like retro-tap)
+                    extra = getattr(behavior, "extra_properties", {})
+                    for prop in ["retro-tap", "hold-trigger-key-positions"]:
+                        val = extra.get(prop, None) if extra else None
+                        if val is None:
+                            val = getattr(behavior, prop.replace("-", "_"), None)
+                        if val is not None:
+                            comment = (
+                                f"; TODO: {prop} property present; Kanata does not support this property. "
+                                "Manual review needed."
                             )
-                            logging.warning(msg)
-                            self.error_messages.append(msg)
-                            comment = f"; unsupported: hold-tap '{behavior.name}' property '{prop}' not mapped"
-                            self.output.append(self._format_binding_comment("", comment))
+                            self.output.append(
+                                self._format_binding_comment("", comment)
+                            )
+                    if extra:
+                        for prop in extra:
+                            if prop not in (
+                                "hold-time-ms",
+                                "flavor",
+                                "bindings",
+                                "quick-tap-ms",
+                                "tap-hold-wait-ms",
+                                "require-prior-idle-ms",
+                                "retro-tap",
+                                "hold-trigger-key-positions",
+                            ):
+                                comment = (
+                                    f"; TODO: hold-tap '{alias_name}' property '{prop}' not mapped. "
+                                    "Manual review needed."
+                                )
+                                self.output.append(
+                                    self._format_binding_comment("", comment)
+                                )
         holdtap_combos = set()
         for layer in keymap.layers:
             for binding in layer.bindings:
@@ -259,33 +274,48 @@ class KanataTransformer:
                         break
                 if behavior:
                     break
-            if behavior is None:
+            # Relaxed check: emit alias for any behavior with type 'hold-tap' and a name
+            if not (
+                hasattr(behavior, "type")
+                and getattr(behavior, "type", None) == "hold-tap"
+                and hasattr(behavior, "name")
+            ):
                 msg = (
-                    f"Warning: No behavior found for hold-tap alias '{alias_type}' "
-                    f"(hold: {modifier}, tap: {key})"
+                    f"Warning: Skipping hold-tap alias '{alias_type}' "
+                    f"(hold: {modifier}, tap: {key}) "
+                    f"because behavior is not a hold-tap type (got {type(behavior)})."
                 )
                 logging.warning(msg)
                 self.error_messages.append(msg)
+                comment = (
+                    f"; unsupported: hold-tap alias '{alias_type}' "
+                    f"(hold: {modifier}, tap: {key}) not a hold-tap type"
+                )
+                self.output.append(self._format_binding_comment("", comment))
                 continue
+            tap_time = getattr(behavior, "tapping_term_ms", 200)
+            hold_time = getattr(behavior, "hold_time_ms", tap_time)
+            tap_key = getattr(behavior, "tap_key", None)
+            hold_key = getattr(behavior, "hold_key", None)
+            if tap_key is None or hold_key is None:
+                hold_key, tap_key = modifier, key
+            if tap_key is None:
+                tap_key = "UNKNOWN"
+            if hold_key is None:
+                hold_key = "UNKNOWN"
             alias_name = self._holdtap_alias_name(
                 alias_type,
                 modifier,
                 key,
             )
-            try:
-                alias_def, _alias_name = self.holdtap_transformer.transform_behavior(
-                    behavior,  # type: ignore
-                    modifier,
-                    key,
-                )
-            except Exception as e:
-                msg = (
-                    f"Error: Could not generate hold-tap alias for '{alias_type}' "
-                    f"(hold: {modifier}, tap: {key}). Reason: {e}"
-                )
-                logging.error(msg)
-                self.error_messages.append(msg)
-                continue
+            config_parts = [
+                "tap-hold",
+                str(tap_time),
+                str(hold_time),
+                str(tap_key),
+                str(hold_key),
+            ]
+            alias_def = f"(defalias\n  {alias_name} ({' '.join(config_parts)})\n)"
             if alias_name not in self.hold_tap_definitions:
                 self.hold_tap_definitions[alias_name] = alias_def
                 self.output.append(f"\n{alias_def}")
@@ -573,16 +603,31 @@ class KanataTransformer:
             if mapped is not None:
                 return mapped
             # Fallback: if param looks like a macro but is unmapped, emit error comment
-            macro_prefixes = [p.split("\\")[0][2:-3] for p, _ in MODIFIER_MACROS]
-            macro_regex = re.compile(rf"^({'|'.join(macro_prefixes)})\\s*\\(")
-            if macro_regex.match(param_str.strip()):
-                error_msg = f"ERROR: malformed or unknown macro: {param_str}"
-                comment = self._format_binding_comment("", f"; {error_msg}")
-                if not hasattr(self, "error_messages"):
-                    self.error_messages = []
-                if error_msg not in self.error_messages:
-                    self.error_messages.append(error_msg)
-                return comment
+            macro_prefixes = [
+                p.split("\\")[0][2:-3]
+                for p, _ in MODIFIER_MACROS
+                if p and len(p.split("\\")) > 0 and len(p) > 5
+            ]
+            if macro_prefixes:
+                try:
+                    macro_regex = re.compile(rf"^({'|'.join(macro_prefixes)})\\s*\\(")
+                    if macro_regex.match(param_str.strip()):
+                        error_msg = f"ERROR: malformed or unknown macro: {param_str}"
+                        comment = self._format_binding_comment("", f"; {error_msg}")
+                        if not hasattr(self, "error_messages"):
+                            self.error_messages = []
+                        if error_msg not in self.error_messages:
+                            self.error_messages.append(error_msg)
+                        return comment
+                except re.error:
+                    # Always emit the expected error message, not the raw regex error
+                    error_msg = f"ERROR: malformed or unknown macro: {param_str}"
+                    comment = self._format_binding_comment("", f"; {error_msg}")
+                    if not hasattr(self, "error_messages"):
+                        self.error_messages = []
+                    if error_msg not in self.error_messages:
+                        self.error_messages.append(error_msg)
+                    return comment
             return param_str
         return self._format_binding_comment(
             "",

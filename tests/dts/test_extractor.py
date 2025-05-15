@@ -2,7 +2,8 @@
 
 from converter.dts.parser import DtsParser
 from converter.dts.extractor import KeymapExtractor
-from converter.models import KeymapConfig, Binding, HoldTap, MacroBehavior
+from converter.models import KeymapConfig, Binding, MacroBehavior
+from converter.model.keymap_model import HoldTap
 
 
 def test_extract_simple_keymap():

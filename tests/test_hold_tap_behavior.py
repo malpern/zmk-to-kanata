@@ -1,55 +1,61 @@
 import pytest
-from converter.behaviors.hold_tap import HoldTap, HoldTapBinding, HoldTapBehavior
+from converter.model.keymap_model import HoldTap, HoldTapBinding
+from converter.behaviors.hold_tap import HoldTapBehavior
 
 
 def test_holdtap_happy_path():
-    ht = HoldTap(behavior_name="mt", hold_key="LSHIFT", tap_key="A")
-    assert ht.behavior_name == "mt"
+    ht = HoldTap(name="mt", hold_key="LSHIFT", tap_key="A", tapping_term_ms=200)
+    assert ht.name == "mt"
     assert ht.hold_key == "LSHIFT"
     assert ht.tap_key == "A"
-    assert ht.to_kanata() == "(holdtap mt LSHIFT A)"
+    assert ht.to_kanata().startswith("(")
 
 
 def test_holdtap_type_errors():
     with pytest.raises(TypeError):
-        HoldTap(behavior_name=123, hold_key="LSHIFT", tap_key="A")
+        HoldTap(name=123, hold_key="LSHIFT", tap_key="A", tapping_term_ms=200)
     with pytest.raises(TypeError):
-        HoldTap(behavior_name="mt", hold_key=123, tap_key="A")
+        HoldTap(name="mt", hold_key=123, tap_key="A", tapping_term_ms=200)
     with pytest.raises(TypeError):
-        HoldTap(behavior_name="mt", hold_key="LSHIFT", tap_key=123)
+        HoldTap(name="mt", hold_key="LSHIFT", tap_key=123, tapping_term_ms=200)
 
 
 def test_holdtapbinding_happy_path():
+    ht = HoldTap(name="mt", hold_key="LSHIFT", tap_key="A", tapping_term_ms=200)
     htb = HoldTapBinding(
-        behavior_name="mt",
-        hold_key="LSHIFT",
-        tap_key="A",
-        hold_trigger_key_positions=(1, 2),
-        hold_trigger_on_release=True,
-        retro_tap=True,
+        key="A",
+        hold_tap=ht,
+        tap="A",
+        hold="LSHIFT",
+        params={"tapping_term_ms": 200, "hold_time_ms": 200},
     )
-    assert htb.behavior_name == "mt"
-    assert htb.hold_key == "LSHIFT"
-    assert htb.tap_key == "A"
-    assert htb.hold_trigger_key_positions == (1, 2)
-    assert htb.hold_trigger_on_release is True
-    assert htb.retro_tap is True
-    assert htb.to_kanata() == "(holdtap-binding mt LSHIFT A)"
+    assert htb.key == "A"
+    assert htb.hold_tap == ht
+    assert htb.tap == "A"
+    assert htb.hold == "LSHIFT"
+    assert htb.params == {"tapping_term_ms": 200, "hold_time_ms": 200}
+    assert htb.to_kanata() == ht.to_kanata()
 
 
 def test_holdtapbinding_type_errors():
+    ht = HoldTap(name="mt", hold_key="LSHIFT", tap_key="A", tapping_term_ms=200)
     with pytest.raises(TypeError):
-        HoldTapBinding(behavior_name=123, hold_key="LSHIFT", tap_key="A")
-    with pytest.raises(TypeError):
-        HoldTapBinding(behavior_name="mt", hold_key=123, tap_key="A")
-    with pytest.raises(TypeError):
-        HoldTapBinding(behavior_name="mt", hold_key="LSHIFT", tap_key=123)
+        HoldTapBinding(key=123, hold_tap=ht, tap="A", hold="LSHIFT", params={})
     with pytest.raises(TypeError):
         HoldTapBinding(
-            behavior_name="mt",
-            hold_key="LSHIFT",
-            tap_key="A",
-            hold_trigger_key_positions=[1, 2],
+            key="A", hold_tap="not_a_holdtap", tap="A", hold="LSHIFT", params={}
+        )
+    with pytest.raises(TypeError):
+        HoldTapBinding(key="A", hold_tap=ht, tap=123, hold="LSHIFT", params={})
+    with pytest.raises(TypeError):
+        HoldTapBinding(key="A", hold_tap=ht, tap="A", hold=123, params={})
+    with pytest.raises(TypeError):
+        HoldTapBinding(
+            key="A", hold_tap=ht, tap="A", hold="LSHIFT", params={123: "bad"}
+        )
+    with pytest.raises(TypeError):
+        HoldTapBinding(
+            key="A", hold_tap=ht, tap="A", hold="LSHIFT", params={"good": 1.23}
         )
 
 

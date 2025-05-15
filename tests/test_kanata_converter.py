@@ -297,7 +297,10 @@ def test_kanata_transformer_no_duplicate_macros_or_aliases():
     # Two layers, each referencing the same macro and hold-tap alias
     layer1 = Layer(name="base", index=0, bindings=[macro_binding1, holdtap_binding1])
     layer2 = Layer(name="fn", index=1, bindings=[macro_binding2, holdtap_binding2])
-    keymap = KeymapConfig(layers=[layer1, layer2], behaviors={"my_macro": macro_behavior, "lt": holdtap_behavior})
+    keymap = KeymapConfig(
+        layers=[layer1, layer2],
+        behaviors={"my_macro": macro_behavior, "lt": holdtap_behavior},
+    )
 
     transformer = KanataTransformer()
     output = transformer.transform(keymap)
@@ -354,6 +357,7 @@ def test_custom_hold_tap_behavior_full_pipeline():
 def test_unicode_macro_full_pipeline(monkeypatch):
     """Test that a Unicode macro (&pi) is converted to Kanata unicode output on macOS, and a warning comment on other platforms."""
     import sys
+
     fixture_path = os.path.join(
         os.path.dirname(__file__), "fixtures", "dts", "simple_keymap.zmk"
     )
@@ -371,8 +375,14 @@ def test_unicode_macro_full_pipeline(monkeypatch):
     # Simulate Linux
     monkeypatch.setattr(sys, "platform", "linux")
     kanata_output = transformer.transform(keymap_config)
-    assert "; WARNING: Unicode output is only supported on macOS (darwin). Unicode 'π' not emitted." in kanata_output
+    assert (
+        "; WARNING: Unicode output is only supported on macOS (darwin). Unicode 'π' not emitted."
+        in kanata_output
+    )
     # Simulate Windows
     monkeypatch.setattr(sys, "platform", "win32")
     kanata_output = transformer.transform(keymap_config)
-    assert "; WARNING: Unicode output is only supported on macOS (darwin). Unicode 'π' not emitted." in kanata_output
+    assert (
+        "; WARNING: Unicode output is only supported on macOS (darwin). Unicode 'π' not emitted."
+        in kanata_output
+    )
