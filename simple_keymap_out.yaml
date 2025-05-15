@@ -1,8 +1,0 @@
-(defcfg
-  input (kb () () )
-  output (kbd ())
-)
-
-(deflayer default_layer
-  4 */ 5 */ 6 */ 7 */ 8 */ 9 */
-)

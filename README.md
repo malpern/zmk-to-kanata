@@ -6,6 +6,58 @@ range of ZMK features. Designed for keyboard enthusiasts and power users
 who want to migrate or experiment with Kanata using their existing ZMK
 layouts.
 
+## Features
+
+- Full DTS parsing support for ZMK keymap files
+- Comprehensive behavior handling:
+  - Hold-tap behaviors with configurable timing and flavors
+  - Layer switching (momentary, toggle, to-layer)
+  - Sticky keys and modifiers
+  - Macro support
+  - Transparent keys
+- Matrix layout support with automatic size detection
+- Built-in ZMK header files - no external dependencies needed
+- Clean, readable Kanata output
+
+
+
+## Architecture
+
+```
+Input ZMK File (.zmk/.dts)
+     |
+     V
+DTS Preprocessor (cpp)
+     |
+     V
+DTS Parser (AST)
+     |
+     V
+Keymap Extractor
+     |
+     V
+Behavior Transformers
+     |
+     V
+Kanata Output Generator
+```
+
+**Key Components:**
+- **DTS Preprocessor:** Integrates with cpp, manages includes, matrix size, error handling
+- **AST Implementation:** DtsNode, DtsProperty, DtsRoot
+- **DTS Parser:** Tokenizes and parses DTS to AST (supports all ZMK property names, including #binding-cells)
+- **Keymap Extractor:** Extracts layers, behaviors, bindings from AST
+- **Behavior Transformers:** Converts ZMK behaviors to Kanata equivalents
+- **Kanata Output Generator:** Produces final Kanata config
+
+**Key Goals:**
+- Robust parsing of ZMK keymap files, including complex DTS structures
+- Support for a comprehensive set of ZMK features (layers, advanced behaviors, macros, transparent keys)
+- Matrix layout handling, including automatic size detection
+- Minimal external dependencies
+- Clean, readable Kanata output
+- CLI and Python API
+
 ---
 
 ## Quickstart
@@ -30,19 +82,6 @@ zmk-to-kanata input.zmk -o output.kbd
 - For known issues, see [Known Limitations](docs/known_limitations.md).
 
 ---
-
-## Features
-
-- Full DTS parsing support for ZMK keymap files
-- Comprehensive behavior handling:
-  - Hold-tap behaviors with configurable timing and flavors
-  - Layer switching (momentary, toggle, to-layer)
-  - Sticky keys and modifiers
-  - Macro support
-  - Transparent keys
-- Matrix layout support with automatic size detection
-- Built-in ZMK header files - no external dependencies needed
-- Clean, readable Kanata output
 
 ## Requirements
 
@@ -291,8 +330,96 @@ For more information, see:
 - [Known Limitations](docs/known_limitations.md)
 - [CONTRIBUTING.md](CONTRIBUTING.md)
 
-# ZMK-to-Kanata Feature Support
+# Preprocessor Configuration, Troubleshooting, and Platform-Specific Setup
 
-- ZMK 'caps word' is now supported and mapped to Kanata's `(caps-word 2000)` action.
-- Bluetooth and bootloader remain unsupported and are mapped to comments.
-- Improved hold-tap (home row mod) mapping: more ZMK properties (timing, flavor, quick-tap-ms, tap-hold-wait-ms, require-prior-idle-ms) are mapped; TODO comments are emitted for advanced/unsupported features (e.g., retro-tap, hold-trigger-key-positions). See the migration guide for best practices.
+## Preprocessor Configuration
+
+The ZMK to Kanata Converter uses the C preprocessor (`cpp`) to handle ZMK DTS
+files. The preprocessor expands includes, macros, and other directives before
+conversion.
+
+### Why is `cpp` needed?
+- ZMK keymap files often use includes and macros, which require preprocessing.
+- The converter relies on `cpp` to produce a fully expanded DTS file.
+
+### How to Check if `cpp` is Installed
+Run:
+```bash
+cpp --version
+```
+If you see version info, `cpp` is installed. If not, follow the instructions
+below for your platform.
+
+### Installing `cpp` by Platform
+
+#### macOS
+```bash
+xcode-select --install
+```
+This installs the Xcode command line tools, including `cpp`.
+
+#### Linux (Debian/Ubuntu)
+```bash
+sudo apt update
+sudo apt install build-essential
+```
+
+#### Linux (Fedora/RHEL)
+```bash
+sudo dnf install gcc-c++
+```
+
+#### Windows
+- `cpp` is not included by default. You can:
+  - Use [WSL](https://docs.microsoft.com/en-us/windows/wsl/) and install as on
+    Linux.
+  - Or install [MinGW](http://www.mingw.org/) and add `cpp.exe` to your PATH.
+- After installation, restart your terminal and check with `cpp --version`.
+
+### Custom Include Paths
+If your ZMK config uses custom includes, add them with `-I`:
+```bash
+zmk-to-kanata input.zmk -o output.kbd -I /path/to/includes
+```
+
+## Platform-Specific Notes
+
+| Feature         | macOS | Linux | Windows |
+|----------------|-------|-------|---------|
+| Unicode Output |  ✅   |  ❌   |   ⚠️   |
+| cpp Required   |  ✅   |  ✅   |   ✅   |
+| Kanata Support |  ✅   |  ✅   |   ✅   |
+
+- Unicode output is fully supported on macOS, experimental on Windows, and not
+  supported on Linux. See [Known Limitations](docs/known_limitations.md).
+- Windows users must install `cpp` manually (see above).
+
+## Troubleshooting
+
+### Common Errors
+
+**'cpp not found' error:**
+- Install `cpp` as described above for your platform.
+
+**Unsupported feature error:**
+- See [Known Limitations](docs/known_limitations.md). Some ZMK features require
+  manual adjustment in the Kanata output.
+
+**Unicode output warning:**
+- Unicode output is only supported on macOS. On other platforms, a warning is
+  emitted and the output is omitted.
+
+### Diagnostic Commands
+- Run with `--debug` for detailed logs:
+  ```bash
+  zmk-to-kanata input.zmk --debug
+  ```
+- Use `--dump-preprocessed` to inspect the preprocessed DTS:
+  ```bash
+  zmk-to-kanata input.zmk --dump-preprocessed
+  ```
+
+### Getting Help
+- See the [User Guide](docs/user_guide.md) and [Known Limitations](docs/known_limitations.md).
+- Open an issue on GitHub with your config and error message for support.
+
