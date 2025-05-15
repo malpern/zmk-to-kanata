@@ -334,4 +334,4 @@ The following are features or changes that, if implemented in Kanata, would allo
 ---
 
 **Kanata users and developers:**  
-If you would like to see these features, consider opening feature requests or contributing to the Kanata project!
+If you would like to see these features, consider opening feature requests or contributing to the Kanata project
