@@ -1,6 +1,25 @@
 # Contributing to ZMK to Kanata Converter
 
-Thank you for your interest in contributing to the ZMK to Kanata Converter! This document provides guidelines and information for contributors.
+Thank you for your interest in contributing! This document provides
+guidelines and information for contributors. Please read it fully before
+submitting a pull request.
+
+---
+
+## Contributor Workflow Summary
+
+1. **Fork and clone** the repository.
+2. **Create a new branch** for your changes.
+3. **Install dependencies** and set up your environment.
+4. **Write code and tests** (with type hints and docstrings).
+5. **Format and lint** your code (`black .` and `ruff check . --fix`).
+6. **Run all tests** and ensure coverage is high.
+7. **Update documentation** as needed.
+8. **Push your branch** and open a pull request (PR).
+9. **Respond to review feedback** and iterate as needed.
+10. **Celebrate your merged PR!**
+
+---
 
 ## Development Setup
 
@@ -11,117 +30,98 @@ Thank you for your interest in contributing to the ZMK to Kanata Converter! This
 
 2. **Setting Up Development Environment**
    ```bash
-   # Clone the repository
    git clone https://github.com/yourusername/zmk-to-kanata.git
    cd zmk-to-kanata
-
-   # Install dependencies
    uv pip install -r requirements.txt
-
-   # Install for development
    uv pip install -e .
    ```
 
 3. **Running Tests**
    ```bash
-   # Run all tests
    python -m pytest tests/
-
-   # Run specific test file
-   python -m pytest tests/test_holdtap_transformer.py
-
-   # Run with coverage
    python -m pytest --cov=converter tests/
    ```
+   - See [Testing Guide](docs/testing_guide.md) for more details.
+
+---
 
 ## Code Style
 
-1. **Formatting**
-   - We use Black for code formatting
-   - Maximum line length is 79 characters
-   - Run `black .` before committing
+- Use **Black** for formatting (line length ≤ 79 chars)
+- Use **Ruff** for linting
+- Add **type hints** to all new code
+- Use `@dataclass` for data models (no Pydantic, attrs, etc.)
+- Add docstrings to all functions/classes
+- See [API Documentation](docs/api_documentation.md) for style examples
 
-2. **Linting**
-   - We use Ruff for linting
-   - Run `ruff check .` to check for issues
-   - Run `ruff check . --fix` to auto-fix issues
+---
 
-3. **Type Hints**
-   - All new code should include type hints
-   - Use `mypy` to check type correctness
+## Example: Test, Docstring, and PR
 
-4. **Data Contracts**
-   - All data models must use Python's `@dataclass` for data contracts
-   - Do **not** use Pydantic, attrs, TypedDict, or NamedTuple for new models
-   - Ensure all fields are type-annotated and include docstrings
-   - Maintain consistency with existing model style throughout the codebase
+**Test Example:**
+```python
+def test_holdtap_behavior():
+    result = convert_zmk_to_kanata("tests/fixtures/holdtap.dts")
+    assert "hold-tap" in result
+```
+
+**Docstring Example:**
+```python
+def parse_layer(node: Node) -> Layer:
+    """Parse a ZMK layer node into a Layer object.
+    Args:
+        node: The parsed DTS node.
+    Returns:
+        Layer: The parsed layer.
+    Raises:
+        ParseError: If the node is invalid.
+    """
+    # ...
+```
+
+**PR Example:**
+- Title: "Add support for sticky keys"
+- Description: "Implements sticky key parsing and output. Adds tests for
+  sticky key edge cases. Updates user guide."
+
+---
 
 ## Pull Request Process
 
-1. **Before Creating a PR**
-   - Create a new branch for your changes
-   - Ensure all tests pass
-   - Add tests for new functionality
-   - Update documentation as needed
-   - Run formatters and linters
+- Ensure all tests pass and code is formatted/linted
+- Add/Update tests and documentation for new features
+- Keep PRs focused and atomic
+- Link to related issues if applicable
+- See [CONTRIBUTING.md](CONTRIBUTING.md) and [Testing Guide](docs/testing_guide.md)
 
-2. **PR Guidelines**
-   - Provide a clear description of changes
-   - Link to any related issues
-   - Include test coverage for new code
-   - Keep changes focused and atomic
+---
 
-3. **Review Process**
-   - PRs require one approval
-   - Address review feedback promptly
-   - Maintain a clean commit history
+## Contributor FAQ
 
-## Testing Guidelines
+**Q: How do I run only one test file?**
+A: `python -m pytest tests/test_somefile.py`
 
-1. **Unit Tests**
-   - Write tests for all new functionality
-   - Use descriptive test names
-   - Follow the existing test structure
-   - Include edge cases and error conditions
+**Q: How do I check code style?**
+A: Run `black .` and `ruff check . --fix` before committing.
 
-2. **Integration Tests**
-   - Add tests for new feature interactions
-   - Test with real-world ZMK configs
-   - Verify Kanata output correctness
+**Q: Where do I add new documentation?**
+A: Update `README.md` for user-facing changes, and add details/examples to
+`docs/user_guide.md` or `docs/api_documentation.md` as appropriate.
 
-3. **Test Coverage**
-   - Aim for 90%+ coverage on new code
-   - Include both success and error cases
-   - Test edge cases and invalid inputs
+**Q: What if my PR fails CI?**
+A: Check the error logs, fix issues, and push again. Ask for help if stuck.
 
-## Documentation
+**Q: Who can review my PR?**
+A: Any project maintainer. PRs require at least one approval.
 
-1. **Code Documentation**
-   - Add docstrings to all new functions/classes
-   - Include type hints and parameter descriptions
-   - Document exceptions and return values
-   - Add inline comments for complex logic
+---
 
-2. **User Documentation**
-   - Update README.md for user-facing changes
-   - Add examples for new features
-   - Document breaking changes
-   - Include troubleshooting information
+## More Resources
+- [User Guide](docs/user_guide.md)
+- [API Documentation](docs/api_documentation.md)
+- [Testing Guide](docs/testing_guide.md)
+- [Known Limitations](docs/known_limitations.md)
 
-## Issue Guidelines
+---
 
-1. **Bug Reports**
-   - Include Python and system versions
-   - Provide minimal reproduction steps
-   - Attach relevant ZMK config files
-   - Include complete error messages
-
-2. **Feature Requests**
-   - Clearly describe the use case
-   - Provide example configurations
-   - Discuss limitations and alternatives
-   - Consider backward compatibility
-
-## License
-
-By contributing, you agree that your contributions will be licensed under the project's MIT License. 
+By contributing, you agree your work is licensed under the MIT License. 

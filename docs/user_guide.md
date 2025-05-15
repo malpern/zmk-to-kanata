@@ -1,6 +1,26 @@
 # ZMK to Kanata Converter User Guide
 
-This guide provides instructions on how to use the ZMK to Kanata Converter to transform your ZMK keyboard configuration files into Kanata format.
+Welcome! This guide will help you use the ZMK to Kanata Converter to
+transform your ZMK keyboard configuration files into Kanata format.
+
+- For installation and quick usage, see the [README](../README.md).
+- For API details, see [API Documentation](api_documentation.md).
+- For known issues, see [Known Limitations](known_limitations.md).
+- For contributing, see [CONTRIBUTING.md](../CONTRIBUTING.md).
+
+---
+
+## Getting Started (Summary)
+
+1. **Install dependencies** (see [README](../README.md)).
+2. **Convert your ZMK file:**
+   ```bash
+   zmk-to-kanata input.dtsi output.kbd
+   ```
+3. **Check the output** in `output.kbd`.
+4. For advanced options, see below and the [API Documentation](api_documentation.md).
+
+---
 
 ## Table of Contents
 
@@ -143,41 +163,31 @@ The converter supports the following ZMK features:
 
 For a complete list of supported features and limitations, see the [Known Limitations](known_limitations.md) document.
 
-## Troubleshooting
+## Troubleshooting & FAQ
 
-### Common Errors
+**Q: The tool says 'Invalid input format'.**
+A: Make sure your ZMK file is valid DTS and follows the standard structure.
 
-#### Invalid Input Format
+**Q: How do I enable debug output?**
+A: Use the `--debug` flag or see the [README](../README.md#debugging-and-output-flags).
 
-```
-Error: Invalid input format. The file does not appear to be a valid ZMK configuration.
-```
+**Q: My output is missing a feature.**
+A: See [Known Limitations](known_limitations.md) for unsupported features.
 
-**Solution**: Ensure your ZMK file follows the standard format with proper indentation and syntax.
+**Q: Where can I get help?**
+A: Open an issue on GitHub and include your config and error message.
 
-#### Unsupported Feature
+**Q: How do I contribute improvements?**
+A: See [CONTRIBUTING.md](../CONTRIBUTING.md).
 
-```
-Error: Unknown binding: &some_binding
-```
+---
 
-**Solution**: The converter does not support this binding. You'll need to manually adjust the generated Kanata file. See the [Known Limitations](known_limitations.md) document for more information.
-
-#### File Permission Error
-
-```
-Error: Permission denied when writing to output file.
-```
-
-**Solution**: Ensure you have write permissions for the output file location.
-
-### Getting Help
-
-If you encounter issues not covered in this guide, please:
-
-1. Check the [Known Limitations](known_limitations.md) document
-2. Open an issue on GitHub with a detailed description of the problem
-3. Include your ZMK configuration file (or a simplified version that reproduces the issue)
+For more information:
+- [README](../README.md)
+- [API Documentation](api_documentation.md)
+- [Testing Guide](testing_guide.md)
+- [Known Limitations](known_limitations.md)
+- [CONTRIBUTING.md](../CONTRIBUTING.md)
 
 ## Examples
 

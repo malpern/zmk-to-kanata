@@ -2,6 +2,13 @@
 
 This document outlines the known limitations of the ZMK to Kanata Converter. Understanding these limitations will help you make the most of the converter and know when manual adjustments might be necessary.
 
+- For installation and usage, see the [README](../README.md).
+- For user instructions, see the [User Guide](user_guide.md).
+- For API details, see [API Documentation](api_documentation.md).
+- For contributing, see [CONTRIBUTING.md](../CONTRIBUTING.md).
+
+---
+
 ## Unsupported ZMK Features
 
 ### 1. Combos
@@ -188,3 +195,19 @@ This document outlines the known limitations of the ZMK to Kanata Converter. Und
 While the ZMK to Kanata Converter handles most common ZMK features, there are limitations that require manual intervention. By understanding these limitations, you can more effectively use the converter and make the necessary adjustments to your Kanata configuration.
 
 If you encounter issues not listed here, please report them on GitHub to help improve the converter.
+
+---
+
+## FAQ & Troubleshooting
+
+**Q: My combo or macro doesn't work in Kanata.**
+A: See the relevant section above and manually define the combo or macro in your Kanata config.
+
+**Q: The converter gives an error about an unsupported feature.**
+A: Check this document for workarounds or see the [User Guide](user_guide.md) for more help.
+
+**Q: How do I report a limitation or request support for a feature?**
+A: Open an issue on GitHub and describe your use case and ZMK config.
+
+**Q: Where can I get more help?**
+A: See the [User Guide](user_guide.md), [README](../README.md), or [CONTRIBUTING.md](../CONTRIBUTING.md).

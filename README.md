@@ -1,6 +1,35 @@
 # ZMK to Kanata Converter
 
-A tool to convert ZMK keymap files to Kanata format, using a robust DTS (Device Tree Source) parser.
+A robust tool to convert ZMK keymap files (DTS format) to Kanata
+configuration files, supporting advanced keyboard behaviors and a wide
+range of ZMK features. Designed for keyboard enthusiasts and power users
+who want to migrate or experiment with Kanata using their existing ZMK
+layouts.
+
+---
+
+## Quickstart
+
+```bash
+# Install uv (recommended, or use pip)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Clone the repository
+git clone https://github.com/yourusername/zmk-to-kanata.git
+cd zmk-to-kanata
+
+# Install dependencies
+uv pip install -r requirements.txt
+
+# Convert a ZMK keymap to Kanata format
+zmk-to-kanata input.zmk -o output.kbd
+```
+
+- For more details, see the [User Guide](docs/user_guide.md).
+- For API usage, see [API Documentation](docs/api_documentation.md).
+- For known issues, see [Known Limitations](docs/known_limitations.md).
+
+---
 
 ## Features
 
@@ -204,50 +233,34 @@ If upgrading from a previous version, note these changes:
    - Some advanced preprocessor directives may not work
    - Windows requires manual cpp installation
 
-## Troubleshooting
+## FAQ & Troubleshooting
 
-### Common Issues
+**Q: The converter fails with a 'cpp not found' error.**
+A: Install the C preprocessor (`cpp`). On macOS, use `xcode-select --install`;
+on Linux, install `build-essential` or `gcc`.
 
-1. **Preprocessing Errors**
-   - Error: "Failed to preprocess DTS file"
-   - Solution: Verify cpp is installed and in PATH
+**Q: My ZMK config uses a feature that isn't supported.**
+A: See [Known Limitations](docs/known_limitations.md). Unsupported features
+require manual adjustment in the Kanata output.
 
-2. **Node Resolution Errors**
-   - Error: "Cannot resolve node reference"
-   - Solution: Check label definitions and references
+**Q: How do I add custom include paths?**
+A: Use the `-I /path/to/includes` flag. See the [User Guide](docs/user_guide.md)
+for details.
 
-3. **Behavior Configuration**
-   - Error: "Invalid behavior configuration"
-   - Solution: Verify behavior properties match ZMK spec
+**Q: Where can I get help or report bugs?**
+A: Open an issue on GitHub and include your ZMK config and error message.
 
-### Getting Help
+**Q: How do I contribute?**
+A: See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines and workflow.
 
-If you encounter issues:
-1. Enable debug logging: `zmk-to-kanata --debug input.zmk`
-2. Check error messages for file/line information
-3. Open an issue with:
-   - Your ZMK file
-   - Complete error output
-   - Expected behavior
+---
 
-## Contributing
-
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Kanata Output Layer Naming Convention
-
-- The converter now maps the ZMK layer name `default_layer` to `default` in the Kanata output for better readability and compatibility with Kanata conventions.
-- Other layer names are preserved as-is unless further mapping is required.
-
-## Manual Review Process for Output Validation
-
-- In addition to automated tests, the project maintains a manual review process for new or complex conversions.
-- Reviewers should inspect the generated Kanata output for correctness, idiomatic formatting, and fidelity to the original ZMK intent.
-- Findings and improvement suggestions should be recorded in `MANUAL_REVIEW.md`.
+For more information, see:
+- [User Guide](docs/user_guide.md)
+- [API Documentation](docs/api_documentation.md)
+- [Testing Guide](docs/testing_guide.md)
+- [Known Limitations](docs/known_limitations.md)
+- [CONTRIBUTING.md](CONTRIBUTING.md)
 
 # ZMK-to-Kanata Feature Support
 

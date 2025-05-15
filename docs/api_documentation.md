@@ -1,6 +1,15 @@
 # ZMK to Kanata Converter API Documentation
 
-This document provides detailed information about the API of the ZMK to Kanata Converter. It's intended for developers who want to use the converter programmatically or contribute to its development.
+This document provides detailed information about the API of the ZMK to
+Kanata Converter. It is intended for developers who want to use the
+converter programmatically or contribute to its development.
+
+- For installation and CLI usage, see the [README](../README.md).
+- For user instructions, see the [User Guide](user_guide.md).
+- For contribution guidelines, see [CONTRIBUTING.md](../CONTRIBUTING.md).
+- For known issues, see [Known Limitations](known_limitations.md).
+
+---
 
 ## Table of Contents
 
@@ -440,3 +449,31 @@ write_kanata_file(kanata_config, 'output.kbd')
 ```
 
 For more examples, see the [examples](../examples) directory.
+
+## FAQ & Troubleshooting
+
+**Q: How do I import the main conversion function?**
+A: Use `from converter.main import convert_zmk_to_kanata`.
+
+**Q: What type does the API return?**
+A: Most parsing and conversion functions return a string (Kanata config)
+or a `KeymapConfig` object. See examples above.
+
+**Q: Where do I find data model definitions?**
+A: See `converter/model/keymap_model.py` and the [Model API](#model-api)
+section above.
+
+**Q: How do I report an API bug or request a feature?**
+A: Open an issue on GitHub and include a code example and error message.
+
+**Q: How do I contribute improvements to the API?**
+A: See [CONTRIBUTING.md](../CONTRIBUTING.md) for workflow and style.
+
+---
+
+For more information:
+- [README](../README.md)
+- [User Guide](user_guide.md)
+- [Testing Guide](testing_guide.md)
+- [Known Limitations](known_limitations.md)
+- [CONTRIBUTING.md](../CONTRIBUTING.md)
