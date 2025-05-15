@@ -1,4 +1,0 @@
-(defcfg
-  input (kb () () )
-  output (kbd ())
-)

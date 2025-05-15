@@ -1,0 +1,50 @@
+(defcfg
+  input (kb () () )
+  output (kbd ())
+)
+
+(defvar tap-time 200)
+(defvar hold-time 250)
+
+
+(defalias mt (tap-hold 200 None  ))
+  ; TODO: hold-tap 'mt' property '#binding-cells' not mapped. Manual review ...
+
+(defalias lt (tap-hold 200 None  ))
+  ; TODO: hold-tap 'lt' property '#binding-cells' not mapped. Manual review ...
+(deflayer default_layer
+  q
+  w
+  e
+  r
+  t
+  y
+  u
+  i
+  o
+  p
+  a
+  s
+  d
+  f
+  g
+  h
+  j
+  k
+  l
+  semi
+  z
+  x
+  c
+  v
+  b
+  n
+  m
+  comma
+  dot
+  fslh
+  lctl
+  spc
+  ret
+  ralt
+)

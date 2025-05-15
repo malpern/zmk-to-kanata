@@ -1,0 +1,288 @@
+(defcfg
+  input (kb () () )
+  output (kbd ())
+)
+
+(defvar tap-time 200)
+(defvar hold-time 250)
+
+
+(defalias mt (tap-hold 200 200 o rctl))
+
+(defalias
+  ht_lctl_a (tap-hold 200 200 a lctl)
+)
+
+(defalias
+  ht_lmet_s (tap-hold 200 200 s lmet)
+)
+
+(defalias
+  ht_lsft_t (tap-hold 200 200 t lsft)
+)
+
+(defalias
+  ht_rmet_e (tap-hold 200 200 e rmet)
+)
+
+(defalias
+  ht_ralt_i (tap-hold 200 200 i ralt)
+)
+
+(defalias
+  ht_lalt_r (tap-hold 200 200 r lalt)
+)
+
+(defalias
+  ht_rsft_n (tap-hold 200 200 n rsft)
+)
+
+(defalias
+  ht_rctl_o (tap-hold 200 200 o rctl)
+)
+(deflayer default_layer
+  tab
+  q
+  w
+  f
+  p
+  b
+  j
+  l
+  u
+  y
+  semi
+  bspc
+  esc
+  @ht_lctl_a
+  @ht_lalt_r
+  @ht_lmet_s
+  @ht_lsft_t
+  g
+  m
+  @ht_rsft_n
+  @ht_rmet_e
+  @ht_ralt_i
+  @ht_rctl_o
+  sqt
+; ERROR: malformed or unknown macro: LSHFT
+  z
+  x
+  c
+  d
+  v
+  k
+  h
+  comma
+  dot
+  fslh
+; ERROR: malformed or unknown macro: RSHFT
+  lctl
+  lmet
+  lalt
+; unsupported: mo 30 (ZMK: &mo 30)
+; unsupported: mo 31 (ZMK: &mo 31)
+; unsupported: mo 32 (ZMK: &mo 32)
+; unsupported: mo 33 (ZMK: &mo 33)
+  ralt
+  rmet
+  rctl
+)
+(deflayer num_sym_layer
+  grv
+  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+  0
+  del
+  _
+  excl
+  at
+  hash
+  dollar
+  percent
+  caret
+  amp
+  astrk
+  lpar
+  rpar
+  bslh
+  _
+  tilde
+  pipe
+  minus
+  plus
+  equal
+  lbrc
+  rbrc
+  lbrc
+  rbrc
+  under
+  _
+  _
+  _
+  _
+  _
+  spc
+  ret
+  _
+  _
+  _
+  _
+)
+(deflayer nav_layer
+  _
+  ins
+  home
+  up
+  end
+  pg_up
+  c_vol_up
+  c_prev
+  c_pp
+  c_next
+  c_mute
+  _
+  _
+  del
+  left
+  down
+  right
+  pg_dn
+  c_vol_dn
+  rsft
+  rmet
+  ralt
+  rctl
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  spc
+  ret
+  _
+  _
+  _
+  _
+)
+(deflayer function_layer
+  _
+  f1
+  f2
+  f3
+  f4
+  f5
+  f6
+  f7
+  f8
+  f9
+  f10
+  _
+  _
+  f11
+  f12
+  caps
+  slck
+  prnt
+; ERROR: malformed or unknown macro: K_APP
+  rsft
+  rmet
+  ralt
+  rctl
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  spc
+  ret
+  _
+  _
+  _
+  _
+)
+(deflayer gaming_layer
+  esc
+  kp7
+  kp8
+  kp9
+  kp_plus
+  kp_multiply
+  _
+  _
+  _
+  _
+  _
+  _
+  tab
+  kp4
+  kp5
+  kp6
+  kp_minus
+  kp_divide
+  _
+  _
+  _
+  _
+  _
+  _
+; ERROR: malformed or unknown macro: LSHFT
+  kp1
+  kp2
+  kp3
+; ERROR: malformed or unknown macro: KP_EQUAL
+  kp_dot
+  _
+  _
+  _
+  _
+  _
+  _
+  lctl
+  kp0
+  lalt
+  _
+  spc
+  kp_enter
+  _
+  _
+  _
+  _
+)
+
+; --- Unsupported/Unknown ZMK Features ---
+  ERROR: malformed or unknown macro: LSHFT
+  ERROR: malformed or unknown macro: RSHFT
+  ERROR: malformed or unknown macro: K_APP
+  ERROR: malformed or unknown macro: KP_EQUAL

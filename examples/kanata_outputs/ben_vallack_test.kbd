@@ -1,0 +1,226 @@
+(defcfg
+  input (kb () () )
+  output (kbd ())
+)
+
+(defvar tap-time 200)
+(defvar hold-time 250)
+
+
+(defalias mt (tap-hold 200 None spc lc(ls(lalt))))
+  ; TODO: hold-tap 'mt' property '#binding-cells' not mapped. Manual review ...
+
+(defalias lt (tap-hold 200 None  ))
+  ; TODO: hold-tap 'lt' property '#binding-cells' not mapped. Manual review ...
+
+(defalias hm (tap-hold 200 None 4 rmet))
+  ; TODO: hold-tap 'hm' property 'label' not mapped. Manual review needed.
+  ; TODO: hold-tap 'hm' property '#binding-cells' not mapped. Manual review ...
+  ; TODO: hold-tap 'hm' property 'quick_tap_ms' not mapped. Manual review ne...
+
+(defalias hs (tap-hold 150 None percent lsft))
+  ; TODO: hold-tap 'hs' property 'label' not mapped. Manual review needed.
+  ; TODO: hold-tap 'hs' property '#binding-cells' not mapped. Manual review ...
+  ; TODO: hold-tap 'hs' property 'quick_tap_ms' not mapped. Manual review ne...
+
+(defalias td (tap-hold 150 None  ))
+  ; TODO: hold-tap 'td' property 'label' not mapped. Manual review needed.
+  ; TODO: hold-tap 'td' property '#binding-cells' not mapped. Manual review ...
+  ; TODO: hold-tap 'td' property 'quick_tap_ms' not mapped. Manual review ne...
+
+(defalias
+  ht_lmet_la(ls(rbrc)) (tap-hold 200 None la(ls(rbrc)) lmet)
+)
+
+(defalias
+  ht_LCTL_s (tap-hold 200 None s LCTL)
+)
+
+(defalias
+  ht_lsft_percent (tap-hold 150 None percent lsft)
+)
+
+(defalias
+  ht_lsft_q (tap-hold 150 None q lsft)
+)
+
+(defalias
+  ht_rmet_lbrc (tap-hold 200 None lbrc rmet)
+)
+
+(defalias
+  ht_rsft_x (tap-hold 150 None x rsft)
+)
+
+(defalias
+  ht_lalt_c_vol_dn (tap-hold 200 None c_vol_dn lalt)
+)
+
+(defalias
+  ht_lsft_tilde (tap-hold 150 None tilde lsft)
+)
+
+(defalias
+  ht_lmet_t (tap-hold 200 None t lmet)
+)
+
+(defalias
+  ht_RCTL_pipe (tap-hold 200 None pipe RCTL)
+)
+
+(defalias
+  ht_lc(ls(lalt))_spc (tap-hold 200 None spc lc(ls(lalt)))
+)
+
+(defalias
+  ht_ralt_rbrc (tap-hold 200 None rbrc ralt)
+)
+
+(defalias
+  ht_RCTL_a (tap-hold 200 None a RCTL)
+)
+
+(defalias
+  ht_rmet_n (tap-hold 200 None n rmet)
+)
+
+(defalias
+  ht_ralt_k (tap-hold 200 None k ralt)
+)
+
+(defalias
+  ht_rmet_a (tap-hold 200 None 4 rmet)
+)
+
+(defalias
+  ht_LCTL_equal (tap-hold 200 None equal LCTL)
+)
+
+(defalias
+  ht_lmet_c_vol_up (tap-hold 200 None c_vol_up lmet)
+)
+
+(defalias
+  ht_lalt_r (tap-hold 200 None r lalt)
+)
+
+(defalias
+  ht_lalt_la(rbrc) (tap-hold 200 None la(rbrc) lalt)
+)
+(deflayer default_layer
+  tab
+  c
+  l
+  m
+  _
+  _
+  f
+  u
+  z
+; ERROR: malformed or unknown macro: BKSP
+  i
+  @ht_LCTL_s
+  @ht_lalt_r
+  @ht_lmet_t
+  _
+  _
+  @ht_rmet_n
+  @ht_ralt_k
+  @ht_RCTL_a
+  o
+  @ht_lsft_q
+  v
+  w
+  d
+  @ht_lc(ls(lalt))_spc
+  e
+  h
+  y
+; ERROR: [extractor] Invalid hold-tap binding for 'td': params=['EXCL']. C...
+  dot
+  @ht_rsft_x
+  @ht_lc(ls(lalt))_spc
+  _
+  _
+  e
+)
+(deflayer left_layer
+  _
+  atsn
+; ERROR: [extractor] Invalid hold-tap binding for 'td': params=['LC(LG(LS(...
+  ls(3)
+  dollar
+  _
+  _
+  ls(comma)
+  ls(dot)
+  caret
+  _
+  tab
+  @ht_LCTL_equal
+  @ht_lalt_la(rbrc)
+  @ht_lmet_la(ls(rbrc))
+  _
+  _
+  @ht_rmet_lbrc
+  @ht_ralt_rbrc
+  @ht_RCTL_pipe
+  amp
+  @ht_lsft_tilde
+  grv
+  la(lbrc)
+  la(ls(lbrc))
+  0
+  2
+  lpar
+  rpar
+  rbrc
+  rsft
+  0
+  _
+  _
+  2
+)
+(deflayer right_layer
+  _
+  c_pp
+  c_prev
+  c_next
+  _
+  _
+  7
+  8
+  9
+  _
+  tab
+  _
+  @ht_lalt_c_vol_dn
+  @ht_lmet_c_vol_up
+  _
+  _
+  @ht_rmet_4
+  5
+  6
+  equal
+  @ht_lsft_percent
+  percent
+  fslh
+  astrk
+  0
+  _
+  1
+  2
+; ERROR: [extractor] Invalid hold-tap binding for 'td': params=['DOT']. Cr...
+  3
+  minus
+  0
+  _
+  _
+  _
+)
+
+; --- Unsupported/Unknown ZMK Features ---
+  ERROR: malformed or unknown macro: BKSP
+  ERROR: [extractor] Invalid hold-tap binding for 'td': params=['EXCL']. Cre...
+  ERROR: [extractor] Invalid hold-tap binding for 'td': params=['LC(LG(LS(N4...
+  ERROR: [extractor] Invalid hold-tap binding for 'td': params=['DOT']. Crea...

@@ -1,0 +1,74 @@
+(defcfg
+  input (kb () () )
+  output (kbd ())
+)
+
+(defvar tap-time 200)
+(defvar hold-time 250)
+
+
+(defalias mt (tap-hold 200 200 semi rmet))
+
+(defalias
+  ht_LCTL_d (tap-hold 200 200 d LCTL)
+)
+
+(defalias
+  ht_lalt_s (tap-hold 200 200 s lalt)
+)
+
+(defalias
+  ht_rmet_semi (tap-hold 200 200 semi rmet)
+)
+
+(defalias
+  ht_RSFT_j (tap-hold 200 200 j RSFT)
+)
+
+(defalias
+  ht_lmet_a (tap-hold 200 200 a lmet)
+)
+
+(defalias
+  ht_ralt_l (tap-hold 200 200 l ralt)
+)
+
+(defalias
+  ht_RCTL_k (tap-hold 200 200 k RCTL)
+)
+
+(defalias
+  ht_LSFT_f (tap-hold 200 200 f LSFT)
+)
+(deflayer default_layer
+  q
+  w
+  e
+  r
+  t
+  y
+  u
+  i
+  o
+  p
+  @ht_lmet_a
+  @ht_lalt_s
+  @ht_LCTL_d
+  @ht_LSFT_f
+  g
+  h
+  @ht_RSFT_j
+  @ht_RCTL_k
+  @ht_ralt_l
+  @ht_rmet_semi
+  z
+  x
+  c
+  v
+  b
+  n
+  m
+  comma
+  dot
+  fslh
+)

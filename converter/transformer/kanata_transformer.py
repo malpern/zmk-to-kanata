@@ -15,6 +15,7 @@ from .sticky_key_transformer import StickyKeyTransformer
 
 import logging
 import re
+from converter.transformer.keycode_map import zmk_to_kanata
 
 # --- Unsupported ZMK features and their Kanata equivalents/limitations ---
 UNSUPPORTED_ZMK_FEATURES = {
@@ -186,8 +187,8 @@ class KanataTransformer:
                         continue
                     tap_time = getattr(behavior, "tapping_term_ms", 200)
                     hold_time = getattr(behavior, "hold_time_ms", tap_time)
-                    tap_key = getattr(behavior, "tap_key", "A")
-                    hold_key = getattr(behavior, "hold_key", "LCTRL")
+                    tap_key = self._to_kanata_symbolic(getattr(behavior, "tap_key", "A"))
+                    hold_key = self._to_kanata_symbolic(getattr(behavior, "hold_key", "LCTRL"))
                     alias_name = behavior.name
                     config_parts = [
                         "tap-hold",
@@ -291,25 +292,20 @@ class KanataTransformer:
                 continue
             tap_time = getattr(behavior, "tapping_term_ms", 200)
             hold_time = getattr(behavior, "hold_time_ms", tap_time)
-            tap_key = getattr(behavior, "tap_key", None)
-            hold_key = getattr(behavior, "hold_key", None)
-            if tap_key is None or hold_key is None:
-                hold_key, tap_key = modifier, key
-            if tap_key is None:
-                tap_key = "UNKNOWN"
-            if hold_key is None:
-                hold_key = "UNKNOWN"
+            # Use mapped values for tap and hold keys, always symbolic
+            mapped_tap = self._to_kanata_symbolic(key)
+            mapped_hold = self._to_kanata_symbolic(modifier)
             alias_name = self._holdtap_alias_name(
                 alias_type,
-                modifier,
-                key,
+                mapped_hold,
+                mapped_tap,
             )
             config_parts = [
                 "tap-hold",
                 str(tap_time),
                 str(hold_time),
-                str(tap_key),
-                str(hold_key),
+                str(mapped_tap),
+                str(mapped_hold),
             ]
             alias_def = f"(defalias\n  {alias_name} ({' '.join(config_parts)})\n)"
             if alias_name not in self.hold_tap_definitions:
@@ -430,6 +426,7 @@ class KanataTransformer:
                     hold_param,
                     tap_param,
                 )
+                logging.debug(f"[DEBUG] _transform_layer: behavior_type={behavior_type}, hold_param={hold_param}, tap_param={tap_param}, alias_name={alias_name}")
                 lines.append(f"  @{alias_name}")
                 continue
             result = self._transform_binding(binding)
@@ -519,7 +516,7 @@ class KanataTransformer:
                 tap = binding.params[0]
                 if behavior_type == "zmk,behavior-tap-dance":
                     # Safe: treat as tap-only, no comment
-                    from .keycode_map import zmk_to_kanata
+                    from converter.transformer.keycode_map import zmk_to_kanata
 
                     mapped = zmk_to_kanata(str(tap))
                     return mapped if mapped is not None else str(tap)
@@ -585,7 +582,7 @@ class KanataTransformer:
 
         # Fallback: try to emit the param or binding as-is
         if binding.params:
-            from .keycode_map import zmk_to_kanata, MODIFIER_MACROS
+            from converter.transformer.keycode_map import zmk_to_kanata, MODIFIER_MACROS
 
             param_str = str(binding.params[0])
             mapped = zmk_to_kanata(param_str)
@@ -664,10 +661,24 @@ class KanataTransformer:
             return f"{indent}{truncated_comment.strip()}"
 
     def _holdtap_alias_name(self, behavior_type, hold_param, tap_param):
-        """Generate a consistent alias name for hold-tap behaviors."""
-        hold = self.macro_transformer._convert_key(hold_param)
-        tap = self.macro_transformer._convert_key(tap_param)
+        """Generate a consistent alias name for hold-tap behaviors using Kanata symbolic names."""
+        hold = self._to_kanata_symbolic(hold_param)
+        tap = self._to_kanata_symbolic(tap_param)
+        logging.debug(f"[DEBUG] _holdtap_alias_name: behavior_type={behavior_type}, hold_param={hold_param}, tap_param={tap_param}, hold={hold}, tap={tap}")
         if behavior_type == "lt":
             return f"lt_{hold}_{tap}"
         else:
             return f"ht_{hold}_{tap}"
+
+    def _to_kanata_symbolic(self, zmk_key):
+        mapped = self.macro_transformer._convert_key(zmk_key)
+        if mapped is not None and not mapped.isdigit():
+            symbolic = mapped
+        else:
+            rev = getattr(self.macro_transformer, 'reverse_key_map', None)
+            if rev and zmk_key.isdigit() and zmk_key in rev:
+                symbolic = rev[zmk_key]
+            else:
+                symbolic = zmk_key
+        kanata = zmk_to_kanata(symbolic)
+        return kanata if kanata is not None else symbolic

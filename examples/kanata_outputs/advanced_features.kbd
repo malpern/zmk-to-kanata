@@ -1,0 +1,194 @@
+(defcfg
+  input (kb () () )
+  output (kbd ())
+)
+
+(defvar tap-time 200)
+(defvar hold-time 250)
+
+
+(defalias mt (tap-hold 200 None semi rctl))
+  ; TODO: hold-tap 'mt' property '#binding-cells' not mapped. Manual review ...
+
+(defalias lt (tap-hold 200 None  ))
+  ; TODO: hold-tap 'lt' property '#binding-cells' not mapped. Manual review ...
+
+(defalias
+  ht_lalt_s (tap-hold 200 None s lalt)
+)
+
+(defalias
+  ht_rmet_k (tap-hold 200 None k rmet)
+)
+
+(defalias
+  ht_ralt_l (tap-hold 200 None l ralt)
+)
+
+(defalias
+  ht_rsft_j (tap-hold 200 None j rsft)
+)
+
+(defalias
+  ht_rctl_semi (tap-hold 200 None semi rctl)
+)
+
+(defalias
+  ht_lsft_f (tap-hold 200 None f lsft)
+)
+
+(defalias
+  ht_lctl_a (tap-hold 200 None a lctl)
+)
+
+(defalias
+  ht_lmet_d (tap-hold 200 None d lmet)
+)
+(deflayer default_layer
+  esc
+  q
+  w
+  e
+  r
+  t
+  y
+  u
+  i
+  o
+  p
+  bspc
+  tab
+  @ht_lctl_a
+  @ht_lalt_s
+  @ht_lmet_d
+  @ht_lsft_f
+  g
+  h
+  @ht_rsft_j
+  @ht_rmet_k
+  @ht_ralt_l
+  @ht_rctl_semi
+  sqt
+; ERROR: malformed or unknown macro: LSHFT
+  z
+  x
+  c
+  v
+  b
+  n
+  m
+  comma
+  dot
+  fslh
+; ERROR: malformed or unknown macro: RSHFT
+  lctl
+  lmet
+  lalt
+  1
+  spc
+  spc
+  2
+  ralt
+  rmet
+  rctl
+)
+(deflayer lower_layer
+  grv
+  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+  0
+  del
+  _
+  _
+  _
+  _
+  _
+  _
+  left
+  down
+  up
+  right
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+)
+(deflayer raise_layer
+  f1
+  f2
+  f3
+  f4
+  f5
+  f6
+  f7
+  f8
+  f9
+  f10
+  f11
+  f12
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+  _
+)
+
+; --- Unsupported/Unknown ZMK Features ---
+  ERROR: malformed or unknown macro: LSHFT
+  ERROR: malformed or unknown macro: RSHFT

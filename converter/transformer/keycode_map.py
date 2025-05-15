@@ -153,6 +153,7 @@ ZMK_TO_KANATA = {
     "RPRN": "rpar",
     "COLON": "colon",
     "ATSN": "atsn",
+    "SLASH": "fslh",
 }
 
 # Modifier macro patterns
@@ -167,6 +168,132 @@ MODIFIER_MACROS = [
     (r"^LC\((.+)\)$", "lc"),
 ]
 
+# Add numeric HID usage codes for standard keys (based on ZMK/QMK HID usage tables)
+NUMERIC_TO_SYMBOLIC = {
+    # Letters
+    "4": "A",
+    "5": "B",
+    "6": "C",
+    "7": "D",
+    "8": "E",
+    "9": "F",
+    "10": "G",
+    "11": "H",
+    "12": "I",
+    "13": "J",
+    "14": "K",
+    "15": "L",
+    "16": "M",
+    "17": "N",
+    "18": "O",
+    "19": "P",
+    "20": "Q",
+    "21": "R",
+    "22": "S",
+    "23": "T",
+    "24": "U",
+    "25": "V",
+    "26": "W",
+    "27": "X",
+    "28": "Y",
+    "29": "Z",
+    # Numbers
+    "30": "N1",
+    "31": "N2",
+    "32": "N3",
+    "33": "N4",
+    "34": "N5",
+    "35": "N6",
+    "36": "N7",
+    "37": "N8",
+    "38": "N9",
+    "39": "N0",
+    # Enter, Escape, Backspace, Tab, Space
+    "40": "ENTER",
+    "41": "ESC",
+    "42": "BSPC",
+    "43": "TAB",
+    "44": "SPACE",
+    # Punctuation
+    "45": "MINUS",
+    "46": "EQUAL",
+    "47": "LBKT",
+    "48": "RBKT",
+    "49": "BSLH",
+    "51": "SEMI",
+    "52": "APOS",
+    "53": "GRAVE",
+    "54": "COMMA",
+    "55": "DOT",
+    "56": "FSLH",
+    # Caps Lock
+    "57": "CAPS",
+    # Function keys
+    "58": "F1",
+    "59": "F2",
+    "60": "F3",
+    "61": "F4",
+    "62": "F5",
+    "63": "F6",
+    "64": "F7",
+    "65": "F8",
+    "66": "F9",
+    "67": "F10",
+    "68": "F11",
+    "69": "F12",
+    # Print, Scroll, Pause
+    "70": "PSCRN",
+    "71": "SLCK",
+    "72": "PAUSE",
+    # Insert, Home, Page Up, Delete, End, Page Down
+    "73": "INS",
+    "74": "HOME",
+    "75": "PG_UP",
+    "76": "DEL",
+    "77": "END",
+    "78": "PG_DN",
+    # Arrows
+    "79": "RIGHT",
+    "80": "LEFT",
+    "81": "DOWN",
+    "82": "UP",
+    # Numpad
+    "83": "NUMLOCK",
+    "84": "KP_SLASH",
+    "85": "KP_ASTERISK",
+    "86": "KP_MINUS",
+    "87": "KP_PLUS",
+    "88": "KP_ENTER",
+    "89": "KP_N1",
+    "90": "KP_N2",
+    "91": "KP_N3",
+    "92": "KP_N4",
+    "93": "KP_N5",
+    "94": "KP_N6",
+    "95": "KP_N7",
+    "96": "KP_N8",
+    "97": "KP_N9",
+    "98": "KP_N0",
+    "99": "KP_DOT",
+    # Modifiers
+    "224": "LCTRL",
+    "225": "LSHIFT",
+    "226": "LALT",
+    "227": "LGUI",
+    "228": "RCTRL",
+    "229": "RSHIFT",
+    "230": "RALT",
+    "231": "RGUI",
+}
+
+# Update ZMK_TO_KANATA to include numeric keys for all mapped symbolic keys
+for num, sym in NUMERIC_TO_SYMBOLIC.items():
+    if sym in ZMK_TO_KANATA:
+        ZMK_TO_KANATA[num] = ZMK_TO_KANATA[sym]
+
+# Reverse mapping for numeric to symbolic
+REVERSE_KEY_MAP = {num: sym for num, sym in NUMERIC_TO_SYMBOLIC.items()}
+
 
 def zmk_to_kanata(key: str) -> Optional[str]:
     """
@@ -179,7 +306,11 @@ def zmk_to_kanata(key: str) -> Optional[str]:
         return ZMK_TO_KANATA[key]
     # Numeric code (decimal or hex)
     if re.match(r"^(0x[0-9A-Fa-f]+|\d+)$", key):
-        return key.lower()
+        # Try to map numeric to symbolic, then to Kanata
+        sym = REVERSE_KEY_MAP.get(key)
+        if sym and sym in ZMK_TO_KANATA:
+            return ZMK_TO_KANATA[sym]
+        return f"; TODO: Unknown numeric keycode: {key}"
     # Modifier macro (possibly nested)
     for pattern, kanata_mod in MODIFIER_MACROS:
         m = re.match(pattern, key)

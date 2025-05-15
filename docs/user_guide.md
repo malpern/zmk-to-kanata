@@ -516,3 +516,30 @@ For more examples, see the [examples](../examples) directory.
 - ZMK: `&pi`
 - Kanata (macOS): `(unicode "π")`
 - Kanata (Windows/Linux): `; WARNING: Unicode output is only supported on macOS (darwin). Unicode 'π' not emitted.`
+
+# Known Limitations
+
+The ZMK to Kanata Converter is robust, but some limitations remain:
+
+1. **Unsupported ZMK Features**
+   - Combos (complex combos with layers, macros, or modifiers)
+   - RGB/LED controls
+   - Bluetooth profiles
+   - Custom behaviors beyond standard types
+
+2. **Technical Limitations**
+   - Matrix size must be defined or detectable
+   - Some advanced preprocessor directives may not work
+   - Windows requires manual cpp installation
+
+3. **Unicode Output**
+   - Fully supported on macOS
+   - Experimental on Windows
+   - Not supported on Linux
+
+4. **Manual Adjustments**
+   - Some ZMK features require manual adjustment in the Kanata output
+   - Review output for TODO comments and warnings
+
+For a complete and up-to-date list, see the full
+[Known Limitations](known_limitations.md) document.
