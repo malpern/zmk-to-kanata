@@ -171,7 +171,7 @@ class KanataTransformer:
                         self.output.append(f"\n{macro_str}")
                 elif behavior.type == "hold-tap":
                     # Always emit a base alias for any hold-tap type with a name
-                    if not (hasattr(behavior, 'name')):
+                    if not (hasattr(behavior, "name")):
                         msg = (
                             f"Warning: Skipping hold-tap behavior with no name "
                             f"(got {type(behavior)})."
@@ -182,9 +182,7 @@ class KanataTransformer:
                             f"; unsupported: hold-tap behavior with no name "
                             f"(got {type(behavior)})"
                         )
-                        self.output.append(
-                            self._format_binding_comment("", comment)
-                        )
+                        self.output.append(self._format_binding_comment("", comment))
                         continue
                     tap_time = getattr(behavior, "tapping_term_ms", 200)
                     hold_time = getattr(behavior, "hold_time_ms", tap_time)
@@ -198,9 +196,7 @@ class KanataTransformer:
                         str(tap_key),
                         str(hold_key),
                     ]
-                    alias_def = (
-                        f"(defalias {alias_name} ({' '.join(config_parts)}))"
-                    )
+                    alias_def = f"(defalias {alias_name} ({' '.join(config_parts)}))"
                     self.output.append(f"\n{alias_def}")
                     # Emit comments for unmapped properties (like retro-tap)
                     extra = getattr(behavior, "extra_properties", {})
