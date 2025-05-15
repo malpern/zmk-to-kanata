@@ -13,6 +13,7 @@ from ..models import (
     ConditionalLayer,
 )
 import logging
+from converter.behaviors.unicode import is_unicode_binding, UnicodeBinding
 
 
 class KeymapExtractor:
@@ -369,9 +370,22 @@ class KeymapExtractor:
         ht = HoldTap(name="", tapping_term_ms=tapping_term_ms)
         # Store all extra properties for best-effort mapping
         ht.extra_properties = {}
+        # Explicitly parse and store all relevant hold-tap properties
         for prop_name, prop in node.properties.items():
             if prop_name not in ("compatible", "tapping-term-ms"):
                 ht.extra_properties[prop_name] = prop.value
+        # Ensure all known properties are present (even if missing)
+        for known in [
+            "quick-tap-ms",
+            "hold-trigger-key-positions",
+            "retro-tap",
+            "tap-hold-wait-ms",
+            "require-prior-idle-ms",
+            "flavor",
+            "bindings",
+        ]:
+            if known not in ht.extra_properties:
+                ht.extra_properties[known] = None
         return ht
 
     def _extract_layers(self, keymap_node: DtsNode) -> None:
@@ -409,7 +423,6 @@ class KeymapExtractor:
         if not isinstance(value, list):
             raise ValueError("Invalid binding value type, expected list")
 
-        # Built-in ZMK behaviors that may not be defined in user config
         BUILTIN_BEHAVIORS = {
             # Key behaviors
             "kp": "zmk,behavior-key-press",
@@ -437,9 +450,16 @@ class KeymapExtractor:
         i = 0
         while i < len(value):
             token = value[i]
-
+            binding_str = str(token)
+            # Always check for Unicode macro first
+            if is_unicode_binding(binding_str):
+                unicode_binding = UnicodeBinding.from_zmk(binding_str)
+                if unicode_binding is not None:
+                    bindings.append(unicode_binding)
+                i += 1
+                continue
             if isinstance(token, str) and token.startswith("&"):
-                behavior_name = token[1:]  # Remove &
+                behavior_name = token[1:]
                 params = []
                 num_params_expected = 0
 
@@ -524,6 +544,11 @@ class KeymapExtractor:
                     bindings.append(self._create_binding([behavior_name] + params))
                     i += 1 + actual_params_consumed
             else:
+                # Unicode macro detection
+                if is_unicode_binding(str(token)):
+                    unicode_binding = UnicodeBinding.from_zmk(str(token))
+                    bindings.append(unicode_binding)
+                    continue
                 bindings.append(self._create_binding(str(token)))
                 i += 1
         return bindings

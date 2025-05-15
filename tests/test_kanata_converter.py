@@ -349,3 +349,30 @@ def test_custom_hold_tap_behavior_full_pipeline():
     assert "tap-hold" in kanata_output
     # Check for a comment about the unmapped retro-tap property
     assert "retro-tap" in kanata_output
+
+
+def test_unicode_macro_full_pipeline(monkeypatch):
+    """Test that a Unicode macro (&pi) is converted to Kanata unicode output on macOS, and a warning comment on other platforms."""
+    import sys
+    fixture_path = os.path.join(
+        os.path.dirname(__file__), "fixtures", "dts", "simple_keymap.zmk"
+    )
+    with open(fixture_path, "r") as f:
+        dts_content = f.read()
+    parser = DtsParser()
+    ast = parser.parse(dts_content)
+    extractor = KeymapExtractor()
+    keymap_config = extractor.extract(ast)
+    transformer = KanataTransformer()
+    # Simulate macOS
+    monkeypatch.setattr(sys, "platform", "darwin")
+    kanata_output = transformer.transform(keymap_config)
+    assert '(unicode "π")' in kanata_output
+    # Simulate Linux
+    monkeypatch.setattr(sys, "platform", "linux")
+    kanata_output = transformer.transform(keymap_config)
+    assert "; WARNING: Unicode output is only supported on macOS (darwin). Unicode 'π' not emitted." in kanata_output
+    # Simulate Windows
+    monkeypatch.setattr(sys, "platform", "win32")
+    kanata_output = transformer.transform(keymap_config)
+    assert "; WARNING: Unicode output is only supported on macOS (darwin). Unicode 'π' not emitted." in kanata_output

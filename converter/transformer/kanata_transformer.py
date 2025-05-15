@@ -159,16 +159,49 @@ class KanataTransformer:
                     hold_time = extra.get("hold-time-ms", tap_time)
                     flavor = extra.get("flavor", "balanced")
                     bindings = extra.get("bindings", None)
+                    quick_tap_ms = extra.get("quick-tap-ms")
+                    tap_hold_wait_ms = extra.get("tap-hold-wait-ms")
+                    require_prior_idle_ms = extra.get("require-prior-idle-ms")
+                    retro_tap = extra.get("retro-tap")
+                    hold_trigger_keys = extra.get("hold-trigger-key-positions")
                     # Only map if bindings are present and length 2
                     if bindings and isinstance(bindings, list) and len(bindings) == 2:
                         from converter.transformer.keycode_map import zmk_to_kanata
                         tap_key = zmk_to_kanata(str(bindings[0])) or str(bindings[0])
                         hold_key = zmk_to_kanata(str(bindings[1])) or str(bindings[1])
                         alias_name = behavior.name
-                        alias_def = (
-                            f"(defalias\n  {alias_name} (tap-hold {tap_time} {hold_time} {tap_key} {hold_key})\n)"
-                        )
+                        # Build Kanata tap-hold config with extra params if present
+                        config_parts = ["tap-hold", str(tap_time), str(hold_time), tap_key, hold_key]
+                        if quick_tap_ms is not None:
+                            config_parts.append(str(quick_tap_ms))
+                        if tap_hold_wait_ms is not None:
+                            if len(config_parts) == 5:
+                                config_parts.append("0")
+                            config_parts.append(str(tap_hold_wait_ms))
+                        if require_prior_idle_ms is not None:
+                            while len(config_parts) < 7:
+                                config_parts.append("0")
+                            config_parts.append(str(require_prior_idle_ms))
+                        alias_def = f"(defalias\n  {alias_name} ({' '.join(config_parts)})\n)"
                         self.output.append(f"\n{alias_def}")
+                        # Comments for advanced/unsupported properties
+                        if retro_tap is not None:
+                            msg = f"Warning: Hold-tap '{alias_name}' uses retro-tap, which Kanata does not support. Manual review needed."
+                            logging.warning(msg)
+                            self.error_messages.append(msg)
+                            comment = f"; TODO: retro-tap property present; Kanata does not support retro-tap. Manual review needed."
+                            self.output.append(self._format_binding_comment("", comment))
+                        if hold_trigger_keys is not None:
+                            msg = f"Warning: Hold-tap '{alias_name}' uses hold-trigger-key-positions, which Kanata does not support. Manual review needed."
+                            logging.warning(msg)
+                            self.error_messages.append(msg)
+                            comment = f"; TODO: hold-trigger-key-positions present; Kanata does not support this property. Manual review needed."
+                            self.output.append(self._format_binding_comment("", comment))
+                        # Emit TODO comments for any other unmapped property
+                        for prop in extra:
+                            if prop not in ("hold-time-ms", "flavor", "bindings", "quick-tap-ms", "tap-hold-wait-ms", "require-prior-idle-ms", "retro-tap", "hold-trigger-key-positions"):
+                                comment = f"; TODO: hold-tap '{alias_name}' property '{prop}' not mapped. Manual review needed."
+                                self.output.append(self._format_binding_comment("", comment))
                     else:
                         msg = (
                             f"Warning: Hold-tap behavior '{behavior.name}' skipped: missing or invalid bindings."
@@ -179,7 +212,7 @@ class KanataTransformer:
                         self.output.append(self._format_binding_comment("", comment))
                     # Emit warnings/comments for any unknown properties
                     for prop in extra:
-                        if prop not in ("hold-time-ms", "flavor", "bindings"):
+                        if prop not in ("hold-time-ms", "flavor", "bindings", "quick-tap-ms", "tap-hold-wait-ms", "require-prior-idle-ms", "retro-tap", "hold-trigger-key-positions"):
                             msg = (
                                 f"Warning: Hold-tap behavior '{behavior.name}' has unsupported property '{prop}'"
                             )
@@ -336,6 +369,16 @@ class KanataTransformer:
         lines = [f"(deflayer {layer.name}"]
         for idx, binding in enumerate(layer.bindings):
             logging.debug(f"  Binding {idx}: {binding}")
+            # Only call to_kanata for UnicodeBinding (or non-plain Binding)
+            if type(binding).__name__ == "UnicodeBinding":
+                result = binding.to_kanata()
+                result_stripped = result.lstrip()
+                if result_stripped.startswith(";"):
+                    lines.append(result_stripped)
+                else:
+                    lines.append(f"  {result}")
+                continue
+            # Existing logic for plain Binding
             if (
                 hasattr(binding, "behavior")
                 and binding.behavior is not None
@@ -366,7 +409,6 @@ class KanataTransformer:
             result = self._transform_binding(binding)
             result_stripped = result.lstrip()
             if result_stripped.startswith(";"):
-                # Output comment as a separate line in the layer block, no indentation
                 lines.append(result_stripped)
             else:
                 lines.append(f"  {result}")

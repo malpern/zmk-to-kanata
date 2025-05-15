@@ -42,11 +42,24 @@ This document outlines the known limitations of the ZMK to Kanata Converter. Und
 
 **Description**: ZMK allows defining custom behaviors like homerow mods using the `zmk,behavior-hold-tap` compatible property.
 
-**Limitation**: Best-effort mapping is provided for custom hold-tap behaviors (home row mods). Standard properties (timing, flavor, bindings) are mapped to Kanata. Any unmapped or advanced properties (e.g., retro-tap, hold-trigger-key-positions) are commented in the output for manual review.
+**Limitation**: Best-effort mapping is provided for custom hold-tap behaviors (home row mods). Standard properties (timing, flavor, bindings, quick-tap-ms, tap-hold-wait-ms, require-prior-idle-ms) are mapped to Kanata. Advanced properties (e.g., retro-tap, hold-trigger-key-positions, or unknowns) are not supported and are marked with TODO comments in the output for manual review.
 
-**Workaround**: Review the Kanata output for comments about unmapped properties and adjust manually if needed.
+**Workaround**: Review the Kanata output for TODO comments about unmapped properties and adjust manually if needed. See the [Hold-Tap Migration Guide](user_guide.md#hold-tap-migration-guide) for best practices and example macros.
 
-| Custom hold-tap (home row mod) | ⚠️         | Best-effort mapping; unmapped properties commented |
+| Property                     | Supported? | Notes/Workaround                        |
+|------------------------------|------------|-----------------------------------------|
+| tapping-term-ms              | ✅         | Fully mapped                            |
+| hold-time-ms                 | ✅         | Fully mapped                            |
+| flavor                       | ✅         | Fully mapped                            |
+| quick-tap-ms                 | ✅         | Mapped if present                       |
+| tap-hold-wait-ms             | ✅         | Mapped if present                       |
+| require-prior-idle-ms        | ✅         | Mapped if present                       |
+| bindings                     | ✅         | Fully mapped                            |
+| retro-tap                    | ❌         | TODO comment, manual review needed      |
+| hold-trigger-key-positions   | ❌         | TODO comment, manual review needed      |
+| (other/unknown properties)   | ❌         | TODO comment, manual review needed      |
+
+> **Note:** If your ZMK config uses advanced hold-tap features, check the Kanata output for TODO comments and review the migration guide.
 
 ### 3. Macros
 
@@ -81,6 +94,22 @@ This document outlines the known limitations of the ZMK to Kanata Converter. Und
 **Limitation**: Some advanced modifier combinations may not translate correctly to Kanata.
 
 **Workaround**: Review and adjust modifier keys in the generated Kanata file.
+
+### 3. Unicode Output
+
+**Description**: ZMK supports Unicode output via macros or custom behaviors, allowing you to type arbitrary Unicode characters (e.g., emoji, accented letters).
+
+**Limitation**: Unicode output is supported on macOS via Kanata's (unicode ...) action. It is experimental on Windows and not supported on Linux. On non-macOS platforms, the converter emits a warning comment instead of Unicode output.
+
+**Workaround**: On macOS, Unicode output works out of the box. On Windows, it is experimental and may not work for all characters. On Linux, Unicode output is not supported by Kanata.
+
+**Example:**
+
+- ZMK: `&pi`
+- Kanata (macOS): `(unicode "π")`
+- Kanata (Windows/Linux): `; WARNING: Unicode output is only supported on macOS (darwin). Unicode 'π' not emitted.`
+
+| Unicode output         | macOS: ✅ | Windows: ⚠️ | Linux: ❌ | See FAQ and workaround |
 
 ## Conversion Accuracy Issues
 
@@ -175,6 +204,8 @@ This document outlines the known limitations of the ZMK to Kanata Converter. Und
 
 **Limitation**: The converter might not handle all variations of ZMK file formats, especially custom or non-standard formats.
 
+**Reference**: See [User Guide: ZMK Configuration](user_guide.md#zmk-configuration) for examples and details. For the official ZMK keymap spec, see [ZMK Keymap Documentation](https://zmk.dev/docs/keymap/).
+
 **Workaround**: Ensure your ZMK file follows the standard format with proper indentation and syntax.
 
 ### 2. Kanata Output Format
@@ -182,6 +213,8 @@ This document outlines the known limitations of the ZMK to Kanata Converter. Und
 **Description**: The converter generates Kanata files in a specific format.
 
 **Limitation**: The generated Kanata file might not be optimally formatted for readability or might not use all Kanata features.
+
+**Reference**: See [User Guide: Kanata Output](user_guide.md#kanata-output) for examples and details. For the official Kanata config spec, see [Kanata Configuration Documentation](https://github.com/jtroo/kanata/blob/master/docs/config.md).
 
 **Workaround**: Manually format and optimize the generated Kanata file as needed.
 
@@ -209,3 +242,6 @@ A: See the [User Guide](user_guide.md), [README](../README.md), or [CONTRIBUTING
 
 **Q: My custom home row mod is not working as expected.**
 A: Standard properties (timing, flavor, bindings) are mapped. Check the Kanata output for comments about unmapped properties and adjust manually if needed.
+
+**Q: Can I use Unicode output in my Kanata config?**
+A: Unicode output is supported on macOS via Kanata's (unicode ...) action. It is experimental on Windows and not supported on Linux. On non-macOS platforms, the converter emits a warning comment instead of Unicode output. See the Kanata documentation for more information.

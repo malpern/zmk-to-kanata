@@ -4,7 +4,7 @@ from converter.behaviors.unicode import UnicodeBinding, is_unicode_binding
 def test_unicodebinding_init_and_to_kanata():
     ub = UnicodeBinding("π")
     assert ub.character == "π"
-    assert ub.to_kanata() == "(unicode π)"
+    assert ub.to_kanata() == '(unicode "π")'
 
 
 def test_unicodebinding_from_zmk_unicode():
@@ -39,3 +39,22 @@ def test_is_unicode_binding_true():
 def test_is_unicode_binding_false():
     assert not is_unicode_binding("&foo")
     assert not is_unicode_binding("")
+
+
+def test_unicodebinding_to_kanata_platform(monkeypatch):
+    ub = UnicodeBinding("π")
+    # Simulate macOS
+    monkeypatch.setattr("sys.platform", "darwin")
+    assert ub.to_kanata() == '(unicode "π")'
+    # Simulate Linux
+    monkeypatch.setattr("sys.platform", "linux")
+    assert (
+        ub.to_kanata()
+        == "; WARNING: Unicode output is only supported on macOS (darwin). Unicode 'π' not emitted."
+    )
+    # Simulate Windows
+    monkeypatch.setattr("sys.platform", "win32")
+    assert (
+        ub.to_kanata()
+        == "; WARNING: Unicode output is only supported on macOS (darwin). Unicode 'π' not emitted."
+    )

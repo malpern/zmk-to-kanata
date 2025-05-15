@@ -259,6 +259,29 @@ A: Only simple combos (e.g., A+B → ESC) are supported. Complex combos (with la
 **Q: Are custom home row mods supported?**
 A: Yes, best-effort mapping is provided for custom hold-tap behaviors (home row mods). Standard properties (timing, flavor, bindings) are mapped to Kanata. Any unmapped or advanced properties are commented in the output for manual review.
 
+**Q: Can I use Unicode output in my Kanata config?**
+A: Unicode output is supported on macOS via Kanata's (unicode ...) action. It is experimental on Windows and not supported on Linux. On non-macOS platforms, the converter emits a warning comment instead of Unicode output. See the Kanata documentation for more information.
+
+### Unicode Output Example
+
+**ZMK Macro:**
+```
+&pi
+```
+
+**Kanata Output (macOS):**
+```
+(unicode "π")
+```
+
+**Kanata Output (Windows/Linux):**
+```
+; WARNING: Unicode output is only supported on macOS (darwin). Unicode 'π' not emitted.
+```
+
+**Q: My home row mod has a TODO comment about retro-tap or hold-trigger-key-positions. What should I do?**
+A: Kanata does not support these ZMK features directly. Review the migration guide and consider manual adjustments or macros for advanced behavior.
+
 ---
 
 For more information, see:
@@ -272,3 +295,4 @@ For more information, see:
 
 - ZMK 'caps word' is now supported and mapped to Kanata's `(caps-word 2000)` action.
 - Bluetooth and bootloader remain unsupported and are mapped to comments.
+- Improved hold-tap (home row mod) mapping: more ZMK properties (timing, flavor, quick-tap-ms, tap-hold-wait-ms, require-prior-idle-ms) are mapped; TODO comments are emitted for advanced/unsupported features (e.g., retro-tap, hold-trigger-key-positions). See the migration guide for best practices.

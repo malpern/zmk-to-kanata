@@ -5,6 +5,7 @@ bindings.
 """
 
 from typing import Optional
+import sys
 
 from converter.model.keymap_model import Binding
 
@@ -18,6 +19,7 @@ class UnicodeBinding(Binding):
         Args:
             character: The Unicode character to output
         """
+        super().__init__(behavior=None, params=[character])
         self.character = character
 
     def to_kanata(self) -> str:
@@ -27,7 +29,10 @@ class UnicodeBinding(Binding):
             The Kanata representation of the binding
         """
         # Return a properly formatted unicode character reference
-        return f"(unicode {self.character})"
+        if sys.platform == "darwin":
+            return f"(unicode \"{self.character}\")"
+        else:
+            return f"; WARNING: Unicode output is only supported on macOS (darwin). Unicode '{self.character}' not emitted."
 
     @classmethod
     def from_zmk(cls, zmk_binding: str) -> Optional["UnicodeBinding"]:

@@ -188,6 +188,47 @@ A: Only simple combos are supported. If your combo is complex (uses layers, macr
 **Q: My custom home row mod is not working as expected.**
 A: Standard properties (timing, flavor, bindings) are mapped. Check the Kanata output for comments about unmapped properties and adjust manually if needed.
 
+**Q: Can I use Unicode output in my Kanata config?**
+A: Unicode output is supported on macOS via Kanata's (unicode ...) action. It is experimental on Windows and not supported on Linux. On non-macOS platforms, the converter emits a warning comment instead of Unicode output. See the Kanata documentation for more information.
+
+## Hold-Tap Migration Guide
+
+This section helps you migrate ZMK hold-tap (home row mod) behaviors to Kanata.
+
+| ZMK Property                | Kanata Equivalent         | Notes/Best Practice                          |
+|-----------------------------|--------------------------|----------------------------------------------|
+| tapping-term-ms             | tap-hold param           | Fully mapped                                 |
+| hold-time-ms                | tap-hold param           | Fully mapped                                 |
+| flavor                      | tap-hold/tap-hold-release| Mapped to Kanata flavor                      |
+| quick-tap-ms                | tap-hold param           | Mapped if present                            |
+| tap-hold-wait-ms            | tap-hold param           | Mapped if present                            |
+| require-prior-idle-ms       | tap-hold param           | Mapped if present                            |
+| bindings                    | tap/hold keys            | Fully mapped                                 |
+| retro-tap                   | (no equivalent)          | TODO comment, manual review needed           |
+| hold-trigger-key-positions  | (no equivalent)          | TODO comment, manual review needed           |
+| (other properties)          | (no equivalent)          | TODO comment, manual review needed           |
+
+**Best Practices:**
+- Review all TODO comments in the Kanata output for manual migration steps.
+- If your ZMK config uses `retro-tap` or `hold-trigger-key-positions`, you may need to manually adjust your Kanata config for similar behavior.
+- Use Kanata macros for advanced timing or custom logic if needed.
+
+**Example Kanata Macro for Advanced Hold-Tap:**
+```
+(defalias
+  my_adv_holdtap (macro ...)
+)
+; TODO: Implement advanced hold-tap logic manually if needed
+```
+
+**FAQ & Troubleshooting:**
+- **Q: Why is there a TODO comment about retro-tap or hold-trigger-key-positions?**
+  A: Kanata does not support these ZMK features directly. You may need to manually adjust your config or use a macro.
+- **Q: How do I tune timing for hold-tap in Kanata?**
+  A: Adjust the tap-hold parameters in the output, e.g., `(tap-hold 180 180 a lctl)`.
+- **Q: What should I do if my home row mod feels different?**
+  A: Review the migration guide, check for TODO comments, and experiment with Kanata timing and macros.
+
 ---
 
 For more information:
@@ -465,3 +506,13 @@ hm: homerow_mods {
 > **Note:** Standard properties (timing, flavor, bindings) are mapped. Any unmapped or advanced properties (e.g., retro-tap) are commented in the output for manual review.
 
 For more examples, see the [examples](../examples) directory.
+
+## Unicode Output
+
+> **Note:** Unicode output is supported on macOS via Kanata's (unicode ...) action. It is experimental on Windows and not supported on Linux. On non-macOS platforms, the converter emits a warning comment instead of Unicode output.
+
+**Example:**
+
+- ZMK: `&pi`
+- Kanata (macOS): `(unicode "π")`
+- Kanata (Windows/Linux): `; WARNING: Unicode output is only supported on macOS (darwin). Unicode 'π' not emitted.`
