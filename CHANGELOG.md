@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Cross-platform support for preprocessing
 - Automatic matrix size detection
 - Enhanced error messages with file/line context
+- Added support for simple combos (two or more keys → single key output). Complex combos (with layers, macros, or modifiers) are not supported and must be added manually.
+- Best-effort support for custom hold-tap behaviors (home row mods): standard properties (timing, flavor, bindings) are mapped to Kanata; unmapped or advanced properties are commented for manual review.
 
 ### Changed
 - Complete refactor to use DTS parsing

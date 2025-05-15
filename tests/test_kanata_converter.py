@@ -1,5 +1,9 @@
 import pytest
 from converter.kanata_converter import KanataConverter
+import os
+from converter.dts.parser import DtsParser
+from converter.dts.extractor import KeymapExtractor
+from converter.transformer.kanata_transformer import KanataTransformer
 
 
 def test_convert_simple_keymap():
@@ -305,3 +309,43 @@ def test_kanata_transformer_no_duplicate_macros_or_aliases():
     alias_count = output.count("(defalias lt ")
     assert macro_count == 1, f"Macro defined {macro_count} times"
     assert alias_count == 1, f"Alias defined {alias_count} times"
+
+
+def test_simple_combo_full_pipeline():
+    """Test that a simple combo in the ZMK keymap is converted to a Kanata alias using the full pipeline."""
+    fixture_path = os.path.join(
+        os.path.dirname(__file__), "fixtures", "dts", "simple_keymap.zmk"
+    )
+    with open(fixture_path, "r") as f:
+        dts_content = f.read()
+    parser = DtsParser()
+    ast = parser.parse(dts_content)
+    extractor = KeymapExtractor()
+    keymap_config = extractor.extract(ast)
+    transformer = KanataTransformer()
+    kanata_output = transformer.transform(keymap_config)
+    # Check for the expected combo alias in the output
+    assert "(defalias" in kanata_output
+    assert "combo_esc" in kanata_output
+    assert "(combo a b esc)" in kanata_output
+
+
+def test_custom_hold_tap_behavior_full_pipeline():
+    """Test that a custom hold-tap behavior (home row mod) is mapped best-effort and unmapped properties are commented."""
+    fixture_path = os.path.join(
+        os.path.dirname(__file__), "fixtures", "dts", "simple_keymap.zmk"
+    )
+    with open(fixture_path, "r") as f:
+        dts_content = f.read()
+    parser = DtsParser()
+    ast = parser.parse(dts_content)
+    extractor = KeymapExtractor()
+    keymap_config = extractor.extract(ast)
+    transformer = KanataTransformer()
+    kanata_output = transformer.transform(keymap_config)
+    # Check for the expected home row mod alias
+    assert "(defalias" in kanata_output
+    assert "hm" in kanata_output
+    assert "tap-hold" in kanata_output
+    # Check for a comment about the unmapped retro-tap property
+    assert "retro-tap" in kanata_output

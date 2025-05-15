@@ -73,6 +73,78 @@ class KanataTransformer:
 
         self._add_header()
 
+        # --- Combo support: emit simple combos as Kanata aliases ---
+        if hasattr(keymap, "combos") and keymap.combos:
+            for combo in keymap.combos:
+                # Simple combo: single key output, no modifiers/macros
+                is_simple = (
+                    hasattr(combo, "binding")
+                    and (
+                        (hasattr(combo.binding, "key") and combo.binding.key)
+                        or (
+                            hasattr(combo.binding, "params")
+                            and isinstance(combo.binding.params, list)
+                            and len(combo.binding.params) == 1
+                        )
+                    )
+                    and isinstance(combo.key_positions, list)
+                    and len(combo.key_positions) >= 2
+                )
+                if is_simple:
+                    # Map key positions to Kanata key names (assume keymap.layers[0] is default)
+                    if keymap.layers:
+                        default_layer = keymap.layers[0]
+                        # Use flat list of bindings
+                        try:
+                            key_names = []
+                            for pos in combo.key_positions:
+                                binding = default_layer.bindings[pos]
+                                if hasattr(binding, "key") and binding.key:
+                                    key_name = binding.key
+                                elif hasattr(binding, "params") and binding.params:
+                                    key_name = binding.params[0]
+                                else:
+                                    key_name = str(pos)
+                                # Map to Kanata
+                                from converter.transformer.keycode_map import zmk_to_kanata
+                                mapped = zmk_to_kanata(key_name)
+                                key_names.append(mapped if mapped else key_name)
+                        except Exception:
+                            key_names = [str(pos) for pos in combo.key_positions]
+                    else:
+                        key_names = [str(pos) for pos in combo.key_positions]
+                    # Get output key
+                    if hasattr(combo.binding, "key") and combo.binding.key:
+                        out_key = combo.binding.key
+                    elif hasattr(combo.binding, "params") and len(combo.binding.params) == 1:
+                        out_key = combo.binding.params[0]
+                    else:
+                        out_key = None
+                    if out_key:
+                        from converter.transformer.keycode_map import zmk_to_kanata
+                        out_key_mapped = zmk_to_kanata(out_key) or out_key
+                        alias_name = f"{combo.name}"
+                        combo_str = (
+                            f"(defalias\n  {alias_name} (combo {' '.join(key_names)} {out_key_mapped})\n)"
+                        )
+                        self.output.append(f"\n{combo_str}")
+                    else:
+                        msg = (
+                            f"Warning: Combo '{combo.name}' skipped: output is not a simple key."
+                        )
+                        logging.warning(msg)
+                        self.error_messages.append(msg)
+                        comment = f"; unsupported: combo '{combo.name}' is not a simple key output"
+                        self.output.append(self._format_binding_comment("", comment))
+                else:
+                    msg = (
+                        f"Warning: Combo '{combo.name}' skipped: not a simple combo."
+                    )
+                    logging.warning(msg)
+                    self.error_messages.append(msg)
+                    comment = f"; unsupported: combo '{combo.name}' is not a simple combo"
+                    self.output.append(self._format_binding_comment("", comment))
+
         if keymap.behaviors:
             for behavior in keymap.behaviors.values():
                 if behavior.type == "macro":
@@ -81,52 +153,40 @@ class KanataTransformer:
                         self.macro_definitions[behavior.name] = macro_str
                         self.output.append(f"\n{macro_str}")
                 elif behavior.type == "hold-tap":
-                    for layer in keymap.layers:
-                        for binding in layer.bindings:
-                            if binding and binding.behavior == behavior:
-                                if not binding.params or len(binding.params) < 2:
-                                    msg = (
-                                        "Warning: Skipped hold-tap alias due to missing parameters "
-                                        f"(binding: {getattr(binding, 'params', binding)})"
-                                    )
-                                    logging.error(msg)
-                                    self.error_messages.append(msg)
-                                    continue
-                                hold_param = binding.params[0]
-                                tap_param = binding.params[1]
-                                if hasattr(behavior, "name") and behavior.name in (
-                                    "lt",
-                                    "mt",
-                                ):
-                                    alias_type = behavior.name
-                                else:
-                                    alias_type = behavior.type
-                                alias_name = self._holdtap_alias_name(
-                                    alias_type,
-                                    hold_param,
-                                    tap_param,
-                                )
-                                try:
-                                    (
-                                        alias_def,
-                                        _alias_name,
-                                    ) = self.holdtap_transformer.transform_behavior(
-                                        behavior,
-                                        hold_param,
-                                        tap_param,
-                                    )
-                                except Exception as e:
-                                    msg = (
-                                        f"Error: Could not generate hold-tap alias for '{alias_type}' "
-                                        f"(hold: {hold_param}, tap: {tap_param}). Reason: {e}"
-                                    )
-                                    logging.error(msg)
-                                    self.error_messages.append(msg)
-                                    continue
-                                if alias_name not in self.hold_tap_definitions:
-                                    self.hold_tap_definitions[alias_name] = alias_def
-                                    self.output.append(f"\n{alias_def}")
-                                break
+                    # Best-effort mapping for custom hold-tap behaviors
+                    extra = getattr(behavior, "extra_properties", {})
+                    tap_time = behavior.tapping_term_ms
+                    hold_time = extra.get("hold-time-ms", tap_time)
+                    flavor = extra.get("flavor", "balanced")
+                    bindings = extra.get("bindings", None)
+                    # Only map if bindings are present and length 2
+                    if bindings and isinstance(bindings, list) and len(bindings) == 2:
+                        from converter.transformer.keycode_map import zmk_to_kanata
+                        tap_key = zmk_to_kanata(str(bindings[0])) or str(bindings[0])
+                        hold_key = zmk_to_kanata(str(bindings[1])) or str(bindings[1])
+                        alias_name = behavior.name
+                        alias_def = (
+                            f"(defalias\n  {alias_name} (tap-hold {tap_time} {hold_time} {tap_key} {hold_key})\n)"
+                        )
+                        self.output.append(f"\n{alias_def}")
+                    else:
+                        msg = (
+                            f"Warning: Hold-tap behavior '{behavior.name}' skipped: missing or invalid bindings."
+                        )
+                        logging.warning(msg)
+                        self.error_messages.append(msg)
+                        comment = f"; unsupported: hold-tap '{behavior.name}' missing or invalid bindings"
+                        self.output.append(self._format_binding_comment("", comment))
+                    # Emit warnings/comments for any unknown properties
+                    for prop in extra:
+                        if prop not in ("hold-time-ms", "flavor", "bindings"):
+                            msg = (
+                                f"Warning: Hold-tap behavior '{behavior.name}' has unsupported property '{prop}'"
+                            )
+                            logging.warning(msg)
+                            self.error_messages.append(msg)
+                            comment = f"; unsupported: hold-tap '{behavior.name}' property '{prop}' not mapped"
+                            self.output.append(self._format_binding_comment("", comment))
         holdtap_combos = set()
         for layer in keymap.layers:
             for binding in layer.bindings:

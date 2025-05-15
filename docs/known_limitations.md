@@ -15,9 +15,9 @@ This document outlines the known limitations of the ZMK to Kanata Converter. Und
 
 **Description**: ZMK combos allow you to trigger a key or behavior when multiple keys are pressed together.
 
-**Limitation**: The converter does not currently support ZMK combos. Kanata has a different approach to key combinations.
+**Limitation**: Only simple combos (two or more keys → single key output) are supported. Combos involving layers, macros, or advanced logic are not supported and must be added manually.
 
-**Workaround**: You'll need to manually define combos in your Kanata configuration using Kanata's syntax:
+**Workaround**: You'll need to manually define complex combos in your Kanata configuration using Kanata's syntax:
 
 ```
 (defalias
@@ -30,28 +30,23 @@ This document outlines the known limitations of the ZMK to Kanata Converter. Und
 )
 ```
 
+| Combo Type         | Supported? | Notes                                 |
+|--------------------|------------|---------------------------------------|
+| Simple (A+B → ESC) | ✅         | Fully supported, auto-converted       |
+| Layered            | ❌         | Not supported, must add manually      |
+| With Modifiers     | ❌         | Not supported, must add manually      |
+| Macro Output       | ❌         | Not supported, must add manually      |
+| Overlapping Combos | ❌         | Not supported, must add manually      |
+
 ### 2. Custom Behaviors
 
 **Description**: ZMK allows defining custom behaviors like homerow mods using the `zmk,behavior-hold-tap` compatible property.
 
-**Limitation**: The converter recognizes these behaviors but cannot fully translate them to Kanata syntax.
+**Limitation**: Best-effort mapping is provided for custom hold-tap behaviors (home row mods). Standard properties (timing, flavor, bindings) are mapped to Kanata. Any unmapped or advanced properties (e.g., retro-tap, hold-trigger-key-positions) are commented in the output for manual review.
 
-**Workaround**: You'll need to manually define these behaviors in your Kanata configuration. For homerow mods, use Kanata's tap-hold syntax:
+**Workaround**: Review the Kanata output for comments about unmapped properties and adjust manually if needed.
 
-```
-(defalias
-  hma (tap-hold 200 200 a lmet)
-  hms (tap-hold 200 200 s lalt)
-  hmd (tap-hold 200 200 d lctl)
-  hmf (tap-hold 200 200 f lsft)
-)
-
-(deflayer default
-  ...
-  hma hms hmd hmf ...
-  ...
-)
-```
+| Custom hold-tap (home row mod) | ⚠️         | Best-effort mapping; unmapped properties commented |
 
 ### 3. Macros
 
@@ -201,7 +196,7 @@ If you encounter issues not listed here, please report them on GitHub to help im
 ## FAQ & Troubleshooting
 
 **Q: My combo or macro doesn't work in Kanata.**
-A: See the relevant section above and manually define the combo or macro in your Kanata config.
+A: Only simple combos (e.g., A+B → ESC) are supported. See the relevant section above and manually define complex combos in your Kanata config.
 
 **Q: The converter gives an error about an unsupported feature.**
 A: Check this document for workarounds or see the [User Guide](user_guide.md) for more help.
@@ -211,3 +206,6 @@ A: Open an issue on GitHub and describe your use case and ZMK config.
 
 **Q: Where can I get more help?**
 A: See the [User Guide](user_guide.md), [README](../README.md), or [CONTRIBUTING.md](../CONTRIBUTING.md).
+
+**Q: My custom home row mod is not working as expected.**
+A: Standard properties (timing, flavor, bindings) are mapped. Check the Kanata output for comments about unmapped properties and adjust manually if needed.

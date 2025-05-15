@@ -16,14 +16,33 @@
         >;
     };
 
+    behaviors {
+        hm: homerow_mods {
+            compatible = "zmk,behavior-hold-tap";
+            tapping-term-ms = <180>;
+            flavor = "tap-preferred";
+            retro-tap = <1>;
+            bindings = <A LCTL>;
+        };
+    };
+
     keymap {
         compatible = "zmk,keymap";
         
         default_layer {
             bindings = <
-                &kp A &kp B &kp C
+                &hm A LCTL &kp B &kp C
                 &kp D &kp E &kp F
             >;
+        };
+    };
+
+    combos {
+        compatible = "zmk,combos";
+        combo_esc {
+            timeout-ms = <30>;
+            key-positions = <0 1>;
+            bindings = <&kp ESC>;
         };
     };
 }; 

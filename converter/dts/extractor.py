@@ -366,7 +366,13 @@ class KeymapExtractor:
             return None
 
         # Create object, name/type set by caller (_extract_behaviors_pass1)
-        return HoldTap(name="", tapping_term_ms=tapping_term_ms)
+        ht = HoldTap(name="", tapping_term_ms=tapping_term_ms)
+        # Store all extra properties for best-effort mapping
+        ht.extra_properties = {}
+        for prop_name, prop in node.properties.items():
+            if prop_name not in ("compatible", "tapping-term-ms"):
+                ht.extra_properties[prop_name] = prop.value
+        return ht
 
     def _extract_layers(self, keymap_node: DtsNode) -> None:
         """Extract layer definitions from the 'keymap' node (Pass 3)."""

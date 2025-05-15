@@ -253,6 +253,12 @@ A: Open an issue on GitHub and include your ZMK config and error message.
 **Q: How do I contribute?**
 A: See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines and workflow.
 
+**Q: Are all ZMK combos supported?**
+A: Only simple combos (e.g., A+B → ESC) are supported. Complex combos (with layers, macros, or modifiers) must be added manually.
+
+**Q: Are custom home row mods supported?**
+A: Yes, best-effort mapping is provided for custom hold-tap behaviors (home row mods). Standard properties (timing, flavor, bindings) are mapped to Kanata. Any unmapped or advanced properties are commented in the output for manual review.
+
 ---
 
 For more information, see:

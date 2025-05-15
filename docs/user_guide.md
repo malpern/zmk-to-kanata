@@ -161,6 +161,8 @@ The converter supports the following ZMK features:
   - Multiple key combinations
 - Unicode input for special characters
 
+### Simple combos (two or more keys → single key output)
+
 For a complete list of supported features and limitations, see the [Known Limitations](known_limitations.md) document.
 
 ## Troubleshooting & FAQ
@@ -179,6 +181,12 @@ A: Open an issue on GitHub and include your config and error message.
 
 **Q: How do I contribute improvements?**
 A: See [CONTRIBUTING.md](../CONTRIBUTING.md).
+
+**Q: My combo is skipped or not working.**
+A: Only simple combos are supported. If your combo is complex (uses layers, macros, or modifiers), you must add it manually in your Kanata config.
+
+**Q: My custom home row mod is not working as expected.**
+A: Standard properties (timing, flavor, bindings) are mapped. Check the Kanata output for comments about unmapped properties and adjust manually if needed.
 
 ---
 
@@ -408,5 +416,52 @@ zmk-to-kanata input.dtsi output.kbd
   z x c v b
 )
 ```
+
+### Simple Combo Example
+
+**ZMK File (input.dtsi):**
+
+```
+combos {
+  compatible = "zmk,combos";
+  combo_esc {
+    key-positions = <0 1>;
+    bindings = <&kp ESC>;
+  };
+};
+```
+
+**Kanata Output:**
+
+```
+(defalias
+  combo_esc (combo a s esc)
+)
+```
+
+> **Note:** Only simple combos (two or more keys → single key output) are supported. Complex combos (with layers, macros, or modifiers) are not supported and must be added manually.
+
+### Custom Hold-Tap (Home Row Mod) Example
+
+**ZMK Behavior:**
+```
+hm: homerow_mods {
+    compatible = "zmk,behavior-hold-tap";
+    tapping-term-ms = <180>;
+    flavor = "tap-preferred";
+    retro-tap = <1>;
+    bindings = <A LCTL>;
+};
+```
+
+**Kanata Output:**
+```
+(defalias
+  hm (tap-hold 180 180 a lctl)
+)
+; unsupported: hold-tap 'hm' property 'retro-tap' not mapped
+```
+
+> **Note:** Standard properties (timing, flavor, bindings) are mapped. Any unmapped or advanced properties (e.g., retro-tap) are commented in the output for manual review.
 
 For more examples, see the [examples](../examples) directory.
