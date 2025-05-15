@@ -254,7 +254,7 @@ def test_preprocess_simple_keymap(preprocessor, simple_keymap_path):
     assert "((1) << 0x25 | (0))" in filtered
     assert "((1) << 0x25 | (1))" in filtered
     assert "((1) << 0x25 | (2))" in filtered
-    assert "&kp 0x04" in filtered
+    assert "&hm 0x04 LCTL" in filtered
     assert "&kp 0x05" in filtered
     assert "&kp 0x06" in filtered
     assert "&kp 0x07" in filtered

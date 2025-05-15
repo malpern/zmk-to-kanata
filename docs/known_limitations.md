@@ -245,3 +245,93 @@ A: Standard properties (timing, flavor, bindings) are mapped. Check the Kanata o
 
 **Q: Can I use Unicode output in my Kanata config?**
 A: Unicode output is supported on macOS via Kanata's (unicode ...) action. It is experimental on Windows and not supported on Linux. On non-macOS platforms, the converter emits a warning comment instead of Unicode output. See the Kanata documentation for more information.
+
+## What Kanata Could Change or Add to Enable a More Complete Converter
+
+The following are features or changes that, if implemented in Kanata, would allow the ZMK to Kanata Converter to overcome its current limitations and provide more accurate, lossless conversions:
+
+### 1. Advanced Combo Support
+
+- **Feature Needed:**  
+  Native support for combos that can trigger not just simple key outputs, but also layer changes, macros, or advanced logic (e.g., combos that activate a layer or run a macro).
+- **Benefit:**  
+  Would allow the converter to map all ZMK combos, including those with modifiers, macros, or layer actions, without manual intervention.
+- **Reference:**  
+  See [issue #1556](https://github.com/jtroo/kanata/issues/1556) for user requests and maintainer discussion about shift-layer and remapping shifted keys to arbitrary actions.
+
+### 2. Custom Behavior Extensibility
+
+- **Feature Needed:**  
+  A plugin or scripting interface for defining custom behaviors (e.g., advanced hold-tap, retro-tap, or custom mod-tap logic) with flexible parameters.
+- **Benefit:**  
+  Would enable direct mapping of ZMK's custom behaviors and advanced hold-tap features, reducing the need for TODO comments and manual edits.
+- **Reference:**  
+  See [issue #1556](https://github.com/jtroo/kanata/issues/1556) and related comments for discussion of extensible behavior needs.
+
+### 3. Macro Enhancements
+
+- **Feature Needed:**  
+  Support for complex macros, including:
+  - Conditionals (if/else logic)
+  - Delays/timing control within macros
+  - Macro composition (macros calling other macros)
+- **Benefit:**  
+  Would allow the converter to fully translate ZMK macros, including those with advanced logic or timing requirements.
+- **Reference:**  
+  See [discussion #1578](https://github.com/jtroo/kanata/discussions/1578) for user workarounds and limitations with macros and external scripting.
+
+### 4. Unicode Input and Output Improvements
+
+- **Feature Needed:**  
+  - Full Unicode input/output support on all platforms (not just macOS).
+  - Consistent Unicode handling in macros and behaviors.
+- **Benefit:**  
+  Would enable the converter to support ZMK's Unicode features everywhere, not just on macOS.
+- **Reference:**  
+  See [issue #1556](https://github.com/jtroo/kanata/issues/1556) and [discussion #1578](https://github.com/jtroo/kanata/discussions/1578) for Unicode limitations and user workarounds.
+
+### 5. Advanced Modifier and Sticky Modifier Support
+
+- **Feature Needed:**  
+  - More flexible modifier handling, including sticky modifiers and advanced modifier combinations.
+  - Ability to define and use custom modifier behaviors.
+- **Benefit:**  
+  Would allow for accurate conversion of ZMK's advanced modifier features.
+- **Reference:**  
+  See [issue #1556](https://github.com/jtroo/kanata/issues/1556) for user requests and discussion of modifier handling.
+
+### 6. Layer Switching Parity
+
+- **Feature Needed:**  
+  - Support for all ZMK layer switching semantics (e.g., momentary, toggle, one-shot, etc.) with matching syntax and behavior.
+- **Benefit:**  
+  Would allow the converter to map all ZMK layer actions directly, without approximation.
+- **Reference:**  
+  See [issue #413](https://github.com/jtroo/kanata/issues/413) and [discussion #422](https://github.com/jtroo/kanata/discussions/422) for edge cases and limitations in layer switching.
+
+### 7. Error Reporting and Recovery
+
+- **Feature Needed:**  
+  - Structured error reporting and partial config loading, so that Kanata can load and report on incomplete or partially invalid configs.
+- **Benefit:**  
+  Would allow the converter to emit partial configs with warnings, improving the user experience during migration.
+- **Reference:**  
+  See [README](https://github.com/jtroo/kanata#how-you-can-help) and general feedback in issues for ongoing usability improvements.
+
+### 8. Config Import/Include Mechanism
+
+- **Feature Needed:**  
+  - A robust include/import system for Kanata configs, similar to C preprocessor includes in ZMK.
+- **Benefit:**  
+  Would allow the converter to map ZMK's modular config structure more directly.
+- **Reference:**  
+  No direct issue, but this is a common feature in QMK/ZMK and is missing in Kanata.
+
+---
+
+**If these features are added to Kanata, the converter could achieve near-perfect, lossless conversion of ZMK keymaps, minimizing or eliminating the need for manual adjustments.**
+
+---
+
+**Kanata users and developers:**  
+If you would like to see these features, consider opening feature requests or contributing to the Kanata project!

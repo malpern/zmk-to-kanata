@@ -72,6 +72,8 @@ def test_no_unsupported_features(zmk_file, generated_outputs):
         "; unsupported: bt",  # Bluetooth is intentionally unsupported
         "; unsupported: bootloader",  # Bootloader is intentionally unsupported
         "; unsupported: failed to transform layer",  # Layer transform errors are now explicit
+        "; unsupported: combo",  # Complex combos are intentionally unsupported
+        "; unsupported: hold-tap",  # Unmapped hold-tap properties are intentionally unsupported
     ]
     out_file = generated_outputs[zmk_file]
     with open(out_file) as f:
