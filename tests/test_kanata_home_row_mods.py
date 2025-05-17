@@ -1,4 +1,3 @@
-import pytest
 from converter.dts.parser import DtsParser
 from converter.dts.extractor import KeymapExtractor
 from converter.transformer.kanata_transformer import KanataTransformer
@@ -62,6 +61,7 @@ ZMK_HOME_ROW_MODS = """
 };
 """
 
+
 def test_kanata_home_row_mods_symbolic_aliases():
     parser = DtsParser()
     ast = parser.parse(ZMK_HOME_ROW_MODS)
@@ -93,4 +93,4 @@ def test_kanata_home_row_mods_symbolic_aliases():
     assert "; TODO: retro-tap property present" in kanata_output
     # Check that all tap/hold keys in alias definitions are symbolic
     for key in ["lsft", "lctl", "ralt", "rmet", "semi", "fslh", "a", "d"]:
-        assert key in kanata_output 
+        assert key in kanata_output

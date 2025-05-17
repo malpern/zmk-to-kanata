@@ -3,8 +3,8 @@
 from dataclasses import dataclass, field
 from typing import List, Optional, Dict, Union
 from .transformer.keycode_map import zmk_binding_to_kanata
-from converter.model.keymap_model import HoldTap, HoldTapBinding
-from converter.model.behavior_base import Behavior
+from converter.model.keymap_model import HoldTap, HoldTapBinding, Behavior
+import logging
 
 
 @dataclass
@@ -28,6 +28,24 @@ class Binding:
 
     behavior: Optional["Behavior"]
     params: List[str]
+
+    def to_kanata(self) -> str:
+        """Convert the binding to Kanata format. Base implementation raises error."""
+        # This method should be overridden by subclasses like KeyMapping or UnicodeBinding.
+        # If a plain Binding object somehow needs transformation, it indicates an
+        # issue upstream (e.g., in the extractor) or requires specific handling here.
+        logging.error(
+            f"to_kanata() called on a base Binding object: {self}. "
+            f"This typically means it wasn't fully processed into a specific type."
+        )
+        # Fallback to a generic comment if direct transformation is not possible.
+        behavior_name = (
+            getattr(self.behavior, "name", "unknown_behavior")
+            if self.behavior
+            else "no_behavior"
+        )
+        param_str = " ".join(self.params)
+        return f"; unsupported: base_binding ({behavior_name} {param_str})"
 
     def to_dict(self) -> dict:
         """Return a serializable dictionary representation of this binding."""

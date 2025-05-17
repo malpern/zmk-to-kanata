@@ -35,11 +35,16 @@ def test_full_pipeline_simple_keymap():
     assert len(config.layers[0].bindings) == 3
 
     # Check bindings
-    for binding in config.layers[0].bindings:
+    expected_bindings = [(["A"], "kp"), (["B"], "kp"), (["C"], "kp")]
+    for binding, (expected_params, expected_name) in zip(
+        config.layers[0].bindings, expected_bindings
+    ):
         assert isinstance(binding, Binding)
-        assert binding.behavior is None  # kp is built-in
-        assert len(binding.params) == 1
-        assert binding.params[0] in ["A", "B", "C"]
+        # assert binding.behavior is None  # kp is built-in
+        assert binding.behavior is not None
+        assert binding.behavior.name == expected_name
+        assert binding.behavior.type == "zmk,behavior-key-press"
+        assert binding.params == expected_params
 
 
 def test_full_pipeline_with_behaviors():
@@ -136,12 +141,23 @@ def test_full_pipeline_multiple_layers():
     assert layer_names == {"default_layer", "lower_layer", "raise_layer"}
 
     # Check each layer
+    expected_layer_bindings = {
+        "default_layer": [(["A"], "kp"), (["B"], "kp")],
+        "lower_layer": [(["C"], "kp"), (["D"], "kp")],
+        "raise_layer": [(["E"], "kp"), (["F"], "kp")],
+    }
     for layer in config.layers:
         assert len(layer.bindings) == 2
-        for binding in layer.bindings:
+        expected_bindings = expected_layer_bindings[layer.name]
+        for binding, (expected_params, expected_name) in zip(
+            layer.bindings, expected_bindings
+        ):
             assert isinstance(binding, Binding)
-            assert binding.behavior is None  # kp is built-in
-            assert len(binding.params) == 1
+            # assert binding.behavior is None  # kp is built-in
+            assert binding.behavior is not None
+            assert binding.behavior.name == expected_name
+            assert binding.behavior.type == "zmk,behavior-key-press"
+            assert binding.params == expected_params
 
 
 def test_full_pipeline_complex_bindings():
@@ -204,7 +220,10 @@ def test_full_pipeline_complex_bindings():
 
     # Third binding should be key-press
     kp_binding = layer.bindings[2]
-    assert kp_binding.behavior is None
+    # assert kp_binding.behavior is None
+    assert kp_binding.behavior is not None
+    assert kp_binding.behavior.name == "kp"
+    assert kp_binding.behavior.type == "zmk,behavior-key-press"
     assert kp_binding.params == ["C"]
 
 

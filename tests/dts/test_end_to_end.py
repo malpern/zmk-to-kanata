@@ -2,9 +2,10 @@
 
 import pytest
 from converter.dts.parser import DtsParser
+from converter.dts.error_handler import DtsParseError
 from converter.dts.extractor import KeymapExtractor
 from converter.models import KeymapConfig, Binding, Behavior
-from converter.dts.error_handler import DtsParseError
+import logging
 
 
 def test_simple_keymap():
@@ -47,7 +48,9 @@ def test_simple_keymap():
         default_layer_node.bindings, expected_key_codes
     ):
         assert isinstance(binding_node, Binding)
-        assert binding_node.behavior is None  # kp is built-in
+        assert binding_node.behavior is not None
+        assert binding_node.behavior.name == "kp"
+        assert binding_node.behavior.type == "zmk,behavior-key-press"
         assert binding_node.params == [expected_key_code]
 
 
@@ -132,23 +135,40 @@ def test_complex_keymap_with_behaviors():
     assert default_layer_node.bindings[0].behavior == mt
     assert default_layer_node.bindings[0].params == ["LSHIFT", "A"]
 
-    assert default_layer_node.bindings[1].behavior is None  # kp is built-in
+    assert default_layer_node.bindings[1].behavior is not None
+    assert default_layer_node.bindings[1].behavior.name == "kp"
+    assert default_layer_node.bindings[1].behavior.type == "zmk,behavior-key-press"
     assert default_layer_node.bindings[1].params == ["B"]
 
     assert default_layer_node.bindings[2].behavior == macro
-    assert not default_layer_node.bindings[2].params
+    assert default_layer_node.bindings[2].params == []
+
+    assert default_layer_node.bindings[3].behavior is not None
+    assert default_layer_node.bindings[3].behavior.name == "kp"
+    assert default_layer_node.bindings[3].behavior.type == "zmk,behavior-key-press"
+    assert default_layer_node.bindings[3].params == ["D"]
 
     assert default_layer_node.bindings[4].behavior == lt
     assert default_layer_node.bindings[4].params == ["1", "E"]
+
+    assert default_layer_node.bindings[5].behavior is not None
+    assert default_layer_node.bindings[5].behavior.name == "kp"
+    assert default_layer_node.bindings[5].behavior.type == "zmk,behavior-key-press"
+    assert default_layer_node.bindings[5].params == ["F"]
 
     # Verify lower layer
     lower_layer_node = next(
         layer_node for layer_node in config.layers if layer_node.name == "lower_layer"
     )
     assert len(lower_layer_node.bindings) == 6
-    for binding_node in lower_layer_node.bindings:
-        assert binding_node.behavior is None  # kp is built-in
-        assert binding_node.params[0].startswith("N")
+    for binding_node, expected_key_code in zip(
+        lower_layer_node.bindings, ["N1", "N2", "N3", "N4", "N5", "N6"]
+    ):
+        assert isinstance(binding_node, Binding)
+        assert binding_node.behavior is not None
+        assert binding_node.behavior.name == "kp"
+        assert binding_node.behavior.type == "zmk,behavior-key-press"
+        assert binding_node.params == [expected_key_code]
 
 
 def test_keymap_with_unicode():
@@ -221,13 +241,18 @@ def test_keymap_with_unicode():
     for binding, (exp_behavior, exp_params) in zip(layer_node.bindings, expected):
         if exp_behavior is not None:
             assert binding.behavior == exp_behavior
+        elif exp_params == ["A"] or exp_params == ["B"]:
+            assert binding.behavior is not None
+            assert binding.behavior.name == "kp"
+            assert binding.behavior.type == "zmk,behavior-key-press"
         else:
             assert binding.behavior is None
         assert binding.params == exp_params
 
 
-def test_error_handling():
+def test_error_handling(caplog):
     """Test error handling with malformed input."""
+    caplog.set_level(logging.ERROR)  # Ensure ERROR logs are captured
     # Test missing root node
     with pytest.raises(DtsParseError, match="DTS must start with root node"):
         parser = DtsParser()
@@ -260,10 +285,27 @@ def test_error_handling():
     """
     )
     extractor = KeymapExtractor()
-    with pytest.raises(
-        ValueError, match="Unknown behavior referenced during binding creation"
-    ):
-        extractor.extract(ast)
+    config = extractor.extract(ast)  # Extract without expecting ValueError
+
+    # Check that the error was logged
+    assert any(
+        record.levelname == "ERROR"
+        and "Unknown behavior referenced or failed to map: invalid_binding"
+        in record.message
+        and record.name == "root"
+        # and "extractor.py" in record.pathname # Pathname can be fragile, message is better
+        for record in caplog.records
+    )
+
+    # Check the created behavior for the invalid binding
+    assert len(config.layers) == 1
+    default_layer_node = config.layers[0]
+    assert len(default_layer_node.bindings) == 1
+    invalid_binding_node = default_layer_node.bindings[0]
+    assert invalid_binding_node.behavior is not None
+    assert invalid_binding_node.behavior.name == "invalid_binding"
+    assert invalid_binding_node.behavior.type == "unknown-behavior"
+    assert invalid_binding_node.params == []
 
 
 def test_keymap_with_combos():

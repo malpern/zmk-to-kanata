@@ -42,7 +42,7 @@ This document outlines the known limitations of the ZMK to Kanata Converter. Und
 
 **Description**: ZMK allows defining custom behaviors like homerow mods using the `zmk,behavior-hold-tap` compatible property.
 
-**Limitation**: Best-effort mapping is provided for custom hold-tap behaviors (home row mods). Standard properties (timing, flavor, bindings, quick-tap-ms, tap-hold-wait-ms, require-prior-idle-ms) are mapped to Kanata. Advanced properties (e.g., retro-tap, hold-trigger-key-positions, or unknowns) are not supported and are marked with TODO comments in the output for manual review.
+**Limitation**: Best-effort mapping is provided for custom hold-tap behaviors (home row mods). Standard properties (timing, flavor, bindings, quick-tap-ms, tap-hold-wait-ms, require-prior-idle-ms) are mapped to Kanata. Advanced properties (e.g., retro-tap, hold-trigger-key-positions, or unknowns) are not supported and are marked with TODO comments in the output for manual review. **LSHFT and RSHFT are now fully supported as synonyms for LSHIFT and RSHIFT.**
 
 **Workaround**: Review the Kanata output for TODO comments about unmapped properties and adjust manually if needed. See the [Hold-Tap Migration Guide](user_guide.md#hold-tap-migration-guide) for best practices and example macros.
 
@@ -61,23 +61,23 @@ This document outlines the known limitations of the ZMK to Kanata Converter. Und
 
 > **Note:** If your ZMK config uses advanced hold-tap features, check the Kanata output for TODO comments and review the migration guide.
 
-### 3. Macros
+### 3. Macros and Tap-Dance
 
-**Description**: ZMK supports macros for executing multiple key presses in sequence.
+**Description**: ZMK supports macros for executing multiple key presses in sequence, and tap-dance for different actions based on tap count.
 
-**Limitation**: The converter supports basic key sequences but not complex macros with conditionals or delays.
+**Limitation**: The converter supports basic key sequences and now supports any number of tap-dance actions (single, double, triple, etc.). These are mapped to Kanata's `(tap-dance <timeout> <key1> <key2> <key3> ...)` syntax. Complex macros with conditionals or delays are not supported. **Tap-dance with hold actions, modifier-aware tap-dance, and per-action timing are not supported by Kanata or the converter.**
 
-**Workaround**: You'll need to manually define complex macros in your Kanata configuration:
+**Supported Tap-Dance Example:**
 
-```
-(defalias
-  mymacro (macro
-    a b c
-    (release a b c)
-    d e f
-  )
-)
-```
+- ZMK: `&td A B C` (tap once = A, tap twice = B, tap three times = C)
+- Kanata: `(tap-dance 200 a b c)`
+
+**Not Supported (TODO emitted):**
+- Tap-dance with hold actions (tap vs. hold)
+- Tap-dance with modifiers (e.g., tap with shift)
+- Tap-dance with custom logic or per-action timing
+
+**Workaround**: For these complex tap-dance or macros, you'll need to manually define them in your Kanata configuration. The converter will emit a TODO comment for manual review.
 
 ### 4. Unicode Input
 
@@ -326,6 +326,17 @@ The following are features or changes that, if implemented in Kanata, would allo
   Would allow the converter to map ZMK's modular config structure more directly.
 - **Reference:**  
   No direct issue, but this is a common feature in QMK/ZMK and is missing in Kanata.
+
+### 9. Tap-Dance Feature Parity
+
+- **Feature Needed:**  
+  - Native support for tap-vs-hold in tap-dance (not just hold-tap).
+  - Modifier-aware tap-dance actions (e.g., tap with shift = different action).
+  - Per-action timing for tap-dance actions.
+- **Benefit:**  
+  Would allow the converter to map all ZMK tap-dance scenarios directly, including tap-vs-hold and modifier-aware actions.
+- **Reference:**  
+  See [Kanata Tap-Dance Config Reference](https://github.com/jtroo/kanata/blob/master/docs/config.md#tap-dance) and [ZMK Tap-Dance Docs](https://zmk.dev/docs/behaviors/tap-dance/).
 
 ---
 

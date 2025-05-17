@@ -1,0 +1,21 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.10.16, pytest-8.3.5, pluggy-1.5.0
+rootdir: /Volumes/FlashGordon/Dropbox/code/nicktokatana
+configfile: pyproject.toml
+testpaths: tests
+collected 131 items / 1 error
+
+==================================== ERRORS ====================================
+________________ ERROR collecting tests/dts/test_end_to_end.py _________________
+ImportError while importing test module '/Volumes/FlashGordon/Dropbox/code/nicktokatana/tests/dts/test_end_to_end.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+tests/dts/test_end_to_end.py:4: in <module>
+    from converter.dts.parser import DtsParser, DtsParserError
+E   ImportError: cannot import name 'DtsParserError' from 'converter.dts.parser' (/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/dts/parser.py)
+=========================== short test summary info ============================
+ERROR tests/dts/test_end_to_end.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+=============================== 1 error in 0.10s ===============================

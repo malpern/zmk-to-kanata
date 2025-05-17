@@ -154,6 +154,9 @@ ZMK_TO_KANATA = {
     "COLON": "colon",
     "ATSN": "atsn",
     "SLASH": "fslh",
+    # Add synonyms
+    "LSHFT": "lsft",
+    "RSHFT": "rsft",
 }
 
 # Modifier macro patterns

@@ -37,7 +37,7 @@
   l
   semi
   sqt
-; ERROR: malformed or unknown macro: LSHFT
+  lsft
   z
   x
   c
@@ -48,7 +48,7 @@
   comma
   dot
   fslh
-; ERROR: malformed or unknown macro: RSHFT
+  rsft
   lctl
   lmet
   lalt
@@ -156,7 +156,3 @@
   _
   _
 )
-
-; --- Unsupported/Unknown ZMK Features ---
-  ERROR: malformed or unknown macro: LSHFT
-  ERROR: malformed or unknown macro: RSHFT

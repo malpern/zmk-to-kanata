@@ -3,25 +3,26 @@ platform darwin -- Python 3.10.16, pytest-8.3.5, pluggy-1.5.0
 rootdir: /Volumes/FlashGordon/Dropbox/code/nicktokatana
 configfile: pyproject.toml
 testpaths: tests
-collected 131 items
+collected 137 items
 
 tests/dts/test_ast.py .....                                              [  3%]
 tests/dts/test_end_to_end.py ......                                      [  8%]
-tests/dts/test_extractor.py .....                                        [ 12%]
-tests/dts/test_integration.py .....                                      [ 16%]
-tests/dts/test_parser.py .............                                   [ 25%]
-tests/dts/test_performance.py ....                                       [ 29%]
-tests/dts/test_preprocessor.py ...........                               [ 37%]
-tests/test_dts_parser.py ..............                                  [ 48%]
-tests/test_dts_preprocessor.py ...                                       [ 50%]
-tests/test_hold_tap_behavior.py ......                                   [ 54%]
-tests/test_holdtap_transformer.py ..........                             [ 62%]
-tests/test_kanata_converter.py .............                             [ 72%]
-tests/test_kanata_home_row_mods.py .                                     [ 73%]
-tests/test_keymap_model.py ..........                                    [ 80%]
+tests/dts/test_extractor.py .....                                        [ 11%]
+tests/dts/test_integration.py .....                                      [ 15%]
+tests/dts/test_parser.py .............                                   [ 24%]
+tests/dts/test_performance.py ....                                       [ 27%]
+tests/dts/test_preprocessor.py ...........                               [ 35%]
+tests/test_dts_parser.py ..............                                  [ 45%]
+tests/test_dts_preprocessor.py ...                                       [ 48%]
+tests/test_hold_tap_behavior.py ......                                   [ 52%]
+tests/test_holdtap_transformer.py ..........                             [ 59%]
+tests/test_kanata_converter.py .............                             [ 69%]
+tests/test_kanata_edge_cases.py ......                                   [ 73%]
+tests/test_kanata_home_row_mods.py .                                     [ 74%]
+tests/test_keymap_model.py ..........                                    [ 81%]
 tests/test_main.py .......                                               [ 86%]
-tests/test_regression_real_world.py ss....                               [ 90%]
-tests/test_sticky_key_transformer.py ....                                [ 93%]
+tests/test_regression_real_world.py ss....                               [ 91%]
+tests/test_sticky_key_transformer.py ....                                [ 94%]
 tests/test_unicode_behavior.py ........                                  [100%]
 
-======================== 129 passed, 2 skipped in 1.35s ========================
+======================== 135 passed, 2 skipped in 1.41s ========================

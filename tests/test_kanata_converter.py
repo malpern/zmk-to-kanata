@@ -239,9 +239,10 @@ def test_kanata_transformer_malformed_macro():
         keymap = KeymapConfig(layers=[layer])
         transformer = KanataTransformer()
         output = transformer.transform(keymap)
-        # Accept either a direct macro error or a layer transform error
+        # Accept any of the possible error messages
         assert (
-            "; ERROR: malformed or unknown macro" in output
+            "; ERROR: malformed or incomplete macro" in output
+            or "; ERROR: malformed or unknown macro" in output
             or "; unsupported: failed to transform layer" in output
         )
         for line in output.splitlines():

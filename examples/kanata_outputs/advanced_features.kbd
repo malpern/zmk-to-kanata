@@ -14,7 +14,23 @@
   ; TODO: hold-tap 'lt' property '#binding-cells' not mapped. Manual review ...
 
 (defalias
-  ht_lalt_s (tap-hold 200 None s lalt)
+  ht_lsft_f (tap-hold 200 None f lsft)
+)
+
+(defalias
+  ht_lmet_d (tap-hold 200 None d lmet)
+)
+
+(defalias
+  ht_lctl_a (tap-hold 200 None a lctl)
+)
+
+(defalias
+  ht_rctl_semi (tap-hold 200 None semi rctl)
+)
+
+(defalias
+  ht_rsft_j (tap-hold 200 None j rsft)
 )
 
 (defalias
@@ -26,23 +42,7 @@
 )
 
 (defalias
-  ht_rsft_j (tap-hold 200 None j rsft)
-)
-
-(defalias
-  ht_rctl_semi (tap-hold 200 None semi rctl)
-)
-
-(defalias
-  ht_lsft_f (tap-hold 200 None f lsft)
-)
-
-(defalias
-  ht_lctl_a (tap-hold 200 None a lctl)
-)
-
-(defalias
-  ht_lmet_d (tap-hold 200 None d lmet)
+  ht_lalt_s (tap-hold 200 None s lalt)
 )
 (deflayer default_layer
   esc
@@ -69,7 +69,7 @@
   @ht_ralt_l
   @ht_rctl_semi
   sqt
-; ERROR: malformed or unknown macro: LSHFT
+  lsft
   z
   x
   c
@@ -80,7 +80,7 @@
   comma
   dot
   fslh
-; ERROR: malformed or unknown macro: RSHFT
+  rsft
   lctl
   lmet
   lalt
@@ -188,7 +188,3 @@
   _
   _
 )
-
-; --- Unsupported/Unknown ZMK Features ---
-  ERROR: malformed or unknown macro: LSHFT
-  ERROR: malformed or unknown macro: RSHFT

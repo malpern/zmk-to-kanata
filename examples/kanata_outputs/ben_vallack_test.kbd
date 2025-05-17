@@ -29,15 +29,7 @@
   ; TODO: hold-tap 'td' property 'quick_tap_ms' not mapped. Manual review ne...
 
 (defalias
-  ht_lmet_la(ls(rbrc)) (tap-hold 200 None la(ls(rbrc)) lmet)
-)
-
-(defalias
-  ht_LCTL_s (tap-hold 200 None s LCTL)
-)
-
-(defalias
-  ht_lsft_percent (tap-hold 150 None percent lsft)
+  ht_lmet_t (tap-hold 200 None t lmet)
 )
 
 (defalias
@@ -45,7 +37,11 @@
 )
 
 (defalias
-  ht_rmet_lbrc (tap-hold 200 None lbrc rmet)
+  ht_LCTL_equal (tap-hold 200 None equal LCTL)
+)
+
+(defalias
+  ht_lalt_la(rbrc) (tap-hold 200 None la(rbrc) lalt)
 )
 
 (defalias
@@ -53,27 +49,7 @@
 )
 
 (defalias
-  ht_lalt_c_vol_dn (tap-hold 200 None c_vol_dn lalt)
-)
-
-(defalias
-  ht_lsft_tilde (tap-hold 150 None tilde lsft)
-)
-
-(defalias
-  ht_lmet_t (tap-hold 200 None t lmet)
-)
-
-(defalias
-  ht_RCTL_pipe (tap-hold 200 None pipe RCTL)
-)
-
-(defalias
-  ht_lc(ls(lalt))_spc (tap-hold 200 None spc lc(ls(lalt)))
-)
-
-(defalias
-  ht_ralt_rbrc (tap-hold 200 None rbrc ralt)
+  ht_rmet_lbrc (tap-hold 200 None lbrc rmet)
 )
 
 (defalias
@@ -81,23 +57,11 @@
 )
 
 (defalias
-  ht_rmet_n (tap-hold 200 None n rmet)
-)
-
-(defalias
   ht_ralt_k (tap-hold 200 None k ralt)
 )
 
 (defalias
-  ht_rmet_a (tap-hold 200 None 4 rmet)
-)
-
-(defalias
-  ht_LCTL_equal (tap-hold 200 None equal LCTL)
-)
-
-(defalias
-  ht_lmet_c_vol_up (tap-hold 200 None c_vol_up lmet)
+  ht_RCTL_pipe (tap-hold 200 None pipe RCTL)
 )
 
 (defalias
@@ -105,7 +69,43 @@
 )
 
 (defalias
-  ht_lalt_la(rbrc) (tap-hold 200 None la(rbrc) lalt)
+  ht_lsft_percent (tap-hold 150 None percent lsft)
+)
+
+(defalias
+  ht_rmet_n (tap-hold 200 None n rmet)
+)
+
+(defalias
+  ht_ralt_rbrc (tap-hold 200 None rbrc ralt)
+)
+
+(defalias
+  ht_LCTL_s (tap-hold 200 None s LCTL)
+)
+
+(defalias
+  ht_rmet_a (tap-hold 200 None 4 rmet)
+)
+
+(defalias
+  ht_lc(ls(lalt))_spc (tap-hold 200 None spc lc(ls(lalt)))
+)
+
+(defalias
+  ht_lmet_c_vol_up (tap-hold 200 None c_vol_up lmet)
+)
+
+(defalias
+  ht_lsft_tilde (tap-hold 150 None tilde lsft)
+)
+
+(defalias
+  ht_lalt_c_vol_dn (tap-hold 200 None c_vol_dn lalt)
+)
+
+(defalias
+  ht_lmet_la(ls(rbrc)) (tap-hold 200 None la(ls(rbrc)) lmet)
 )
 (deflayer default_layer
   tab

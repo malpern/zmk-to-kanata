@@ -7,10 +7,9 @@ This file is the single source of truth for keymap models. It contains
 all the model classes and conversion logic for the keymap converter.
 """
 
-from dataclasses import dataclass, field
-from typing import List, Optional, Union, Dict
+from dataclasses import dataclass, field, KW_ONLY
+from typing import List, Optional, Union, Dict, Any
 from converter.transformer.keycode_map import zmk_to_kanata
-from converter.model.behavior_base import Behavior
 
 
 @dataclass
@@ -34,6 +33,18 @@ class GlobalSettings:
 
 
 @dataclass
+class Behavior:
+    """Represents a ZMK behavior, serving as a base for specific types."""
+
+    name: str
+    _: KW_ONLY
+    type: Optional[str] = None  # E.g., "hold-tap", "macro", etc.
+    extra_properties: Dict[str, Any] = field(
+        default_factory=dict
+    )  # Store other DTS properties like 'tapping-term-ms'
+
+
+@dataclass
 class HoldTap(Behavior):
     """Represents a hold-tap behavior in ZMK."""
 
@@ -48,6 +59,7 @@ class HoldTap(Behavior):
     require_prior_idle_ms: Optional[int] = None
 
     def __post_init__(self):
+        """Validate fields after initialization."""
         if not isinstance(self.name, str):
             raise TypeError("name must be a string")
         if not isinstance(self.hold_key, str):
@@ -121,10 +133,7 @@ class HoldTap(Behavior):
         return f"({' '.join(config)})"
 
     def to_dict(self) -> dict:
-        """
-        Return a serializable dictionary representation of this hold-tap
-        behavior.
-        """
+        """Return a serializable dictionary representation of this hold-tap behavior."""
         return {
             "name": self.name,
             "hold_key": self.hold_key,
@@ -149,6 +158,7 @@ class HoldTapBinding:
     params: Dict[str, Union[str, int]] = field(default_factory=dict)
 
     def __post_init__(self):
+        """Validate fields after initialization."""
         if not isinstance(self.key, str):
             raise TypeError("key must be a string")
         if not isinstance(self.hold_tap, HoldTap):

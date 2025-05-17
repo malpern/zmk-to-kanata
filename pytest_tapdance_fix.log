@@ -1,0 +1,1516 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.10.16, pytest-8.3.5, pluggy-1.5.0
+rootdir: /Volumes/FlashGordon/Dropbox/code/nicktokatana
+configfile: pyproject.toml
+testpaths: tests
+collected 137 items
+
+tests/dts/test_ast.py .....                                              [  3%]
+tests/dts/test_end_to_end.py FFFF..                                      [  8%]
+tests/dts/test_extractor.py ...F.                                        [ 11%]
+tests/dts/test_integration.py F.FF.                                      [ 15%]
+tests/dts/test_parser.py .............                                   [ 24%]
+tests/dts/test_performance.py ....                                       [ 27%]
+tests/dts/test_preprocessor.py ...........                               [ 35%]
+tests/test_dts_parser.py ..............                                  [ 45%]
+tests/test_dts_preprocessor.py ...                                       [ 48%]
+tests/test_hold_tap_behavior.py ......                                   [ 52%]
+tests/test_holdtap_transformer.py ..........                             [ 59%]
+tests/test_kanata_converter.py .............                             [ 69%]
+tests/test_kanata_edge_cases.py F..FFF                                   [ 73%]
+tests/test_kanata_home_row_mods.py .                                     [ 74%]
+tests/test_keymap_model.py ..........                                    [ 81%]
+tests/test_main.py .......                                               [ 86%]
+tests/test_regression_real_world.py EEEEEE                               [ 91%]
+tests/test_sticky_key_transformer.py ....                                [ 94%]
+tests/test_unicode_behavior.py ........                                  [100%]
+
+==================================== ERRORS ====================================
+_ ERROR at setup of test_golden_regression[tests/fixtures/real_world/card.keymap] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x1034b0460>, _basetemp=PosixPath...olders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-274'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def generated_outputs(tmp_path_factory):
+        """
+        Generate Kanata outputs for all ZMK files in a temp directory.
+        Returns a dict mapping input file to output file path.
+        """
+        tmp_path = tmp_path_factory.mktemp("kanata_regression")
+        outputs = {}
+        for zmk_file in zmk_files():
+            out_file = tmp_path / (os.path.basename(zmk_file) + KANATA_SUFFIX)
+>           subprocess.run(
+                [
+                    "python",
+                    "-m",
+                    "converter.main",
+                    zmk_file,
+                    "-o",
+                    str(out_file),
+                ],
+                check=True,
+            )
+
+tests/test_regression_real_world.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['python', '-m', 'converter.main', 'tests/fixtures/real_world/card.keymap', '-o', '/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-274/kanata_regression0/card.keymap.out.kanata'],)
+kwargs = {}
+process = <Popen: returncode: 1 args: ['python', '-m', 'converter.main', 'tests/fixtur...>
+stdout = None, stderr = None, retcode = 1
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['python', '-m', 'converter.main', 'tests/fixtures/real_world/card.keymap', '-o', '/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-274/kanata_regression0/card.keymap.out.kanata']' returned non-zero exit status 1.
+
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:526: CalledProcessError
+---------------------------- Captured stdout setup -----------------------------
+[DtsPreprocessor] ENVIRONMENT:
+  MallocNanoZone=0
+  USER=malpern
+  SECURITYSESSIONID=186a3
+  COMMAND_MODE=unix2003
+  __CFBundleIdentifier=com.todesktop.230313mzl4w4u92
+  PATH=/Users/malpern/.curs....cache/lm-studio/bin
+  LOGNAME=malpern
+  SSH_AUTH_SOCK=/private/tmp/com.app...x1qskoux7b/Listeners
+  HOME=/Users/malpern
+  SHELL=/bin/zsh
+  TMPDIR=/var/folders/0s/42v7...1cdnx0vrvyr0000gn/T/
+  LaunchInstanceID=BFD4BF06-15BD-4F76-8D8A-1AEC50E6795A
+  __CF_USER_TEXT_ENCODING=0x1F5:0x0:0x0
+  XPC_SERVICE_NAME=0
+  XPC_FLAGS=0x0
+  ORIGINAL_XDG_CURRENT_DESKTOP=undefined
+  CURSOR_TRACE_ID=cd8a772a34744c45b29a364c714f681a
+  SHLVL=1
+  PWD=/Volumes/FlashGordon...ox/code/nicktokatana
+  OLDPWD=/Volumes/FlashGordon...ox/code/nicktokatana
+  HOMEBREW_PREFIX=/opt/homebrew
+  HOMEBREW_CELLAR=/opt/homebrew/Cellar
+  HOMEBREW_REPOSITORY=/opt/homebrew
+  INFOPATH=/opt/homebrew/share/...homebrew/share/info:
+  YOUR_CONSUMER_KEY=ah6HAffNJRCv4xNrV4OZcVIrQ
+  YOUR_CONSUMER_SECRET=EXM9IzH9IEdE2yJf0t5F...DPuFXLk55DwB8pLRswR5
+  YOUR_ACCESS_TOKEN=1483-5UbadNrxZUkJpAp...JSXPVSxtsPwJyrUrZvcO
+  YOUR_ACCESS_TOKEN_SECRET=jeyyEWPHAgoS0ebKus4t...0jH2T3gRCIz3dsYXQwqS
+  YOUR_BEARER_TOKEN=AAAAAAAAAAAAAAAAAAAA...8YVAWCOQu6Pyu4yhuY0a
+  OPENAI_API_KEY=sk-qVQDNdwpfPhrAvFr9...ob362AQbhWVa3p95yD28
+  ANTHROPIC_API_KEY=sk-ant-api03-Tq7nYRm...SCuUoAfwIQg-NWFWuAAA
+  TAVILY_API_KEY=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
+  BING_SUBSCRIPTION_KEY=bec8ded0f34a421ba60cc3bd4626825e
+  EDITOR=vi
+  ZSH=/Users/malpern/.oh-my-zsh
+  PAGER=head -n 10000 | cat
+  LESS=-R
+  LSCOLORS=Gxfxcxdxbxegedabagacad
+  LS_COLORS=di=1;36:ln=35:so=32:...46:tw=30;42:ow=30;43
+  PYENV_ROOT=/Users/malpern/.pyenv
+  PYENV_SHELL=zsh
+  DISABLE_AUTO_UPDATE=true
+  TERM_PROGRAM=vscode
+  TERM_PROGRAM_VERSION=0.50.4
+  LANG=en_US.UTF-8
+  COLORTERM=truecolor
+  GIT_ASKPASS=/Applications/Cursor.../git/dist/askpass.sh
+  VSCODE_GIT_ASKPASS_NODE=/Applications/Cursor...rsor Helper (Plugin)
+  VSCODE_GIT_ASKPASS_EXTRA_ARGS=
+  VSCODE_GIT_ASKPASS_MAIN=/Applications/Cursor...dist/askpass-main.js
+  VSCODE_GIT_IPC_HANDLE=/var/folders/0s/42v7...-git-14a5ce3e7f.sock
+  VIRTUAL_ENV=/Volumes/FlashGordon...e/nicktokatana/.venv
+  VIRTUAL_ENV_PROMPT=(.venv) 
+  VSCODE_INJECTION=1
+  ZDOTDIR=/Users/malpern
+  USER_ZDOTDIR=/Users/malpern
+  TERM=xterm-256color
+  PS1=(.venv) %(?:%{[01;3...} $(git_prompt_info)
+  _=/Volumes/FlashGordon...ana/.venv/bin/pytest
+  PYTEST_VERSION=8.3.5
+  LINES=1
+  COLUMNS=109
+  PYTEST_CURRENT_TEST=tests/test_regressio...card.keymap] (setup)
+[DtsPreprocessor] Temp file: /var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpt0_4i2ki.dts
+[DtsPreprocessor] Temp file contents:
+/*
+ * Copyright (c) 2020 The ZMK Contributors
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/mouse.h>
+
+
+
+&mt {
+    tapping-term-ms = <201>;
+    flavor = "tap-preferred";
+ };
+&sk {
+     release-after-ms = <2000>;
+     quick-release;
+ };
+ 
+/* Layers */
+#define AL1 0
+#define GM 1
+#define AL2 2
+#define AL2U 8
+#define SM1 3
+#define SM2 4	
+#define NM1 5	
+#define SYS 6
+#define BT 7	
+/ { 
+    combos {
+        compatible = "zmk,combos";
+        combo_game {
+            timeout-ms = <30>;
+	    key-positions = <2 3 4 5>;
+            bindings = <&to GM>;
+        };
+        combo_sys {
+            timeout-ms = <30>;
+	    key-positions = <4 5 6>;
+            bindings = <&to SYS>;
+        };
+        combo_caps {
+            timeout-ms = <30>;
+	    key-positions = <12 13 14>;
+            bindings = <&caps_word>;
+        };
+        combo_bt  {
+            timeout-ms = <10>;
+            key-positions = <13 14>;
+            bindings = <&to BT>;
+	    layers = <SM1>; 
+        };
+        lalt {
+            timeout-ms = <20>;
+	    key-positions = <10 11>;
+            bindings = <&kp LALT>; 
+	    layers = <SYS>; 
+        };
+        lclk {
+            timeout-ms = <20>;
+	    key-positions = <12	13>;
+            bindings = <&mkp LCLK>;
+	    layers = <SYS>;
+        };
+        rclk {
+            timeout-ms = <20>;
+	    key-positions = <4 5>;
+            bindings = <&mkp RCLK>;
+	    layers = <SYS>;
+        };
+
+
+    };
+
+    behaviors {
+        hm: homerow_mods {
+            compatible = "zmk,behavior-hold-tap";
+            label = "HOMEROW_MODS";
+            #binding-cells = <2>;
+            tapping-term-ms = <300>;
+            quick_tap_ms = <0>;
+            flavor = "tap-preferred";
+            bindings = <&kp>, <&kp>;
+        };
+        sr: shift_layer {
+            compatible = "zmk,behavior-hold-tap";
+            label = "SHIFT_LAYER";
+            #binding-cells = <2>;
+            tapping-term-ms = <300>;
+            quick_tap_ms = <0>;
+            flavor = "tap-preferred";
+            bindings = <&kp>, <&to>;
+	    retro-tap;
+        };
+        hl: homerow_layers {
+            compatible = "zmk,behavior-hold-tap";
+            label = "HOMEROW_LAYERS";
+            #binding-cells = <2>;
+            tapping-term-ms = <220>;
+            quick_tap_ms = <0>;
+            flavor = "tap-preferred";
+            bindings = <&sl>, <&kp>;
+        };
+	td: tapdance {
+            compatible = "zmk,behavior-hold-tap";
+            label = "TAPDANCE";
+            #binding-cells = <2>;
+            tapping-term-ms = <190>;
+            quick_tap_ms = <0>;
+            flavor = "tap-preferred";
+            bindings = <&kp>, <&kp>;
+        };
+	alpha2macro: behavior_macro_1 {
+		compatible = "zmk,behavior-macro";
+		label = "MACRO1";
+		#binding-cells = <0>;
+		bindings = < &sl AL2 >;
+	};
+    };
+       keymap {
+                compatible = "zmk,keymap";
+                
+       		alpha1 {
+		bindings = <
+		&trans 		&hm LCTL L 	&hm LALT G 	&hm LGUI D		&hm RGUI H 	&hm RALT U    		&hm RCTL O	&trans  
+		&hl NM1 I	&hl SM2 S	&hl SM1 R	&hl SYS T 	 	&hl SYS N    	&hl SM1 E   		&hl SM2 A 	&hl NM1 C
+		&trans	 	&trans 		&trans 		&mt LC(LS(LALT)) SPC 	&alpha2macro	&trans 			&trans		&trans
+								&trans	 		&trans
+		>;
+		};
+       		game {
+		bindings = <
+		&trans 		&kp L 		&kp G 		&kp D			&hm RGUI H 	&hm RALT U    		&hm RCTL O	&trans  
+		&kp I		&kp S		&kp R		&kp T 		 	&hl SYS N    	&hl SM1 E   		&hl SM2  A 	&hl NM1 C
+		&trans	 	&trans 		&trans 		&kp SPC 		&sl AL2		&trans 			&trans		&trans
+								&trans	 		&trans
+		>;
+		};
+       		alpha2 {
+		bindings = <
+		&trans 	 	&kp V 		&kp W		&kp M	 	 	&kp F    	&kp SQT			&kp Z 		&trans
+		&kp Q	 	&kp J 		&kp P		&kp K 			&kp B 		&kp DOT			&kp X		&kp Y 
+		&trans	 	&trans 		&trans 		&sk LSHIFT 		&sl AL2U	&trans			&trans		&trans
+								&trans	 		&trans
+		>;
+		};
+		
+       		sym1 {
+		bindings = <
+		&trans 		&kp LA(N3)   	&kp LS(N3)	&kp DLLR	    	&kp LS(COMMA)	&kp LS(DOT)		&kp CARET	&trans
+		&kp GRAVE	&kp TILDE 	&kp MINUS      	&kp BSLH	 	&kp LBKT	&kp RBKT	 	&kp PIPE 	&kp SLASH
+		&trans		&trans  	&trans		&trans  		&trans		&trans 			&trans  	&trans
+							 	&trans		 	&trans
+		>;
+		};
+		sym2 {
+		bindings = <
+		&trans		&kp ATSN	&td LA(RBKT) LA(LS(RBKT))	&td  LA(LBKT) LA(LS(LBKT))	&kp LPRN	&kp RPRN 	&kp SEMI 	&trans
+		&kp STAR  	&kp PRCNT	&td QMARK EXCL       		&kp DQT   			&kp LBRC  	&kp RBRC	&kp AMPS	&kp COLON 
+		&trans 		&trans 		&trans  			&trans 				&trans 		&trans 		&trans 		&trans   
+						 				&trans				&trans
+
+		>;
+		};
+
+		num {
+		bindings = <
+		&trans		&hm LCTL DOT 	&hm LALT N0	&hm LGUI N1 		&hm RGUI N2 	&hm RALT N3		&hm RCTL N4	&trans
+		&kp MINUS	&kp PLUS 	&kp N5		&kp N6			&kp N7		&kp N8			&kp N9   	&kp EQUAL
+		&trans  	&trans 		&trans		&sr LSHIFT AL1 		&trans 		&trans 			&trans  	&trans 
+								&trans	 	 	&trans
+		>;
+		};
+
+		sys {
+		bindings = <
+		&trans		 	&kp ESC			&kp LC(LS(TAB)) 	&kp RC(TAB)		&td LG(V) LG(C) 	&kp UP 		&td Q BKSP 			&trans
+		&td LG(GRAVE) TAB	&td HOME DEL		&td END LG(LBKT) 	&kp LG(RBKT)		&td TAB LEFT  		&kp DOWN 	&td  LC(LG(LS(N4))) RIGHT 	&kp RET 
+		&trans 			&trans 		 	&trans			&sr LSHIFT AL1 		&kp RGUI		&trans 		&trans				&trans 	   
+									 		&trans	 		&trans
+		>;
+		};
+
+		bt {
+		bindings = <
+		&trans		&bt BT_PRV	&bt BT_NXT	&trans 			&trans 	&trans	&trans	&trans
+		&bootloader  	&trans 		&trans 		&trans 			&trans 	&trans 	&trans	&bt BT_CLR
+		&trans 	 	&trans 		&trans		&to AL1			&trans  &trans  &trans 	&bt BT_CLR
+						 		&trans			&trans
+		>;
+		};
+
+       		alpha2cap {
+		bindings = <
+		&trans 	 	&kp LS(V)	&kp LS(W)	&kp LS(M) 	 	&kp LS(F)    	&trans		&kp LS(Z)	&trans 
+		&kp LS(Q) 	&kp LS(J) 	&kp LS(P)	&kp LS(K)		&kp LS(B)	&kp COMMA	&kp LS(X)	&kp LS(Y) 
+		&trans	 	&trans 		&trans 		&trans 			&kp LA(SEMI)	&trans		&trans		&trans
+								&trans	 		&trans
+		>;
+		};
+        
+	};
+};
+
+[DtsPreprocessor] cpp command: ['/usr/bin/clang', '-E', '-nostdinc', '-undef', '-x', 'assembler-with-cpp', '-I', '/Volumes/FlashGordon/Dropbox/code/nicktokatana/converter/dts/include', '/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/tmpt0_4i2ki.dts']
+Added combo combo_game: Combo(name='combo_game', timeout_ms=30, key_positions=[31, 32, 33, 34], binding=Binding(behavior=Behavior(name='to', type='zmk,behavior-toggle-layer'), params=['30']))
+Added combo combo_sys: Combo(name='combo_sys', timeout_ms=30, key_positions=[33, 34, 35], binding=Binding(behavior=Behavior(name='to', type='zmk,behavior-toggle-layer'), params=['35']))
+Added combo combo_caps: Combo(name='combo_caps', timeout_ms=30, key_positions=[12, 13, 14], binding=Binding(behavior=Behavior(name='caps_word', type='zmk,behavior-caps-word'), params=[]))
+Added combo combo_bt: Combo(name='combo_bt', timeout_ms=10, key_positions=[13, 14], binding=Binding(behavior=Behavior(name='to', type='zmk,behavior-toggle-layer'), params=['36']))
+Added combo lalt: Combo(name='lalt', timeout_ms=20, key_positions=[10, 11], binding=Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['LALT']))
+Added combo lclk: Combo(name='lclk', timeout_ms=20, key_positions=[12, 13], binding=Binding(behavior=Behavior(name='mkp', type='zmk,behavior-mouse-key-press'), params=['1']))
+Added combo rclk: Combo(name='rclk', timeout_ms=20, key_positions=[33, 34], binding=Binding(behavior=Behavior(name='mkp', type='zmk,behavior-mouse-key-press'), params=['2']))
+Added layer alpha1: Layer(name='alpha1', bindings=[Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=HoldTap(name='hm', type='hold-tap', hold_key='', tap_key='', tapping_term_ms=300, hold_time_ms=None, quick_tap_ms=None, flavor=None, tap_hold_wait_ms=None, require_prior_idle_ms=None), params=['LCTL', '15']), Binding(behavior=HoldTap(name='hm', type='hold-tap', hold_key='', tap_key='', tapping_term_ms=300, hold_time_ms=None, quick_tap_ms=None, flavor=None, tap_hold_wait_ms=None, require_prior_idle_ms=None), params=['LALT', '10']), Binding(behavior=HoldTap(name='hm', type='hold-tap', hold_key='', tap_key='', tapping_term_ms=300, hold_time_ms=None, quick_tap_ms=None, flavor=None, tap_hold_wait_ms=None, require_prior_idle_ms=None), params=['LGUI', '7']), Binding(behavior=HoldTap(name='hm', type='hold-tap', hold_key='', tap_key='', tapping_term_ms=300, hold_time_ms=None, quick_tap_ms=None, flavor=None, tap_hold_wait_ms=None, require_prior_idle_ms=None), params=['RGUI', '11']), Binding(behavior=HoldTap(name='hm', type='hold-tap', hold_key='', tap_key='', tapping_term_ms=300, hold_time_ms=None, quick_tap_ms=None, flavor=None, tap_hold_wait_ms=None, require_prior_idle_ms=None), params=['RALT', '24']), Binding(behavior=HoldTap(name='hm', type='hold-tap', hold_key='', tap_key='', tapping_term_ms=300, hold_time_ms=None, quick_tap_ms=None, flavor=None, tap_hold_wait_ms=None, require_prior_idle_ms=None), params=['RCTL', '18']), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=HoldTap(name='hl', type='hold-tap', hold_key='', tap_key='', tapping_term_ms=220, hold_time_ms=None, quick_tap_ms=None, flavor=None, tap_hold_wait_ms=None, require_prior_idle_ms=None), params=['34', '12']), Binding(behavior=HoldTap(name='hl', type='hold-tap', hold_key='', tap_key='', tapping_term_ms=220, hold_time_ms=None, quick_tap_ms=None, flavor=None, tap_hold_wait_ms=None, require_prior_idle_ms=None), params=['33', '22']), Binding(behavior=HoldTap(name='hl', type='hold-tap', hold_key='', tap_key='', tapping_term_ms=220, hold_time_ms=None, quick_tap_ms=None, flavor=None, tap_hold_wait_ms=None, require_prior_idle_ms=None), params=['32', '21']), Binding(behavior=HoldTap(name='hl', type='hold-tap', hold_key='', tap_key='', tapping_term_ms=220, hold_time_ms=None, quick_tap_ms=None, flavor=None, tap_hold_wait_ms=None, require_prior_idle_ms=None), params=['35', '23']), Binding(behavior=HoldTap(name='hl', type='hold-tap', hold_key='', tap_key='', tapping_term_ms=220, hold_time_ms=None, quick_tap_ms=None, flavor=None, tap_hold_wait_ms=None, require_prior_idle_ms=None), params=['35', '17']), Binding(behavior=HoldTap(name='hl', type='hold-tap', hold_key='', tap_key='', tapping_term_ms=220, hold_time_ms=None, quick_tap_ms=None, flavor=None, tap_hold_wait_ms=None, require_prior_idle_ms=None), params=['32', '8']), Binding(behavior=HoldTap(name='hl', type='hold-tap', hold_key='', tap_key='', tapping_term_ms=220, hold_time_ms=None, quick_tap_ms=None, flavor=None, tap_hold_wait_ms=None, require_prior_idle_ms=None), params=['33', '4']), Binding(behavior=HoldTap(name='hl', type='hold-tap', hold_key='', tap_key='', tapping_term_ms=220, hold_time_ms=None, quick_tap_ms=None, flavor=None, tap_hold_wait_ms=None, require_prior_idle_ms=None), params=['34', '6']), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='mt', type='hold-tap'), params=['LC(LS(LALT))', 'SPC']), Binding(behavior=MacroBehavior(name='alpha2macro', type='macro'), params=[]), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[])], index=0)
+Added layer game: Layer(name='game', bindings=[Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['15']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['10']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['7']), Binding(behavior=HoldTap(name='hm', type='hold-tap', hold_key='', tap_key='', tapping_term_ms=300, hold_time_ms=None, quick_tap_ms=None, flavor=None, tap_hold_wait_ms=None, require_prior_idle_ms=None), params=['RGUI', '11']), Binding(behavior=HoldTap(name='hm', type='hold-tap', hold_key='', tap_key='', tapping_term_ms=300, hold_time_ms=None, quick_tap_ms=None, flavor=None, tap_hold_wait_ms=None, require_prior_idle_ms=None), params=['RALT', '24']), Binding(behavior=HoldTap(name='hm', type='hold-tap', hold_key='', tap_key='', tapping_term_ms=300, hold_time_ms=None, quick_tap_ms=None, flavor=None, tap_hold_wait_ms=None, require_prior_idle_ms=None), params=['RCTL', '18']), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['12']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['22']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['21']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['23']), Binding(behavior=HoldTap(name='hl', type='hold-tap', hold_key='', tap_key='', tapping_term_ms=220, hold_time_ms=None, quick_tap_ms=None, flavor=None, tap_hold_wait_ms=None, require_prior_idle_ms=None), params=['35', '17']), Binding(behavior=HoldTap(name='hl', type='hold-tap', hold_key='', tap_key='', tapping_term_ms=220, hold_time_ms=None, quick_tap_ms=None, flavor=None, tap_hold_wait_ms=None, require_prior_idle_ms=None), params=['32', '8']), Binding(behavior=HoldTap(name='hl', type='hold-tap', hold_key='', tap_key='', tapping_term_ms=220, hold_time_ms=None, quick_tap_ms=None, flavor=None, tap_hold_wait_ms=None, require_prior_idle_ms=None), params=['33', '4']), Binding(behavior=HoldTap(name='hl', type='hold-tap', hold_key='', tap_key='', tapping_term_ms=220, hold_time_ms=None, quick_tap_ms=None, flavor=None, tap_hold_wait_ms=None, require_prior_idle_ms=None), params=['34', '6']), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['SPC']), Binding(behavior=Behavior(name='sl', type='zmk,behavior-sticky-layer'), params=['31']), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[])], index=1)
+Added layer alpha2: Layer(name='alpha2', bindings=[Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['25']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['26']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['16']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['9']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['SQT']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['29']), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['20']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['13']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['19']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['14']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['5']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['DOT']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['27']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['28']), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='sk', type='zmk,behavior-sticky-key'), params=['LSHIFT']), Binding(behavior=Behavior(name='sl', type='zmk,behavior-sticky-layer'), params=['37']), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[])], index=2)
+Added layer sym1: Layer(name='sym1', bindings=[Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['LA(N3)']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['LS(N3)']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['DLLR']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['LS(COMMA)']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['LS(DOT)']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['CARET']), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['GRAVE']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['TILDE']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['MINUS']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['BSLH']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['LBKT']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['RBKT']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['PIPE']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['SLASH']), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[]), Binding(behavior=Behavior(name='trans', type='zmk,behavior-transparent'), params=[])], index=3)
+---------------------------- Captured stderr setup -----------------------------
+[WARNING] Duplicate child 'behaviors' found in stray block; overwriting in node '/'
+[ERROR] Error: Behavior.__init__() got an unexpected keyword argument 'type'
+Error: Failed to convert keymap: Behavior.__init__() got an unexpected keyword argument 'type'
+_ ERROR at setup of test_golden_regression[tests/fixtures/real_world/piano.keymap] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x1034b0460>, _basetemp=PosixPath...olders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-274'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def generated_outputs(tmp_path_factory):
+        """
+        Generate Kanata outputs for all ZMK files in a temp directory.
+        Returns a dict mapping input file to output file path.
+        """
+        tmp_path = tmp_path_factory.mktemp("kanata_regression")
+        outputs = {}
+        for zmk_file in zmk_files():
+            out_file = tmp_path / (os.path.basename(zmk_file) + KANATA_SUFFIX)
+>           subprocess.run(
+                [
+                    "python",
+                    "-m",
+                    "converter.main",
+                    zmk_file,
+                    "-o",
+                    str(out_file),
+                ],
+                check=True,
+            )
+
+tests/test_regression_real_world.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['python', '-m', 'converter.main', 'tests/fixtures/real_world/card.keymap', '-o', '/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-274/kanata_regression0/card.keymap.out.kanata'],)
+kwargs = {}
+process = <Popen: returncode: 1 args: ['python', '-m', 'converter.main', 'tests/fixtur...>
+stdout = None, stderr = None, retcode = 1
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['python', '-m', 'converter.main', 'tests/fixtures/real_world/card.keymap', '-o', '/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-274/kanata_regression0/card.keymap.out.kanata']' returned non-zero exit status 1.
+
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:526: CalledProcessError
+_ ERROR at setup of test_no_unsupported_features[tests/fixtures/real_world/card.keymap] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x1034b0460>, _basetemp=PosixPath...olders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-274'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def generated_outputs(tmp_path_factory):
+        """
+        Generate Kanata outputs for all ZMK files in a temp directory.
+        Returns a dict mapping input file to output file path.
+        """
+        tmp_path = tmp_path_factory.mktemp("kanata_regression")
+        outputs = {}
+        for zmk_file in zmk_files():
+            out_file = tmp_path / (os.path.basename(zmk_file) + KANATA_SUFFIX)
+>           subprocess.run(
+                [
+                    "python",
+                    "-m",
+                    "converter.main",
+                    zmk_file,
+                    "-o",
+                    str(out_file),
+                ],
+                check=True,
+            )
+
+tests/test_regression_real_world.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['python', '-m', 'converter.main', 'tests/fixtures/real_world/card.keymap', '-o', '/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-274/kanata_regression0/card.keymap.out.kanata'],)
+kwargs = {}
+process = <Popen: returncode: 1 args: ['python', '-m', 'converter.main', 'tests/fixtur...>
+stdout = None, stderr = None, retcode = 1
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['python', '-m', 'converter.main', 'tests/fixtures/real_world/card.keymap', '-o', '/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-274/kanata_regression0/card.keymap.out.kanata']' returned non-zero exit status 1.
+
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:526: CalledProcessError
+_ ERROR at setup of test_no_unsupported_features[tests/fixtures/real_world/piano.keymap] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x1034b0460>, _basetemp=PosixPath...olders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-274'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def generated_outputs(tmp_path_factory):
+        """
+        Generate Kanata outputs for all ZMK files in a temp directory.
+        Returns a dict mapping input file to output file path.
+        """
+        tmp_path = tmp_path_factory.mktemp("kanata_regression")
+        outputs = {}
+        for zmk_file in zmk_files():
+            out_file = tmp_path / (os.path.basename(zmk_file) + KANATA_SUFFIX)
+>           subprocess.run(
+                [
+                    "python",
+                    "-m",
+                    "converter.main",
+                    zmk_file,
+                    "-o",
+                    str(out_file),
+                ],
+                check=True,
+            )
+
+tests/test_regression_real_world.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['python', '-m', 'converter.main', 'tests/fixtures/real_world/card.keymap', '-o', '/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-274/kanata_regression0/card.keymap.out.kanata'],)
+kwargs = {}
+process = <Popen: returncode: 1 args: ['python', '-m', 'converter.main', 'tests/fixtur...>
+stdout = None, stderr = None, retcode = 1
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['python', '-m', 'converter.main', 'tests/fixtures/real_world/card.keymap', '-o', '/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-274/kanata_regression0/card.keymap.out.kanata']' returned non-zero exit status 1.
+
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:526: CalledProcessError
+_ ERROR at setup of test_no_long_lines_in_kanata_outputs[tests/fixtures/real_world/card.keymap] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x1034b0460>, _basetemp=PosixPath...olders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-274'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def generated_outputs(tmp_path_factory):
+        """
+        Generate Kanata outputs for all ZMK files in a temp directory.
+        Returns a dict mapping input file to output file path.
+        """
+        tmp_path = tmp_path_factory.mktemp("kanata_regression")
+        outputs = {}
+        for zmk_file in zmk_files():
+            out_file = tmp_path / (os.path.basename(zmk_file) + KANATA_SUFFIX)
+>           subprocess.run(
+                [
+                    "python",
+                    "-m",
+                    "converter.main",
+                    zmk_file,
+                    "-o",
+                    str(out_file),
+                ],
+                check=True,
+            )
+
+tests/test_regression_real_world.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['python', '-m', 'converter.main', 'tests/fixtures/real_world/card.keymap', '-o', '/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-274/kanata_regression0/card.keymap.out.kanata'],)
+kwargs = {}
+process = <Popen: returncode: 1 args: ['python', '-m', 'converter.main', 'tests/fixtur...>
+stdout = None, stderr = None, retcode = 1
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['python', '-m', 'converter.main', 'tests/fixtures/real_world/card.keymap', '-o', '/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-274/kanata_regression0/card.keymap.out.kanata']' returned non-zero exit status 1.
+
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:526: CalledProcessError
+_ ERROR at setup of test_no_long_lines_in_kanata_outputs[tests/fixtures/real_world/piano.keymap] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x1034b0460>, _basetemp=PosixPath...olders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-274'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def generated_outputs(tmp_path_factory):
+        """
+        Generate Kanata outputs for all ZMK files in a temp directory.
+        Returns a dict mapping input file to output file path.
+        """
+        tmp_path = tmp_path_factory.mktemp("kanata_regression")
+        outputs = {}
+        for zmk_file in zmk_files():
+            out_file = tmp_path / (os.path.basename(zmk_file) + KANATA_SUFFIX)
+>           subprocess.run(
+                [
+                    "python",
+                    "-m",
+                    "converter.main",
+                    zmk_file,
+                    "-o",
+                    str(out_file),
+                ],
+                check=True,
+            )
+
+tests/test_regression_real_world.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['python', '-m', 'converter.main', 'tests/fixtures/real_world/card.keymap', '-o', '/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-274/kanata_regression0/card.keymap.out.kanata'],)
+kwargs = {}
+process = <Popen: returncode: 1 args: ['python', '-m', 'converter.main', 'tests/fixtur...>
+stdout = None, stderr = None, retcode = 1
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['python', '-m', 'converter.main', 'tests/fixtures/real_world/card.keymap', '-o', '/private/var/folders/0s/42v7yl697hn0l1cdnx0vrvyr0000gn/T/pytest-of-malpern/pytest-274/kanata_regression0/card.keymap.out.kanata']' returned non-zero exit status 1.
+
+/Users/malpern/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py:526: CalledProcessError
+=================================== FAILURES ===================================
+______________________________ test_simple_keymap ______________________________
+
+    def test_simple_keymap():
+        """Test parsing a simple keymap file."""
+        content = """
+        / {
+            keymap {
+                compatible = "zmk,keymap";
+    
+                default_layer {
+                    bindings = <
+                        &kp A &kp B &kp C
+                        &kp D &kp E &kp F
+                    >;
+                };
+            };
+        };
+        """
+    
+        # Parse and extract
+        parser = DtsParser()
+        ast = parser.parse(content)
+    
+        extractor = KeymapExtractor()
+        config = extractor.extract(ast)
+    
+        # Verify basic structure
+        assert isinstance(config, KeymapConfig)
+        assert len(config.layers) == 1
+    
+        # Verify default layer
+        default_layer_node = next(
+            layer_node for layer_node in config.layers if layer_node.name == "default_layer"
+        )
+        assert len(default_layer_node.bindings) == 6
+    
+        # Verify bindings
+        expected_key_codes = ["A", "B", "C", "D", "E", "F"]
+        for binding_node, expected_key_code in zip(
+            default_layer_node.bindings, expected_key_codes
+        ):
+            assert isinstance(binding_node, Binding)
+>           assert binding_node.behavior is None  # kp is built-in
+E           AssertionError: assert Behavior(name='kp', type='zmk,behavior-key-press') is None
+E            +  where Behavior(name='kp', type='zmk,behavior-key-press') = Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['A']).behavior
+
+tests/dts/test_end_to_end.py:51: AssertionError
+----------------------------- Captured stdout call -----------------------------
+Added layer default_layer: Layer(name='default_layer', bindings=[Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['A']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['B']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['C']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['D']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['E']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['F'])], index=0)
+______________________ test_complex_keymap_with_behaviors ______________________
+
+    def test_complex_keymap_with_behaviors():
+        """Test parsing a complex keymap with behaviors."""
+        content = """
+        / {
+            behaviors {
+                mt: mod_tap {
+                    compatible = "zmk,behavior-hold-tap";
+                    tapping-term-ms = <200>;
+                    #binding-cells = <2>;
+                };
+    
+                macro_a: macro_a {
+                    compatible = "zmk,behavior-macro";
+                    #binding-cells = <0>;
+                    bindings = <&kp A &kp B>;
+                };
+    
+                lt: layer_tap {
+                    compatible = "zmk,behavior-hold-tap";
+                    tapping-term-ms = <200>;
+                    #binding-cells = <2>;
+                };
+            };
+    
+            keymap {
+                compatible = "zmk,keymap";
+    
+                default_layer {
+                    bindings = <
+                        &mt LSHIFT A  &kp B        &macro_a
+                        &kp D         &lt 1 E      &kp F
+                    >;
+                };
+    
+                lower_layer {
+                    bindings = <
+                        &kp N1  &kp N2  &kp N3
+                        &kp N4  &kp N5  &kp N6
+                    >;
+                };
+            };
+        };
+        """
+    
+        # Parse and extract
+        parser = DtsParser()
+        ast = parser.parse(content)
+    
+        extractor = KeymapExtractor()
+        config = extractor.extract(ast)
+    
+        # Verify basic structure
+        assert isinstance(config, KeymapConfig)
+        assert len(config.layers) == 2
+        assert "mt" in config.behaviors
+        assert "macro_a" in config.behaviors
+        assert "lt" in config.behaviors
+    
+        # Verify behaviors
+        mt = next(b for b in config.behaviors.values() if b.name == "mt")
+        assert isinstance(mt, Behavior)
+        assert mt.tapping_term_ms == 200
+    
+        lt = next(b for b in config.behaviors.values() if b.name == "lt")
+        assert isinstance(lt, Behavior)
+        assert lt.tapping_term_ms == 200
+    
+        macro = next(b for b in config.behaviors.values() if b.name == "macro_a")
+        assert isinstance(macro, Behavior)
+        assert all(isinstance(b, Binding) for b in macro.bindings)
+    
+        # Verify default layer
+        default_layer_node = next(
+            layer_node for layer_node in config.layers if layer_node.name == "default_layer"
+        )
+        assert len(default_layer_node.bindings) == 6
+    
+        # Check specific bindings
+        assert default_layer_node.bindings[0].behavior == mt
+        assert default_layer_node.bindings[0].params == ["LSHIFT", "A"]
+    
+>       assert default_layer_node.bindings[1].behavior is None  # kp is built-in
+E       AssertionError: assert Behavior(name='kp', type='zmk,behavior-key-press') is None
+E        +  where Behavior(name='kp', type='zmk,behavior-key-press') = Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['B']).behavior
+
+tests/dts/test_end_to_end.py:136: AssertionError
+----------------------------- Captured stdout call -----------------------------
+Added layer default_layer: Layer(name='default_layer', bindings=[Binding(behavior=HoldTap(name='mt', type='hold-tap', hold_key='', tap_key='', tapping_term_ms=200, hold_time_ms=None, quick_tap_ms=None, flavor=None, tap_hold_wait_ms=None, require_prior_idle_ms=None), params=['LSHIFT', 'A']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['B']), Binding(behavior=MacroBehavior(name='macro_a', type='macro'), params=[]), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['D']), Binding(behavior=HoldTap(name='lt', type='hold-tap', hold_key='', tap_key='', tapping_term_ms=200, hold_time_ms=None, quick_tap_ms=None, flavor=None, tap_hold_wait_ms=None, require_prior_idle_ms=None), params=['1', 'E']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['F'])], index=0)
+Added layer lower_layer: Layer(name='lower_layer', bindings=[Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['N1']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['N2']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['N3']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['N4']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['N5']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['N6'])], index=1)
+___________________________ test_keymap_with_unicode ___________________________
+
+    def test_keymap_with_unicode():
+        """Test parsing a keymap with unicode behaviors."""
+        content = """
+        / {
+            behaviors {
+                unicode: unicode {
+                    compatible = "zmk,behavior-unicode";
+                    #binding-cells = <1>;
+                };
+    
+                uc_string: unicode_string {
+                    compatible = "zmk,behavior-unicode-string";
+                    #binding-cells = <1>;
+                    strings = <
+                        "smile" "😊"
+                        "heart" "❤️"
+                    >;
+                };
+            };
+    
+            keymap {
+                compatible = "zmk,keymap";
+    
+                default_layer {
+                    bindings = <
+                        &unicode U0001F600  &uc_string smile  &kp A
+                        &unicode U2764      &uc_string heart  &kp B
+                    >;
+                };
+            };
+        };
+        """
+    
+        # Parse and extract
+        parser = DtsParser()
+        ast = parser.parse(content)
+    
+        extractor = KeymapExtractor()
+        config = extractor.extract(ast)
+    
+        # Verify behaviors
+        assert "unicode" in config.behaviors
+        assert "uc_string" in config.behaviors
+    
+        unicode = next(b for b in config.behaviors.values() if b.name == "unicode")
+        assert isinstance(unicode, Behavior)
+    
+        uc_string = next(b for b in config.behaviors.values() if b.name == "uc_string")
+        assert isinstance(uc_string, Behavior)
+    
+        # Verify bindings
+        layer_node = config.layers[0]
+        assert len(layer_node.bindings) == 10
+    
+        # Expected sequence: unicode, U0001F600, uc_string, smile, A, unicode, U2764, uc_string, heart, B
+        expected = [
+            (unicode, []),
+            (None, ["U0001F600"]),
+            (uc_string, []),
+            (None, ["smile"]),
+            (None, ["A"]),
+            (unicode, []),
+            (None, ["U2764"]),
+            (uc_string, []),
+            (None, ["heart"]),
+            (None, ["B"]),
+        ]
+        for binding, (exp_behavior, exp_params) in zip(layer_node.bindings, expected):
+            if exp_behavior is not None:
+                assert binding.behavior == exp_behavior
+            else:
+>               assert binding.behavior is None
+E               AssertionError: assert Behavior(name='kp', type='zmk,behavior-key-press') is None
+E                +  where Behavior(name='kp', type='zmk,behavior-key-press') = Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['A']).behavior
+
+tests/dts/test_end_to_end.py:226: AssertionError
+----------------------------- Captured stdout call -----------------------------
+Added layer default_layer: Layer(name='default_layer', bindings=[Binding(behavior=Behavior(name='unicode', type='zmk,behavior-unicode'), params=[]), Binding(behavior=None, params=['U0001F600']), Binding(behavior=Behavior(name='uc_string', type='zmk,behavior-unicode-string'), params=[]), Binding(behavior=None, params=['smile']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['A']), Binding(behavior=Behavior(name='unicode', type='zmk,behavior-unicode'), params=[]), Binding(behavior=None, params=['U2764']), Binding(behavior=Behavior(name='uc_string', type='zmk,behavior-unicode-string'), params=[]), Binding(behavior=None, params=['heart']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['B'])], index=0)
+_____________________________ test_error_handling ______________________________
+
+    def test_error_handling():
+        """Test error handling with malformed input."""
+        # Test missing root node
+        with pytest.raises(DtsParseError, match="DTS must start with root node"):
+            parser = DtsParser()
+            parser.parse("keymap { };")
+    
+        # Test invalid property assignment
+        with pytest.raises(DtsParseError, match="Invalid property value"):
+            parser = DtsParser()
+            parser.parse(
+                """
+            / {
+                keymap {
+                    prop = value
+                };
+            };
+            """
+            )
+    
+        # Test invalid binding format
+        parser = DtsParser()
+        ast = parser.parse(
+            """
+        / {
+            keymap {
+                default_layer {
+                    bindings = <&invalid_binding>;
+                };
+            };
+        };
+        """
+        )
+        extractor = KeymapExtractor()
+>       with pytest.raises(
+            ValueError, match="Unknown behavior referenced during binding creation"
+        ):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/dts/test_end_to_end.py:264: Failed
+----------------------------- Captured stdout call -----------------------------
+Added layer default_layer: Layer(name='default_layer', bindings=[Binding(behavior=Behavior(name='invalid_binding', type='unknown-behavior'), params=[])], index=0)
+------------------------------ Captured log call -------------------------------
+ERROR    root:parser.py:75 DTS must start with root node '/' (first token: 'keymap')
+ERROR    root:parser.py:694 Parse error for property 'prop': Invalid property value: value at line 3, column 1
+
+1 |         / {
+2 |             keymap {
+3 |                 prop = value
+  | ^
+4 |             };
+5 |         };
+
+Help: Property values must be strings, integers, arrays, or booleans
+ERROR    root:parser.py:198 Parse error: Invalid property value: value at line 3, column 1
+
+1 |         / {
+2 |             keymap {
+3 |                 prop = value
+  | ^
+4 |             };
+5 |         };
+
+Help: Property values must be strings, integers, arrays, or booleans
+ERROR    root:extractor.py:558 Unknown behavior referenced or failed to map: invalid_binding (type_str hint: invalid_binding). Creating as 'unknown-behavior'.
+________________________ test_extract_complex_bindings _________________________
+
+    def test_extract_complex_bindings():
+        """Test extracting complex bindings."""
+        content = """
+        / {
+            behaviors {
+                mt: mod_tap {
+                    compatible = "zmk,behavior-hold-tap";
+                    tapping-term-ms = <200>;
+                };
+                lt: layer_tap {
+                    compatible = "zmk,behavior-hold-tap";
+                    tapping-term-ms = <200>;
+                };
+            };
+            keymap {
+                default_layer {
+                    bindings = <
+                        &mt LSHIFT A
+                        &lt 1 B
+                        &kp C
+                    >;
+                };
+            };
+        };
+        """
+    
+        parser = DtsParser()
+        ast = parser.parse(content)
+        extractor = KeymapExtractor()
+        config = extractor.extract(ast)
+    
+        layer = config.layers[0]
+        assert len(layer.bindings) == 3
+    
+        # Check first binding (mod-tap)
+        mt_binding = layer.bindings[0]
+        assert mt_binding.behavior.name == "mt"
+        assert mt_binding.params == ["LSHIFT", "A"]
+    
+        # Check second binding (layer-tap)
+        lt_binding = layer.bindings[1]
+        assert lt_binding.behavior.name == "lt"
+        assert lt_binding.params == ["1", "B"]
+    
+        # Check third binding (key-press)
+        kp_binding = layer.bindings[2]
+>       assert kp_binding.behavior is None  # Key press is built-in
+E       AssertionError: assert Behavior(name='kp', type='zmk,behavior-key-press') is None
+E        +  where Behavior(name='kp', type='zmk,behavior-key-press') = Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['C']).behavior
+
+tests/dts/test_extractor.py:157: AssertionError
+----------------------------- Captured stdout call -----------------------------
+Added layer default_layer: Layer(name='default_layer', bindings=[Binding(behavior=HoldTap(name='mt', type='hold-tap', hold_key='', tap_key='', tapping_term_ms=200, hold_time_ms=None, quick_tap_ms=None, flavor=None, tap_hold_wait_ms=None, require_prior_idle_ms=None), params=['LSHIFT', 'A']), Binding(behavior=HoldTap(name='lt', type='hold-tap', hold_key='', tap_key='', tapping_term_ms=200, hold_time_ms=None, quick_tap_ms=None, flavor=None, tap_hold_wait_ms=None, require_prior_idle_ms=None), params=['1', 'B']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['C'])], index=0)
+_______________________ test_full_pipeline_simple_keymap _______________________
+
+    def test_full_pipeline_simple_keymap():
+        """Test the full pipeline with a simple keymap."""
+        content = """
+        / {
+            keymap {
+                compatible = "zmk,keymap";
+                default_layer {
+                    bindings = <&kp A &kp B &kp C>;
+                };
+            };
+        };
+        """
+    
+        # Parse DTS
+        parser = DtsParser()
+        ast = parser.parse(content)
+    
+        # Extract keymap
+        extractor = KeymapExtractor()
+        config = extractor.extract(ast)
+    
+        # Verify results
+        assert isinstance(config, KeymapConfig)
+        assert len(config.layers) == 1
+        assert config.layers[0].name == "default_layer"
+        assert len(config.layers[0].bindings) == 3
+    
+        # Check bindings
+        for binding in config.layers[0].bindings:
+            assert isinstance(binding, Binding)
+>           assert binding.behavior is None  # kp is built-in
+E           AssertionError: assert Behavior(name='kp', type='zmk,behavior-key-press') is None
+E            +  where Behavior(name='kp', type='zmk,behavior-key-press') = Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['A']).behavior
+
+tests/dts/test_integration.py:40: AssertionError
+----------------------------- Captured stdout call -----------------------------
+Added layer default_layer: Layer(name='default_layer', bindings=[Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['A']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['B']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['C'])], index=0)
+______________________ test_full_pipeline_multiple_layers ______________________
+
+    def test_full_pipeline_multiple_layers():
+        """Test the full pipeline with multiple layers."""
+        content = """
+        / {
+            keymap {
+                default_layer {
+                    bindings = <&kp A &kp B>;
+                };
+                lower_layer {
+                    bindings = <&kp C &kp D>;
+                };
+                raise_layer {
+                    bindings = <&kp E &kp F>;
+                };
+            };
+        };
+        """
+    
+        # Parse DTS
+        parser = DtsParser()
+        ast = parser.parse(content)
+    
+        # Extract keymap
+        extractor = KeymapExtractor()
+        config = extractor.extract(ast)
+    
+        # Verify results
+        assert isinstance(config, KeymapConfig)
+        assert len(config.layers) == 3
+    
+        # Check layer names
+        layer_names = {layer.name for layer in config.layers}
+        assert layer_names == {"default_layer", "lower_layer", "raise_layer"}
+    
+        # Check each layer
+        for layer in config.layers:
+            assert len(layer.bindings) == 2
+            for binding in layer.bindings:
+                assert isinstance(binding, Binding)
+>               assert binding.behavior is None  # kp is built-in
+E               AssertionError: assert Behavior(name='kp', type='zmk,behavior-key-press') is None
+E                +  where Behavior(name='kp', type='zmk,behavior-key-press') = Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['A']).behavior
+
+tests/dts/test_integration.py:143: AssertionError
+----------------------------- Captured stdout call -----------------------------
+Added layer default_layer: Layer(name='default_layer', bindings=[Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['A']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['B'])], index=0)
+Added layer lower_layer: Layer(name='lower_layer', bindings=[Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['C']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['D'])], index=1)
+Added layer raise_layer: Layer(name='raise_layer', bindings=[Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['E']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['F'])], index=2)
+_____________________ test_full_pipeline_complex_bindings ______________________
+
+    def test_full_pipeline_complex_bindings():
+        """Test the full pipeline with complex bindings."""
+        content = """
+        / {
+            behaviors {
+                mt: mod_tap {
+                    compatible = "zmk,behavior-hold-tap";
+                    tapping-term-ms = <200>;
+                };
+                lt: layer_tap {
+                    compatible = "zmk,behavior-hold-tap";
+                    tapping-term-ms = <200>;
+                };
+            };
+            keymap {
+                default_layer {
+                    bindings = <
+                        &mt LSHIFT A
+                        &lt 1 B
+                        &kp C
+                    >;
+                };
+            };
+        };
+        """
+    
+        # Parse DTS
+        parser = DtsParser()
+        ast = parser.parse(content)
+    
+        # Extract keymap
+        extractor = KeymapExtractor()
+        config = extractor.extract(ast)
+    
+        # Verify results
+        assert isinstance(config, KeymapConfig)
+        assert len(config.layers) == 1
+        assert "mt" in config.behaviors
+        assert "lt" in config.behaviors
+    
+        # Check behaviors
+        mt = next(b for b in config.behaviors.values() if b.name == "mt")
+        lt = next(b for b in config.behaviors.values() if b.name == "lt")
+    
+        # Check layer bindings
+        layer = config.layers[0]
+        assert len(layer.bindings) == 3
+    
+        # First binding should be mod-tap
+        mt_binding = layer.bindings[0]
+        assert mt_binding.behavior == mt
+        assert mt_binding.params == ["LSHIFT", "A"]
+    
+        # Second binding should be layer-tap
+        lt_binding = layer.bindings[1]
+        assert lt_binding.behavior == lt
+        assert lt_binding.params == ["1", "B"]
+    
+        # Third binding should be key-press
+        kp_binding = layer.bindings[2]
+>       assert kp_binding.behavior is None
+E       AssertionError: assert Behavior(name='kp', type='zmk,behavior-key-press') is None
+E        +  where Behavior(name='kp', type='zmk,behavior-key-press') = Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['C']).behavior
+
+tests/dts/test_integration.py:207: AssertionError
+----------------------------- Captured stdout call -----------------------------
+Added layer default_layer: Layer(name='default_layer', bindings=[Binding(behavior=HoldTap(name='mt', type='hold-tap', hold_key='', tap_key='', tapping_term_ms=200, hold_time_ms=None, quick_tap_ms=None, flavor=None, tap_hold_wait_ms=None, require_prior_idle_ms=None), params=['LSHIFT', 'A']), Binding(behavior=HoldTap(name='lt', type='hold-tap', hold_key='', tap_key='', tapping_term_ms=200, hold_time_ms=None, quick_tap_ms=None, flavor=None, tap_hold_wait_ms=None, require_prior_idle_ms=None), params=['1', 'B']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['C'])], index=0)
+___________________________ test_complex_combo_todo ____________________________
+
+    def test_complex_combo_todo():
+        """Test that complex combos emit a TODO or unsupported comment."""
+        kanata = parse_and_transform(ZMK_COMPLEX_COMBO)
+>       assert "unsupported: combo 'combo1'" in kanata
+E       assert "unsupported: combo 'combo1'" in '(defcfg\n  input (kb () () )\n  output (kbd ())\n)\n\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default_layer\n; unsupported: kp A (ZMK: &kp A)\n; unsupported: kp B (ZMK: &kp B)\n; unsupported: kp C (ZMK: &kp C)\n)'
+
+tests/test_kanata_edge_cases.py:124: AssertionError
+----------------------------- Captured stdout call -----------------------------
+Warning: Skipping combo 'combo1' due to missing/invalid properties.
+Added layer default_layer: Layer(name='default_layer', bindings=[Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['A']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['B']), Binding(behavior=Behavior(name='kp', type='zmk,behavior-key-press'), params=['C'])], index=0)
+____________________________ test_tapdance_3actions ____________________________
+
+    def test_tapdance_3actions():
+        """Test tap-dance with 3 actions emits correct Kanata syntax."""
+        kanata = parse_and_transform(ZMK_TAPDANCE_3ACTIONS)
+>       assert "(tap-dance 200 a b c)" in kanata
+E       AssertionError: assert '(tap-dance 200 a b c)' in '(defcfg\n  input (kb () () )\n  output (kbd ())\n)\n\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default_layer\n; unsupported: hold-tap/tap-dance malformed: &td A B C\n)'
+
+tests/test_kanata_edge_cases.py:144: AssertionError
+----------------------------- Captured stdout call -----------------------------
+Added layer default_layer: Layer(name='default_layer', bindings=[Binding(behavior=Behavior(name='td', type='zmk,behavior-tap-dance'), params=['A', 'B', 'C'])], index=0)
+___________________________ test_tapdance_hold_todo ____________________________
+
+    def test_tapdance_hold_todo():
+        """Test tap-dance with hold-action emits a TODO and doc link."""
+        kanata = parse_and_transform(ZMK_TAPDANCE_HOLD)
+>       assert "TODO" in kanata and "tap-dance" in kanata
+E       AssertionError: assert ('TODO' in '(defcfg\n  input (kb () () )\n  output (kbd ())\n)\n\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default_layer\n; unsupported: td A B (ZMK: &td A B)\n)')
+
+tests/test_kanata_edge_cases.py:151: AssertionError
+----------------------------- Captured stdout call -----------------------------
+Added layer default_layer: Layer(name='default_layer', bindings=[Binding(behavior=Behavior(name='td', type='zmk,behavior-tap-dance'), params=['A', 'B'])], index=0)
+_____________________________ test_malformed_macro _____________________________
+
+    def test_malformed_macro():
+        """Test malformed macro emits an error and summary section."""
+        kanata = parse_and_transform(ZMK_MALFORMED_MACRO)
+        assert "ERROR: malformed or unknown macro" in kanata
+>       assert "; --- Conversion Summary: TODOs and Errors ---" in kanata
+E       AssertionError: assert '; --- Conversion Summary: TODOs and Errors ---' in '(defcfg\n  input (kb () () )\n  output (kbd ())\n)\n\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer defa... unknown macro: LSHIFT(\n)\n\n; --- Unsupported/Unknown ZMK Features ---\n  ERROR: malformed or unknown macro: LSHIFT('
+
+tests/test_kanata_edge_cases.py:159: AssertionError
+----------------------------- Captured stdout call -----------------------------
+Added layer default_layer: Layer(name='default_layer', bindings=[Binding(behavior=None, params=['LSHIFT('])], index=0)
+=========================== short test summary info ============================
+FAILED tests/dts/test_end_to_end.py::test_simple_keymap - AssertionError: ass...
+FAILED tests/dts/test_end_to_end.py::test_complex_keymap_with_behaviors - Ass...
+FAILED tests/dts/test_end_to_end.py::test_keymap_with_unicode - AssertionErro...
+FAILED tests/dts/test_end_to_end.py::test_error_handling - Failed: DID NOT RA...
+FAILED tests/dts/test_extractor.py::test_extract_complex_bindings - Assertion...
+FAILED tests/dts/test_integration.py::test_full_pipeline_simple_keymap - Asse...
+FAILED tests/dts/test_integration.py::test_full_pipeline_multiple_layers - As...
+FAILED tests/dts/test_integration.py::test_full_pipeline_complex_bindings - A...
+FAILED tests/test_kanata_edge_cases.py::test_complex_combo_todo - assert "uns...
+FAILED tests/test_kanata_edge_cases.py::test_tapdance_3actions - AssertionErr...
+FAILED tests/test_kanata_edge_cases.py::test_tapdance_hold_todo - AssertionEr...
+FAILED tests/test_kanata_edge_cases.py::test_malformed_macro - AssertionError...
+ERROR tests/test_regression_real_world.py::test_golden_regression[tests/fixtures/real_world/card.keymap]
+ERROR tests/test_regression_real_world.py::test_golden_regression[tests/fixtures/real_world/piano.keymap]
+ERROR tests/test_regression_real_world.py::test_no_unsupported_features[tests/fixtures/real_world/card.keymap]
+ERROR tests/test_regression_real_world.py::test_no_unsupported_features[tests/fixtures/real_world/piano.keymap]
+ERROR tests/test_regression_real_world.py::test_no_long_lines_in_kanata_outputs[tests/fixtures/real_world/card.keymap]
+ERROR tests/test_regression_real_world.py::test_no_long_lines_in_kanata_outputs[tests/fixtures/real_world/piano.keymap]
+=================== 12 failed, 119 passed, 6 errors in 1.41s ===================

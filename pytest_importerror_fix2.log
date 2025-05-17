@@ -1,0 +1,152 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.10.16, pytest-8.3.5, pluggy-1.5.0
+rootdir: /Volumes/FlashGordon/Dropbox/code/nicktokatana
+configfile: pyproject.toml
+testpaths: tests
+collected 137 items
+
+tests/dts/test_ast.py .....                                              [  3%]
+tests/dts/test_end_to_end.py ...F..                                      [  8%]
+tests/dts/test_extractor.py .....                                        [ 11%]
+tests/dts/test_integration.py .....                                      [ 15%]
+tests/dts/test_parser.py .............                                   [ 24%]
+tests/dts/test_performance.py ....                                       [ 27%]
+tests/dts/test_preprocessor.py ...........                               [ 35%]
+tests/test_dts_parser.py ..............                                  [ 45%]
+tests/test_dts_preprocessor.py ...                                       [ 48%]
+tests/test_hold_tap_behavior.py ......                                   [ 52%]
+tests/test_holdtap_transformer.py ..........                             [ 59%]
+tests/test_kanata_converter.py .............                             [ 69%]
+tests/test_kanata_edge_cases.py F..FFF                                   [ 73%]
+tests/test_kanata_home_row_mods.py .                                     [ 74%]
+tests/test_keymap_model.py ..........                                    [ 81%]
+tests/test_main.py .......                                               [ 86%]
+tests/test_regression_real_world.py ss....                               [ 91%]
+tests/test_sticky_key_transformer.py ....                                [ 94%]
+tests/test_unicode_behavior.py ........                                  [100%]
+
+=================================== FAILURES ===================================
+_____________________________ test_error_handling ______________________________
+
+    def test_error_handling():
+        """Test error handling with malformed input."""
+        # Test missing root node
+        with pytest.raises(DtsParseError, match="DTS must start with root node"):
+            parser = DtsParser()
+            parser.parse("keymap { };")
+    
+        # Test invalid property assignment
+        with pytest.raises(DtsParseError, match="Invalid property value"):
+            parser = DtsParser()
+            parser.parse(
+                """
+            / {
+                keymap {
+                    prop = value
+                };
+            };
+            """
+            )
+    
+        # Test invalid binding format
+        parser = DtsParser()
+        ast = parser.parse(
+            """
+        / {
+            keymap {
+                default_layer {
+                    bindings = <&invalid_binding>;
+                };
+            };
+        };
+        """
+        )
+        extractor = KeymapExtractor()
+>       with pytest.raises(
+            ValueError, match="Unknown behavior referenced during binding creation"
+        ):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/dts/test_end_to_end.py:264: Failed
+----------------------------- Captured stdout call -----------------------------
+Added layer default_layer: Layer(name='default_layer', bindings=[Binding(behavior=Behavior(name='invalid_binding', type='unknown-behavior'), params=[])], index=0)
+------------------------------ Captured log call -------------------------------
+ERROR    root:parser.py:75 DTS must start with root node '/' (first token: 'keymap')
+ERROR    root:parser.py:694 Parse error for property 'prop': Invalid property value: value at line 3, column 1
+
+1 |         / {
+2 |             keymap {
+3 |                 prop = value
+  | ^
+4 |             };
+5 |         };
+
+Help: Property values must be strings, integers, arrays, or booleans
+ERROR    root:parser.py:198 Parse error: Invalid property value: value at line 3, column 1
+
+1 |         / {
+2 |             keymap {
+3 |                 prop = value
+  | ^
+4 |             };
+5 |         };
+
+Help: Property values must be strings, integers, arrays, or booleans
+ERROR    root:extractor.py:542 Unknown behavior referenced or failed to map: invalid_binding (type_str hint: invalid_binding). Creating as 'unknown-behavior'.
+___________________________ test_complex_combo_todo ____________________________
+
+    def test_complex_combo_todo():
+        """Test that complex combos emit a TODO or unsupported comment."""
+        kanata = parse_and_transform(ZMK_COMPLEX_COMBO)
+>       assert "unsupported: combo 'combo1'" in kanata
+E       assert "unsupported: combo 'combo1'" in '(defcfg\n  input (kb () () )\n  output (kbd ())\n)\n\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer default_layer\n  a\n  b\n  c\n)'
+
+tests/test_kanata_edge_cases.py:124: AssertionError
+----------------------------- Captured stdout call -----------------------------
+Warning: Skipping combo 'combo1' due to missing/invalid properties.
+Added layer default_layer: Layer(name='default_layer', bindings=[Binding(behavior=None, params=['A']), Binding(behavior=None, params=['B']), Binding(behavior=None, params=['C'])], index=0)
+____________________________ test_tapdance_3actions ____________________________
+
+    def test_tapdance_3actions():
+        """Test tap-dance with 3 actions emits correct Kanata syntax."""
+        kanata = parse_and_transform(ZMK_TAPDANCE_3ACTIONS)
+>       assert "(tap-dance 200 a b c)" in kanata
+E       assert '(tap-dance 200 a b c)' in "(defcfg\n  input (kb () () )\n  output (kbd ())\n)\n\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer defa... Unsupported/Unknown ZMK Features ---\n  ERROR: [extractor] Invalid hold-tap binding for 'td': params=['A']. Creati..."
+
+tests/test_kanata_edge_cases.py:144: AssertionError
+----------------------------- Captured stdout call -----------------------------
+Added layer default_layer: Layer(name='default_layer', bindings=[Binding(behavior=None, params=["ERROR: [extractor] Invalid hold-tap binding for 'td': params=['A']. Creating error binding."]), Binding(behavior=None, params=['B']), Binding(behavior=None, params=['C'])], index=0)
+------------------------------ Captured log call -------------------------------
+WARNING  root:extractor.py:685 [extractor] Invalid hold-tap binding for 'td': params=['A']. Creating error binding.
+___________________________ test_tapdance_hold_todo ____________________________
+
+    def test_tapdance_hold_todo():
+        """Test tap-dance with hold-action emits a TODO and doc link."""
+        kanata = parse_and_transform(ZMK_TAPDANCE_HOLD)
+>       assert "TODO" in kanata and "tap-dance" in kanata
+E       assert ('TODO' in "(defcfg\n  input (kb () () )\n  output (kbd ())\n)\n\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer defa... Unsupported/Unknown ZMK Features ---\n  ERROR: [extractor] Invalid hold-tap binding for 'td': params=['A']. Creati...")
+
+tests/test_kanata_edge_cases.py:151: AssertionError
+----------------------------- Captured stdout call -----------------------------
+Added layer default_layer: Layer(name='default_layer', bindings=[Binding(behavior=None, params=["ERROR: [extractor] Invalid hold-tap binding for 'td': params=['A']. Creating error binding."]), Binding(behavior=None, params=['B'])], index=0)
+------------------------------ Captured log call -------------------------------
+WARNING  root:extractor.py:685 [extractor] Invalid hold-tap binding for 'td': params=['A']. Creating error binding.
+_____________________________ test_malformed_macro _____________________________
+
+    def test_malformed_macro():
+        """Test malformed macro emits an error and summary section."""
+        kanata = parse_and_transform(ZMK_MALFORMED_MACRO)
+        assert "ERROR: malformed or unknown macro" in kanata
+>       assert "; --- Conversion Summary: TODOs and Errors ---" in kanata
+E       AssertionError: assert '; --- Conversion Summary: TODOs and Errors ---' in '(defcfg\n  input (kb () () )\n  output (kbd ())\n)\n\n(defvar tap-time 200)\n(defvar hold-time 250)\n\n(deflayer defa... unknown macro: LSHIFT(\n)\n\n; --- Unsupported/Unknown ZMK Features ---\n  ERROR: malformed or unknown macro: LSHIFT('
+
+tests/test_kanata_edge_cases.py:159: AssertionError
+----------------------------- Captured stdout call -----------------------------
+Added layer default_layer: Layer(name='default_layer', bindings=[Binding(behavior=None, params=['LSHIFT('])], index=0)
+=========================== short test summary info ============================
+FAILED tests/dts/test_end_to_end.py::test_error_handling - Failed: DID NOT RA...
+FAILED tests/test_kanata_edge_cases.py::test_complex_combo_todo - assert "uns...
+FAILED tests/test_kanata_edge_cases.py::test_tapdance_3actions - assert '(tap...
+FAILED tests/test_kanata_edge_cases.py::test_tapdance_hold_todo - assert ('TO...
+FAILED tests/test_kanata_edge_cases.py::test_malformed_macro - AssertionError...
+=================== 5 failed, 130 passed, 2 skipped in 1.54s ===================

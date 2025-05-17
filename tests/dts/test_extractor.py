@@ -154,7 +154,9 @@ def test_extract_complex_bindings():
 
     # Check third binding (key-press)
     kp_binding = layer.bindings[2]
-    assert kp_binding.behavior is None  # Key press is built-in
+    assert kp_binding.behavior is not None
+    assert kp_binding.behavior.name == "kp"
+    assert kp_binding.behavior.type == "zmk,behavior-key-press"
     assert kp_binding.params == ["C"]
 
 

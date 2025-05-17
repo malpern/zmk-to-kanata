@@ -173,17 +173,15 @@ class KeymapExtractor:
 
                 compatible = compatible_prop.value
                 behavior_object = None
-                behavior_type = "unknown"
+                behavior_type = compatible  # Always set to compatible string
 
                 # Determine behavior type and create basic object
                 if compatible == "zmk,behavior-hold-tap":
                     behavior_object = self._create_hold_tap_behavior(child_node)
                     behavior_type = "hold-tap"
                 elif compatible == "zmk,behavior-macro":
-                    # Defer binding parsing
                     behavior_object = MacroBehavior(name="", bindings=[])
                     behavior_type = "macro"
-                    # Store node for pass 2
                     label_key = next(iter(child_node.labels.keys()), name)
                     self._behavior_nodes_to_process.append((label_key, child_node))
                 elif compatible == "zmk,behavior-unicode":
@@ -193,16 +191,44 @@ class KeymapExtractor:
                     behavior_object = Behavior(name="")
                     behavior_object.type = "unicode_string"
                 else:
-                    # Register all other behaviors as generic
                     behavior_object = Behavior(name="")
                     behavior_object.type = compatible
 
                 if behavior_object:
-                    # Use the first label found as the primary key
                     label_key = next(iter(child_node.labels.keys()), None)
                     behavior_key = label_key if label_key else name
-                    behavior_object.name = behavior_key  # Assign name
-                    behavior_object.type = behavior_type  # Ensure type is set
+                    behavior_object.name = behavior_key
+                    behavior_object.type = behavior_type
+
+                    # Populate extra_properties with all DTS properties for this behavior node
+                    if hasattr(behavior_object, "extra_properties"):
+                        for prop_name, prop_obj in child_node.properties.items():
+                            behavior_object.extra_properties[prop_name] = prop_obj.value
+
+                    # Special handling for tapping-term-ms for tap-dance if not already in extra_properties as int
+                    if behavior_object.type == "zmk,behavior-tap-dance":
+                        tapping_term_prop = child_node.properties.get("tapping-term-ms")
+                        if tapping_term_prop and isinstance(
+                            tapping_term_prop.value, int
+                        ):
+                            setattr(
+                                behavior_object,
+                                "tapping_term_ms",
+                                tapping_term_prop.value,
+                            )
+                        elif (
+                            tapping_term_prop
+                            and isinstance(tapping_term_prop.value, list)
+                            and tapping_term_prop.value
+                        ):
+                            # Handle cases where tapping-term-ms might be an array <200>
+                            try:
+                                val = int(tapping_term_prop.value[0])
+                                setattr(behavior_object, "tapping_term_ms", val)
+                            except (ValueError, TypeError, IndexError):
+                                logging.warning(
+                                    f"Could not parse tapping-term-ms for {behavior_key}: {tapping_term_prop.value}"
+                                )
 
                     if behavior_key in self.behaviors:
                         print(
@@ -210,6 +236,11 @@ class KeymapExtractor:
                             f"{behavior_key}. Overwriting."
                         )
                     self.behaviors[behavior_key] = behavior_object
+
+        # --- Ensure built-in behaviors like reset and bootloader are always present if referenced ---
+        for builtin in ["reset", "bootloader"]:
+            if builtin not in self.behaviors:
+                self.behaviors[builtin] = Behavior(name=builtin)
 
     def _extract_behaviors_pass2(self) -> None:
         """Pass 2: Process deferred behavior details, parse macro bindings."""
@@ -270,7 +301,11 @@ class KeymapExtractor:
 
             # Parse positions
             try:
-                key_positions = [int(p) for p in positions_prop.value]
+                key_positions = [
+                    int(p)
+                    for p in positions_prop.value
+                    if isinstance(positions_prop.value, list)
+                ]
             except (ValueError, TypeError):
                 print(
                     f"Warning: Skipping combo '{name}' due to "
@@ -280,7 +315,9 @@ class KeymapExtractor:
 
             # Parse bindings (expecting a single binding for the combo)
             # This parsing happens *after* behaviors pass 1
-            parsed_bindings = self._parse_bindings(bindings_prop.value)
+            parsed_bindings = self._parse_bindings(
+                bindings_prop.value if isinstance(bindings_prop.value, list) else []
+            )
             if not parsed_bindings:
                 print(f"Warning: Skipping combo '{name}' due to invalid bindings.")
                 continue
@@ -326,7 +363,11 @@ class KeymapExtractor:
 
             # Parse if-layers
             try:
-                if_layer_nums = [int(layer_num) for layer_num in if_layers_prop.value]
+                if_layer_nums = [
+                    int(layer_num)
+                    for layer_num in if_layers_prop.value
+                    if isinstance(if_layers_prop.value, list)
+                ]
             except (ValueError, TypeError):
                 print(
                     f"Warning: Skipping conditional layer '{name}' due to "
@@ -415,13 +456,21 @@ class KeymapExtractor:
             return None
 
         # Parse bindings now, all behaviors should be available
-        parsed_bindings = self._parse_bindings(bindings_prop.value)
+        parsed_bindings = self._parse_bindings(
+            bindings_prop.value if isinstance(bindings_prop.value, list) else []
+        )
         return Layer(name=node.name, index=index, bindings=parsed_bindings)
 
     def _parse_bindings(self, value: List[Any]) -> List[Binding]:
         """Parse bindings from a list value provided by the parser."""
         if not isinstance(value, list):
-            raise ValueError("Invalid binding value type, expected list")
+            # This case should ideally be caught before calling _parse_bindings
+            # or handled by ensuring `value` is always a list.
+            # If it still happens, log an error and return an empty list.
+            logging.error(
+                "Invalid binding value type, expected list, got %s", type(value)
+            )
+            return []
 
         BUILTIN_BEHAVIORS = {
             # Key behaviors
@@ -446,7 +495,7 @@ class KeymapExtractor:
             # Add more as needed
         }
 
-        bindings = []
+        bindings: list[Binding] = []  # Initialize with correct type
         i = 0
         while i < len(value):
             token = value[i]
@@ -460,11 +509,43 @@ class KeymapExtractor:
                 continue
             if isinstance(token, str) and token.startswith("&"):
                 behavior_name = token[1:]
+                # Special handling for reset and bootloader
+                if behavior_name in ("reset", "bootloader"):
+                    behavior = self.behaviors.get(behavior_name)
+                    if not behavior:
+                        behavior = Behavior(name=behavior_name)
+                        self.behaviors[behavior_name] = behavior
+                    bindings.append(Binding(behavior=behavior, params=[]))
+                    i += 1
+                    continue
                 params = []
                 num_params_expected = 0
+                actual_params_consumed = 0
 
-                # Determine expected parameters
-                if behavior_name in ("kp", "mo", "to", "sl", "sk", "td", "bt", "mkp"):
+                # Determine expected parameters and consume them
+                if behavior_name == "td":
+                    param_idx = i + 1
+                    while param_idx < len(value) and not str(
+                        value[param_idx]
+                    ).startswith("&"):
+                        params.append(str(value[param_idx]))
+                        param_idx += 1
+                    actual_params_consumed = len(params)
+
+                    # Ensure 'td' behavior object exists and is correctly typed
+                    td_behavior = self.behaviors.get(behavior_name)
+                    if not td_behavior:  # If not found, create and store
+                        td_behavior = Behavior(name=behavior_name)
+                        td_behavior.type = (
+                            "zmk,behavior-tap-dance"  # Set type after creation
+                        )
+                        self.behaviors[behavior_name] = td_behavior  # Store it
+
+                    bindings.append(Binding(behavior=td_behavior, params=params))
+                    i += 1 + actual_params_consumed
+                    continue  # Crucial: skip the generic param logic below
+
+                elif behavior_name in ("kp", "mo", "to", "sl", "sk", "bt", "mkp"):
                     num_params_expected = 1
                 elif behavior_name in (
                     "mt",
@@ -485,35 +566,52 @@ class KeymapExtractor:
                 )
 
                 # When resolving a binding, only allow behaviors explicitly defined by the user
-                def get_or_create_behavior(name, type_str):
+                def get_or_create_behavior(name, type_str=None):
                     if name in self.behaviors:
                         return self.behaviors[name]
-                    if name in BUILTIN_BEHAVIORS:
-                        if name in ("mt", "hold-tap", "mod-tap"):
-                            # Register a generic Behavior for now; HoldTap will be created at binding time
-                            b = Behavior(name=name)
-                            b.type = "hold-tap"
+
+                    effective_name_for_lookup = type_str or name
+                    mapped_type = BUILTIN_BEHAVIORS.get(effective_name_for_lookup)
+
+                    if mapped_type:
+                        b = Behavior(
+                            name=name
+                        )  # Use actual name for the behavior object
+                        if effective_name_for_lookup in ("mt", "hold-tap", "mod-tap"):
+                            b.type = "hold-tap"  # Canonical internal type
+                        elif effective_name_for_lookup == "sk":
+                            b.type = (
+                                "zmk,behavior-sticky-key"  # Use ZMK compatible string
+                            )
                         else:
-                            b = Behavior(name=name)
-                            b.type = BUILTIN_BEHAVIORS[name]
+                            b.type = mapped_type
                         self.behaviors[name] = b
                         return b
-                    raise ValueError(
-                        f"Unknown behavior referenced during binding creation: {name}"
+
+                    logging.error(
+                        f"Unknown behavior referenced or failed to map: {name} "
+                        f"(type_str hint: {type_str}). Creating as 'unknown-behavior'."
                     )
+                    b = Behavior(name=name)
+                    b.type = "unknown-behavior"  # Mark as unknown instead of crashing
+                    self.behaviors[name] = b
+                    return b
 
                 # Enhanced parameter extraction for nested macros
                 param_start_index = i + 1
-                actual_params_consumed = 0
+                # actual_params_consumed = 0 # Already init above
+                # params = [] # Already init above
+
+                temp_params_for_non_td = []  # Use a temporary list here
                 j = param_start_index
                 while actual_params_consumed < num_params_expected and j < len(value):
                     next_token = value[j]
                     if (
                         isinstance(next_token, str)
                         and next_token.startswith("&")
-                        and actual_params_consumed < num_params_expected
+                        # and actual_params_consumed < num_params_expected # This part of condition seems redundant with loop head
                     ):
-                        break
+                        break  # Stop if we hit another behavior token prematurely
                     # Detect nested macro/parenthesis
                     if isinstance(next_token, str) and (
                         "(" in next_token or ")" in next_token
@@ -521,26 +619,30 @@ class KeymapExtractor:
                         # Group tokens until parentheses are balanced
                         paren_count = 0
                         param_tokens = []
-                        while j < len(value):
-                            t = value[j]
+                        temp_j = j  # Use temp_j for this inner loop
+                        while temp_j < len(value):
+                            t = value[temp_j]
                             param_tokens.append(str(t))
-                            paren_count += t.count("(")
-                            paren_count -= t.count(")")
+                            paren_count += str(t).count("(")
+                            paren_count -= str(t).count(")")
                             if paren_count <= 0 and ("(" in param_tokens[0]):
                                 break
-                            j += 1
-                        params.append(" ".join(param_tokens))
+                            temp_j += 1
+                        temp_params_for_non_td.append(" ".join(param_tokens))
                         actual_params_consumed += 1
-                        j += 1
+                        j = temp_j + 1
                     else:
-                        params.append(str(next_token))
+                        temp_params_for_non_td.append(str(next_token))
                         actual_params_consumed += 1
                         j += 1
+
+                params = temp_params_for_non_td  # Assign collected params back
+
                 logging.debug(
-                    f"[extractor]   Params consumed: {params} (actual: {actual_params_consumed})"
+                    f"[extractor]   Params consumed for {behavior_name}: {params} (actual: {actual_params_consumed})"
                 )
-                get_or_create_behavior(behavior_name, behavior_name)
-                bindings.append(self._create_binding([behavior_name] + params))
+                behavior = get_or_create_behavior(behavior_name, behavior_name)
+                bindings.append(Binding(behavior=behavior, params=params))
                 i += 1 + actual_params_consumed
             else:
                 # Unicode macro detection
@@ -550,10 +652,44 @@ class KeymapExtractor:
                     continue
                 bindings.append(self._create_binding(str(token)))
                 i += 1
+
+        # After main loop, patch any fallback bootloader/reset bindings
+        for idx, b in enumerate(bindings):
+            if (
+                getattr(b, "behavior", None) is None
+                and isinstance(getattr(b, "params", None), list)
+                and len(b.params) == 1
+                and b.params[0] in ("&bootloader", "&reset")
+            ):
+                behavior_name = b.params[0][1:]
+                behavior = self.behaviors.get(behavior_name)
+                if not behavior:
+                    behavior = Behavior(name=behavior_name)
+                    self.behaviors[behavior_name] = behavior
+                bindings[idx] = Binding(behavior=behavior, params=[])
         return bindings
 
-    def _create_binding(self, value: str | List[str]) -> Binding:
+    def _create_binding(self, value: str | list[str]) -> Binding:
         """Create a binding instance from a value."""
+        # Special handling for bootloader/reset as string or first list param
+        behavior_name_to_check = None
+        if isinstance(value, str) and value in ("&bootloader", "&reset"):
+            behavior_name_to_check = value[1:]
+        elif (
+            isinstance(value, list)
+            and value
+            and isinstance(value[0], str)
+            and value[0] in ("&bootloader", "&reset")
+        ):
+            behavior_name_to_check = value[0][1:]
+
+        if behavior_name_to_check:
+            behavior = self.behaviors.get(behavior_name_to_check)
+            if not behavior:
+                behavior = Behavior(name=behavior_name_to_check)
+                self.behaviors[behavior_name_to_check] = behavior
+            return Binding(behavior=behavior, params=[])
+
         if isinstance(value, list):
             if not value:
                 msg = "Empty binding list value"
@@ -607,11 +743,24 @@ class KeymapExtractor:
             if behavior_name == "kp":
                 if len(params) != 1:
                     msg = (
-                        f"kp behavior expects 1 parameter, got {len(params)}: {params}"
+                        f"kp behavior expects 1 parameter, got {len(params)}: "
+                        f"{params}"
                     )
                     logging.error(msg)
                     return Binding(behavior=None, params=[f"ERROR: {msg}"])
                 return Binding(behavior=None, params=[params[0]])
+            # Handle &sk LSHIFT case specifically before generic behavior handling
+            if behavior_name == "sk" and len(params) == 1:
+                behavior = self.behaviors.get(behavior_name)
+                if not behavior:
+                    behavior = Behavior(name=behavior_name)
+                    behavior.type = (
+                        "zmk,behavior-sticky-key"  # Ensure correct type for &sk
+                    )
+                    self.behaviors[behavior_name] = behavior
+                return Binding(behavior=behavior, params=params)
+            # Generic behavior handling using self.behaviors (populated by _parse_bindings)
+            behavior = self.behaviors.get(behavior_name)
             if behavior:
                 return Binding(behavior=behavior, params=params)
             else:
@@ -641,24 +790,20 @@ class KeymapExtractor:
 
     def _parse_integer_prop(self, prop: DtsProperty) -> Optional[int]:
         """Safely parse an integer value from a property."""
-        # print(f"DEBUG _parse_integer_prop: Received prop type='{prop.type}', value={repr(prop.value)}") # DEBUG
         # Handle direct integer/scalar types from parser simplification
         if prop.type in ["integer", "scalar"]:
             try:
-                result = int(prop.value)
-                # print(f"DEBUG _parse_integer_prop: Parsed type '{prop.type}' to {result}") # DEBUG
-                return result
+                return int(prop.value)
             except (ValueError, TypeError):
-                # print(f"DEBUG _parse_integer_prop: Failed int(prop.value) for type '{prop.type}': {e}") # DEBUG
                 return None
         # Handle case where parser left it as a single-element array
-        elif prop.type == "array" and len(prop.value) == 1:
+        elif (
+            prop.type == "array"
+            and isinstance(prop.value, list)
+            and len(prop.value) == 1
+        ):
             try:
-                result = int(prop.value[0])
-                # print(f"DEBUG _parse_integer_prop: Parsed type 'array[1]' to {result}") # DEBUG
-                return result
+                return int(prop.value[0])
             except (ValueError, TypeError):
-                # print(f"DEBUG _parse_integer_prop: Failed int(prop.value[0]) for type 'array[1]': {e}") # DEBUG
                 return None
-        # print(f"DEBUG _parse_integer_prop: Property type '{prop.type}' not handled or array length != 1.") # DEBUG
         return None

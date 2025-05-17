@@ -10,7 +10,23 @@
 (defalias mt (tap-hold 200 200 semi rmet))
 
 (defalias
+  ht_lmet_a (tap-hold 200 200 a lmet)
+)
+
+(defalias
+  ht_LSFT_f (tap-hold 200 200 f LSFT)
+)
+
+(defalias
   ht_LCTL_d (tap-hold 200 200 d LCTL)
+)
+
+(defalias
+  ht_RSFT_j (tap-hold 200 200 j RSFT)
+)
+
+(defalias
+  ht_RCTL_k (tap-hold 200 200 k RCTL)
 )
 
 (defalias
@@ -22,23 +38,7 @@
 )
 
 (defalias
-  ht_RSFT_j (tap-hold 200 200 j RSFT)
-)
-
-(defalias
-  ht_lmet_a (tap-hold 200 200 a lmet)
-)
-
-(defalias
   ht_ralt_l (tap-hold 200 200 l ralt)
-)
-
-(defalias
-  ht_RCTL_k (tap-hold 200 200 k RCTL)
-)
-
-(defalias
-  ht_LSFT_f (tap-hold 200 200 f LSFT)
 )
 (deflayer default_layer
   q

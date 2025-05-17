@@ -10,15 +10,19 @@
 (defalias mt (tap-hold 200 200 o rctl))
 
 (defalias
+  ht_lsft_t (tap-hold 200 200 t lsft)
+)
+
+(defalias
   ht_lctl_a (tap-hold 200 200 a lctl)
 )
 
 (defalias
-  ht_lmet_s (tap-hold 200 200 s lmet)
+  ht_rsft_n (tap-hold 200 200 n rsft)
 )
 
 (defalias
-  ht_lsft_t (tap-hold 200 200 t lsft)
+  ht_rctl_o (tap-hold 200 200 o rctl)
 )
 
 (defalias
@@ -34,11 +38,7 @@
 )
 
 (defalias
-  ht_rsft_n (tap-hold 200 200 n rsft)
-)
-
-(defalias
-  ht_rctl_o (tap-hold 200 200 o rctl)
+  ht_lmet_s (tap-hold 200 200 s lmet)
 )
 (deflayer default_layer
   tab
@@ -65,7 +65,7 @@
   @ht_ralt_i
   @ht_rctl_o
   sqt
-; ERROR: malformed or unknown macro: LSHFT
+  lsft
   z
   x
   c
@@ -76,7 +76,7 @@
   comma
   dot
   fslh
-; ERROR: malformed or unknown macro: RSHFT
+  rsft
   lctl
   lmet
   lalt
@@ -257,7 +257,7 @@
   _
   _
   _
-; ERROR: malformed or unknown macro: LSHFT
+  lsft
   kp1
   kp2
   kp3
@@ -282,7 +282,5 @@
 )
 
 ; --- Unsupported/Unknown ZMK Features ---
-  ERROR: malformed or unknown macro: LSHFT
-  ERROR: malformed or unknown macro: RSHFT
   ERROR: malformed or unknown macro: K_APP
   ERROR: malformed or unknown macro: KP_EQUAL
